@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="9634f5b5-f135-4866-b1d6-9eb36f37aa3e" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+        <option value="Dockerfile" />
+      </list>
+    </option>
+  </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="2tfM3KvgDz9HGkfgg4Oocmgc5Tx" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Node.js.client.ts.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "/Users/rahilk/Projects/i-4-u/services/chat-service/src/proto",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "ts.external.directory.path": "/Users/rahilk/Projects/i-4-u/frontend/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/services/chat-service/src/proto" />
+      <recent name="$PROJECT_DIR$/services/order-service" />
+      <recent name="$PROJECT_DIR$/services/order-service/src" />
+      <recent name="$PROJECT_DIR$/services/user-service/src" />
+      <recent name="$PROJECT_DIR$/services" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/services/user-service/src" />
+      <recent name="$PROJECT_DIR$/gateway/src" />
+      <recent name="$PROJECT_DIR$/services/service-1/src" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/backend/services" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-WS-243.25659.40" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9634f5b5-f135-4866-b1d6-9eb36f37aa3e" name="Changes" comment="" />
+      <created>1740738474560</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1740738474560</updated>
+      <workItem from="1740738475673" duration="5191000" />
+      <workItem from="1740848644778" duration="226000" />
+      <workItem from="1740848877608" duration="96000" />
+      <workItem from="1740848979185" duration="94000" />
+      <workItem from="1740849077607" duration="45000" />
+      <workItem from="1740849127060" duration="951000" />
+      <workItem from="1740850088796" duration="2000" />
+      <workItem from="1740905014508" duration="243000" />
+      <workItem from="1741194187413" duration="644000" />
+      <workItem from="1741241660213" duration="5954000" />
+      <workItem from="1741287032707" duration="16287000" />
+      <workItem from="1741664508842" duration="1225000" />
+      <workItem from="1741667308954" duration="2147000" />
+      <workItem from="1741689992772" duration="7000" />
+      <workItem from="1741691161482" duration="9128000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+    <option name="exactExcludedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/services/order-service/src/server.js" />
+      </list>
+    </option>
+  </component>
+</project>
