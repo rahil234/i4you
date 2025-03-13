@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Settings, Heart, Calendar, LogOut, Edit, Plus } from "lucide-react"
+import {toast, Toaster} from "sonner";
 
 export default function ProfilePage() {
   // This would come from your authentication system in a real app
@@ -53,7 +54,6 @@ export default function ProfilePage() {
                 {user.name}, {user.age}
               </h2>
               <p className="text-muted-foreground">{user.location}</p>
-
               <Button variant="outline" size="sm" className="mt-2">
                 <Edit className="h-3 w-3 mr-2" />
                 Edit Profile
@@ -136,7 +136,12 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
 
-        <Button variant="outline" className="w-full text-red-500 hover:text-red-600">
+        <Toaster />
+        <Button variant="outline" className="w-full text-red-500 hover:text-red-600"
+        onClick={()=>{
+          toast.success("You have been signed out.")
+        }}
+        >
           <LogOut className="h-4 w-4 mr-2" />
           Sign Out
         </Button>

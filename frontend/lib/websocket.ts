@@ -42,7 +42,7 @@ class WebSocketClient {
                 this.notifyStatusChange("connected");
 
                 // Send the "join" event to register the user
-                this.send({event: "join", userId});
+                this.send({event: "join", userId: "rahil", id: "rahil"});
             };
 
             this.socket.onmessage = (event) => {
@@ -51,6 +51,8 @@ class WebSocketClient {
 
                     if (data.event === "receive_message") {
                         this.notifyMessageHandlers({sender: data.sender, message: data.message});
+                    } else {
+                        console.error("Unknown WebSocket event:", data);
                     }
                 } catch (error) {
                     console.error("Error parsing WebSocket message:", error);
@@ -89,14 +91,30 @@ class WebSocketClient {
         }
     }
 
-    // sendMessage({receiver, message}: any) {
-    //     if (this.socket?.readyState === WebSocket.OPEN && this.userId) {
-    //         this.send({event: "send_message", sender: this.userId, receiver, message});
-    //         console.log("rahil", receiver, message);
-    //         return true;
-    //     }
-    //     return false;
-    // }
+    sendMessage({receiver, message}: { receiver: string; message: string }) {
+        if (this.socket?.readyState === WebSocket.OPEN && this.userId) {
+            this.send({event: "send_message", sender: this.userId, receiver, message});
+            console.log("rahil", receiver, message);
+            return true;
+        }
+        return false;
+    }
+
+    sendReadReceipt(receiver: string, chatId: string) {
+        if (this.socket?.readyState === WebSocket.OPEN && this.userId) {
+            this.send({event: "read_receipt", sender: this.userId, receiver, chatId});
+            return true;
+        }
+        return false
+    }
+
+    sendTyping(receiver: string, chatId: string, isTyping: boolean) {
+        if (this.socket?.readyState === WebSocket.OPEN && this.userId) {
+            this.send({event: "typing", sender: this.userId, receiver, isTyping});
+            return true;
+        }
+        return false;
+    }
 
     onMessage(handler: MessageHandler) {
         this.messageHandlers.push(handler);
@@ -113,13 +131,12 @@ class WebSocketClient {
     }
 
     private send(data: any) {
-        console.log("Sending message", data);
         if (this.socket?.readyState === WebSocket.OPEN) {
             this.socket.send(JSON.stringify(data));
         }
     }
 
-    private notifyMessageHandlers(message: { sender: string; message: string }) {
+    private notifyMessageHandlers(message: any) {
         this.messageHandlers.forEach((handler) => handler(message));
     }
 
