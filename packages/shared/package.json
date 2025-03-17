@@ -1,16 +1,15 @@
 {
-  "name": "i4you",
+  "name": "shared",
   "version": "1.0.0",
+  "exports": {
+    "types": "./types/index.ts",
+    "proto": "./proto/"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
-  "devDependencies": {
-    "pnpm": "^10.6.3",
-    "turbo": "^2.4.4"
-  },
-  "packageManager": "pnpm@10.6.3"
+  "description": ""
 }

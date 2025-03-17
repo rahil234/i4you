@@ -1,0 +1,4 @@
+packages:
+  - 'packages/**'           # All subdirectories in packages/
+  - 'apps/*'              # All subdirectories in apps/
+  - 'apps/services/*'     # All subdirectories in apps/services/

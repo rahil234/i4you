@@ -1,0 +1,19 @@
+services:
+  user-service:
+    build:
+      context: user-service
+    ports:
+      - "50051:50051"
+      - "3001:3001"
+    volumes:
+      - ./user-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    networks:
+      - app-network
+    command: "npm run dev"
+
+networks:
+  app-network:
+    driver: bridge

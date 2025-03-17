@@ -1,0 +1,36 @@
+services:
+
+  #  order-service:
+  #    build: apps/services/order-service
+  #    ports:
+  #      - "4002:4002"
+  #    volumes:
+  #      - ./order-service:/app
+  #      - /app/node_modules
+  #    depends_on:
+  #      - user-service
+  #    environment:
+  #      - NODE_ENV=development
+  #    networks:
+  #      - app-network
+  #    command: "npm run dev"
+
+  user-service:
+    build:
+      context: apps/services/user-service
+    ports:
+      - "50051:50051"
+      - "3001:3001"
+    volumes:
+      - ./apps/services/user-service:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    networks:
+      - app-network
+    command: "ls node_modules && npx tsx src/index.ts"
+
+
+networks:
+  app-network:
+    driver: bridge
