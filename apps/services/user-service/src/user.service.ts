@@ -1,5 +1,5 @@
 import {UserRequest, UserResponse} from './proto/user';
-import {ServerUnaryCall, sendUnaryData} from '@grpc/grpc-js';
+import {sendUnaryData, ServerUnaryCall} from '@grpc/grpc-js';
 
 export const getUser = (
     call: ServerUnaryCall<UserRequest, UserResponse>,

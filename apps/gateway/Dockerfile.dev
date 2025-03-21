@@ -1,0 +1,14 @@
+FROM node:23-alpine
+
+WORKDIR /app
+
+RUN corepack enable
+
+COPY ./apps/gateway /app/apps/gateway
+COPY ./package.json /app/package.json
+COPY ./pnpm*.yaml /app/pnpm*.yaml
+COPY ./packages /app/packages
+
+RUN pnpm install --filter=gateway-server
+
+CMD ["pnpm", "run", "--filter=gateway-server", "dev"]

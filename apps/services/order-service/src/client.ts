@@ -6,14 +6,18 @@ import path from 'path';
 
 dotenv.config();
 
-const PROTO_PATH = path.resolve(__dirname, './proto/user.proto');
+const PROTO_PATH = path.resolve(__dirname, './proto-files/user-files');
 const packageDefinition = protoLoader.loadSync(PROTO_PATH);
 const userProto = grpc.loadPackageDefinition(packageDefinition) as any;
 
-const USER_SERVICE_URL = process.env.USER_SERVICE_URL || 'user-service:50051';
+const USER_SERVICE_GRPC_URL = process.env.USER_SERVICE_GRPC_URL;
+
+if(!USER_SERVICE_GRPC_URL) {
+    throw new Error('USER_SERVICE_GRPC_PORT Environment Variable must be defined');
+}
 
 const client = new userProto.user.UserService(
-    USER_SERVICE_URL,
+    USER_SERVICE_GRPC_URL,
     grpc.credentials.createInsecure()
 );
 

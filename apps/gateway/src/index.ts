@@ -3,48 +3,53 @@ import {expressjwt} from 'express-jwt';
 import {createProxyMiddleware} from 'http-proxy-middleware';
 import {Auth} from '../types/jwt-payload';
 
-// Initialize Express app
 const app = express();
 
-// Configuration
-const jwtSecret = process.env.JWT_SECRET || 'your-secret-key';
-const backendUrl = process.env.BACKEND_URL || 'http://localhost:3000';
-const port = process.env.PORT || 8080;
+const jwtSecret = process.env.JWT_SECRET;
+const USER_SERVER_URL = process.env.USER_SERVER_URL;
+const PORT = process.env.PORT;
 
-// JWT Validation Middleware
-app.use(
-    expressjwt({
-        secret: jwtSecret,
-        algorithms: ['HS256'],
-    }).unless({path: ['/public']})
-);
+if (!USER_SERVER_URL) {
+    console.error('USER_HTTP_PORT environment variable is required');
+    process.exit(1);
+} else if (!PORT) {
+    console.error('PORT environment variable is required');
+    process.exit(1);
+}
 
-// Custom Middleware: Add User Info to Proxied Request
+if (jwtSecret) {
+    app.use(
+        expressjwt({
+            secret: jwtSecret,
+            algorithms: ['HS256'],
+        }).unless({path: ['/public']})
+    );
+}
+
 app.use((req: Request, res: Response, next: NextFunction) => {
     if (req.user) {
-        // req.user is now typed as Auth.JwtPayload | undefined
-        const user = req.user as Auth.JwtPayload; // Type assertion (safe after express-jwt)
+        const user = req.user as Auth.JwtPayload;
         req.headers['X-User-ID'] = user.sub;
         console.log(`Forwarding request for user: ${user.name}`);
     }
+    console.log("URL: ", req.url);
     next();
 });
 
-// Proxy Middleware
 const proxyMiddleware = createProxyMiddleware<Request, Response>({
-    target: backendUrl,
+    target: USER_SERVER_URL,
     changeOrigin: true,
+    pathRewrite: {'^/api/': ''},
     on: {
         proxyReq: (proxyReq, req) => {
-            // Forward the user ID to the backend
+            console.log("Request-proxing: ", req.url);
             const userId = req.headers['X-User-ID'];
             if (userId) {
                 proxyReq.setHeader('X-User-ID', userId);
             }
         },
         proxyRes: (proxyRes, req, res) => {
-            // Log the response status code
-            console.log(`Response status code: ${proxyRes.statusCode}`);
+            console.log(req.url, ": Response: ", proxyRes.statusCode);
         },
         error: (err, req, res) => {
             console.error('Proxy error:', err);
@@ -56,7 +61,6 @@ const proxyMiddleware = createProxyMiddleware<Request, Response>({
 
 app.use('/api', proxyMiddleware);
 
-// Error Handling Middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     if (err.name === 'UnauthorizedError') {
         res.status(401).json({error: 'Invalid or missing token'});
@@ -65,7 +69,6 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     }
 });
 
-// Start the Server
-app.listen(port, () => {
-    console.log(`Reverse proxy with JWT validation running on port ${port}`);
+app.listen(PORT, () => {
+    console.log(`Reverse proxy with JWT validation running on port ${PORT}`);
 });

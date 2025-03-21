@@ -7,6 +7,7 @@ import { Settings, Heart, Calendar, LogOut, Edit, Plus } from "lucide-react"
 import {toast, Toaster} from "sonner";
 
 export default function ProfilePage() {
+
   // This would come from your authentication system in a real app
   const user = {
     name: "John Doe",

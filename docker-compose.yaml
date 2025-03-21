@@ -1,18 +1,86 @@
 services:
+
   user-service:
+    image: user-service-image
+    pull_policy: never
     build:
-      context: user-service
-    ports:
-      - "50051:50051"
-      - "3001:3001"
+      context: ./
+      dockerfile: apps/services/user-service/Dockerfile.dev
+    develop:
+      watch:
+        - action: rebuild
+          path: apps/services/user-service/package.json
+          target: /app/apps/services/user-service/package.json
+
+        - action: sync
+          path: ./apps/services/user-service
+          target: /app/apps/services/user-service
     volumes:
-      - ./user-service:/app
+      - ./apps/services/user-service:/app/apps/services/user-service
       - /app/node_modules
+      - /app/apps/services/user-service/node_modules
+      - ./packages:/app/packages
     environment:
       - NODE_ENV=development
+      - MONGODB_URI=mongodb://host.docker.internal:27017/UserDB
+#      - PORT=${USER_HTTP_PORT}
+#      - GRPC_PORT=${USER_GRPC_PORT}
+    env_file:
+      - ./apps/services/user-service/.env
     networks:
       - app-network
-    command: "npm run dev"
+
+#  order-service:
+#    image: order-service-image
+#    build:
+#      context: ./
+#      dockerfile: apps/services/order-service/Dockerfile.dev
+#    volumes:
+#      - ./apps/services/order-service:/app/apps/services/order-service
+#      - /app/node_modules
+#      - /app/apps/services/order-service/node_modules
+#    depends_on:
+#      - user-service
+#    environment:
+#      - NODE_ENV=development
+#      - USER_SERVICE_GRPC_URL=user-service:${USER_GRPC_PORT}
+#      - PORT=${ORDER_HTTP_PORT}
+#    networks:
+#      - app-network
+
+#  chat-service:
+#    build: apps/services/chat-service
+#    ports:
+#      - "6000:6000"
+#    volumes:
+#      - ./apps/services/chat-service:/app
+#      - /app/node_modules
+#    depends_on:
+#      - user-service
+
+  gateway-server:
+    image: gateway-server-image
+    pull_policy: never
+    build:
+      context: ./
+      dockerfile: apps/gateway/Dockerfile.dev
+    ports:
+      - "${GATEWAY_HTTP_PORT}:${GATEWAY_HTTP_PORT}"
+    volumes:
+      - ./apps/gateway:/app/apps/gateway
+      - /app/apps/gateway/node_modules
+      - /app/node_modules
+      - ./packages:/app/packages
+    environment:
+      - NODE_ENV=development
+      - PORT=${GATEWAY_HTTP_PORT}
+      - USER_SERVER_URL=http://user-service:${USER_HTTP_PORT}
+      - ORDER_SERVICE_URI=http://order-service:${ORDER_HTTP_PORT}
+    depends_on:
+      - user-service
+#      - order-service
+    networks:
+      - app-network
 
 networks:
   app-network:

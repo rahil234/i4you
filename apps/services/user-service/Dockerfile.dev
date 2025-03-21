@@ -1,0 +1,13 @@
+FROM node:23-alpine
+
+WORKDIR /app
+
+RUN corepack enable
+
+COPY ./apps/services/user-service /app/apps/services/user-service
+COPY package*.json pnpm*.yaml ./
+COPY ./packages /app/packages
+
+RUN pnpm install --filter=user-service
+
+CMD ["pnpm", "run", "--filter=user-service", "dev"]

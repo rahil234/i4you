@@ -1,0 +1,13 @@
+{
+  "name": "@repo/proto-files",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "files": ["dist", "proto"],
+  "exports": {
+    "./*": "./dist/*"
+  },
+  "scripts": {
+    "build": "mkdir -p dist && cp -r proto dist/",
+    "clean": "rm -rf dist"
+  }
+}

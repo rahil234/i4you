@@ -1,0 +1,14 @@
+FROM node:23-alpine
+
+WORKDIR /app
+
+RUN corepack enable
+
+COPY ./apps/services/order-service /app/apps/services/order-service
+COPY ./package.json /app/package.json
+COPY ./pnpm-workspace.yaml /app/pnpm-workspace.yaml
+COPY ./packages /app/packages
+
+RUN pnpm install --filter=order-service
+
+CMD ["pnpm", "run", "--filter=order-service", "dev"]
