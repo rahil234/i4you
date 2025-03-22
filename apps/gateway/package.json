@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "start": "node ./dist/server.js",
-    "dev": "tsx watch ./src/index.ts"
+    "dev": "tsx watch src/app.ts"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",

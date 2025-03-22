@@ -263,7 +263,6 @@ export function ChatProvider({children}: { children: React.ReactNode }) {
     // Initialize WebSocket connection
     useEffect(() => {
         const wsClient = getWebSocketClient()
-        console.log(wsClient);
 
         // Set up message handler
         const messageHandler = wsClient.onMessage((message) => {
@@ -314,7 +313,7 @@ export function ChatProvider({children}: { children: React.ReactNode }) {
         })
 
         // Connect to WebSocket server
-        wsClient.connect("user1")
+        // wsClient.connect("user1")
 
         // Clean up on unmount
         return () => {

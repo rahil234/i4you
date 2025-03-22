@@ -1,32 +1,32 @@
 import express, {Request, Response, NextFunction} from 'express';
-import {expressjwt} from 'express-jwt';
+// import {expressjwt} from 'express-jwt';
 import {createProxyMiddleware} from 'http-proxy-middleware';
 import {Auth} from '../types/jwt-payload';
 
 const app = express();
 
-const jwtSecret = process.env.JWT_SECRET;
-const USER_SERVER_URL = process.env.USER_SERVER_URL;
+// const jwtSecret = process.env.JWT_SECRET;
+const USER_SERVER_URI = process.env.USER_SERVER_URI;
 const PORT = process.env.PORT;
 
-if (!USER_SERVER_URL) {
-    console.error('USER_HTTP_PORT environment variable is required');
-    process.exit(1);
-} else if (!PORT) {
-    console.error('PORT environment variable is required');
-    process.exit(1);
-}
+// if (!USER_SERVER_URL) {
+//     console.error('USER_HTTP_PORT environment variable is required');
+//     process.exit(1);
+// } else if (!PORT) {
+//     console.error('PORT environment variable is required');
+//     process.exit(1);
+// }
+//
+// if (jwtSecret) {
+//     app.use(
+//         expressjwt({
+//             secret: jwtSecret,
+//             algorithms: ['HS256'],
+//         }).unless({path: ['/public']})
+//     );
+// }
 
-if (jwtSecret) {
-    app.use(
-        expressjwt({
-            secret: jwtSecret,
-            algorithms: ['HS256'],
-        }).unless({path: ['/public']})
-    );
-}
-
-app.use((req: Request, res: Response, next: NextFunction) => {
+app.use((req: Request, _res: Response, next: NextFunction) => {
     if (req.user) {
         const user = req.user as Auth.JwtPayload;
         req.headers['X-User-ID'] = user.sub;
@@ -37,9 +37,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 const proxyMiddleware = createProxyMiddleware<Request, Response>({
-    target: USER_SERVER_URL,
+    target: USER_SERVER_URI,
     changeOrigin: true,
-    pathRewrite: {'^/api/': ''},
+    pathRewrite: {'^/api/user': ''},
     on: {
         proxyReq: (proxyReq, req) => {
             console.log("Request-proxing: ", req.url);
@@ -48,10 +48,10 @@ const proxyMiddleware = createProxyMiddleware<Request, Response>({
                 proxyReq.setHeader('X-User-ID', userId);
             }
         },
-        proxyRes: (proxyRes, req, res) => {
+        proxyRes: (proxyRes, req, _res) => {
             console.log(req.url, ": Response: ", proxyRes.statusCode);
         },
-        error: (err, req, res) => {
+        error: (err, _req, res) => {
             console.error('Proxy error:', err);
             if ('status' in res)
                 res.status(500).json({error: 'Unexpected error'});
@@ -59,9 +59,9 @@ const proxyMiddleware = createProxyMiddleware<Request, Response>({
     }
 });
 
-app.use('/api', proxyMiddleware);
+app.use('/api/user', proxyMiddleware);
 
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
     if (err.name === 'UnauthorizedError') {
         res.status(401).json({error: 'Invalid or missing token'});
     } else {

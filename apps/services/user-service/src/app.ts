@@ -14,7 +14,7 @@ app.use(httpLogger());
 
 app.use(httpLogger({ logFilePath: path.join(__dirname, "logs/user_service.log") }));
 
-app.use('/api/users', userRoutes);
+app.use('/', userRoutes);
 
 const startServer = async () => {
     await connectDB();

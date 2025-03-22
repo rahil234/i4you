@@ -5,99 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9634f5b5-f135-4866-b1d6-9eb36f37aa3e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/gateway/.dockerignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/gateway/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/gateway/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/gateway/Dockerfile.dev" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/chat-service/.dockerignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/chat-service/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/order-service/.dockerignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/order-service/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/order-service/Dockerfile.dev" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/user-service/.dockerignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/user-service/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/user-service/Dockerfile.dev" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/user-service/env.config.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/user-service/src/app.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/user-service/src/config/db.config.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/user-service/src/config/env.config.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/user-service/src/config/grpc.server.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/user-service/src/config/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/user-service/src/controllers/user.controller.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/user-service/src/core/interface/repositories/IUserRepository.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/user-service/src/models/user.model.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/user-service/src/repositories/base.repository.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/user-service/src/repositories/user.repository.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/user-service/src/routes/user.routes.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/user-service/src/services/user.service.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/user-service/src/utils/bcrypt.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/user-service/src/utils/jwt.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/env-config/src/generateType.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/http-logger/src/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/http-logger/src/logger.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/proto-files/src/user/user.client.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/proto-files/src/user/user.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/frontend/public/favicon.ico" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/19.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/20.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/21.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/22.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/23.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/24.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/25.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/26.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/27.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/28.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/29.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/30.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/31.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/32.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/33.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/34.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/35.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/36.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/37.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/38.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/39.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/40.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/41.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/42.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/43.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/44.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/45.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/46.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/47.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/48.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/49.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/50.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.turbo/cookies/51.cookie" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/app/(user)/profile/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/app/(user)/profile/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/gateway/nodemon.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/contexts/chat-context.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/contexts/chat-context.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/lib/websocket.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/lib/websocket.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/gateway/.dockerignore" beforeDir="false" afterPath="$PROJECT_DIR$/apps/gateway/.dockerignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/gateway/Dockerfile.dev" beforeDir="false" afterPath="$PROJECT_DIR$/apps/gateway/Dockerfile.dev" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/gateway/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/gateway/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/gateway/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/gateway/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/chat-service/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/chat-service/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/chat-service/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/chat-service/src/main.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/order-service/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/order-service/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/order-service/src/client.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/order-service/src/client.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/order-service/src/proto/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/order-service/src/proto/user.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/order-service/src/server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/order-service/src/server.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/nodemon.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/index.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/proto/user.client.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/proto/user.client.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/proto/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/proto/user.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/user.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/user.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose-old.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/gateway/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/gateway/src/app.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/services/user-service/.dockerignore" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/.dockerignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/services/user-service/Dockerfile.dev" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/Dockerfile.dev" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/app.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/routes/user.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/routes/user.routes.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/shared/proto/user.proto" beforeDir="false" afterPath="$PROJECT_DIR$/packages/proto-files/src/user/user.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pnpm-workspace.yaml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -155,6 +77,7 @@
     "Docker.docker-compose.yaml.chat-service: Compose Deployment.executor": "Run",
     "Docker.docker-compose.yaml.gateway-server: Compose Deployment.executor": "Run",
     "Docker.docker-compose.yaml: Compose Deployment.executor": "Run",
+    "JavaScript Debug.localhost:3000.executor": "Debug",
     "Node.js.client.ts.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
@@ -187,7 +110,10 @@
       <recent name="$PROJECT_DIR$/apps/services/user-service/src" />
     </key>
   </component>
-  <component name="RunManager" selected="Docker.docker-compose.yaml.gateway-server: Compose Deployment">
+  <component name="RunManager" selected="JavaScript Debug.localhost:3000">
+    <configuration name="localhost:3000" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:3000">
+      <method v="2" />
+    </configuration>
     <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
       <deployment type="docker-compose.yml">
         <settings />
@@ -244,6 +170,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JavaScript Debug.localhost:3000" />
         <item itemvalue="Docker.docker-compose.yaml.gateway-server: Compose Deployment" />
         <item itemvalue="Docker.docker-compose.yaml.chat-service: Compose Deployment" />
         <item itemvalue="Docker.docker-compose.yaml: Compose Deployment" />
@@ -287,7 +214,7 @@
       <workItem from="1741852661373" duration="12206000" />
       <workItem from="1741973294796" duration="33171000" />
       <workItem from="1742219600349" duration="44021000" />
-      <workItem from="1742397325458" duration="50960000" />
+      <workItem from="1742397325458" duration="58968000" />
     </task>
     <servers />
   </component>

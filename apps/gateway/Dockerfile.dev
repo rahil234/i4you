@@ -4,10 +4,11 @@ WORKDIR /app
 
 RUN corepack enable
 
-COPY ./apps/gateway /app/apps/gateway
-COPY ./package.json /app/package.json
-COPY ./pnpm*.yaml /app/pnpm*.yaml
-COPY ./packages /app/packages
+# Copy root-level package files from the additional 'root' context
+COPY --from=root /package*.json /pnpm*.yaml ./
+COPY --from=root /packages /app/packages
+
+COPY . /app/apps/gateway
 
 RUN pnpm install --filter=gateway-server
 

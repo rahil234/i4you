@@ -2,6 +2,7 @@
   "name": "i4you",
   "version": "1.0.0",
   "scripts": {
+    "frontend": "pnpm run --filter=frontend dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

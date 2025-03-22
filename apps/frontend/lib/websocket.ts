@@ -163,7 +163,7 @@ class WebSocketClient {
 let wsClient: WebSocketClient | null = null;
 
 export function getWebSocketClient() {
-    console.log("Connecting to WebSocket server...")
+    // console.log("Connecting to WebSocket server...")
 
     if (!wsClient) {
         wsClient = new WebSocketClient("ws://localhost:4000");

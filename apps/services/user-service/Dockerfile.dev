@@ -4,9 +4,11 @@ WORKDIR /app
 
 RUN corepack enable
 
-COPY ./apps/services/user-service /app/apps/services/user-service
-COPY package*.json pnpm*.yaml ./
-COPY ./packages /app/packages
+# Copy root-level package files from the additional 'root' context
+COPY --from=root /package*.json /pnpm*.yaml ./
+COPY --from=root /packages /app/packages
+
+COPY . /app/apps/services/user-service
 
 RUN pnpm install --filter=user-service
 
