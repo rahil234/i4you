@@ -1,5 +1,36 @@
 services:
 
+  auth-service:
+    image: auth-service-image
+    pull_policy: never
+    build:
+      context: ./apps/services/auth-service
+      dockerfile: Dockerfile.dev
+      additional_contexts:
+        root: ./
+      no_cache: true
+    #    develop:
+    #      watch:
+    #        - action: rebuild
+    #          path: ./apps/services/auth-service/package.json
+    #          target: /app/apps/services/auth-service/package.json
+    #        - action: sync
+    #          path: ./apps/services/auth-service/src
+    #          target: /app/apps/services/auth-service/src
+    volumes:
+      - ./apps/services/auth-service:/app/apps/services/auth-service
+      - /app/node_modules
+      - /app/apps/services/auth-service/node_modules
+      - ./packages:/app/packages
+    environment:
+      - NODE_ENV=development
+      - PORT=${AUTH_HTTP_PORT}
+      - MONGODB_URI=mongodb://host.docker.internal:27017/UserDB
+    env_file:
+      - ./apps/services/auth-service/.env
+    networks:
+      - app-network
+
   user-service:
     image: user-service-image
     pull_policy: never
@@ -9,19 +40,18 @@ services:
       additional_contexts:
         root: ./
       no_cache: true
-    develop:
-      watch:
-        - action: rebuild
-          path: ./apps/services/user-service/package.json
-          target: /app/apps/services/user-service/package.json
-        - action: rebuild
-          path: ./apps/services/user-service
-          target: /app/apps/services/user-service
-        - action: sync
-          path: ./apps/services/user-service/src
-          target: /app/apps/services/user-service/src
+    #    develop:
+    #      watch:
+    #        - action: rebuild
+    #          path: ./apps/services/user-service/package.json
+    #          target: /app/apps/services/user-service/package.json
+    #        - action: sync
+    #          path: ./apps/services/user-service/src
+    #          target: /app/apps/services/user-service/src
     volumes:
-      - ./apps/services/user-service/src:/app/apps/services/user-service/src
+      - ./apps/services/user-service:/app/apps/services/user-service
+      - /app/node_modules
+      - /app/apps/services/auth-service/node_modules
       - ./packages:/app/packages
     environment:
       - NODE_ENV=development
@@ -71,18 +101,21 @@ services:
     ports:
       - "${GATEWAY_HTTP_PORT}:${GATEWAY_HTTP_PORT}"
     volumes:
-      - ./apps/gateway/src:/app/apps/gateway/src
+      - ./apps/gateway:/app/apps/gateway
+      - /app/node_modules
+      - /app/apps/services/auth-service/node_modules
       - ./packages:/app/packages
     environment:
       - NODE_ENV=development
       - PORT=${GATEWAY_HTTP_PORT}
-      - USER_SERVER_URI=http://user-service:${USER_HTTP_PORT}
-      - ORDER_SERVICE_URI=http://order-service:${ORDER_HTTP_PORT}
+      - USER_SERVER_URL=http://user-service:${USER_HTTP_PORT}
+      - AUTH_SERVER_URL=http://auth-service:${AUTH_HTTP_PORT}
+      - ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001
     env_file:
       - ./apps/gateway/.env
     depends_on:
       - user-service
-    #      - order-service
+      - auth-service
     networks:
       - app-network
 

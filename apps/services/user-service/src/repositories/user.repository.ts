@@ -1,12 +1,15 @@
-import { UserModel } from '../models/user.model';
-import UserRepository from '../core/interface/repositories/IUserRepository';
+import {UserModel, UserDocument} from '@/models/user.model';
+import IUserRepository from '@/repositories/interfaces/IUserRepository';
+import {BaseRepository} from '@/repositories/base.repository';
 
-export class UserRepositoryImpl implements UserRepository {
-    async findByEmail(email: string) {
-        return UserModel.findOne({ email });
+export class UserRepository
+    extends BaseRepository<UserDocument>
+    implements IUserRepository {
+    constructor() {
+        super(UserModel);
     }
 
-    async create(user: any) {
-        return UserModel.create(user);
+    async findByEmail(email: string): Promise<UserDocument | null> {
+        return this.model.findOne({email}).exec();
     }
 }

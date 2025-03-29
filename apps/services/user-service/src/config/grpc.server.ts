@@ -2,8 +2,11 @@ import * as protoLoader from "@grpc/proto-loader";
 import * as grpc from "@grpc/grpc-js";
 import {UserRequest, UserResponse} from "@/proto/user";
 import {GrpcObject} from "@grpc/grpc-js/build/src/make-client";
-import {getUser} from "@/user.service";
+import {UserService} from "@/services/user.service";
 import {env} from "@/config";
+import IUserRepository from "@/repositories/interfaces/IUserRepository";
+import {UserRepository} from "@/repositories/user.repository";
+import {GrpcUserService} from "@/grpc/user.grpc";
 
 const GRPC_PORT = env.GRPC_PORT;
 
@@ -25,8 +28,13 @@ const userProto = grpc.loadPackageDefinition(packageDefinition) as GrpcObject & 
 
 const server = new grpc.Server();
 
+// Initialize repository, service, and gRPC service
+const userRepository: IUserRepository = new UserRepository();
+const userService = new UserService(userRepository);
+const grpcUserService = new GrpcUserService(userService);
+
 server.addService(userProto.user.UserService.service, {
-    GetUser: getUser,
+    GetUser: grpcUserService.getUser,
 });
 
 server.bindAsync(

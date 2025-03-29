@@ -1,16 +1,25 @@
-import { Request, Response } from 'express';
-import { UserService } from '../services/user.service';
+import {NextFunction, Request, Response} from 'express';
+import {UserService} from '@/services/user.service';
+import {inject, injectable} from "inversify";
+import {TYPES} from "@/types";
 
+@injectable()
 export class UserController {
-    constructor(private userService: UserService) {}
+    constructor(@inject(TYPES.UserService) private userService: UserService) {
+    }
 
-    login = async (req: Request, res: Response) => {
+    getUser = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { email, password } = req.body;
-            const token = await this.userService.login(email, password);
-            res.json({ token });
-        } catch (error) {
-            res.status(401).json({ message: 'Login failed' });
+            const userId = req.header("X-User-Id");
+            if (!userId) {
+                res.status(401).json({message: 'Unauthorized'});
+                return;
+            }
+            const user = await this.userService.getUserById(userId);
+
+            res.status(200).json(user);
+        } catch (e) {
+            next(e);
         }
     }
 }

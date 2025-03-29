@@ -2,11 +2,18 @@ import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
 import {generateEnvType} from "./generateType";
-import {EnvConfig} from "../dist/envConfig";
 
 dotenv.config(); // Load from .env first
 
-let envConfig: EnvConfig | null = null;
+const jsonPath = path.resolve(process.cwd(), "env.config.json");
+
+// type EnvConfig = {
+//     [K in keyof typeof jsonPath]: string;
+// };
+
+type EnvConfig = any;
+
+let envConfig: EnvConfig = null;
 
 // Define a logger function
 const log = (...args: any[]) => {

@@ -136,8 +136,8 @@ class UserResponse$Type extends MessageType<UserResponse> {
  */
 export const UserResponse = new UserResponse$Type();
 /**
- * @generated ServiceType for protobuf service user.UserService
+ * @generated ServiceType for protobuf service user.AuthService
  */
-export const UserService = new ServiceType("user.UserService", [
+export const UserService = new ServiceType("user.AuthService", [
     { name: "GetUser", options: {}, I: UserRequest, O: UserResponse }
 ]);

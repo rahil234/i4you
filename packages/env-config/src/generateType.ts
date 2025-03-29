@@ -21,7 +21,7 @@ function generateTypeDefinition(parsedConfig: Record<string, any>): string {
 
 export function generateEnvType(log: (...args: any[]) => void) {
     const jsonPath = path.resolve(process.cwd(), "env.config.json");
-    const distPath = path.resolve(__dirname, "../dist");
+    const distPath = process.cwd();
 
     log("dist ",distPath);
 

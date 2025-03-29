@@ -1,65 +1,79 @@
 import express, {Request, Response, NextFunction} from 'express';
-// import {expressjwt} from 'express-jwt';
+import "@/config"
+import {expressjwt} from 'express-jwt';
+import cors from 'cors';
 import {createProxyMiddleware} from 'http-proxy-middleware';
-import {Auth} from '../types/jwt-payload';
+import httpLogger from "@repo/http-logger";
+import * as path from "node:path";
+import {env} from "@/config";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
-// const jwtSecret = process.env.JWT_SECRET;
-const USER_SERVER_URI = process.env.USER_SERVER_URI;
-const PORT = process.env.PORT;
+app.use(httpLogger());
+app.use(httpLogger({logFilePath: path.join(__dirname, "logs/gateway.log")}));
 
-// if (!USER_SERVER_URL) {
-//     console.error('USER_HTTP_PORT environment variable is required');
-//     process.exit(1);
-// } else if (!PORT) {
-//     console.error('PORT environment variable is required');
-//     process.exit(1);
-// }
-//
-// if (jwtSecret) {
-//     app.use(
-//         expressjwt({
-//             secret: jwtSecret,
-//             algorithms: ['HS256'],
-//         }).unless({path: ['/public']})
-//     );
-// }
+app.use(cookieParser());
+
+const ALLOWED_ORIGINS = env.ALLOWED_ORIGINS;
+
+const allowedOrigins = ALLOWED_ORIGINS ? ALLOWED_ORIGINS.split(',') : ["http://localhost:3000"];
+
+app.use(cors({
+    origin: allowedOrigins,
+    credentials: true,
+}));
+
+app.use(
+    expressjwt({
+        secret: env.JWT_SECRET,
+        algorithms: ['HS256'],
+    }).unless({
+        path: [
+            '/public',
+            '/api/v1/auth/login',
+            '/api/v1/auth/register',
+            '/api/v1/auth/refresh-token',
+            '/api/v1/auth/logout',
+        ],
+    })
+);
 
 app.use((req: Request, _res: Response, next: NextFunction) => {
-    if (req.user) {
-        const user = req.user as Auth.JwtPayload;
-        req.headers['X-User-ID'] = user.sub;
-        console.log(`Forwarding request for user: ${user.name}`);
+    if (req.auth) {
+        req.headers['X-User-ID'] = req.auth.sub;
     }
-    console.log("URL: ", req.url);
+    console.log("Request User: ", req.auth);
     next();
 });
 
-const proxyMiddleware = createProxyMiddleware<Request, Response>({
-    target: USER_SERVER_URI,
-    changeOrigin: true,
-    pathRewrite: {'^/api/user': ''},
-    on: {
-        proxyReq: (proxyReq, req) => {
-            console.log("Request-proxing: ", req.url);
-            const userId = req.headers['X-User-ID'];
-            if (userId) {
-                proxyReq.setHeader('X-User-ID', userId);
-            }
+const createProxy = (target: string, pathRewrite: Record<string, string>) => {
+    return createProxyMiddleware<Request, Response>({
+        target,
+        changeOrigin: true,
+        pathRewrite,
+        on: {
+            proxyReq: (proxyReq, req) => {
+                const userId = req.headers['X-User-ID'];
+                if (userId) {
+                    proxyReq.setHeader('X-User-ID', userId);
+                }
+            },
+            proxyRes: (proxyRes, req, _res) => {
+                console.log(req.url, ": Response: ", proxyRes.statusCode);
+            },
+            error: (err, _req, res) => {
+                console.error('Proxy error:', err);
+                if ('status' in res) {
+                    res.status(500).json({error: 'Unexpected error'});
+                }
+            },
         },
-        proxyRes: (proxyRes, req, _res) => {
-            console.log(req.url, ": Response: ", proxyRes.statusCode);
-        },
-        error: (err, _req, res) => {
-            console.error('Proxy error:', err);
-            if ('status' in res)
-                res.status(500).json({error: 'Unexpected error'});
-        },
-    }
-});
+    });
+};
 
-app.use('/api/user', proxyMiddleware);
+app.use('/api/v1/auth', createProxy(env.AUTH_SERVER_URL, {'^/api/v1/auth': ''}));
+app.use('/api/v1/user', createProxy(env.USER_SERVER_URL, {'^/api/v1/user': ''}));
 
 app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
     if (err.name === 'UnauthorizedError') {
@@ -68,6 +82,16 @@ app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
         next(err);
     }
 });
+
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception:', err);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+const PORT = env.PORT;
 
 app.listen(PORT, () => {
     console.log(`Reverse proxy with JWT validation running on port ${PORT}`);

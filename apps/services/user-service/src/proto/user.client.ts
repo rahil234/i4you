@@ -10,7 +10,7 @@ import type { UserRequest } from "./user";
 import type { UnaryCall } from "@protobuf-ts/runtime-rpc";
 import type { RpcOptions } from "@protobuf-ts/runtime-rpc";
 /**
- * @generated from protobuf service user.UserService
+ * @generated from protobuf service user.AuthService
  */
 export interface IUserServiceClient {
     /**
@@ -19,7 +19,7 @@ export interface IUserServiceClient {
     getUser(input: UserRequest, options?: RpcOptions): UnaryCall<UserRequest, UserResponse>;
 }
 /**
- * @generated from protobuf service user.UserService
+ * @generated from protobuf service user.AuthService
  */
 export class UserServiceClient implements IUserServiceClient, ServiceInfo {
     typeName = UserService.typeName;

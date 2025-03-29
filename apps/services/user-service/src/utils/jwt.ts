@@ -1,32 +1,37 @@
-import jwt from 'jsonwebtoken';
-import config from '../config';
-
-// Payload interface for type safety
-interface JwtPayload {
-    id: string;
-    email: string;
-    [key: string]: any; // Allow additional claims
-}
+import jwt,{JwtPayload} from 'jsonwebtoken';
+import config from '@/config';
 
 /**
- * Generates a JWT token
+ * Generates an access token
  * @param payload Data to encode in the token
- * @returns Signed JWT token
+ * @returns Signed JWT access token
  */
-export const generateToken = (payload: JwtPayload): string => {
+export const generateAccessToken = (payload: JwtPayload) => {
     try {
         return jwt.sign(
             payload,
-            "rahil",
+            config.jwtSecret,
             { expiresIn: '15m' }
         );
-        // return jwt.sign(
-        //     payload,
-        //     config.jwtSecret,
-        //     { expiresIn: config.jwtExpiresIn }
-        // );
     } catch (error) {
-        throw new Error(`Token generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        throw new Error(`Access token generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+};
+
+/**
+ * Generates a refresh token
+ * @param payload Data to encode in the token
+ * @returns Signed JWT refresh token
+ */
+export const generateRefreshToken = (payload: { sub: string }) => {
+    try {
+        return jwt.sign(
+            payload,
+            config.jwtSecret,
+            { expiresIn: '7d' }
+        );
+    } catch (error) {
+        throw new Error(`Refresh token generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
 };
 
@@ -41,16 +46,4 @@ export const verifyToken = (token: string): JwtPayload => {
     } catch (error) {
         throw new Error(`Token verification failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
-};
-
-/**
- * Extracts token from Authorization header
- * @param header Authorization header value
- * @returns Token string or null if invalid
- */
-export const extractToken = (header: string | undefined): string | null => {
-    if (!header || !header.startsWith('Bearer ')) {
-        return null;
-    }
-    return header.split(' ')[1];
 };

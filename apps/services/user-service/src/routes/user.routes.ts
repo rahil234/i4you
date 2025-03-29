@@ -1,17 +1,17 @@
 import express from 'express';
-import {UserController} from '@/controllers/user.controller';
-import {UserService} from '@/services/user.service';
-import {UserRepositoryImpl} from '@/repositories/user.repository';
+import type {UserController} from '@/controllers/user.controller';
+import httpLogger from "@repo/http-logger";
+import {container} from "@/config/inversify.config";
+import {TYPES} from "@/types";
 
 const router = express.Router();
-const userRepository = new UserRepositoryImpl();
-const userService = new UserService(userRepository);
-const userController = new UserController(userService);
 
-router.get('/health', (req, res) => {
+const userController = container.get<UserController>(TYPES.UserController);
+
+router.get('/health', (_req, res) => {
     res.send('User Service is up and running');
 });
 
-router.post('/login', userController.login);
+router.get('/me', userController.getUser);
 
 export default router;
