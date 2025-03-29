@@ -3,6 +3,12 @@ import {getUserFromService} from './client';
 
 const app = express();
 
+const PORT = process.env.PORT;
+
+if (!PORT) {
+    throw new Error('PORT Environment Variable must be defined');
+}
+
 app.get('/user/:id', async (req, res) => {
     try {
         const user = await getUserFromService(req.params.id);
@@ -17,7 +23,6 @@ app.get('/user/:id', async (req, res) => {
     console.log(user);
 })()
 
-const PORT = 4002;
 
 app.listen(PORT, () => {
     console.log(`Order Service running on port ${PORT}`);

@@ -1,0 +1,15 @@
+FROM node:23-alpine
+
+WORKDIR /app
+
+RUN corepack enable
+
+# Copy root-level package files from the additional 'root' context
+COPY --from=root /package*.json /pnpm*.yaml ./
+COPY --from=root /packages /app/packages
+
+COPY . /app/apps/gateway
+
+RUN pnpm install --filter=gateway-server
+
+CMD ["pnpm", "run", "--filter=gateway-server", "dev"]

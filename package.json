@@ -2,6 +2,7 @@
   "name": "i4you",
   "version": "1.0.0",
   "scripts": {
+    "frontend": "pnpm run --filter=frontend dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -9,7 +10,8 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "pnpm": "^10.6.3",
+    "@types/node": "^22.13.10",
+    "pnpm": "^10.6.4",
     "turbo": "^2.4.4"
   },
   "packageManager": "pnpm@10.6.3"

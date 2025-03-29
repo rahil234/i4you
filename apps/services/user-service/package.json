@@ -2,9 +2,10 @@
   "name": "user-service",
   "version": "0.0.0",
   "scripts": {
-    "start": "node src/index.ts",
-    "dev": "tsx watch src/index.ts",
+    "start": "node src/app.ts",
+    "dev": "tsx watch src/app.ts",
     "build": "tsc --project ./tsconfig.json",
+    "build:noemit": "tsc --project ./tsconfig.json --noEmit",
     "proto": "protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --ts_out=src/proto --proto_path=src/proto src/proto/*.proto"
   },
   "dependencies": {
@@ -12,21 +13,31 @@
     "@grpc/proto-loader": "^0.7.13",
     "@protobuf-ts/runtime": "^2.9.5",
     "@protobuf-ts/runtime-rpc": "^2.9.5",
+    "@repo/env-config": "workspace:*",
+    "@repo/http-logger": "workspace:*",
+    "@repo/proto-files": "workspace:*",
     "@trpc/server": "^10.45.2",
+    "bcryptjs": "^3.0.2",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "inversify": "^7.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.12.1",
     "morgan": "~1.9.1",
-    "tsx": "^4.19.3",
     "zod": "^3.24.2"
   },
   "devDependencies": {
     "@protobuf-ts/plugin": "^2.9.4",
     "@types/cors": "^2.8.17",
+    "@repo/shared": "workspace:*",
     "@types/express": "^5.0.0",
-    "nodemon": "^3.1.9",
+    "@types/jsonwebtoken": "^9.0.9",
     "ts-proto": "^2.6.1",
+    "tsx": "^4.19.3",
     "typescript": "^5.8.2"
-  }
+  },
+  "packageManager": "pnpm@10.6.4+sha512.da3d715bfd22a9a105e6e8088cfc7826699332ded60c423b14ec613a185f1602206702ff0fe4c438cb15c979081ce4cb02568e364b15174503a63c7a8e2a5f6c"
 }
