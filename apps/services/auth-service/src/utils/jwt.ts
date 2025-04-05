@@ -1,4 +1,4 @@
-import jwt,{JwtPayload} from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '@/config';
 
 /**
@@ -7,16 +7,14 @@ import config from '@/config';
  * @returns Signed JWT access token
  */
 export const generateAccessToken = (payload: JwtPayload) => {
-    try {
-        console.log('Generating access token', config.jwtSecret);
-        return jwt.sign(
-            payload,
-            config.jwtSecret,
-            { expiresIn: '15m' }
-        );
-    } catch (error) {
-        throw new Error(`Access token generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    }
+  try {
+    console.log('Generating access token', config.jwtSecret);
+    return jwt.sign(payload, config.jwtSecret, { expiresIn: '15m' });
+  } catch (error) {
+    throw new Error(
+      `Access token generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
+  }
 };
 
 /**
@@ -25,15 +23,13 @@ export const generateAccessToken = (payload: JwtPayload) => {
  * @returns Signed JWT refresh token
  */
 export const generateRefreshToken = (payload: { sub: string }) => {
-    try {
-        return jwt.sign(
-            payload,
-            config.jwtSecret,
-            { expiresIn: '7d' }
-        );
-    } catch (error) {
-        throw new Error(`Refresh token generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    }
+  try {
+    return jwt.sign(payload, config.jwtSecret, { expiresIn: '7d' });
+  } catch (error) {
+    throw new Error(
+      `Refresh token generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
+  }
 };
 
 /**
@@ -42,9 +38,11 @@ export const generateRefreshToken = (payload: { sub: string }) => {
  * @returns Decoded payload
  */
 export const verifyRefreshToken = (token: string): JwtPayload => {
-    try {
-        return jwt.verify(token, config.jwtSecret) as JwtPayload;
-    } catch (error) {
-        throw new Error(`Token verification failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    }
+  try {
+    return jwt.verify(token, config.jwtSecret) as JwtPayload;
+  } catch (error) {
+    throw new Error(
+      `Token verification failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
+  }
 };

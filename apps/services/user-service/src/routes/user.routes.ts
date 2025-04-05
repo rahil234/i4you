@@ -1,6 +1,5 @@
 import express from 'express';
 import type {UserController} from '@/controllers/user.controller';
-import httpLogger from "@repo/http-logger";
 import {container} from "@/config/inversify.config";
 import {TYPES} from "@/types";
 

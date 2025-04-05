@@ -8,7 +8,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Slider } from "@/components/ui/slider"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { OnboardingProgress } from "@/components/onboarding-progress"
-import { usePreferencesStore } from "@/store"
+import { usePreferencesStore } from "@/store/authStore"
 
 export default function OnboardingPreferences() {
   const router = useRouter()

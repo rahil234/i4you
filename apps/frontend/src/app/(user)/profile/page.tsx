@@ -4,7 +4,7 @@ import {Button} from "@/components/ui/button"
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card"
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"
 import {Settings, Heart, Calendar, LogOut, Edit, Plus} from "lucide-react"
-import {useAuthStore} from "@/store";
+import {useAuthStore} from "@/store/authStore";
 
 export default function ProfilePage() {
     const user = {

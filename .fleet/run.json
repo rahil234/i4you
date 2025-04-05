@@ -1,0 +1,23 @@
+{
+    "configurations": [
+        {
+            "type": "docker-compose-up",
+            "name": "Docker-compose-up configuration",
+            "files": ["docker-compose.yaml"]
+        },
+        {
+            "type": "npm",
+            "name": "frontend",
+            "command": "run",
+            "packageFile": "./apps/frontend/package.json",
+            "scripts": "dev"
+        },
+        {
+            "type": "browser",
+            "name": "Browser configuration",
+            "dependsOn": ["frontend"],
+            "url": "localhost:3000",
+            "browserKind": "chrome"
+        }
+    ]
+}

@@ -8,9 +8,11 @@ import {useRouter} from "next/navigation"
 import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
-import {Flame, Loader2, Apple, Facebook} from "lucide-react"
+import {Flame, Loader2, Facebook} from "lucide-react"
 import {ThemeToggle} from "@/components/theme-toggle"
-import {useAuthStore} from "@/store";
+import {useAuthStore} from "@/store/authStore";
+import GoogleLogo from "@/components/auth/google-logo";
+import {useGoogleLogin} from "@react-oauth/google"
 
 export default function SignupPage() {
     const [email, setEmail] = useState("")
@@ -19,7 +21,7 @@ export default function SignupPage() {
     const [success, setSuccess] = useState<string | null>(null)
     const router = useRouter()
 
-    const {register, isLoading, signUpError} = useAuthStore()
+    const {register, googleAuthLogin, isLoading, error, signUpError} = useAuthStore()
 
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -29,12 +31,20 @@ export default function SignupPage() {
         setSuccess("Account created successfully! Please check your email for verification.")
 
 
-        // Redirect to login after a delay
+        // Redirect to log in after a delay
         if (!signUpError)
             setTimeout(() => {
                 router.push("/onboarding")
             }, 3000)
     }
+
+    const googleLogin = useGoogleLogin({
+        onSuccess: async (res) => {
+            console.log('Google Login Success:', res)
+            await googleAuthLogin(res.access_token)
+        },
+        onError: error => console.log('Login Failed:', error),
+    });
 
     return (
         <div className="flex min-h-screen flex-col items-center justify-center p-4">
@@ -54,9 +64,12 @@ export default function SignupPage() {
                 </div>
 
                 <div className="space-y-4">
-                    <Button variant="outline" className="w-full py-6 relative">
-                        <Apple className="h-5 w-5 absolute left-4"/>
-                        <span>Continue with Apple</span>
+                    <Button variant="outline" className="w-full py-6 relative"
+                            onClick={() => googleLogin()}
+                            disabled={isLoading}
+                    >
+                        <GoogleLogo className="h-5 w-5 absolute left-4"/>
+                        <span>Continue with Google</span>
                     </Button>
 
                     <Button variant="outline" className="w-full py-6 relative">
@@ -113,7 +126,10 @@ export default function SignupPage() {
                         <p className="text-xs text-muted-foreground">Password must be at least 8 characters long</p>
                     </div>
 
-                    {signUpError && <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{signUpError}</div>}
+                    {(signUpError || error) &&
+                        <div
+                            className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{signUpError || error}</div>
+                    }
 
                     {success && <div className="rounded-md bg-success/10 p-3 text-sm text-success">{success}</div>}
 

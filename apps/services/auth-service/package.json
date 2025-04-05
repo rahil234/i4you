@@ -4,6 +4,9 @@
   "scripts": {
     "start": "node src/app.ts",
     "dev": "tsx watch src/app.ts",
+    "lint": "eslint --ext .ts src",
+    "lint:fix": "eslint --fix --ext .ts src",
+    "format": "prettier --write .",
     "build": "tsc --project ./tsconfig.json",
     "build:noemit": "tsc --project ./tsconfig.json --noEmit",
     "proto": "protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --ts_out=src/proto --proto_path=src/proto src/proto/*.proto"
@@ -18,6 +21,7 @@
     "@repo/proto-files": "workspace:*",
     "@trpc/server": "^10.45.2",
     "@types/cookie-parser": "^1.4.8",
+    "axios": "^1.8.4",
     "bcryptjs": "^3.0.2",
     "cookie-parser": "~1.4.7",
     "cors": "^2.8.5",
@@ -31,14 +35,23 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.18.0",
     "@protobuf-ts/plugin": "^2.9.4",
+    "@repo/shared": "workspace:*",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.9",
+    "@typescript-eslint/eslint-plugin": "^8.29.0",
+    "@typescript-eslint/parser": "^8.29.0",
+    "eslint": "^9.22.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.2",
+    "globals": "^16.0.0",
+    "prettier": "^3.4.2",
     "ts-proto": "^2.6.1",
     "tsx": "^4.19.3",
-    "@repo/shared": "workspace:*",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.26.1"
   },
   "packageManager": "pnpm@10.6.4+sha512.da3d715bfd22a9a105e6e8088cfc7826699332ded60c423b14ec613a185f1602206702ff0fe4c438cb15c979081ce4cb02568e364b15174503a63c7a8e2a5f6c"
 }

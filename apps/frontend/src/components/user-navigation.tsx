@@ -4,7 +4,8 @@ import Link from "next/link"
 import {usePathname} from "next/navigation"
 import {Heart, MessageCircle, User} from "lucide-react"
 import {cn} from "@/lib/utils"
-import {useMatchesStore, useMessagesStore} from "@/store"
+import useMatchesStore from "@/store/matchesStore"
+import useMessagesStore from "@/store/messagesStore"
 import {Logo} from "@/components/logo"
 
 export function UserNavigation() {

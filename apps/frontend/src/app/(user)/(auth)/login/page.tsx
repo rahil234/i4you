@@ -8,15 +8,17 @@ import {useRouter} from "next/navigation"
 import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
-import {Flame, Loader2, Apple, Facebook} from "lucide-react"
-import {useAuthStore} from "@/store"
+import {Flame, Loader2, Facebook} from "lucide-react"
+import useAuthStore from "@/store/authStore"
 import {ThemeToggle} from "@/components/theme-toggle"
+import {useGoogleLogin} from "@react-oauth/google";
+import GoogleLogo from "@/components/auth/google-logo";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const router = useRouter()
-    const {login, isLoading, error} = useAuthStore()
+    const {login, googleAuthLogin, isLoading, error} = useAuthStore()
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -24,6 +26,14 @@ export default function LoginPage() {
         if (!error)
             router.push("/discover")
     }
+
+    const googleLogin = useGoogleLogin({
+        onSuccess: async (res) => {
+            console.log('Google Login Success:', res)
+            await googleAuthLogin(res.access_token)
+        },
+        onError: error => console.log('Login Failed:', error),
+    });
 
     return (
         <div className="flex min-h-screen flex-col items-center justify-center p-4">
@@ -43,9 +53,12 @@ export default function LoginPage() {
                 </div>
 
                 <div className="space-y-4">
-                    <Button variant="outline" className="w-full py-6 relative">
-                        <Apple className="h-5 w-5 absolute left-4"/>
-                        <span>Continue with Apple</span>
+                    <Button variant="outline" className="w-full py-6 relative"
+                            onClick={() => googleLogin()}
+                            disabled={isLoading}
+                    >
+                        <GoogleLogo className="h-5 w-5 absolute left-4"/>
+                        <span>Continue with Google</span>
                     </Button>
 
                     <Button variant="outline" className="w-full py-6 relative">

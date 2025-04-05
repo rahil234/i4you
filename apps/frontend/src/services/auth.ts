@@ -22,6 +22,19 @@ export const login = async (email: string, password: string) => {
     }
 };
 
+export const googleAuthLogin = async (token: string) => {
+    try {
+        const response = await api.post("/auth/login/google", {token}, {withCredentials: true});
+        return {data: response.data, error: null};
+    } catch (error) {
+        console.log("Error: ", error);
+        if ((error as Error).status === 401) {
+            return {data: null, error: "Invalid username or password"};
+        }
+        return {data: null, error: (error as Error).message};
+    }
+};
+
 export const register = async (name: string, email: string, password: string) => {
     try {
         const response = await api.post("/auth/register", {name, email, password});
@@ -34,7 +47,6 @@ export const register = async (name: string, email: string, password: string) =>
 export const getUser = async () => {
     try {
         const response = await api.get("/user/me");
-        console.log("me res", response)
         return {data: response.data, error: null};
     } catch (error) {
         return {data: null, error: (error as Error).message};
@@ -42,9 +54,17 @@ export const getUser = async () => {
 };
 
 export const logout = async () => {
-    await api.post("/auth/logout", {},
-        {withCredentials: true}
-    );
+    try {
+        await api.post("/auth/logout", {},
+            {withCredentials: true}
+        );
+        return {error: null};
+    } catch (error) {
+        if ((error as Error).status === 401) {
+            return {error: "Invalid username or password"};
+        }
+        return {error: (error as Error).message};
+    }
 };
 
 export const refreshToken = async () => {
@@ -61,6 +81,7 @@ export const refreshToken = async () => {
 
 export default {
     login,
+    googleAuthLogin,
     register,
     getUser,
     logout,
