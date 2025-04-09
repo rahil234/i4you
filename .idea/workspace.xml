@@ -5,67 +5,38 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9634f5b5-f135-4866-b1d6-9eb36f37aa3e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/apps/frontend/src/app/(user)/(auth)/layout.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/frontend/src/assets/google-logo.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/frontend/src/components/auth/google-logo.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/frontend/src/store/matchesStore.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/frontend/src/store/messagesStore.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/frontend/src/store/preferencesStore.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/auth-service/.eslintignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/auth-service/.prettierignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/auth-service/.prettierrc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/auth-service/src/utils/google-auth.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.devcontainer/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/frontend/src/app/(user)/loading.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/frontend/src/components/auth/user-session-hydrator.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/frontend/src/components/loading-indicator.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/frontend/src/components/test-page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/frontend/src/lib/auth/refresh-session.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/frontend/src/middleware.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/next.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/next.config.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/forgot-password/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(user)/(auth)/forgot-password/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/layout.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/login-with-otp/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(user)/(auth)/login-with-otp/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(user)/(auth)/login/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/reset-password/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(user)/(auth)/reset-password/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/signup/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(user)/(auth)/signup/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/verify-otp/loading.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(user)/(auth)/verify-otp/loading.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/verify-otp/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(user)/(auth)/verify-otp/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(user)/discover/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(user)/discover/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(user)/(auth)/forgot-password/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/forgot-password/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(user)/(auth)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(user)/(auth)/login-with-otp/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/login-with-otp/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(user)/(auth)/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/login/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(user)/(auth)/reset-password/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/reset-password/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(user)/(auth)/signup/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/signup/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(user)/(auth)/verify-otp/loading.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/verify-otp/loading.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(user)/(auth)/verify-otp/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/verify-otp/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(user)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(user)/layout.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(user)/profile/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(user)/profile/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/onboarding/preferences/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/onboarding/preferences/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/components/user-navigation.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/components/user-navigation.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/components/user-profile-card.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/components/user-profile-card.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/lib/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/lib/api.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/frontend/src/services/auth.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/services/auth.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/store/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/store/authStore.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/env.config.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/env.config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/store/authStore.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/store/authStore.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/store/matchesStore.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/store/matchesStore.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/types/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/types/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/gateway/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/gateway/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/gateway/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/gateway/src/app.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/services/auth-service/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/app.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/config/db.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/config/db.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/config/env.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/config/env.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/config/grpc.server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/config/grpc.server.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/config/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/config/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/config/inversify.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/config/inversify.config.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/controllers/auth.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/controllers/auth.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/dtos/login.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/dtos/login.dto.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/dtos/register.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/dtos/register.dto.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/models/auth.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/models/auth.model.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/proto/user.client.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/proto/user.client.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/proto/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/proto/user.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/repositories/auth.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/repositories/auth.repository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/repositories/base.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/repositories/base.repository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/repositories/interfaces/IAuthRepository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/repositories/interfaces/IAuthRepository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/repositories/interfaces/IBaseRepositoryInterface.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/repositories/interfaces/IBaseRepositoryInterface.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/routes/auth.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/routes/auth.routes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/services/auth.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/services/auth.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/types/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/types/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/utils/bcrypt.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/utils/bcrypt.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/utils/cookie.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/utils/cookie.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/utils/jwt.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/utils/jwt.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/order-service/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/order-service/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/services/user-service/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/routes/user.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/routes/user.routes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/http-logger/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/http-logger/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
     </list>
@@ -77,8 +48,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Dockerfile" />
         <option value="TypeScript JSX File" />
+        <option value="Dockerfile" />
         <option value="TypeScript File" />
       </list>
     </option>
@@ -125,14 +96,23 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Attach to Node.js/Chrome.Auth Service Debug.executor&quot;: &quot;Debug&quot;,
+    &quot;Attach to Node.js/Chrome.Gateway Server Debug.executor&quot;: &quot;Debug&quot;,
+    &quot;Attach to Node.js/Chrome.Runtime Debug.executor&quot;: &quot;Debug&quot;,
+    &quot;Attach to Node.js/Chrome.User Service Debug.executor&quot;: &quot;Debug&quot;,
+    &quot;Docker.Run Auth-Service.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.Run Gateway-Server.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.Run User-Service.executor&quot;: &quot;Run&quot;,
     &quot;Docker.docker-compose-old.yaml: Compose Deployment.executor&quot;: &quot;Run&quot;,
     &quot;Docker.docker-compose.yaml.auth-service: Compose Deployment.executor&quot;: &quot;Run&quot;,
     &quot;Docker.docker-compose.yaml.chat-service: Compose Deployment.executor&quot;: &quot;Run&quot;,
     &quot;Docker.docker-compose.yaml.gateway-server: Compose Deployment.executor&quot;: &quot;Run&quot;,
     &quot;Docker.docker-compose.yaml: Compose Deployment.executor&quot;: &quot;Run&quot;,
     &quot;Docker.docker-compose.yaml[auth-service, gateway-server, user-service]: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;JavaScript Debug.Debug Frontend.executor&quot;: &quot;Debug&quot;,
     &quot;JavaScript Debug.localhost:3000.executor&quot;: &quot;Debug&quot;,
     &quot;JavaScript Debug.localhost:3001.executor&quot;: &quot;Debug&quot;,
+    &quot;JavaScript Debug.refresh-token.executor&quot;: &quot;Debug&quot;,
     &quot;Node.js.client.ts.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
@@ -144,12 +124,41 @@
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;npm.frontend &gt; dev.executor&quot;: &quot;Run&quot;,
+    &quot;npm.frontend.executor&quot;: &quot;Run&quot;,
     &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/rahilk/Projects/i4you/apps/services/chat-service/node_modules/prettier&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;bigdataide_conn_settings&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;ts.external.directory.path&quot;: &quot;/Users/rahilk/Projects/i4you/apps/services/chat-service/node_modules/typescript/lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RdControllerToolWindowsLayoutState" isNewUi="true">
+    <layout>
+      <window_info id="Bookmarks" side_tool="true" />
+      <window_info id="Merge Requests" />
+      <window_info id="npm" side_tool="true" />
+      <window_info id="Commit_Guest" show_stripe_button="false" />
+      <window_info id="Pull Requests" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" />
+      <window_info id="Commit" order="1" weight="0.25" />
+      <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Database Changes" />
+      <window_info anchor="bottom" id="TypeScript" />
+      <window_info anchor="bottom" id="TODO" />
+      <window_info anchor="bottom" id="File Transfer" />
+      <window_info anchor="bottom" id="Version Control" order="0" />
+      <window_info anchor="bottom" id="Problems" order="1" />
+      <window_info anchor="bottom" id="Problems View" order="2" />
+      <window_info anchor="bottom" id="Terminal" order="3" />
+      <window_info anchor="bottom" id="Services" order="4" />
+      <window_info anchor="right" id="Endpoints" />
+      <window_info anchor="right" id="Coverage" side_tool="true" />
+      <window_info anchor="right" id="Notifications" order="0" />
+      <window_info anchor="right" id="AIAssistant" order="1" weight="0.25" />
+      <window_info anchor="right" id="Database" order="2" weight="0.25" />
+      <window_info anchor="right" id="Gradle" order="3" weight="0.25" />
+      <window_info anchor="right" id="Maven" order="4" weight="0.25" />
+    </layout>
+  </component>
   <component name="ReactDesignerToolWindowState">
     <option name="myId2Visible">
       <map>
@@ -168,15 +177,76 @@
       <recent name="$PROJECT_DIR$/apps/gateway" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/apps/frontend/src" />
+      <recent name="$PROJECT_DIR$/apps/frontend/src/app" />
       <recent name="$PROJECT_DIR$/apps/frontend/src/app/(user)" />
       <recent name="$PROJECT_DIR$/apps/frontend/src/components/auth" />
       <recent name="$PROJECT_DIR$/apps/frontend/src/components/auth/google" />
-      <recent name="$PROJECT_DIR$/apps/frontend/src/assets" />
-      <recent name="$PROJECT_DIR$/packages/proto-files/src/greeter" />
     </key>
   </component>
-  <component name="RunManager" selected="JavaScript Debug.localhost:3000">
-    <configuration name="localhost:3000" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:3000">
+  <component name="RunManager" selected="Docker.Run Auth-Service">
+    <configuration name="Auth Service Debug" type="ChromiumRemoteDebugType" factoryName="Chromium Remote" activateToolWindowBeforeRun="false" port="9229">
+      <method v="2">
+        <option name="RunConfigurationTask" enabled="true" run_configuration_name="Run Auth-Service" run_configuration_type="docker-deploy" />
+      </method>
+    </configuration>
+    <configuration name="Gateway Server Debug" type="ChromiumRemoteDebugType" factoryName="Chromium Remote" port="9220">
+      <method v="2">
+        <option name="RunConfigurationTask" enabled="true" run_configuration_name="Run Gateway-Server" run_configuration_type="docker-deploy" />
+      </method>
+    </configuration>
+    <configuration name="User Service Debug" type="ChromiumRemoteDebugType" factoryName="Chromium Remote" port="9221">
+      <method v="2">
+        <option name="RunConfigurationTask" enabled="true" run_configuration_name="Run User-Service" run_configuration_type="docker-deploy" />
+      </method>
+    </configuration>
+    <configuration name="Debug Frontend" type="JavascriptDebugType" temporary="true" uri="http://localhost:3000" useFirstLineBreakpoints="true">
+      <mapping url="http://localhost:3000" local-file="$PROJECT_DIR$/apps/frontend" />
+      <method v="2" />
+    </configuration>
+    <configuration name="refresh-token" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:4000/api/v1/auth/refresh-token">
+      <method v="2" />
+    </configuration>
+    <configuration name="Run Auth-Service" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="envFilePath" value="" />
+          <option name="services">
+            <list>
+              <option value="auth-service" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="docker-compose.yaml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="Run Gateway-Server" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="envFilePath" value="" />
+          <option name="services">
+            <list>
+              <option value="gateway-server" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="docker-compose.yaml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="Run User-Service" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="envFilePath" value="" />
+          <option name="services">
+            <list>
+              <option value="user-service" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="docker-compose.yaml" />
+        </settings>
+      </deployment>
       <method v="2" />
     </configuration>
     <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
@@ -205,13 +275,22 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Attach to Node.js/Chrome.User Service Debug" />
+      <item itemvalue="Attach to Node.js/Chrome.Gateway Server Debug" />
+      <item itemvalue="Attach to Node.js/Chrome.Auth Service Debug" />
+      <item itemvalue="Compound.Start And Debug Server" />
+      <item itemvalue="Docker.Run Gateway-Server" />
+      <item itemvalue="Docker.Run User-Service" />
+      <item itemvalue="Docker.Run Auth-Service" />
       <item itemvalue="Docker.docker-compose.yaml[auth-service, gateway-server, user-service]: Compose Deployment" />
       <item itemvalue="Docker.docker-compose.yaml.auth-service: Compose Deployment" />
-      <item itemvalue="JavaScript Debug.localhost:3000" />
+      <item itemvalue="JavaScript Debug.refresh-token" />
+      <item itemvalue="JavaScript Debug.Debug Frontend" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JavaScript Debug.localhost:3000" />
+        <item itemvalue="JavaScript Debug.Debug Frontend" />
+        <item itemvalue="JavaScript Debug.refresh-token" />
         <item itemvalue="Docker.docker-compose.yaml.auth-service: Compose Deployment" />
       </list>
     </recent_temporary>
@@ -267,7 +346,13 @@
       <workItem from="1743655040459" duration="532000" />
       <workItem from="1743656795995" duration="13916000" />
       <workItem from="1743738369000" duration="22721000" />
-      <workItem from="1743840587115" duration="4659000" />
+      <workItem from="1743840587115" duration="11469000" />
+      <workItem from="1743964631535" duration="10821000" />
+      <workItem from="1744009964218" duration="743000" />
+      <workItem from="1744011471127" duration="295000" />
+      <workItem from="1744011773289" duration="800000" />
+      <workItem from="1744012580186" duration="23248000" />
+      <workItem from="1744202265300" duration="1170000" />
     </task>
     <servers />
   </component>

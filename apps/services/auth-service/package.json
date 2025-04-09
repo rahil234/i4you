@@ -4,6 +4,7 @@
   "scripts": {
     "start": "node src/app.ts",
     "dev": "tsx watch src/app.ts",
+    "debug": "node --inspect=0.0.0.0:9229 --import tsx src/app.ts",
     "lint": "eslint --ext .ts src",
     "lint:fix": "eslint --fix --ext .ts src",
     "format": "prettier --write .",

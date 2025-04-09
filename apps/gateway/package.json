@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "start": "node ./dist/server.js",
-    "dev": "tsx watch src/app.ts"
+    "dev": "tsx watch src/app.ts",
+    "debug": "tsx watch --inspect=0.0.0.0:9220 src/app.ts"
   },
   "dependencies": {
     "@repo/env-config": "workspace:*",

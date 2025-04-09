@@ -1,6 +1,7 @@
 {
-  "name": "@repo/http-logger",
-  "version": "1.0.0",
+  "name": "rahil-express-logr",
+  "version": "1.0.2",
+  "private": false,
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

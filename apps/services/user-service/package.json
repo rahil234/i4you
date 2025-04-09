@@ -5,6 +5,7 @@
     "start": "node src/app.ts",
     "dev": "tsx watch src/app.ts",
     "build": "tsc --project ./tsconfig.json",
+    "debug": "node --inspect=0.0.0.0:9221 --import tsx src/app.ts",
     "build:noemit": "tsc --project ./tsconfig.json --noEmit",
     "proto": "protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --ts_out=src/proto --proto_path=src/proto src/proto/*.proto"
   },

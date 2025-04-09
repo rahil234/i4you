@@ -24,6 +24,8 @@ export class AuthController {
   googleLogin = async (req: Request, res: Response) => {
     const { token } = req.body;
 
+    console.log('Google login token:', token);
+
     // verify the token
     if (!token) {
       res.status(401).json({ message: 'Unauthorized' });

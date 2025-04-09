@@ -32,6 +32,7 @@ app.use(
         path: [
             '/public',
             '/api/v1/auth/login',
+            '/api/v1/auth/login/google',
             '/api/v1/auth/register',
             '/api/v1/auth/refresh-token',
             '/api/v1/auth/logout',

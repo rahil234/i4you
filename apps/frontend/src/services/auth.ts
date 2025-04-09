@@ -70,7 +70,7 @@ export const logout = async () => {
 export const refreshToken = async () => {
     const baseURL = process.env.VUE_APP_AUTH_SERVER_URL || "http://localhost:4000/api/v1";
     try {
-        const response = await axios.get(`${baseURL}/auth/refresh-token`, {
+        const response = await axios.post(`${baseURL}/auth/refresh-token`,{}, {
             withCredentials: true
         });
         return {data: response.data, error: null};
