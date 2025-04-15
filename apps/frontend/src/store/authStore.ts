@@ -1,7 +1,9 @@
 import type { AuthState } from '@/types';
 import { create } from 'zustand/index';
 import { devtools, persist } from 'zustand/middleware';
-import auth from '@/services/auth';
+import { AuthService } from '@/services/auth.service';
+
+const auth = new AuthService();
 
 interface AuthStore extends AuthState {
   login: (email: string, password: string) => Promise<void>;
@@ -30,6 +32,8 @@ export const useAuthStore = AuthStore(
           login: async (email, password) => {
             set({ isLoading: true, error: null });
             const { data, error } = await auth.login(email, password);
+
+            console.log('login data', data, error);
 
             if (error) {
               set({ error: error, isLoading: false });

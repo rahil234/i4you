@@ -1,7 +1,6 @@
-import {setupEnvConfig,getEnvConfig} from "@repo/env-config";
+import { setupEnvConfig } from 'env-config';
+import { env as config } from '../env.config';
 
-setupEnvConfig({debug: false});
-
-export const env = getEnvConfig();
+export const env = setupEnvConfig(config, { debug: false });
 
 export default env;

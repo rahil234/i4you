@@ -25,6 +25,7 @@ export class UserGrpcService {
         return;
       }
 
+      // noinspection Annotator
       const response: GetUserResponse = {
         id: user.id.toString(),
         name: user.name,

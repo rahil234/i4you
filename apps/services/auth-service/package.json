@@ -17,7 +17,7 @@
     "@grpc/proto-loader": "^0.7.13",
     "@protobuf-ts/runtime": "^2.9.5",
     "@protobuf-ts/runtime-rpc": "^2.9.5",
-    "@repo/env-config": "workspace:*",
+    "env-config": "workspace:*",
     "proto-files": "workspace:*",
     "@trpc/server": "^10.45.2",
     "@types/cookie-parser": "^1.4.8",

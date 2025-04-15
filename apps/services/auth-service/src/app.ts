@@ -4,9 +4,10 @@ import cookieParser from 'cookie-parser';
 
 import httpLogger from 'express-logr';
 
-import authRoutes from '@/routes/auth.routes';
-import { connectDB } from '@/config/db.config';
 import { env } from '@/config';
+import { connectDB } from '@/config/db.config';
+import authRoutes from '@/routes/auth.routes';
+import { errorHandlerMiddleware } from '@/middlwares/error-handler.middleware';
 
 const app = express();
 
@@ -25,6 +26,8 @@ app.use('/', authRoutes);
 app.get('/health', (_req, res) => {
   res.send('Auth Service is up and running');
 });
+
+app.use(errorHandlerMiddleware);
 
 const startServer = async () => {
   await connectDB();

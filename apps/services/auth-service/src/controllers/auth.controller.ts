@@ -1,16 +1,17 @@
-import { Request, Response } from 'express';
-import { AuthService } from '@/services/auth.service';
 import { inject, injectable } from 'inversify';
-import { verifyRefreshToken } from '@/utils/jwt';
+
 import { TYPES } from '@/types';
-import { setRefreshCookie } from '@/utils/cookie';
 import { getUserById } from '@/grpc/user.client.helpers';
+import { AuthService } from '@/services/auth.service';
+import { handleAsync } from '@/utils/handle-async';
+import { setRefreshCookie } from '@/utils/cookie';
+import { verifyRefreshToken } from '@/utils/jwt';
 
 @injectable()
 export class AuthController {
   constructor(@inject(TYPES.AuthService) private authService: AuthService) {}
 
-  getUser = async (req: Request, res: Response) => {
+  getUser = handleAsync(async (req, res) => {
     try {
       const { userId } = req.body;
       console.log('Getting user with ID:', userId);
@@ -21,9 +22,9 @@ export class AuthController {
       console.error('Error getting user:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
-  };
+  });
 
-  login = async (req: Request, res: Response) => {
+  login = handleAsync(async (req, res) => {
     const { accessToken, refreshToken, user } = await this.authService.login(
       req.body
     );
@@ -33,9 +34,9 @@ export class AuthController {
     console.log('User:', user, 'Token:', accessToken);
 
     res.json({ accessToken, user });
-  };
+  });
 
-  googleLogin = async (req: Request, res: Response) => {
+  googleLogin = handleAsync(async (req, res) => {
     const { token } = req.body;
 
     console.log('Google login token:', token);
@@ -56,9 +57,9 @@ export class AuthController {
     res.json({ accessToken, user });
 
     res.status(401).json({ message: 'Login failed' });
-  };
+  });
 
-  register = async (req: Request, res: Response) => {
+  register = handleAsync(async (req, res) => {
     const { accessToken, user, refreshToken } = await this.authService.register(
       req.body
     );
@@ -66,9 +67,9 @@ export class AuthController {
     setRefreshCookie(res, refreshToken);
 
     res.status(201).json({ accessToken, user });
-  };
+  });
 
-  refreshToken = async (req: Request, res: Response) => {
+  refreshToken = handleAsync(async (req, res) => {
     const { refreshToken } = req.cookies;
     console.log('refreshing token', refreshToken);
 
@@ -95,10 +96,10 @@ export class AuthController {
     setRefreshCookie(res, newRefreshToken);
 
     res.json({ token: accessToken, user });
-  };
+  });
 
-  logout = (_req: Request, res: Response) => {
+  logout = handleAsync((_req, res) => {
     res.clearCookie('refreshToken');
     res.status(200).json({ message: 'Logged out' });
-  };
+  });
 }

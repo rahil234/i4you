@@ -1,16 +1,22 @@
 import { injectable, inject } from 'inversify';
 import { hashPassword, comparePassword } from '@/utils/bcrypt';
-import {
-  generateAccessToken,
-  generateRefreshToken,
-  verifyRefreshToken,
-} from '@/utils/jwt';
+import { generateAccessToken, generateRefreshToken } from '@/utils/jwt';
 import IAuthRepository from '@/repositories/interfaces/IAuthRepository';
 import { type LoginRequestDTO, LoginResponseDTO } from '@/dtos/login.dto';
 import type { RegisterRequestDTO } from '@/dtos/register.dto';
 import { TYPES } from '@/types';
 import fetchGoogleUser from '@/utils/google-auth';
 import { getUserById } from '@/grpc/user.client.helpers';
+
+export class BadRequestError extends Error {
+  status = 400;
+
+  constructor(message = 'Bad Request') {
+    super(message);
+    this.name = 'BadRequestError';
+    this.status = 400;
+  }
+}
 
 @injectable()
 export class AuthService {
@@ -27,7 +33,7 @@ export class AuthService {
 
     const user = await this.authRepository.findByEmail(loginDTO.email);
     if (!user || !(await comparePassword(loginDTO.password, user.password))) {
-      throw new Error('Invalid credentials');
+      throw new BadRequestError('Invalid credentials');
     }
 
     const accessToken = generateAccessToken({

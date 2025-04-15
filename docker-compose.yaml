@@ -23,7 +23,6 @@ services:
     #      [ "pnpm","run", "--filter", "auth-service","debug" ]
     volumes:
       - ./apps/services/auth-service:/app/apps/services/auth-service
-      - /app/node_modules
       - /app/apps/services/auth-service/node_modules
       - ./packages:/app/packages
     environment:
@@ -59,7 +58,6 @@ services:
     #      [ "pnpm","run", "--filter", "user-service","debug" ]
     volumes:
       - ./apps/services/user-service:/app/apps/services/user-service
-      - /app/node_modules
       - /app/apps/services/auth-service/node_modules
       - ./packages:/app/packages
     environment:

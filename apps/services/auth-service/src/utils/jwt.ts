@@ -8,7 +8,6 @@ import config from '@/config';
  */
 export const generateAccessToken = (payload: JwtPayload) => {
   try {
-    console.log('Generating access token', config.jwtSecret);
     return jwt.sign(payload, config.jwtSecret, { expiresIn: '15m' });
   } catch (error) {
     throw new Error(

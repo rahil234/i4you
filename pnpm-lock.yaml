@@ -213,9 +213,6 @@ importers:
 
   apps/gateway:
     dependencies:
-      '@repo/env-config':
-        specifier: workspace:*
-        version: link:../../packages/env-config
       '@types/cookie-parser':
         specifier: ^1.4.8
         version: 1.4.8(@types/express@5.0.0)
@@ -231,6 +228,9 @@ importers:
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
+      env-config:
+        specifier: workspace:*
+        version: link:../../packages/env-config
       express:
         specifier: ^4.21.2
         version: 4.21.2
@@ -274,9 +274,6 @@ importers:
       '@protobuf-ts/runtime-rpc':
         specifier: ^2.9.5
         version: 2.9.5
-      '@repo/env-config':
-        specifier: workspace:*
-        version: link:../../../packages/env-config
       '@trpc/server':
         specifier: ^10.45.2
         version: 10.45.2
@@ -301,6 +298,9 @@ importers:
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
+      env-config:
+        specifier: workspace:*
+        version: link:../../../packages/env-config
       express:
         specifier: ^4.21.2
         version: 4.21.2
@@ -547,9 +547,6 @@ importers:
       '@protobuf-ts/runtime-rpc':
         specifier: ^2.9.5
         version: 2.9.5
-      '@repo/env-config':
-        specifier: workspace:*
-        version: link:../../../packages/env-config
       '@trpc/server':
         specifier: ^10.45.2
         version: 10.45.2
@@ -568,6 +565,9 @@ importers:
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
+      env-config:
+        specifier: workspace:*
+        version: link:../../../packages/env-config
       express:
         specifier: ^4.21.2
         version: 4.21.2
@@ -589,6 +589,9 @@ importers:
       proto-files:
         specifier: workspace:*
         version: link:../../../packages/proto-files
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
       zod:
         specifier: ^3.24.2
         version: 3.24.2

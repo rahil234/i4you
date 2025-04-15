@@ -1,3 +1,5 @@
+// noinspection DuplicatedCode
+
 import { Model, Document } from 'mongoose';
 import IBaseRepository from './interfaces/IBaseRepositoryInterface';
 

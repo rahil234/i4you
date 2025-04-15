@@ -20,17 +20,17 @@ function generateTypeDefinition(parsedConfig: Record<string, any>): string {
 }
 
 export function generateEnvType(log: (...args: any[]) => void) {
-    const jsonPath = path.resolve(process.cwd(), "env.config.json");
+    const jsonPath = path.resolve(process.cwd(), "env.config.ts");
     const distPath = process.cwd();
 
     log("dist ",distPath);
 
     if (!fs.existsSync(jsonPath)) {
-        console.warn("⚠️ env.config.json not found. Skipping type generation.");
+        console.warn("⚠️ env.config.ts not found. Skipping type generation.");
         return;
     }
 
-    log("📂 Generating TypeScript type from env.config.json...");
+    log("📂 Generating TypeScript type from env.config.ts...");
 
     const jsonData = fs.readFileSync(jsonPath, "utf-8");
     const parsedConfig = JSON.parse(jsonData);

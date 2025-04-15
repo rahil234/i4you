@@ -1,18 +1,13 @@
 import env from '@/config/env.config';
-import {PrivateKey, Secret, SignOptions} from 'jsonwebtoken';
 
 interface Config {
-    env: typeof env;
-    jwtSecret: Secret | PrivateKey;
-    jwtExpiresIn: SignOptions["expiresIn"];
+  env: typeof env;
 }
 
-const config = {
-    env,
-    jwtSecret: env.JWT_SECRET,
-    jwtExpiresIn: env.JWT_EXPIRES_IN,
+const config: Config = {
+  env
 };
 
-export {env};
+export { env };
 
 export default config;

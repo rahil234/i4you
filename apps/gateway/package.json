@@ -7,7 +7,7 @@
     "debug": "tsx watch --inspect=0.0.0.0:9220 src/app.ts"
   },
   "dependencies": {
-    "@repo/env-config": "workspace:*",
+    "env-config": "workspace:*",
     "@types/cookie-parser": "^1.4.8",
     "cookie-parser": "~1.4.7",
     "cors": "^2.8.5",
