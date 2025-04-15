@@ -4,10 +4,24 @@ import { inject, injectable } from 'inversify';
 import { verifyRefreshToken } from '@/utils/jwt';
 import { TYPES } from '@/types';
 import { setRefreshCookie } from '@/utils/cookie';
+import { getUserById } from '@/grpc/user.client.helpers';
 
 @injectable()
 export class AuthController {
   constructor(@inject(TYPES.AuthService) private authService: AuthService) {}
+
+  getUser = async (req: Request, res: Response) => {
+    try {
+      const { userId } = req.body;
+      console.log('Getting user with ID:', userId);
+      const user = await getUserById(userId);
+      console.log('User:', user);
+      res.json(user);
+    } catch (error) {
+      console.error('Error getting user:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  };
 
   login = async (req: Request, res: Response) => {
     const { accessToken, refreshToken, user } = await this.authService.login(
@@ -57,14 +71,30 @@ export class AuthController {
   refreshToken = async (req: Request, res: Response) => {
     const { refreshToken } = req.cookies;
     console.log('refreshing token', refreshToken);
+
     if (!refreshToken) {
       res.status(401).json({ message: 'Unauthorized' });
       return;
     }
 
-    verifyRefreshToken(refreshToken);
+    const { sub: userId } = verifyRefreshToken(refreshToken);
 
-    res.json({ token: refreshToken });
+    if (!userId) {
+      res.status(401).json({ message: 'Unauthorized' });
+      return;
+    }
+
+    const {
+      accessToken,
+      user,
+      refreshToken: newRefreshToken,
+    } = await this.authService.refreshToken(userId);
+
+    console.log('new refresh token', newRefreshToken);
+
+    setRefreshCookie(res, newRefreshToken);
+
+    res.json({ token: accessToken, user });
   };
 
   logout = (_req: Request, res: Response) => {

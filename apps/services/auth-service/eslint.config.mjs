@@ -8,7 +8,6 @@ export default defineConfig([
   // Base JS + TS recommended configs
   js.configs.recommended,
   ...tseslint.configs.recommended,
-
   // Custom config block
   {
     files: ['**/*.{js,ts}'],
@@ -18,6 +17,7 @@ export default defineConfig([
       globals: {
         ...globals.node,
       },
+      parser: '@typescript-eslint/parser',
     },
     plugins: {
       prettier: prettierPlugin,

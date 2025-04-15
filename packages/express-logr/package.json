@@ -1,6 +1,6 @@
 {
-  "name": "rahil-express-logr",
-  "version": "1.0.2",
+  "name": "express-logr",
+  "version": "1.0.6",
   "private": false,
   "type": "module",
   "main": "dist/index.js",

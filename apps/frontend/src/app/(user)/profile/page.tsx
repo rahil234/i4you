@@ -6,7 +6,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Settings, Heart, Calendar, LogOut, Edit, Plus } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { useRouter } from 'next/navigation';
-import { useNavigation } from 'react-day-picker';
 
 export default function ProfilePage() {
   const user = {
@@ -41,6 +40,10 @@ export default function ProfilePage() {
     return <div>Loading...</div>;
   }
 
+  if (!user2) {
+    return <div>User not found</div>;
+  }
+
   return (
     <UserLayout>
       <div className="max-w-lg mx-auto pb-20 pt-6 px-4">
@@ -55,7 +58,7 @@ export default function ProfilePage() {
           <CardContent className="pt-6">
             <div className="flex flex-col items-center mb-6">
               <Avatar className="h-24 w-24 mb-4">
-                <AvatarImage src="/placeholder.svg?height=96&width=96" alt={user.name} />
+                <AvatarImage src="/placeholder.svg?height=96&width=96" alt={user2?.name} />
                 <AvatarFallback>
                   {user.name
                     .split(' ')
@@ -65,7 +68,7 @@ export default function ProfilePage() {
               </Avatar>
 
               <h2 className="text-xl font-bold">
-                {user.name}, {user.age}
+                {user2.name}, {user2.age}
               </h2>
               <p className="text-muted-foreground">{user.location}</p>
 

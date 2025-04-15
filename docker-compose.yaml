@@ -17,10 +17,10 @@ services:
     #        - action: sync
     #          path: ./apps/services/auth-service/src
     #          target: /app/apps/services/auth-service/src
-#    ports:
-#      - "9229:9229"
-#    command:
-#      [ "pnpm","run", "--filter", "auth-service","debug" ]
+    #    ports:
+    #      - "9229:9229"
+    #    command:
+    #      [ "pnpm","run", "--filter", "auth-service","debug" ]
     volumes:
       - ./apps/services/auth-service:/app/apps/services/auth-service
       - /app/node_modules
@@ -29,7 +29,8 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=${AUTH_HTTP_PORT}
-      - MONGODB_URI=mongodb://host.docker.internal:27017/UserDB
+      - USER_GRPC_SERVER_URL=user-service:${USER_GRPC_PORT}
+      - MONGODB_URI=mongodb://host.docker.internal:27017/I4you-userDB
     env_file:
       - ./apps/services/auth-service/.env
     networks:
@@ -52,10 +53,10 @@ services:
     #        - action: sync
     #          path: ./apps/services/user-service/src
     #          target: /app/apps/services/user-service/src
-#    ports:
-#      - "9221:9221"
-#    command:
-#      [ "pnpm","run", "--filter", "user-service","debug" ]
+    #    ports:
+    #      - "9221:9221"
+    #    command:
+    #      [ "pnpm","run", "--filter", "user-service","debug" ]
     volumes:
       - ./apps/services/user-service:/app/apps/services/user-service
       - /app/node_modules
@@ -64,7 +65,8 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=${USER_HTTP_PORT}
-      - MONGODB_URI=mongodb://host.docker.internal:27017/UserDB
+      - GRPC_PORT=${USER_GRPC_PORT}
+      - MONGODB_URI=mongodb://host.docker.internal:27017/I4you-userDB
     env_file:
       - ./apps/services/user-service/.env
     networks:
@@ -108,9 +110,9 @@ services:
         root: ./
     ports:
       - "${GATEWAY_HTTP_PORT}:${GATEWAY_HTTP_PORT}"
-#      - "9220:9220"
-#    command:
-#      [ "pnpm","run", "--filter", "gateway-server","debug" ]
+    #      - "9220:9220"
+    #    command:
+    #      [ "pnpm","run", "--filter", "gateway-server","debug" ]
     volumes:
       - ./apps/gateway:/app/apps/gateway
       - /app/node_modules

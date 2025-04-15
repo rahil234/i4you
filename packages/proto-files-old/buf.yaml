@@ -1,0 +1,8 @@
+version: v2
+modules:
+  - path: src/proto
+lint:
+  use:
+    - STANDARD
+  ignore:
+    - node_modules

@@ -140,7 +140,7 @@ export const useAuthStore = AuthStore(
           isAuthenticated: state.isAuthenticated,
         }),
       },
-    ),{name:'auth-store', enabled: true}
+    ), { name: 'auth-store', enabled: true },
   ),
 );
 

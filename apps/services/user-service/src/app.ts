@@ -3,7 +3,7 @@ import userRoutes from '@/routes/user.routes';
 import {connectDB} from '@/config/db.config';
 import {env} from '@/config';
 import "@/config/grpc.server"
-import httpLogger from "@repo/http-logger";
+import httpLogger from "express-logr";
 import * as path from "node:path";
 
 const app = express();

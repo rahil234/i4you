@@ -1,7 +1,9 @@
 import axios from "axios"
 import {useAuthStore} from "@/store/authStore"
 
-const baseURL = process.env.REACT_APP_API_URL || "http://localhost:4000/api/v1"
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+const baseURL = API_URL + '/api/v1/'
 
 const api = axios.create({
     baseURL,

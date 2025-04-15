@@ -39,5 +39,5 @@ WORKDIR /app/apps/services/user-service
 
 COPY --from=build /app/apps/services/user-service/node_modules/@repo/proto-files/proto/ dist/proto
 
-#CMD ["ls", "dist/proto-files"]
+#CMD ["ls", "dist/proto-files-old"]
 CMD ["node", "dist/index.js"]

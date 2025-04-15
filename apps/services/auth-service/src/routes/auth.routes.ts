@@ -7,6 +7,8 @@ const router = express.Router();
 
 const authController = container.get<AuthController>(TYPES.AuthController);
 
+router.post('/get-user', authController.getUser);
+
 router.post('/refresh-token', authController.refreshToken);
 
 router.post('/login', authController.login);

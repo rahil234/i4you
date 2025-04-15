@@ -10,13 +10,11 @@
     "proto": "protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --ts_out=src/proto --proto_path=src/proto src/proto/*.proto"
   },
   "dependencies": {
-    "@grpc/grpc-js": "^1.12.6",
+    "@grpc/grpc-js": "^1.13.3",
     "@grpc/proto-loader": "^0.7.13",
     "@protobuf-ts/runtime": "^2.9.5",
     "@protobuf-ts/runtime-rpc": "^2.9.5",
     "@repo/env-config": "workspace:*",
-    "@repo/http-logger": "workspace:*",
-    "@repo/proto-files": "workspace:*",
     "@trpc/server": "^10.45.2",
     "bcryptjs": "^3.0.2",
     "cookie-parser": "~1.4.4",
@@ -24,10 +22,12 @@
     "debug": "~2.6.9",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "express-logr": "^1.0.6",
     "inversify": "^7.2.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.12.1",
     "morgan": "~1.9.1",
+    "proto-files": "workspace:*",
     "zod": "^3.24.2"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
 import env from '@/config/env.config';
-import { PrivateKey, Secret, SignOptions } from 'jsonwebtoken';
+import { Secret, SignOptions } from 'jsonwebtoken';
 
 interface Config {
   env: typeof env;

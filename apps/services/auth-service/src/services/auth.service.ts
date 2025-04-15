@@ -1,17 +1,24 @@
 import { injectable, inject } from 'inversify';
 import { hashPassword, comparePassword } from '@/utils/bcrypt';
-import { generateAccessToken, generateRefreshToken } from '@/utils/jwt';
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  verifyRefreshToken,
+} from '@/utils/jwt';
 import IAuthRepository from '@/repositories/interfaces/IAuthRepository';
 import { type LoginRequestDTO, LoginResponseDTO } from '@/dtos/login.dto';
 import type { RegisterRequestDTO } from '@/dtos/register.dto';
 import { TYPES } from '@/types';
 import fetchGoogleUser from '@/utils/google-auth';
+import { getUserById } from '@/grpc/user.client.helpers';
 
 @injectable()
 export class AuthService {
-  constructor(
-    @inject(TYPES.AuthRepository) private authRepository: IAuthRepository
-  ) {}
+  private authRepository;
+
+  constructor(@inject(TYPES.AuthRepository) authRepository: IAuthRepository) {
+    this.authRepository = authRepository;
+  }
 
   async login(loginDTO: LoginRequestDTO): Promise<LoginResponseDTO> {
     // if (!loginDTO.isValid()) {
@@ -91,5 +98,31 @@ export class AuthService {
       ...user,
       id: user._id,
     });
+  }
+
+  async refreshToken(userId: string): Promise<LoginResponseDTO> {
+    const user = await getUserById(userId);
+
+    if (!user) {
+      throw new Error('Invalid credentials');
+    }
+
+    console.log('User:', user);
+
+    const accessToken = generateAccessToken({
+      sub: user.id,
+      email: user.email,
+    });
+
+    const refreshToken = generateRefreshToken({ sub: user.id });
+
+    return new LoginResponseDTO(accessToken, refreshToken, {
+      ...user,
+      id: user.id,
+    });
+  }
+
+  async logout(_userId: string): Promise<void> {
+    // await this.authRepository.logout(userId);
   }
 }

@@ -1,4 +1,12 @@
 packages:
-  - 'packages/**'           # All subdirectories in packages/
-  - 'apps/*'              # All subdirectories in apps/
-  - 'apps/services/*'     # All subdirectories in apps/services/
+  - packages/**
+  - apps/*
+  - apps/services/*
+onlyBuiltDependencies:
+  - '@bufbuild/buf'
+  - '@nestjs/core'
+  - '@swc/core'
+  - esbuild
+  - grpc-tools
+  - protobufjs
+  - sharp
