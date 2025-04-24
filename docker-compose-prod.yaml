@@ -1,0 +1,104 @@
+services:
+
+  auth-service:
+    image: auth-service-image
+    pull_policy: never
+    build:
+      context: ./apps/services/auth-service
+      dockerfile: Dockerfile
+      additional_contexts:
+        root: ./
+    volumes:
+      - ./apps/services/auth-service:/app/apps/services/auth-service
+      - /app/apps/services/auth-service/node_modules
+      - ./packages:/app/packages
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - PORT=${AUTH_HTTP_PORT}
+      - USER_GRPC_SERVER_URL=user-service:${USER_GRPC_PORT}
+      - MONGODB_URI=mongodb://host.docker.internal:27017/I4you-userDB
+    env_file:
+      - ./apps/services/auth-service/.env
+    networks:
+      - app-network
+
+  user-service:
+    image: user-service-image
+    pull_policy: never
+    build:
+      context: ./apps/services/user-service
+      dockerfile: Dockerfile
+      additional_contexts:
+        root: ./
+    environment:
+      - NODE_ENV=development
+      - PORT=${USER_HTTP_PORT}
+      - GRPC_PORT=${USER_GRPC_PORT}
+      - MONGODB_URI=mongodb://host.docker.internal:27017/I4you-userDB
+    env_file:
+      - ./apps/services/user-service/.env
+    networks:
+      - app-network
+
+  #  order-service:
+  #    image: order-service-image
+  #    build:
+  #      context: ./
+  #      dockerfile: apps/services/order-service/Dockerfile.dev
+  #    volumes:
+  #      - ./apps/services/order-service:/app/apps/services/order-service
+  #      - /app/node_modules
+  #      - /app/apps/services/order-service/node_modules
+  #    depends_on:
+  #      - user-service
+  #    environment:
+  #      - NODE_ENV=development
+  #      - USER_SERVICE_GRPC_URL=user-service:${USER_GRPC_PORT}
+  #      - PORT=${ORDER_HTTP_PORT}
+  #    networks:
+  #      - app-network
+
+  #  chat-service:
+  #    build: apps/services/chat-service
+  #    ports:
+  #      - "6000:6000"
+  #    volumes:
+  #      - ./apps/services/chat-service:/app
+  #      - /app/node_modules
+  #    depends_on:
+  #      - user-service
+
+  gateway-server:
+    image: gateway-server-image
+    pull_policy: never
+    build:
+      context: ./apps/gateway
+      dockerfile: Dockerfile
+      additional_contexts:
+        root: ./
+    ports:
+      - "${GATEWAY_HTTP_PORT}:${GATEWAY_HTTP_PORT}"
+    volumes:
+      - ./apps/gateway:/app/apps/gateway
+      - /app/node_modules
+      - /app/apps/services/auth-service/node_modules
+      - ./packages:/app/packages
+    environment:
+      - NODE_ENV=development
+      - PORT=${GATEWAY_HTTP_PORT}
+      - USER_SERVER_URL=http://user-service:${USER_HTTP_PORT}
+      - AUTH_SERVER_URL=http://auth-service:${AUTH_HTTP_PORT}
+      - ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001
+    env_file:
+      - ./apps/gateway/.env
+    depends_on:
+      - user-service
+      - auth-service
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

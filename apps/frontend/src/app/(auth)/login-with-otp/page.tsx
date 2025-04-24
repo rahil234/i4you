@@ -12,11 +12,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Heart, Loader2 } from "lucide-react"
 import { createClient } from "@supabase/supabase-js"
 
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
 export default function LoginWithOTPPage() {
   const [email, setEmail] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -32,16 +27,6 @@ export default function LoginWithOTPPage() {
     setError(null)
 
     try {
-      // Send magic link/OTP to the user's email
-      const { error: otpError } = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          // This will send an OTP instead of a magic link
-          shouldCreateUser: true,
-        },
-      })
-
-      if (otpError) throw otpError
 
       setSuccess("OTP sent to your email. Please check your inbox.")
       setShowOTPInput(true)
@@ -58,14 +43,6 @@ export default function LoginWithOTPPage() {
     setError(null)
 
     try {
-      // Verify the OTP
-      const { data, error: verifyError } = await supabase.auth.verifyOtp({
-        email,
-        token: otp,
-        type: "email",
-      })
-
-      if (verifyError) throw verifyError
 
       // Redirect to user dashboard on successful verification
       router.push("/user-dashboard")
@@ -82,15 +59,7 @@ export default function LoginWithOTPPage() {
     setSuccess(null)
 
     try {
-      // Resend OTP
-      const { error: otpError } = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          shouldCreateUser: true,
-        },
-      })
-
-      if (otpError) throw otpError
+      // if (otpError) throw otpError
 
       setSuccess("New OTP sent to your email. Please check your inbox.")
     } catch (err: any) {

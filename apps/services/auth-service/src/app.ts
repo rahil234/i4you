@@ -8,6 +8,7 @@ import { env } from '@/config';
 import { connectDB } from '@/config/db.config';
 import authRoutes from '@/routes/auth.routes';
 import { errorHandlerMiddleware } from '@/middlwares/error-handler.middleware';
+import setupSwaggerDocs, { swaggerSpec } from '@/config/swagger.config';
 
 const app = express();
 
@@ -21,6 +22,11 @@ app.use(
   httpLogger({ logFilePath: path.join(__dirname, 'logs/auth_service.log') })
 );
 
+app.get('/api-docs-json', (_req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
+
 app.use('/', authRoutes);
 
 app.get('/health', (_req, res) => {
@@ -29,11 +35,18 @@ app.get('/health', (_req, res) => {
 
 app.use(errorHandlerMiddleware);
 
+setupSwaggerDocs(app);
+
 const startServer = async () => {
   await connectDB();
-  app.listen(env.PORT, () => {
-    console.log('Auth Server running on port ', env.PORT);
-  });
+  app.listen(env.PORT);
 };
 
-startServer();
+startServer()
+  .then(() => {
+    console.log('Auth Server running on port ', env.PORT);
+  })
+  .catch((err) => {
+    console.error('Error starting server:', err);
+    process.exit(1);
+  });

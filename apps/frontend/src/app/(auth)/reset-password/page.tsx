@@ -1,79 +1,75 @@
-"use client"
+'use client';
 
-import type React from "react"
+import type React from 'react';
 
-import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Heart, Loader2 } from "lucide-react"
-import { createClient } from "@supabase/supabase-js"
-
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Heart, Loader2 } from 'lucide-react';
+import AuthService from '@/services/auth.service';
 
 export default function ResetPasswordPage() {
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<string | null>(null)
-  const router = useRouter()
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const router = useRouter();
 
-  // Check if user is in password recovery mode
-  useEffect(() => {
-    const checkSession = async () => {
-      const { data, error } = await supabase.auth.getSession()
+  const searchParams = useSearchParams();
+  const token = searchParams.get('token');
 
-      // If no session or not in recovery mode, redirect to login
-      if (error || !data.session || !data.session.user) {
-        router.push("/login")
-      }
-    }
-
-    checkSession()
-  }, [router])
+  if (!token) {
+    return (
+      <div
+        className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-teal-50 to-teal-100 p-4">
+        <Card className="w-full max-w-md shadow-lg">
+          <CardHeader className="space-y-1 text-center">
+            <div className="flex justify-center mb-2">
+              <Heart className="h-12 w-12 text-teal-500" />
+            </div>
+            <CardTitle className="text-2xl font-bold">Error</CardTitle>
+            <CardDescription>Invalid or missing token</CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  }
 
   const handleResetPassword = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError(null)
+    e.preventDefault();
+    setIsLoading(true);
+    setSuccess(null);
+    setError(null);
 
     // Check if passwords match
     if (password !== confirmPassword) {
-      setError("Passwords do not match")
-      setIsLoading(false)
-      return
+      setError('Passwords do not match');
+      setIsLoading(false);
+      return;
+    }
+    const { error } = await AuthService.resetPassword(password, token);
+
+    if (error) {
+      setError(error || 'Failed to update password');
+      return;
     }
 
-    try {
-      // Update the user's password
-      const { error: updateError } = await supabase.auth.updateUser({
-        password,
-      })
+    setSuccess('Password updated successfully! please login with your new password');
+    setIsLoading(false);
 
-      if (updateError) throw updateError
-
-      setSuccess("Password updated successfully!")
-
-      // Redirect to login after a delay
-      setTimeout(() => {
-        router.push("/login")
-      }, 3000)
-    } catch (err: any) {
-      setError(err.message || "Failed to update password")
-    } finally {
-      setIsLoading(false)
-    }
-  }
+    setTimeout(() => {
+      router.push('/login');
+    }, 3000);
+  };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-teal-50 to-teal-100 p-4">
+    <div
+      className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-teal-50 to-teal-100 p-4">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="space-y-1 text-center">
           <div className="flex justify-center mb-2">
@@ -120,7 +116,7 @@ export default function ResetPasswordPage() {
                     Updating password...
                   </>
                 ) : (
-                  "Reset Password"
+                  'Reset Password'
                 )}
               </Button>
             </div>
@@ -135,6 +131,6 @@ export default function ResetPasswordPage() {
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }
 

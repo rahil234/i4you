@@ -4,4 +4,5 @@ export const env = {
   MONGODB_URI: 'MONGODB_URI',
   JWT_SECRET: 'JWT_SECRET',
   JWT_EXPIRES_IN: 'JWT_EXPIRES_IN',
+  NODE_ENV: 'NODE_ENV',
 };

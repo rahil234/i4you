@@ -5,7 +5,7 @@ export const setRefreshCookie = (res: Response, token: string) => {
   const ENV = env.NODE_ENV;
   const options: CookieOptions = {
     httpOnly: true,
-    secure: ENV && false,
+    secure: Boolean(ENV && false),
     sameSite: 'lax',
     // path: '/api/v1/auth/refresh-token',
     path: '/',

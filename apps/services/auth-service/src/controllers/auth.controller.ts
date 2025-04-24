@@ -5,7 +5,6 @@ import { getUserById } from '@/grpc/user.client.helpers';
 import { AuthService } from '@/services/auth.service';
 import { handleAsync } from '@/utils/handle-async';
 import { setRefreshCookie } from '@/utils/cookie';
-import { verifyRefreshToken } from '@/utils/jwt';
 
 @injectable()
 export class AuthController {
@@ -36,6 +35,17 @@ export class AuthController {
     res.json({ accessToken, user });
   });
 
+  adminLogin = handleAsync(async (req, res) => {
+    const { accessToken, refreshToken, user } =
+      await this.authService.adminLogin(req.body);
+
+    setRefreshCookie(res, refreshToken);
+
+    console.log('User:', user, 'Token:', accessToken);
+
+    res.json({ accessToken, user });
+  });
+
   googleLogin = handleAsync(async (req, res) => {
     const { token } = req.body;
 
@@ -55,8 +65,6 @@ export class AuthController {
     console.log('User:', user, 'Token:', accessToken, 'Refresh:', refreshToken);
 
     res.json({ accessToken, user });
-
-    res.status(401).json({ message: 'Login failed' });
   });
 
   register = handleAsync(async (req, res) => {
@@ -69,18 +77,49 @@ export class AuthController {
     res.status(201).json({ accessToken, user });
   });
 
-  refreshToken = handleAsync(async (req, res) => {
-    const { refreshToken } = req.cookies;
-    console.log('refreshing token', refreshToken);
+  forgetPassword = handleAsync(async (req, res) => {
+    const { email } = req.body;
 
-    if (!refreshToken) {
-      res.status(401).json({ message: 'Unauthorized' });
+    if (!email) {
+      res.status(400).json({ message: 'Email is required' });
       return;
     }
 
-    const { sub: userId } = verifyRefreshToken(refreshToken);
+    await this.authService.forgetPassword(email);
 
-    if (!userId) {
+    res.status(200).json({ message: 'Password reset link sent' });
+  });
+
+  resetPassword = handleAsync(async (req, res) => {
+    const { password, token } = req.body;
+
+    if (!password || !token) {
+      res.status(400).json({ message: 'password and token is required' });
+      return;
+    }
+
+    await this.authService.resetPassword(password, token);
+
+    res.status(200).json({ message: 'Password Changed Successfully' });
+  });
+
+  verifyAccount = handleAsync(async (req, res) => {
+    const { password, token } = req.body;
+
+    if (!password || !token) {
+      res.status(400).json({ message: 'password and token is required' });
+      return;
+    }
+
+    await this.authService.verifyAccount(password, token);
+
+    res.status(200).json({ message: 'Account Verfication Successfull' });
+  });
+
+  refreshToken = handleAsync(async (req, res) => {
+    const { refreshToken } = req.cookies;
+
+    if (!refreshToken) {
       res.status(401).json({ message: 'Unauthorized' });
       return;
     }
@@ -89,9 +128,9 @@ export class AuthController {
       accessToken,
       user,
       refreshToken: newRefreshToken,
-    } = await this.authService.refreshToken(userId);
+    } = await this.authService.refreshToken(refreshToken);
 
-    console.log('new refresh token', newRefreshToken);
+    console.log('Access token:\n', accessToken);
 
     setRefreshCookie(res, newRefreshToken);
 

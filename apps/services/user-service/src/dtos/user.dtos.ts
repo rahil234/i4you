@@ -5,25 +5,29 @@ class UserDTO implements User {
   name: string;
   email: string;
   age: number;
+  status: 'active' | 'suspended';
   bio: string;
   photos: string[];
+  role: 'admin' | 'member';
   location: string;
   phone: string;
   address: string;
-  createdAt: string;
+  joined: string;
   updatedAt: string;
 
-  constructor(user: any) {
+  constructor(user: any, role?: 'admin' | 'member') {
     this.id = user._id;
     this.name = user.name;
     this.email = user.email;
+    this.role = role || user.role;
+    this.status = user.status;
     this.age = user.age;
     this.bio = user.bio;
     this.photos = user.photos;
     this.location = user.location;
     this.phone = user.phone;
     this.address = user.address;
-    this.createdAt = user.createdAt;
+    this.joined = user.createdAt;
     this.updatedAt = user.updatedAt;
   }
 }

@@ -29,8 +29,8 @@ export default function LoginPage() {
 
   const googleLogin = useGoogleLogin({
     onSuccess: async (res) => {
-      console.log('Google Login Success:', res);
       await googleAuthLogin(res.access_token);
+      router.push('/discover');
     },
     onError: error => console.log('Login Failed:', error),
   });
@@ -54,10 +54,7 @@ export default function LoginPage() {
 
         <div className="space-y-4">
           <Button variant="outline" className="w-full py-6 relative"
-                  onClick={() => {
-                    console.log('Google Login Clicked');
-                    googleLogin();
-                  }}
+                  onClick={() => googleLogin()}
                   disabled={isLoading}
           >
             <GoogleLogo className="h-5 w-5 absolute left-4" />

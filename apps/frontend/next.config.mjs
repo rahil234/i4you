@@ -21,19 +21,7 @@ const nextConfig = {
     parallelServerBuildTraces: true,
     parallelServerCompiles: true,
   },
-  async headers() {
-    return [
-      {
-        source: '/((?!api/auth/callback).*)', // exclude auth callback
-        headers: [
-          {
-            key: 'Cross-Origin-Opener-Policy',
-            value: 'same-origin',
-          },
-        ],
-      },
-    ];
-  },
+  devIndicators: false
 };
 
 

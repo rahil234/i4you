@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useAuthStore } from '@/store/authStore';
-import { ok } from 'node:assert';
+import { useRouter } from 'next/navigation';
 
 type Props = {
   userData: {
@@ -12,18 +12,30 @@ type Props = {
       email: string;
     } | null;
     token: string | null;
+    shouldDelete: boolean;
   };
 };
 
 export default function UserSessionHydrator({ userData }: Props) {
-  const { setState } = useAuthStore();
+  const router = useRouter();
 
-  const { user, token } = userData;
+  const { setState, logout, isLoading } = useAuthStore();
+
+  const { user, token, shouldDelete } = userData;
+
+  const handleDeleteUserSession = async () => {
+    await logout();
+    router.push('/login');
+  };
 
   useEffect(() => {
-    if (user) {
+    if (user && token) {
       setState({ user: user, accessToken: token, isAuthenticated: true, isLoading: false });
     } else {
+      if (shouldDelete) {
+        setState({ user: null, isAuthenticated: false, isLoading: true });
+        handleDeleteUserSession();
+      }
       setState({ user: null, isAuthenticated: false, isLoading: false });
     }
   }, [user, setState]);

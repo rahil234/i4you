@@ -1,12 +1,11 @@
 import type { AuthState } from '@/types';
-import { create } from 'zustand/index';
+import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
-import { AuthService } from '@/services/auth.service';
-
-const auth = new AuthService();
+import AuthService from '@/services/auth.service';
 
 interface AuthStore extends AuthState {
   login: (email: string, password: string) => Promise<void>;
+  adminLogin: (email: string, password: string) => Promise<void>;
   googleAuthLogin: (token: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -31,9 +30,7 @@ export const useAuthStore = AuthStore(
 
           login: async (email, password) => {
             set({ isLoading: true, error: null });
-            const { data, error } = await auth.login(email, password);
-
-            console.log('login data', data, error);
+            const { data, error } = await AuthService.login(email, password);
 
             if (error) {
               set({ error: error, isLoading: false });
@@ -50,9 +47,19 @@ export const useAuthStore = AuthStore(
             });
           },
 
-          googleAuthLogin: async (token: string) => {
+          adminLogin: async (email, password) => {
             set({ isLoading: true, error: null });
-            const { data, error } = await auth.googleAuthLogin(token);
+            const { data, error } = await AuthService.adminLogin(email, password);
+            if (error) {
+              set({ error: error, isLoading: false });
+              return;
+            }
+            set({ error: null, isLoading: false, user: data.user, accessToken: data.token, isAuthenticated: true });
+          },
+
+          googleAuthLogin: async (token) => {
+            set({ isLoading: true, error: null });
+            const { data, error } = await AuthService.googleAuthLogin(token);
 
             if (error) {
               set({ error: error, isLoading: false });
@@ -69,9 +76,9 @@ export const useAuthStore = AuthStore(
             });
           },
 
-          register: async (name: string, email: string, password: string) => {
+          register: async (name, email, password) => {
             set({ isLoading: true, signUpError: null });
-            const { data, error } = await auth.register(name, email, password);
+            const { data, error } = await AuthService.register(name, email, password);
 
             if (error) {
               set({ signUpError: error, isLoading: false });
@@ -91,7 +98,7 @@ export const useAuthStore = AuthStore(
           },
 
           logout: async () => {
-            const { error } = await auth.logout();
+            const { error } = await AuthService.logout();
             if (error) {
               set({ error: error, isLoading: false });
               return;
@@ -107,7 +114,7 @@ export const useAuthStore = AuthStore(
               return;
             }
 
-            const { data, error } = await auth.refreshToken();
+            const { data, error } = await AuthService.refreshToken();
 
             if (error) {
               set({ error: error, isLoading: false });

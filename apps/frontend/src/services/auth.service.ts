@@ -1,4 +1,3 @@
-// src/services/AuthService.ts
 import api from '@/lib/api';
 import axios from 'axios';
 import { handleApi } from '@/utils/apiHandler';
@@ -8,6 +7,13 @@ export class AuthService {
     handleApi(() =>
       api
         .post('/auth/login', { email, password }, { withCredentials: true })
+        .then(res => res.data),
+    );
+
+  adminLogin = (email: string, password: string) =>
+    handleApi(() =>
+      api
+        .post('/auth/login/admin', { email, password }, { withCredentials: true })
         .then(res => res.data),
     );
 
@@ -37,6 +43,23 @@ export class AuthService {
         .then(() => null),
     );
 
+  forgetPassword = (email: string) =>
+    handleApi(() =>
+      api.post('/auth/forgot-password', { email }).then(res => res.data),
+    );
+
+  resetPassword = (password: string, token: string) =>
+    handleApi(() =>
+      api.post('/auth/reset-password', { password, token }).then(res => res.data),
+    );
+
+  verifyAccount = (password: string, token: string) =>
+    handleApi(() =>
+      api
+        .post('/auth/verify-account', { password, token })
+        .then(res => res.data),
+    );
+
   refreshToken = () => {
     const baseURL =
       process.env.NEXT_PUBLIC_API_URL;
@@ -48,3 +71,5 @@ export class AuthService {
     );
   };
 }
+
+export default new AuthService();

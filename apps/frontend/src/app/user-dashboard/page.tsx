@@ -7,37 +7,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Heart, LogOut, User, MessageSquare, Settings } from "lucide-react"
 import { createClient } from "@supabase/supabase-js"
 
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
 export default function UserDashboard() {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
-  useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.getSession()
-
-      if (error || !session) {
-        router.push("/login")
-        return
-      }
-
-      setUser(session.user)
-      setLoading(false)
-    }
-
-    getUser()
-  }, [router])
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
     router.push("/login")
   }
 

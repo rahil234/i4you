@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { AppError } from '@/errors/AppError';
 
 export function errorHandlerMiddleware(
   err: any,
@@ -6,10 +7,19 @@ export function errorHandlerMiddleware(
   res: Response,
   _next: NextFunction
 ) {
-  console.error('❌ Error:', err);
+  if (err instanceof AppError) {
+    res.status(err.statusCode).json({
+      status: 'error',
+      message: err.message,
+    });
+    return;
+  }
 
-  const statusCode = err.status || 500;
-  const message = err.message || 'Internal Server Error';
-
-  res.status(statusCode).json({ message });
+  // Fallback for unknown errors
+  console.error('Unhandled Error:', err);
+  res.status(500).json({
+    status: 'error',
+    message: 'Something went wrong',
+    type: 'INTERNAL_SERVER_ERROR',
+  });
 }

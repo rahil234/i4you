@@ -39,6 +39,7 @@
     "@radix-ui/react-toggle-group": "^1.1.1",
     "@radix-ui/react-tooltip": "^1.1.6",
     "@react-oauth/google": "^0.12.1",
+    "@repo/shared": "workspace:*",
     "@supabase/supabase-js": "latest",
     "autoprefixer": "^10.4.20",
     "axios": "latest",

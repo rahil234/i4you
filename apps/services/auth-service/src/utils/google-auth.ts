@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const fetchGoogleUser = async (token: string) => {
+export const fetchGoogleUser = async (token: string) => {
   try {
     const response = await axios.get(
       'https://www.googleapis.com/oauth2/v3/userinfo',
@@ -16,5 +16,3 @@ const fetchGoogleUser = async (token: string) => {
     return null;
   }
 };
-
-export default fetchGoogleUser;

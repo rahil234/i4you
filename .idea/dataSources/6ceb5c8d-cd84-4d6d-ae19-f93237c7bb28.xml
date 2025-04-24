@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="@localhost">
+  <database-model serializer="dbm" dbms="MONGO" family-id="MONGO" format-version="4.53">
+    <root id="1">
+      <ServerVersion>8.0.6</ServerVersion>
+    </root>
+    <schema id="2" parent="1" name="I4you-userDB"/>
+    <schema id="3" parent="1" name="UserDB"/>
+    <schema id="4" parent="1" name="admin"/>
+    <schema id="5" parent="1" name="config"/>
+    <schema id="6" parent="1" name="db"/>
+    <schema id="7" parent="1" name="local"/>
+    <schema id="8" parent="1" name="mydatabase"/>
+    <schema id="9" parent="1" name="studentDB"/>
+    <schema id="10" parent="1" name="stuentDB"/>
+    <schema id="11" parent="1" name="test">
+      <Current>1</Current>
+      <LastIntrospectionLocalTimestamp>2025-04-23.06:11:04</LastIntrospectionLocalTimestamp>
+    </schema>
+    <schema id="12" parent="1" name="user-service"/>
+    <table id="13" parent="11" name="customers"/>
+    <table id="14" parent="11" name="orders"/>
+    <table id="15" parent="11" name="products"/>
+    <table id="16" parent="11" name="users"/>
+    <column id="17" parent="13" name="_id">
+      <Position>1</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="18" parent="13" name="email">
+      <Position>1</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="19" parent="13" name="name">
+      <Position>2</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <index id="20" parent="13" name="_id_">
+      <ColNames>_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <column id="21" parent="14" name="_id">
+      <Position>1</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="22" parent="14" name="total">
+      <Position>1</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="23" parent="14" name="customer_id">
+      <Position>2</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <index id="24" parent="14" name="_id_">
+      <ColNames>_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <column id="25" parent="15" name="_id">
+      <Position>1</Position>
+      <StoredType>ObjectId|12s</StoredType>
+    </column>
+    <column id="26" parent="15" name="name">
+      <Position>1</Position>
+      <StoredType>String|12s</StoredType>
+    </column>
+    <column id="27" parent="15" name="price">
+      <Position>2</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <column id="28" parent="15" name="stock">
+      <Position>3</Position>
+      <StoredType>Int32|4s</StoredType>
+    </column>
+    <index id="29" parent="15" name="_id_">
+      <ColNames>_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+  </database-model>
+</dataSource>

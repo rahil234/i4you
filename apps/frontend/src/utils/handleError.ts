@@ -12,7 +12,7 @@ export const handleError = (err: unknown): string => {
     const status = axiosErr.response?.status;
 
     // Handle common status codes
-    if (status === 400 || status === 422) {
+    if (status === 400 || status === 422 || status === 403) {
       // Could be validation or user error
       const message = axiosErr.response?.data?.message;
       const validationErrors = axiosErr.response?.data?.errors;

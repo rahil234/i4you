@@ -15,7 +15,7 @@ export class UserGrpcService {
   ) => {
     try {
       console.log('Received request to get user with ID:', call.request.id);
-      const user = await this.userService.getUserById(call.request.id);
+      const user = await this.userService.getUserById(call.request.id, "member");
 
       if (!user) {
         callback({
@@ -25,14 +25,13 @@ export class UserGrpcService {
         return;
       }
 
-      // noinspection Annotator
       const response: GetUserResponse = {
         id: user.id.toString(),
         name: user.name,
         email: user.email,
         phone: user.phone,
         address: user.address,
-        createdAt: user.createdAt,
+        createdAt: user.joined,
         updatedAt: user.updatedAt,
       };
 

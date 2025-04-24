@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Gateway-Server" pattern="file[i4you]:apps/gateway/*||file[i4you]:apps/gateway//*" />
+</component>
