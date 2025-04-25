@@ -1,6 +1,6 @@
 {
   "name": "express-logr",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "private": false,
   "type": "module",
   "main": "./dist/cjs/index.js",
@@ -22,7 +22,8 @@
     "build:cjs": "tsc -p tsconfig.cjs.json",
     "build": "npm run build:esm && npm run build:cjs",
     "build:noemit": "tsc --noEmit",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "prepublish": "echo prepublish"
   },
   "devDependencies": {
     "@types/express": "^4.17.17",

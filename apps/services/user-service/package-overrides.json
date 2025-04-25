@@ -1,0 +1,5 @@
+{
+  "proto-files": "workspace:*",
+  "express-logr": "workspace:*",
+  "env-config": "@i4you/env-config: workspace:*"
+}

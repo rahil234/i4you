@@ -25,12 +25,12 @@
     "dotenv": "^16.4.7",
     "env-config": "workspace:*",
     "express": "^4.21.2",
-    "express-logr": "^1.1.4",
+    "express-logr": "workspace:*",
     "inversify": "^7.2.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.12.1",
     "morgan": "~1.9.1",
-    "proto-files": "workspace:*",
+    "proto-files": "^1.0.0",
     "reflect-metadata": "^0.2.2",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
@@ -49,5 +49,10 @@
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"
   },
-  "packageManager": "pnpm@10.6.4+sha512.da3d715bfd22a9a105e6e8088cfc7826699332ded60c423b14ec613a185f1602206702ff0fe4c438cb15c979081ce4cb02568e364b15174503a63c7a8e2a5f6c"
+  "packageManager": "pnpm@10.6.4+sha512.da3d715bfd22a9a105e6e8088cfc7826699332ded60c423b14ec613a185f1602206702ff0fe4c438cb15c979081ce4cb02568e364b15174503a63c7a8e2a5f6c",
+  "overrides": {
+    "proto-files": "workspace:*",
+    "express-logr": "workspace:*",
+    "env-config": "workspace:*"
+  }
 }
