@@ -7,12 +7,12 @@
   "type": "commonjs",
   "exports": {
     "./client/*": {
-      "types": "./dist/src/clients/*.d.ts",
-      "default": "./dist/src/clients/*.js"
+      "types": "./dist/src/client/*.d.ts",
+      "default": "./dist/src/client/*.js"
     },
     "./server/*": {
-      "types": "./dist/src/servers/*.d.ts",
-      "default": "./dist/src/servers/*.js"
+      "types": "./dist/src/server/*.d.ts",
+      "default": "./dist/src/server/*.js"
     },
     "./generated/*": {
       "types": "./dist/generated/*",

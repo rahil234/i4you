@@ -17,9 +17,9 @@ const app = express();
 
 app.use(express.json());
 
-app.use(httpLogger());
+app.use(httpLogger() as () => void);
 
-app.use(httpLogger({ logFilePath: path.join(dirname, 'logs/user_service.log') }));
+app.use(httpLogger({ logFilePath: path.join(dirname, 'logs/user_service.log') }) as () => void);
 
 app.get('/api-docs-json', (_req, res) => {
   res.setHeader('Content-Type', 'application/json');

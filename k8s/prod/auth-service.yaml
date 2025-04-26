@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: auth-service
-          image: auth-service-image:latest
-          imagePullPolicy: Never
+          image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/auth-service-image:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 4001
           env:
@@ -36,7 +36,7 @@ spec:
             - name: JWT_EXPIRES_IN
               value: 15m
             - name: MONGODB_URI
-              value: mongodb://host.docker.internal:27017/I4you-userDB
+              value: "mongodb+srv://rahilsardar234:tPPNaEcGk980awe2@i4you-cluster.kdpj0cj.mongodb.net"
 ---
 apiVersion: v1
 kind: Service

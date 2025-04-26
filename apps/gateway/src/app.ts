@@ -13,8 +13,8 @@ import { loadSpecs } from '@/config/swagger.config';
 
 const app = express();
 
-app.use(httpLogger());
-app.use(httpLogger({ logFilePath: path.join(__dirname, 'logs/gateway.log') }));
+app.use(httpLogger() as () => void);
+app.use(httpLogger({ logFilePath: path.join(__dirname, 'logs/gateway.log') }) as () => void);
 
 app.use(cookieParser());
 

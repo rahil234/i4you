@@ -6,12 +6,9 @@ RUN corepack enable
 
 COPY --from=root /package.json /pnpm*.yaml ./
 COPY --from=root /packages /app/packages
-COPY --from=root /scripts /app/scripts
 
 COPY . /app/apps/services/user-service
 
-RUN pnpm run --filter=user-service prepare
-
-RUN #pnpm install --filter=user-service
+RUN pnpm install
 
 CMD ["pnpm", "run", "--filter=user-service", "dev"]

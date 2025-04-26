@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 
-dotenv.config(); // Load from .env
+dotenv.config();
 
 // Define types
 export type EnvConfig<T extends Record<string, string>> = {

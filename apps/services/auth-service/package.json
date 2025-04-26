@@ -1,16 +1,16 @@
 {
   "name": "auth-service",
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "start": "node src/app.ts",
+    "build": "tsc && tsc-alias && tsc-esm-fix",
+    "start": "node dist/app.js",
     "dev": "tsx watch src/app.ts",
     "debug": "node --inspect=0.0.0.0:9229 --import tsx src/app.ts",
     "lint": "eslint --ext .ts src",
     "lint:fix": "eslint --fix --ext .ts src",
     "format": "prettier --write .",
-    "build": "tsc --project ./tsconfig.json",
-    "build:noemit": "tsc --project ./tsconfig.json --noEmit",
-    "proto": "protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --ts_out=src/proto --proto_path=src/proto src/proto/*.proto"
+    "build:noemit": "tsc --project tsconfig-olg.json --noEmit"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.12.6",
@@ -24,16 +24,16 @@
     "cookie-parser": "~1.4.7",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
-    "dotenv": "^16.4.7",
     "env-config": "workspace:*",
     "express": "^4.21.2",
-    "express-logr": "^1.0.6",
+    "express-logr": "workspace:*",
     "inversify": "^7.2.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.12.1",
     "morgan": "~1.9.1",
     "nodemailer": "^6.10.1",
     "proto-files": "workspace:*",
+    "reflect-metadata": "^0.2.2",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "zod": "^3.24.2"
@@ -56,6 +56,8 @@
     "globals": "^16.0.0",
     "prettier": "^3.4.2",
     "ts-proto": "^2.6.1",
+    "tsc-alias": "^1.8.15",
+    "tsc-esm-fix": "^3.1.2",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.26.1"

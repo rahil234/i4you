@@ -3,6 +3,10 @@ import swaggerUi from 'swagger-ui-express';
 import { Application } from 'express';
 import { env } from '@/env.config';
 import * as path from 'node:path';
+import { fileURLToPath } from 'url';
+
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
 
 const options = {
   definition: {
@@ -18,7 +22,7 @@ const options = {
       },
     ],
   },
-  apis: [path.join(__dirname, '../routes/*.ts')],
+  apis: [path.join(dirname, '../routes/*.ts')],
 };
 
 export const swaggerSpec = swaggerJSDoc(options);

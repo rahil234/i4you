@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: user-service
-          image: user-service-image:latest
-          imagePullPolicy: Never
+          image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/user-service-image:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 4002
           env:
@@ -30,7 +30,7 @@ spec:
             - name: GRPC_PORT
               value: "50051"
             - name: MONGODB_URI
-              value: "mongodb://host.docker.internal:27017/I4you-userDB"
+              value: "mongodb+srv://rahilsardar234:tPPNaEcGk980awe2@i4you-cluster.kdpj0cj.mongodb.net"
 ---
 apiVersion: v1
 kind: Service

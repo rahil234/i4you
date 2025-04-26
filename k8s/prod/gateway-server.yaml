@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: gateway-server
-          image: gateway-server-image:latest
-          imagePullPolicy: Never
+          image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/gateway-server-image:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 4000
           env:

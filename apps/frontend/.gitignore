@@ -7,7 +7,7 @@
 /.next/
 /out/
 
-# production
+# prod
 /build
 
 # debug

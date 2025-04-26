@@ -17,7 +17,6 @@
     "types": [
       "reflect-metadata"
     ],
-    "resolveJsonModule": true,
     "outDir": "./dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,

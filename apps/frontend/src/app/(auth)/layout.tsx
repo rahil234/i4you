@@ -20,7 +20,7 @@ export default async function AuthLayout({ children }: Readonly<{
 
   return (
     <GoogleOAuthProvider clientId={NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
-      <div className="min-h-screen bg-gradient-to-br from-teal-50 to-teal-100">{children}</div>
+      <div className="min-h-screen  bg-background">{children}</div>
     </GoogleOAuthProvider>
   );
 }

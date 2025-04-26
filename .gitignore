@@ -144,7 +144,7 @@ dist
 /.next/
 /out/
 
-# production
+# prod
 /build
 
 # misc
