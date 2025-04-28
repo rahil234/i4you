@@ -144,7 +144,7 @@ dist
 /.next/
 /out/
 
-# production
+# prod
 /build
 
 # misc
@@ -167,5 +167,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-./.turbo
-!/.turbo/
+.turbo/

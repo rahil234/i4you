@@ -7,7 +7,7 @@
 /.next/
 /out/
 
-# production
+# prod
 /build
 
 # debug
@@ -25,3 +25,4 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+certificates

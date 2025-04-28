@@ -22,14 +22,42 @@ export default function OnboardingLocation() {
   }
 
   const handleUseCurrentLocation = () => {
-    setIsLocating(true)
+    setIsLocating(true);
 
-    // Simulate geolocation
-    setTimeout(() => {
-      setLocation("New York, NY")
-      setIsLocating(false)
-    }, 1500)
-  }
+    if (!navigator.geolocation) {
+      setLocation("Geolocation not supported");
+      setIsLocating(false);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+          );
+          const data = await response.json();
+          const city = data?.address?.city || data?.address?.town || data?.address?.village || '';
+          const state = data?.address?.state || '';
+          const country = data?.address?.country || '';
+
+          setLocation(`${city}, ${state}, ${country}`);
+        } catch (error) {
+          setLocation("Unable to get location");
+          console.error("Error fetching location:", error);
+        }
+
+        setIsLocating(false);
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+        setLocation("Permission denied or unavailable");
+        setIsLocating(false);
+      }
+    );
+  };
 
   return (
     <div className="min-h-screen flex flex-col">

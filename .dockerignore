@@ -1,4 +1,7 @@
-/apps/services/user-service/.turbo
-/apps/services/user-service/.env
-/apps/services/user-service/Dockerfile
-/apps/services/user-service/Dockerfile.dev
+.fleet
+.devcontainer
+.idea
+node_modules/
+.dockerignore
+docker-compose.yaml
+turbo.json

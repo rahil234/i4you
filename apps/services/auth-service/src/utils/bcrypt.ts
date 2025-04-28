@@ -9,12 +9,14 @@ const SALT_ROUNDS = 10;
  * @returns Hashed password
  */
 export const hashPassword = async (password: string): Promise<string> => {
-    try {
-        const salt = await bcrypt.genSalt(SALT_ROUNDS);
-        return await bcrypt.hash(password, salt);
-    } catch (error) {
-        throw new Error(`Password hashing failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    }
+  try {
+    const salt = await bcrypt.genSalt(SALT_ROUNDS);
+    return await bcrypt.hash(password, salt);
+  } catch (error) {
+    throw new Error(
+      `Password hashing failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
+  }
 };
 
 /**
@@ -23,10 +25,15 @@ export const hashPassword = async (password: string): Promise<string> => {
  * @param hash Hashed password
  * @returns Boolean indicating if they match
  */
-export const comparePassword = async (password: string, hash: string): Promise<boolean> => {
-    try {
-        return await bcrypt.compare(password, hash);
-    } catch (error) {
-        throw new Error(`Password comparison failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    }
+export const comparePassword = async (
+  password: string,
+  hash: string
+): Promise<boolean> => {
+  try {
+    return await bcrypt.compare(password, hash);
+  } catch (error) {
+    throw new Error(
+      `Password comparison failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
+  }
 };

@@ -1,50 +1,40 @@
-"use client"
+'use client';
 
-import type React from "react"
+import type React from 'react';
 
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Heart, Loader2 } from "lucide-react"
-import { createClient } from "@supabase/supabase-js"
-
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { useState } from 'react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Heart, Loader2 } from 'lucide-react';
+import AuthService from '@/services/auth.service';
 
 export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<string | null>(null)
+  const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const handleResetPassword = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError(null)
-
-    try {
-      // Send password reset email
-      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`,
-      })
-
-      if (resetError) throw resetError
-
-      setSuccess("Password reset link sent to your email. Please check your inbox.")
-    } catch (err: any) {
-      setError(err.message || "Failed to send password reset email")
-    } finally {
-      setIsLoading(false)
+    e.preventDefault();
+    setIsLoading(true);
+    setSuccess(null);
+    setError(null);
+    const { error, data } = await AuthService.forgetPassword(email);
+    if (error) {
+      setError(error || 'Failed to send password reset email');
+      setIsLoading(false);
+      return
     }
-  }
+    setSuccess('Password reset link sent to your email. Please check your inbox.');
+    setIsLoading(false);
+  };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-teal-50 to-teal-100 p-4">
+    <div
+      className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-teal-50 to-teal-100 p-4">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="space-y-1 text-center">
           <div className="flex justify-center mb-2">
@@ -79,7 +69,7 @@ export default function ForgotPasswordPage() {
                     Sending reset link...
                   </>
                 ) : (
-                  "Send Reset Link"
+                  'Send Reset Link'
                 )}
               </Button>
             </div>
@@ -87,7 +77,7 @@ export default function ForgotPasswordPage() {
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
           <div className="text-center text-sm">
-            Remember your password?{" "}
+            Remember your password?{' '}
             <Link href="/login" className="text-teal-500 hover:underline">
               Sign in
             </Link>
@@ -100,6 +90,6 @@ export default function ForgotPasswordPage() {
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }
 

@@ -1,46 +1,28 @@
-import * as protoLoader from "@grpc/proto-loader";
-import * as grpc from "@grpc/grpc-js";
-import {UserRequest, UserResponse} from "@/proto/user";
-import {GrpcObject} from "@grpc/grpc-js/build/src/make-client";
-import {UserService} from "@/services/user.service";
-import {env} from "@/config";
-import IUserRepository from "@/repositories/interfaces/IUserRepository";
-import {UserRepository} from "@/repositories/user.repository";
-import {GrpcUserService} from "@/grpc/user.grpc";
+import { Server, ServerCredentials } from '@grpc/grpc-js';
 
-const GRPC_PORT = env.GRPC_PORT;
+import { UserServiceService } from 'proto-files/server/userServer';
 
-const PROTO_PATH = require.resolve('@repo/proto-files/user/user.proto');
+import { env } from '@/config/env.config';
+import { UserGrpcService } from '@/grpc/grpc.user.service';
+import { container } from '@/config/inversify.config';
+import { TYPES } from '@/types';
 
-const packageDefinition = protoLoader.loadSync(PROTO_PATH);
 
-type ImplementationType = {
-    GetUser: grpc.ServerUnaryCall<UserRequest, UserResponse>;
-};
+const userService = container.get(TYPES.GrpcUserService) as UserGrpcService;
 
-const userProto = grpc.loadPackageDefinition(packageDefinition) as GrpcObject & {
-    user: {
-        UserService: {
-            service: grpc.ServiceDefinition<ImplementationType>;
-        };
-    };
-};
+function startServer() {
 
-const server = new grpc.Server();
+  const { GRPC_PORT } = env;
 
-// Initialize repository, service, and gRPC service
-const userRepository: IUserRepository = new UserRepository();
-const userService = new UserService(userRepository);
-const grpcUserService = new GrpcUserService(userService);
-
-server.addService(userProto.user.UserService.service, {
-    GetUser: grpcUserService.getUser,
-});
-
-server.bindAsync(
-    `0.0.0.0:${GRPC_PORT}`,
-    grpc.ServerCredentials.createInsecure(),
-    () => {
-        console.log('User Service running on port ', GRPC_PORT);
+  const server = new Server();
+  server.addService(UserServiceService, userService.handlers());
+  server.bindAsync(`0.0.0.0:${GRPC_PORT}`, ServerCredentials.createInsecure(), (err, port) => {
+    if (err) {
+      console.error('Server error:', err);
+      return;
     }
-);
+    console.log(`User gRPC Server running at 0.0.0.0:${port}`);
+  });
+}
+
+startServer();

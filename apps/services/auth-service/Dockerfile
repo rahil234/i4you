@@ -1,43 +1,36 @@
-# --- Stage 1: Build Dependencies ---
 FROM node:23-alpine AS build
 
 WORKDIR /app
 
 RUN corepack enable
 
-# Copy workspace-related config files
-COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+COPY --from=root package*.json pnpm*.yaml ./
+COPY --from=root packages ./packages
 
-# Copy local packages and the user-service package.json
-COPY packages ./packages
+COPY package.json ./apps/services/auth-service/
 
-COPY apps/services/user-service/package.json apps/services/user-service/
-
-# Install dependencies for the entire workspace (including local packages)
 RUN pnpm install
 
-# Copy the entire monorepo after dependencies are installed
-COPY . .
+COPY . ./apps/services/auth-service/
 
-# Build the user-service if needed
-RUN pnpm --filter=user-service run build
+RUN pnpm --filter auth-service run build
 
-
-# --- Stage 2: Production Image ---
 FROM node:23-alpine AS runtime
 
 WORKDIR /app
 
-# Copy only necessary runtime files from the build stage
-COPY --from=build /app/apps/services/user-service ./apps/services/user-service
+RUN corepack enable
+
 COPY --from=build /app/packages ./packages
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/pnpm-lock.yaml ./
+COPY --from=build /app/pnpm-*.yaml /app/package*.json ./
 
-# Set working directory to user-service
-WORKDIR /app/apps/services/user-service
+WORKDIR /app/apps/services/auth-service
 
-COPY --from=build /app/apps/services/user-service/node_modules/@repo/proto-files/proto/ dist/proto
+COPY --from=build /app/apps/services/auth-service/package*.json ./
 
-#CMD ["ls", "dist/proto-files"]
-CMD ["node", "dist/index.js"]
+RUN pnpm install --prod
+
+COPY --from=build /app/apps/services/auth-service/dist ./dist
+
+
+ENTRYPOINT ["node", "dist/app.js"]

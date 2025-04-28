@@ -10,6 +10,6 @@ COPY --from=root /packages /app/packages
 
 COPY . /app/apps/gateway
 
-RUN pnpm install --filter=gateway-server
+RUN pnpm install
 
 CMD ["pnpm", "run", "--filter=gateway-server", "dev"]

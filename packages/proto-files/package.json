@@ -1,22 +1,36 @@
 {
-  "name": "@repo/proto-files",
+  "name": "proto-files",
   "version": "1.0.0",
-  "main": "dist/index.js",
-  "files": [
-    "dist",
-    "proto"
-  ],
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
   "exports": {
-    "./*": "./dist/*"
+    "./client/*": {
+      "types": "./dist/src/client/*.d.ts",
+      "default": "./dist/src/client/*.js"
+    },
+    "./server/*": {
+      "types": "./dist/src/server/*.d.ts",
+      "default": "./dist/src/server/*.js"
+    },
+    "./generated/*": {
+      "types": "./dist/generated/*",
+      "default": "./dist/generated/*"
+    }
   },
   "scripts": {
-    "build": "mkdir -p dist && cp -r proto dist/",
-    "clean": "rm -rf dist"
+    "prebuild": "buf generate",
+    "build": "tsc && tsc-alias"
   },
   "dependencies": {
-    "@grpc/grpc-js": "^1.13.1",
-    "@grpc/proto-loader": "^0.7.13",
-    "@protobuf-ts/runtime": "^2.9.5",
-    "@protobuf-ts/runtime-rpc": "^2.9.5"
+    "@bufbuild/protobuf": "^2.2.5",
+    "@grpc/grpc-js": "^1.13.3"
+  },
+  "devDependencies": {
+    "@bufbuild/buf": "^1.52.1",
+    "ts-proto": "^2.7.0",
+    "tsc-alias": "^1.8.15",
+    "typescript": "^5.8.3"
   }
 }

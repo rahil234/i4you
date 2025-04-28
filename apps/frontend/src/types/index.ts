@@ -22,6 +22,12 @@ export interface AuthState {
   signUpError: string | null
 }
 
+
+export type SetUserType = {
+  token: string;
+  user: Partial<User>;
+}
+
 // User preferences
 export interface UserPreferences {
   ageRange: [number, number]

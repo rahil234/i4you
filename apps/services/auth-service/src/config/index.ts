@@ -1,18 +1,20 @@
 import env from '@/config/env.config';
-import {PrivateKey, Secret, SignOptions} from 'jsonwebtoken';
+import { Secret, SignOptions } from 'jsonwebtoken';
+
+type JWTExpiresIn = SignOptions['expiresIn'];
 
 interface Config {
-    env: typeof env;
-    jwtSecret: Secret | PrivateKey;
-    jwtExpiresIn: SignOptions["expiresIn"];
+  env: typeof env;
+  jwtSecret: Secret;
+  jwtExpiresIn: JWTExpiresIn;
 }
 
-const config = {
-    env,
-    jwtSecret: env.JWT_SECRET,
-    jwtExpiresIn: env.JWT_EXPIRES_IN,
+const config: Config = {
+  env,
+  jwtSecret: env.JWT_SECRET,
+  jwtExpiresIn: env.JWT_EXPIRES_IN as JWTExpiresIn,
 };
 
-export {env};
+export { env };
 
 export default config;

@@ -1,18 +1,48 @@
 {
-  "name": "@repo/env-config",
-  "version": "1.0.0",
-  "description": "Load the environment variable and create appropriate getters",
-  "license": "ISC",
-  "author": "rahil234",
-  "type": "commonjs",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "name": "env-config",
+  "version": "1.0.2",
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    }
+  },
   "scripts": {
-    "build": "tsc",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build": "npm run build:esm && npm run build:cjs",
     "dev": "tsc --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "dotenv": "^16.4.7"
-  }
+    "dotenv": "^16.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.2"
+  },
+  "description": "Load the environment variable and Validate the env described in 'env-config.js' file and create appropriate getters also with full type safety.",
+  "license": "ISC",
+  "author": "rahil234",
+  "keywords": [
+    "env",
+    "config",
+    "dotenv",
+    "typescript",
+    "validation"
+  ],
+  "files": [
+    "dist",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ]
 }

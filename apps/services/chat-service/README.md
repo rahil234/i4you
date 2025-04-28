@@ -40,7 +40,7 @@ $ npm run start
 # watch mode
 $ npm run start:dev
 
-# production mode
+# prod mode
 $ npm run start:prod
 ```
 

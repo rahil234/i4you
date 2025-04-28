@@ -4,12 +4,13 @@ WORKDIR /app
 
 RUN corepack enable
 
-# Copy root-level package files from the additional 'root' context
 COPY --from=root /package*.json /pnpm*.yaml ./
 COPY --from=root /packages /app/packages
 
-COPY . /app/apps/services/auth-service
+COPY package.json /app/apps/services/auth-service/
 
-RUN pnpm install --filter=auth-service
+RUN pnpm install
+
+COPY . /app/apps/services/auth-service
 
 CMD ["pnpm", "run", "--filter=auth-service", "dev"]

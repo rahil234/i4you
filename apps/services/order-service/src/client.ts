@@ -6,7 +6,7 @@ import path from 'path';
 
 dotenv.config();
 
-const PROTO_PATH = path.resolve(__dirname, './proto-files/user-files');
+const PROTO_PATH = path.resolve(__dirname, './proto-files-old/user-files');
 const packageDefinition = protoLoader.loadSync(PROTO_PATH);
 const userProto = grpc.loadPackageDefinition(packageDefinition) as any;
 

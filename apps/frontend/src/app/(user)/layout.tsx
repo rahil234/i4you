@@ -1,33 +1,42 @@
-"use client"
+import React from 'react';
+import { redirect } from 'next/navigation';
+import UserSessionHydrator from '@/components/auth/user-session-hydrator';
+import { refreshSession } from '@/lib/auth/refresh-session';
 
-import React, {useEffect, useState} from "react"
-import {useAuthStore} from "@/store";
-import {redirect} from "next/navigation";
+export default async function UserLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  // const userData = await refreshSession();
 
-export default function UserLayout(
-    {children}: Readonly<{ children: React.ReactNode }>
-) {
-    const {fetchUser, refreshToken, isLoading, isAuthenticated, error} = useAuthStore()
+  // const { shouldDelete, user } = userData;
+  //
+  // if (shouldDelete) {
+  //   console.log('Token invalid, redirecting to logout handler');
+  //   redirect('/clear-token');
+  // }
+  //
+  // if (!user) {
+  //   console.log('No user found, redirecting to login');
+  //   redirect('/login');
+  // }
+  //
+  // if (user.role === 'admin') {
+  //   console.log('User is admin, redirecting to admin dashboard');
+  //   redirect('/admin');
+  // }
 
-    useEffect(() => {
-        refreshToken().then(async () => {
-            await fetchUser()
-        })
-    }, []);
+  let userData = {
+    shouldDelete: false,
+    token: '1234567890',
+    user: {
+      id: '123',
+      name: 'John Doe',
+      email: 'rahil@gmail.com'
+    },
+  };
 
-
-    if (!isAuthenticated) {
-        console.log("User is not authenticated")
-        redirect("/login")
-    }
-
-    if (isLoading) {
-        return <div>Loading...</div>
-    }
-
-    return (
-        <div className="min-h-screen bg-gradient-to-br from-teal-50 to-teal-100">
-            {children}
-        </div>
-    )
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 to-teal-100">
+      <UserSessionHydrator userData={userData} />
+      {children}
+    </div>
+  );
 }

@@ -8,24 +8,17 @@ services:
       dockerfile: Dockerfile.dev
       additional_contexts:
         root: ./
-      no_cache: true
-    #    develop:
-    #      watch:
-    #        - action: rebuild
-    #          path: ./apps/services/auth-service/package.json
-    #          target: /app/apps/services/auth-service/package.json
-    #        - action: sync
-    #          path: ./apps/services/auth-service/src
-    #          target: /app/apps/services/auth-service/src
     volumes:
       - ./apps/services/auth-service:/app/apps/services/auth-service
-      - /app/node_modules
       - /app/apps/services/auth-service/node_modules
       - ./packages:/app/packages
+    ports:
+      - "3001:3001"
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
       - PORT=${AUTH_HTTP_PORT}
-      - MONGODB_URI=mongodb://host.docker.internal:27017/UserDB
+      - USER_GRPC_SERVER_URL=user-service:${USER_GRPC_PORT}
+      - MONGODB_URI=mongodb://host.docker.internal:27017/I4you-userDB
     env_file:
       - ./apps/services/auth-service/.env
     networks:
@@ -39,24 +32,15 @@ services:
       dockerfile: Dockerfile.dev
       additional_contexts:
         root: ./
-      no_cache: true
-    #    develop:
-    #      watch:
-    #        - action: rebuild
-    #          path: ./apps/services/user-service/package.json
-    #          target: /app/apps/services/user-service/package.json
-    #        - action: sync
-    #          path: ./apps/services/user-service/src
-    #          target: /app/apps/services/user-service/src
     volumes:
       - ./apps/services/user-service:/app/apps/services/user-service
-      - /app/node_modules
       - /app/apps/services/auth-service/node_modules
       - ./packages:/app/packages
     environment:
       - NODE_ENV=development
       - PORT=${USER_HTTP_PORT}
-      - MONGODB_URI=mongodb://host.docker.internal:27017/UserDB
+      - GRPC_PORT=${USER_GRPC_PORT}
+      - MONGODB_URI=mongodb://host.docker.internal:27017/I4you-userDB
     env_file:
       - ./apps/services/user-service/.env
     networks:

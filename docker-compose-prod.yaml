@@ -1,0 +1,72 @@
+services:
+  auth-service:
+    image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/auth-service-image:v0.0.3
+    pull_policy: never
+    build:
+      platforms:
+        - linux/amd64
+      context: ./apps/services/auth-service
+      dockerfile: Dockerfile
+      additional_contexts:
+        root: ./
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - PORT=${AUTH_HTTP_PORT}
+      - USER_GRPC_SERVER_URL=user-service:${USER_GRPC_PORT}
+      - MONGODB_URI=mongodb://host.docker.internal:27017/I4you-userDB
+    env_file:
+      - ./apps/services/auth-service/.env
+    networks:
+      - app-network
+
+  user-service:
+    image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/user-service-image:v0.0.1
+    pull_policy: never
+    build:
+      platforms:
+        - linux/amd64
+      context: ./apps/services/user-service
+      dockerfile: Dockerfile
+      additional_contexts:
+        root: ./
+    environment:
+      - NODE_ENV=development
+      - PORT=${USER_HTTP_PORT}
+      - GRPC_PORT=${USER_GRPC_PORT}
+      - MONGODB_URI=mongodb://host.docker.internal:27017/I4you-userDB
+    env_file:
+      - ./apps/services/user-service/.env
+    networks:
+      - app-network
+
+  gateway-server:
+    image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/gateway-server-image:v0.0.1
+    pull_policy: never
+    build:
+      platforms:
+        - linux/amd64
+      context: ./apps/gateway
+      dockerfile: Dockerfile
+      additional_contexts:
+        root: ./
+    ports:
+      - "${GATEWAY_HTTP_PORT}:${GATEWAY_HTTP_PORT}"
+    environment:
+      - NODE_ENV=development
+      - PORT=${GATEWAY_HTTP_PORT}
+      - USER_SERVER_URL=http://user-service:${USER_HTTP_PORT}
+      - AUTH_SERVER_URL=http://auth-service:${AUTH_HTTP_PORT}
+      - ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001
+    env_file:
+      - ./apps/gateway/.env
+    depends_on:
+      - user-service
+      - auth-service
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

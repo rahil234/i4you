@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: i4you-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: i4you.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: gateway-server
+                port:
+                  number: 4000
