@@ -9,10 +9,6 @@ pnpmfileChecksum: sha256-iyKCBZAukAhoVdSseyS7QFdUvDoo75uF6cVomMXP4f8=
 importers:
 
   .:
-    dependencies:
-      auth-service:
-        specifier: ^1.0.0
-        version: 1.0.0
     devDependencies:
       pnpm:
         specifier: ^10.8.1
@@ -116,6 +112,9 @@ importers:
       '@repo/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@repo/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@supabase/supabase-js':
         specifier: latest
         version: 2.49.4
@@ -3217,9 +3216,6 @@ packages:
 
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
-
-  auth-service@1.0.0:
-    resolution: {integrity: sha512-UBvLqFFEGeuc4n7/9bZSoGDAkphJJ7Z1HfsTqOZqxaKeesYO4daQQGzgPWzJgHPq7FC7cu91T1Zs9iAEamrI9g==}
 
   autoprefixer@10.4.21:
     resolution: {integrity: sha512-O+A6LWV5LDHSJD3LjHYoNi4VLsj/Whi7k6zG12xTYaU4cQ8oxQGckXNX8cRHK5yOZ/ppVHe0ZBXGzSV9jXdVbQ==}
@@ -8955,8 +8951,6 @@ snapshots:
   async@3.2.6: {}
 
   asynckit@0.4.0: {}
-
-  auth-service@1.0.0: {}
 
   autoprefixer@10.4.21(postcss@8.5.3):
     dependencies:
