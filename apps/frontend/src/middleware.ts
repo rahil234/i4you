@@ -22,12 +22,14 @@ export function middleware(request: NextRequest) {
 
   const token = request.cookies.get('refreshToken')?.value;
 
-  if (!token) {
-    if (pathname.startsWith('/admin')) {
-      return NextResponse.redirect(new URL('/admin/login', request.url));
-    }
-    return NextResponse.redirect(new URL('/login', request.url));
-  }
+  console.log(`token: ${token}`);
+
+  // if (!token) {
+  //   if (pathname.startsWith('/admin')) {
+  //     return NextResponse.redirect(new URL('/admin/login', request.url));
+  //   }
+  //   return NextResponse.redirect(new URL('/login', request.url));
+  // }
 
   return NextResponse.next();
 }

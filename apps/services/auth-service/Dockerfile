@@ -27,8 +27,10 @@ COPY --from=build /app/pnpm-*.yaml /app/package*.json ./
 WORKDIR /app/apps/services/auth-service
 
 COPY --from=build /app/apps/services/auth-service/package*.json ./
-COPY --from=build /app/apps/services/auth-service/dist ./dist
 
 RUN pnpm install --prod
+
+COPY --from=build /app/apps/services/auth-service/dist ./dist
+
 
 ENTRYPOINT ["node", "dist/app.js"]

@@ -1,5 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import * as path from 'node:path';
+import {fileURLToPath} from 'node:url';
 import redoc from 'redoc-express';
 import { expressjwt } from 'express-jwt';
 import cors from 'cors';
@@ -11,10 +12,13 @@ import { env } from '@/config';
 import httpLogger from 'express-logr';
 import { loadSpecs } from '@/config/swagger.config';
 
+const filePath = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filePath);
+
 const app = express();
 
 app.use(httpLogger() as () => void);
-app.use(httpLogger({ logFilePath: path.join(__dirname, 'logs/gateway.log') }) as () => void);
+app.use(httpLogger({ logFilePath: path.join(dirname, 'logs/gateway.log') }) as () => void);
 
 app.use(cookieParser());
 
@@ -27,7 +31,7 @@ app.use(cors({
   credentials: true,
 }));
 
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(dirname, '../public')));
 
 
 // Serve Swagger and ReDoc

@@ -14,13 +14,13 @@ spec:
     spec:
       containers:
         - name: user-service
-          image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/user-service-image:latest
-          imagePullPolicy: IfNotPresent
+          image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/user-service-image:v0.0.1
+          imagePullPolicy: Always
           ports:
             - containerPort: 4002
           env:
             - name: NODE_ENV
-              value: "prod"
+              value: "production"
             - name: PORT
               value: "4002"
             - name: AUTH_SERVER_URL

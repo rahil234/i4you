@@ -5,58 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9634f5b5-f135-4866-b1d6-9eb36f37aa3e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/k8s/prod/auth-service.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/k8s/prod/gateway-server.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/k8s/prod/ingress.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/k8s/prod/user-service.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/env-config/.npmignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/env-config/tsconfig.cjs.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/env-config/tsconfig.esm.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/packages/proto-files/.npmignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/k8s/prod/cluster-issuer.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.pnpmfile.cjs" beforeDir="false" afterPath="$PROJECT_DIR$/.pnpmfile.cjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/frontend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/globals.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/tailwind.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/tailwind.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/gateway/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/apps/gateway/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/gateway/Dockerfile.dev" beforeDir="false" afterPath="$PROJECT_DIR$/apps/gateway/Dockerfile.dev" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/gateway/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/gateway/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(user)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(user)/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/middleware.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/middleware.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/gateway/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/gateway/src/app.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/gateway/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/gateway/tsconfig.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/services/auth-service/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/Dockerfile.dev" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/Dockerfile.dev" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/app.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/config/swagger.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/config/swagger.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/tsconfig.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/chat-service/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/chat-service/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/Dockerfile.dev" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/Dockerfile.dev" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/package-overrides.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/app.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/utils/cookie.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/utils/cookie.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose-prod.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose-prod.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/k8s/dev/auth-service.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/dev/auth-service.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/k8s/dev/gateway-server.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/dev/gateway-server.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/k8s/dev/ingress.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/dev/ingress.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/k8s/dev/user-service.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/dev/user-service.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k8s/prod/auth-service.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/prod/auth-service.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k8s/prod/gateway-server.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/prod/gateway-server.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k8s/prod/ingress.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/prod/ingress.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/k8s/prod/user-service.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/prod/user-service.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/env-config/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/env-config/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/env-config/src/generateType.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/env-config/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/env-config/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/env-config/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/env-config/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/express-logr/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/express-logr/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/express-logr/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/express-logr/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/express-logr/src/logger.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/proto-files/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/proto-files/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/proto-files/src/clients/greeterClient.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/proto-files/src/client/greeterClient.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/proto-files/src/clients/userClient.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/proto-files/src/client/userClient.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/proto-files/src/servers/greeterServer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/proto-files/src/server/greeterServer.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/proto-files/src/servers/userServer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/proto-files/src/server/userServer.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,6 +72,15 @@
   ],
   &quot;isMigrated&quot;: true
 }</component>
+  <component name="KubernetesSettings">
+    <option name="contextConfigFilePath" value="file://$USER_HOME$/.kube/config" />
+    <option name="contextName" value="gke_i4you-457707_asia-south1_i4you-cluster" />
+    <specSources>
+      <SpecSource>
+        <option name="pathOrUrl" value="https://github.com/cert-manager/cert-manager/releases/download/v1.1.1/cert-manager.yaml" />
+      </SpecSource>
+    </specSources>
+  </component>
   <component name="NamedScopeManager">
     <order>
       <scope name="User-Service" />
@@ -157,7 +130,7 @@
     &quot;npm.frontend.executor&quot;: &quot;Run&quot;,
     &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/rahilk/Projects/i4you/apps/services/chat-service/node_modules/prettier&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.intellij.kubernetes.config.KubernetesConfigurable&quot;,
     &quot;ts.external.directory.path&quot;: &quot;/Users/rahilk/Projects/i4you/apps/services/order-service/node_modules/typescript/lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
@@ -185,11 +158,11 @@
       <recent name="$PROJECT_DIR$/apps/services/user-service/src/errors" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/apps/frontend/certs" />
       <recent name="$PROJECT_DIR$/apps/services/user-service/src/repositories/interfaces" />
       <recent name="$PROJECT_DIR$/apps/frontend/src/app" />
       <recent name="$PROJECT_DIR$/apps/gateway/src" />
       <recent name="$PROJECT_DIR$/apps/frontend/src/app/admin/(dashboard)" />
-      <recent name="$PROJECT_DIR$/apps/services/user-service/src" />
     </key>
   </component>
   <component name="RunManager" selected="JavaScript Debug.localhost:3000">
@@ -322,7 +295,9 @@
       <workItem from="1745388430741" duration="3501000" />
       <workItem from="1745583066463" duration="7515000" />
       <workItem from="1745592427838" duration="28170000" />
-      <workItem from="1745672773735" duration="3850000" />
+      <workItem from="1745672773735" duration="38828000" />
+      <workItem from="1745782743784" duration="6922000" />
+      <workItem from="1745826922829" duration="536000" />
     </task>
     <servers />
   </component>

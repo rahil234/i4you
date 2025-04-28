@@ -15,7 +15,7 @@ services:
     ports:
       - "3001:3001"
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
       - PORT=${AUTH_HTTP_PORT}
       - USER_GRPC_SERVER_URL=user-service:${USER_GRPC_PORT}
       - MONGODB_URI=mongodb://host.docker.internal:27017/I4you-userDB

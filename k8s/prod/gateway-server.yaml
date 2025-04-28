@@ -14,17 +14,17 @@ spec:
     spec:
       containers:
         - name: gateway-server
-          image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/gateway-server-image:latest
-          imagePullPolicy: IfNotPresent
+          image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/gateway-server-image:v0.0.1
+          imagePullPolicy: Always
           ports:
             - containerPort: 4000
           env:
             - name: NODE_ENV
-              value: "development"
+              value: "production"
             - name: PORT
               value: "4000"
             - name: ALLOWED_ORIGINS
-              value: "http://localhost:3000,http://localhost:3001"
+              value: "http://localhost:3000,https://localhost:3000"
             - name: AUTH_SERVER_URL
               value: "http://auth-service:4001"
             - name: USER_SERVER_URL
@@ -37,7 +37,7 @@ kind: Service
 metadata:
   name: gateway-server
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: gateway-server
   ports:

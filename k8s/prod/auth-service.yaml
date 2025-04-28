@@ -14,19 +14,13 @@ spec:
     spec:
       containers:
         - name: auth-service
-          image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/auth-service-image:latest
-          imagePullPolicy: IfNotPresent
+          image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/auth-service-image:v0.0.3
+          imagePullPolicy: Always
           ports:
             - containerPort: 4001
           env:
             - name: NODE_ENV
-              value: "development"
-            - name: ALLOWED_ORIGINS
-              value: "http://localhost:3000,http://localhost:3001"
-            - name: AUTH_SERVER_URL
-              value: "http://auth-service:3001"
-            - name: USER_SERVER_URL
-              value: "http://user-service:3000"
+              value: "production"
             - name: PORT
               value: "4001"
             - name: USER_GRPC_SERVER_URL

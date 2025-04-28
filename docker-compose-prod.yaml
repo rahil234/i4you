@@ -1,6 +1,6 @@
 services:
   auth-service:
-    image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/auth-service-image
+    image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/auth-service-image:v0.0.3
     pull_policy: never
     build:
       platforms:
@@ -22,9 +22,11 @@ services:
       - app-network
 
   user-service:
-    image: user-service-image
+    image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/user-service-image:v0.0.1
     pull_policy: never
     build:
+      platforms:
+        - linux/amd64
       context: ./apps/services/user-service
       dockerfile: Dockerfile
       additional_contexts:
@@ -40,9 +42,11 @@ services:
       - app-network
 
   gateway-server:
-    image: gateway-server-image
+    image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/gateway-server-image:v0.0.1
     pull_policy: never
     build:
+      platforms:
+        - linux/amd64
       context: ./apps/gateway
       dockerfile: Dockerfile
       additional_contexts:

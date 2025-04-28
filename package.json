@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "frontend": "pnpm run --filter=frontend dev",
+    "frontend:secure": "pnpm run --filter=frontend dev:secure",
     "clean": "pnpm exec -r 'rm -rf node_modules'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
