@@ -1,7 +1,8 @@
 import type React from 'react';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { verifyToken } from '@/lib/auth/verify-token';
+import GoogleProviderWrapper from '@/app/(auth)/google-provider';
 
 export default async function AuthLayout({ children }: Readonly<{
   children: React.ReactNode
@@ -9,18 +10,15 @@ export default async function AuthLayout({ children }: Readonly<{
 
   const cookieStore = await cookies();
   const refreshToken = cookieStore.get('refreshToken')?.value;
+  const accessToken = cookieStore.get('accessToken')?.value;
 
-  if (refreshToken) {
+  if (refreshToken || accessToken) {
     redirect('/discover');
   }
 
-  const NEXT_PUBLIC_GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-
-  if (!NEXT_PUBLIC_GOOGLE_CLIENT_ID) throw new Error('NEXT_PUBLIC_GOOGLE_CLIENT_ID is not defined');
-
   return (
-    <GoogleOAuthProvider clientId={NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
+    <GoogleProviderWrapper>
       <div className="min-h-screen  bg-background">{children}</div>
-    </GoogleOAuthProvider>
+    </GoogleProviderWrapper>
   );
 }

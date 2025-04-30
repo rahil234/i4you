@@ -1,10 +1,10 @@
 import express, { Request, Response, NextFunction } from 'express';
 import * as path from 'node:path';
-import {fileURLToPath} from 'node:url';
+import { fileURLToPath } from 'node:url';
+import cookieParser from 'cookie-parser';
 import redoc from 'redoc-express';
 import { expressjwt } from 'express-jwt';
 import cors from 'cors';
-import cookieParser from 'cookie-parser';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import swaggerUi from 'swagger-ui-express';
 
@@ -33,6 +33,7 @@ app.use(cors({
 
 app.use(express.static(path.join(dirname, '../public')));
 
+app.use(cookieParser());
 
 // Serve Swagger and ReDoc
 app.use('/api-docs', swaggerUi.serve, async (req: Request, res: Response, next: NextFunction) => {
@@ -42,7 +43,7 @@ app.use('/api-docs', swaggerUi.serve, async (req: Request, res: Response, next: 
 
 app.get('/docs', redoc({
   title: 'I4You Docs',
-  specUrl: '/api-docs-json',
+  specUrl: '/ap-docs-json',
 }));
 
 app.get('/api-docs-json', async (_req, res) => {

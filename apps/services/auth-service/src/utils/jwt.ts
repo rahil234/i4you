@@ -67,7 +67,6 @@ export const generateResetToken = (payload: { sub: string }) => {
     const token = jwt.sign(payload, config.jwtSecret, {
       expiresIn: '1h',
     });
-    console.log(token);
     return token;
   } catch (error) {
     throw new Error(

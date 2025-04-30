@@ -5,15 +5,12 @@
   "license": "MIT",
   "sideEffects": false,
   "files": [
-    "dist/**",
     "dist"
   ],
   "exports": {
     "./Button": {
-      "import": {
         "types": "./dist/button.d.ts",
         "default": "./dist/button.js"
-      }
     }
   },
   "scripts": {

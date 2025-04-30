@@ -16,12 +16,13 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  allowedDevOrigins: ['http://localhost:3000', 'http://i4you.local.com:3000'],
   experimental: {
     webpackBuildWorker: true,
     parallelServerBuildTraces: true,
     parallelServerCompiles: true,
   },
-  devIndicators: false
+  devIndicators: false,
 };
 
 

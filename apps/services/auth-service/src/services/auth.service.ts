@@ -243,8 +243,6 @@ export class AuthService {
       user = await this.userRepository.findById(userId);
     }
 
-    console.log('refresh token user', user);
-
     if (!user) {
       throw new Error('User not found');
     }

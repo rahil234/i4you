@@ -4,7 +4,11 @@ import { TYPES } from '@/types';
 import { getUserById } from '@/grpc/user.client.helpers';
 import { AuthService } from '@/services/auth.service';
 import { handleAsync } from '@/utils/handle-async';
-import { setRefreshCookie } from '@/utils/cookie';
+import {
+  clearRefreshCookie,
+  setAccessCookie,
+  setRefreshCookie,
+} from '@/utils/cookie';
 
 @injectable()
 export class AuthController {
@@ -28,6 +32,8 @@ export class AuthController {
       req.body
     );
 
+    setAccessCookie(res, accessToken);
+
     setRefreshCookie(res, refreshToken);
 
     console.log('User:', user, 'Token:', accessToken);
@@ -39,6 +45,7 @@ export class AuthController {
     const { accessToken, refreshToken, user } =
       await this.authService.adminLogin(req.body);
 
+    setAccessCookie(res, accessToken);
     setRefreshCookie(res, refreshToken);
 
     console.log('User:', user, 'Token:', accessToken);
@@ -51,7 +58,6 @@ export class AuthController {
 
     console.log('Google login token:', token);
 
-    // verify the token
     if (!token) {
       res.status(401).json({ message: 'Unauthorized' });
       return;
@@ -59,6 +65,8 @@ export class AuthController {
 
     const { accessToken, refreshToken, user } =
       await this.authService.googleLogin(token);
+
+    setAccessCookie(res, accessToken);
 
     setRefreshCookie(res, refreshToken);
 
@@ -130,7 +138,12 @@ export class AuthController {
       refreshToken: newRefreshToken,
     } = await this.authService.refreshToken(refreshToken);
 
-    console.log('Access token:\n', accessToken);
+    if (!accessToken) {
+      res.status(401).json({ message: 'Unauthorized' });
+      return;
+    }
+
+    setAccessCookie(res, accessToken);
 
     setRefreshCookie(res, newRefreshToken);
 
@@ -138,7 +151,7 @@ export class AuthController {
   });
 
   logout = handleAsync((_req, res) => {
-    res.clearCookie('refreshToken');
+    clearRefreshCookie(res);
     res.status(200).json({ message: 'Logged out' });
   });
 }

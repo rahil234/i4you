@@ -9,7 +9,7 @@ const authController = container.get<AuthController>(TYPES.AuthController);
 
 /**
  * @swagger
- * /api/v1/auth/get-user:
+ * /ap/v1/auth/get-user:
  *   post:
  *     summary: Get user by ID
  *     tags:
@@ -59,7 +59,7 @@ router.post('/refresh-token', authController.refreshToken);
 
 /**
  * @swagger
- * /api/v1/auth/login:
+ * /ap/v1/auth/login:
  *   post:
  *     summary: Login user
  *     tags:
@@ -85,7 +85,7 @@ router.post('/login', authController.login);
 
 /**
  * @swagger
- * /api/v1/auth/login:
+ * /ap/v1/auth/login:
  *   post:
  *     summary: Login user
  *     tags:
@@ -111,7 +111,7 @@ router.post('/login/admin', authController.adminLogin);
 
 /**
  * @swagger
- * /api/v1/auth/register:
+ * /ap/v1/auth/register:
  *   post:
  *     summary: Register user
  *     tags:
@@ -135,10 +135,9 @@ router.post('/login/admin', authController.adminLogin);
  */
 router.post('/register', authController.register);
 
-
 /**
  * @swagger
- * /api/v1/auth/login:
+ * /ap/v1/auth/login:
  *   post:
  *     summary: Login user
  *     tags:
@@ -162,10 +161,9 @@ router.post('/register', authController.register);
  */
 router.post('/forgot-password', authController.forgetPassword);
 
-
 /**
  * @swagger
- * /api/v1/auth/login:
+ * /ap/v1/auth/login:
  *   post:
  *     summary: Login user
  *     tags:
@@ -191,7 +189,7 @@ router.post('/reset-password', authController.resetPassword);
 
 /**
  * @swagger
- * /api/v1/auth/login:
+ * /ap/v1/auth/login:
  *   post:
  *     summary: Login user
  *     tags:
@@ -230,7 +228,7 @@ router.post('/logout', authController.logout);
 
 /**
  * @swagger
- * api/v1/auth/login/google:
+ * ap/v1/auth/login/google:
  *   post:
  *     summary: Login with Google
  *     tags:

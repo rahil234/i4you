@@ -9,7 +9,7 @@ const userController = container.get<UserController>(TYPES.UserController);
 
 /**
  * @swagger
- * /api/v1/user:
+ * /ap/v1/user:
  *   get:
  *     summary: Get all users
  *     tags:
@@ -24,7 +24,7 @@ router.get('/', userController.getUsers);
 
 /**
  * @swagger
- * /api/v1/user/:userId/status:
+ * /ap/v1/user/:userId/status:
  *   patch:
  *     summary: Update user status
  *     tags:
@@ -50,7 +50,7 @@ router.patch('/:userId/status', userController.updateUserStatus);
 
 /**
  * @swagger
- * /api/v1/user/me:
+ * /ap/v1/user/me:
  *   get:
  *     summary: Get user by token
  *     tags:

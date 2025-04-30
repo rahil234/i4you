@@ -5,22 +5,38 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9634f5b5-f135-4866-b1d6-9eb36f37aa3e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/k8s/prod/cluster-issuer.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/google-provider.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/frontend/src/app/clear-token/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/frontend/src/components/auth/auth-session-hydrator.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/frontend/src/lib/auth/get-user-data.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/frontend/src/lib/auth/get-user.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/frontend/src/lib/auth/verify-token.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/nginx/nginx.conf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/next.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/next.config.mjs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/layout.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(user)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(user)/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/admin/(dashboard)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/admin/(dashboard)/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/clear-token/page.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/test-page/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/test-page/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/components/auth/user-session-hydrator.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/lib/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/lib/api.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/lib/auth/refresh-session.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/lib/auth/refresh-session.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/frontend/src/middleware.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/middleware.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/store/authStore.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/store/authStore.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/gateway/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/gateway/src/app.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/config/swagger.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/config/swagger.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/controllers/auth.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/controllers/auth.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/routes/auth.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/routes/auth.routes.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/utils/cookie.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/utils/cookie.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose-prod.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose-prod.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/config/swagger.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/config/swagger.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/routes/user.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/routes/user.routes.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/k8s/prod/auth-service.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/prod/auth-service.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/k8s/prod/gateway-server.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/prod/gateway-server.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/k8s/prod/ingress.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/prod/ingress.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/k8s/prod/user-service.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/k8s/prod/user-service.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/ui/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/ui/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/ui/src/button.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/packages/ui/src/button.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/turbo.json" beforeDir="false" afterPath="$PROJECT_DIR$/turbo.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,6 +128,9 @@
     &quot;Docker.docker-compose.yaml.chat-service: Compose Deployment.executor&quot;: &quot;Run&quot;,
     &quot;Docker.docker-compose.yaml.gateway-server: Compose Deployment.executor&quot;: &quot;Run&quot;,
     &quot;Docker.docker-compose.yaml: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;JavaScript Debug.i4you.local.com:3000.executor&quot;: &quot;Debug&quot;,
+    &quot;JavaScript Debug.i4you.local.net secure.executor&quot;: &quot;Debug&quot;,
+    &quot;JavaScript Debug.i4you.local.net.executor&quot;: &quot;Debug&quot;,
     &quot;JavaScript Debug.localhost:3000.executor&quot;: &quot;Debug&quot;,
     &quot;JavaScript Debug.localhost:3001.executor&quot;: &quot;Debug&quot;,
     &quot;Node.js.client.ts.executor&quot;: &quot;Run&quot;,
@@ -121,7 +140,7 @@
     &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;22.11.0&quot;,
     &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;22.14.1&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/rahilk/Projects/i4you/k8s&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/rahilk/Projects/i4you/nginx&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -151,25 +170,25 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/nginx" />
       <recent name="$PROJECT_DIR$/k8s" />
       <recent name="$PROJECT_DIR$/apps/services/auth-service/node_modules" />
       <recent name="$PROJECT_DIR$/apps/frontend/src/app/(auth)" />
       <recent name="$PROJECT_DIR$/apps/services/auth-service/src/errors" />
-      <recent name="$PROJECT_DIR$/apps/services/user-service/src/errors" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/apps/frontend/src/app" />
+      <recent name="$PROJECT_DIR$/apps/frontend/src/app/api" />
+      <recent name="$PROJECT_DIR$/apps/frontend/src/app/api/clear-token" />
       <recent name="$PROJECT_DIR$/apps/frontend/certs" />
       <recent name="$PROJECT_DIR$/apps/services/user-service/src/repositories/interfaces" />
-      <recent name="$PROJECT_DIR$/apps/frontend/src/app" />
-      <recent name="$PROJECT_DIR$/apps/gateway/src" />
-      <recent name="$PROJECT_DIR$/apps/frontend/src/app/admin/(dashboard)" />
     </key>
   </component>
-  <component name="RunManager" selected="JavaScript Debug.localhost:3000">
-    <configuration name="localhost:3000" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:3000">
+  <component name="RunManager" selected="JavaScript Debug.i4you.local.net secure">
+    <configuration name="i4you.local.net secure" type="JavascriptDebugType" uri="https://i4you.local.net">
       <method v="2" />
     </configuration>
-    <configuration name="localhost:3001" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:3001">
+    <configuration name="i4you.local.net" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://i4you.local.net">
       <method v="2" />
     </configuration>
     <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
@@ -181,19 +200,6 @@
     <configuration default="true" type="docker-deploy" factoryName="docker-image" temporary="true">
       <deployment type="docker-image">
         <settings />
-      </deployment>
-      <method v="2" />
-    </configuration>
-    <configuration name="docker-compose.yaml.chat-service: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
-      <deployment type="docker-compose.yml">
-        <settings>
-          <option name="services">
-            <list>
-              <option value="chat-service" />
-            </list>
-          </option>
-          <option name="sourceFilePath" value="docker-compose.yaml" />
-        </settings>
       </deployment>
       <method v="2" />
     </configuration>
@@ -220,13 +226,19 @@
       <envs />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Compound.Start And Debug Server" />
+      <item itemvalue="Docker.docker-compose.yaml[auth-service, gateway-server, user-service]: Compose Deployment" />
+      <item itemvalue="Docker.docker-compose.yaml.gateway-server: Compose Deployment" />
+      <item itemvalue="JavaScript Debug.i4you.local.net secure" />
+      <item itemvalue="JavaScript Debug.i4you.local.net" />
+      <item itemvalue="npm.frontend" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JavaScript Debug.localhost:3000" />
+        <item itemvalue="JavaScript Debug.i4you.local.net" />
         <item itemvalue="npm.frontend" />
-        <item itemvalue="JavaScript Debug.localhost:3001" />
         <item itemvalue="Docker.docker-compose.yaml.gateway-server: Compose Deployment" />
-        <item itemvalue="Docker.docker-compose.yaml.chat-service: Compose Deployment" />
       </list>
     </recent_temporary>
   </component>
@@ -298,6 +310,12 @@
       <workItem from="1745672773735" duration="38828000" />
       <workItem from="1745782743784" duration="6922000" />
       <workItem from="1745826922829" duration="536000" />
+      <workItem from="1745827879467" duration="9246000" />
+      <workItem from="1745861298161" duration="3305000" />
+      <workItem from="1745900152440" duration="1931000" />
+      <workItem from="1745902104167" duration="4240000" />
+      <workItem from="1745916109757" duration="25345000" />
+      <workItem from="1745988171464" duration="1451000" />
     </task>
     <servers />
   </component>

@@ -78,7 +78,7 @@ api.interceptors.response.use(
 
 
 // Response interceptor
-// api.interceptors.response.use(
+// ap.interceptors.response.use(
 //     (response) => {
 //         return response
 //     },
@@ -99,7 +99,7 @@ api.interceptors.response.use(
 //                 // }
 //
 //                 // Retry the request
-//                 return api(originalRequest)
+//                 return ap(originalRequest)
 //             } catch (refreshError) {
 //                 // If refresh token fails, logout the user
 //                 useAuthStore.getState().logout()

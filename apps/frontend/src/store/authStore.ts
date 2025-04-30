@@ -11,7 +11,7 @@ interface AuthStore extends AuthState {
   logout: () => Promise<void>;
   clearState: () => Promise<void>;
   refreshToken: () => Promise<string>;
-  setState: ({}: Partial<AuthState>) => void;
+  setState: (state: Partial<AuthState>) => void;
 }
 
 const AuthStore = create<AuthStore>();
@@ -150,6 +150,7 @@ export const useAuthStore = AuthStore(
           user: state.user,
           isAuthenticated: state.isAuthenticated,
         }),
+        skipHydration: true,
       },
     ), { name: 'auth-store', enabled: true },
   ),
