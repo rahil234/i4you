@@ -9,10 +9,9 @@ export default async function AuthLayout({ children }: Readonly<{
 }>) {
 
   const cookieStore = await cookies();
-  const refreshToken = cookieStore.get('refreshToken')?.value;
-  const accessToken = cookieStore.get('accessToken')?.value;
+  const accessToken = cookieStore.get('accessToken');
 
-  if (refreshToken || accessToken) {
+  if (accessToken) {
     redirect('/discover');
   }
 

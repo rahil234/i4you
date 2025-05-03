@@ -70,3 +70,31 @@ export interface PaginatedResponse<T> extends ApiResponse<T> {
   totalPages: number
 }
 
+export type UserData = {
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  } | null;
+  token: string | null;
+};
+
+// Define the full onboarding data structure
+export interface OnboardingData {
+  // Basic info
+  name: string;
+  age: number | null;
+  bio: string;
+
+  // Photos
+  photos: string[];
+
+  // Interests
+  interests: string[];
+
+  // Preferences (reusing your existing type)
+  preferences: UserPreferences;
+
+  // Location
+  location: string;
+}

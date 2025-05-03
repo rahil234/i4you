@@ -28,7 +28,7 @@ api.interceptors.request.use(
     },
 )
 
-// Flag to prevent multiple refresh requests
+// Flag to prevent multiple refresh-token requests
 let isRefreshing = false;
 let refreshSubscribers: ((token: string) => void)[] = [];
 
@@ -68,7 +68,7 @@ api.interceptors.response.use(
                     });
                 }
             } catch (refreshError) {
-                await useAuthStore.getState().logout(); // Logout on refresh failure
+                await useAuthStore.getState().logout(); // Logout on refresh-token failure
             }
         }
 
@@ -101,7 +101,7 @@ api.interceptors.response.use(
 //                 // Retry the request
 //                 return ap(originalRequest)
 //             } catch (refreshError) {
-//                 // If refresh token fails, logout the user
+//                 // If refresh-token token fails, logout the user
 //                 useAuthStore.getState().logout()
 //                 return Promise.reject(refreshError)
 //             }

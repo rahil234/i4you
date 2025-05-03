@@ -46,23 +46,28 @@ services:
     networks:
       - app-network
 
-  #  order-service:
-  #    image: order-service-image
-  #    build:
-  #      context: ./
-  #      dockerfile: apps/services/order-service/Dockerfile.dev
-  #    volumes:
-  #      - ./apps/services/order-service:/app/apps/services/order-service
-  #      - /app/node_modules
-  #      - /app/apps/services/order-service/node_modules
-  #    depends_on:
-  #      - user-service
-  #    environment:
-  #      - NODE_ENV=development
-  #      - USER_SERVICE_GRPC_URL=user-service:${USER_GRPC_PORT}
-  #      - PORT=${ORDER_HTTP_PORT}
-  #    networks:
-  #      - app-network
+  media-service:
+    image: media-service-image
+    pull_policy: never
+    build:
+      context: ./apps/services/media-service
+      dockerfile: Dockerfile.dev
+      additional_contexts:
+        root: ./
+    volumes:
+      - ./apps/services/media-service:/app/apps/services/media-service
+      - /app/apps/services/media-service/node_modules
+      - ./packages:/app/packages
+    ports:
+      - "3003:3003"
+    environment:
+      - NODE_ENV=development
+      - PORT=${MEDIA_HTTP_PORT}
+      - USER_GRPC_SERVER_URL=user-service:${USER_GRPC_PORT}
+    env_file:
+      - ./apps/services/media-service/.env
+    networks:
+      - app-network
 
   #  chat-service:
   #    build: apps/services/chat-service
@@ -94,24 +99,26 @@ services:
       - PORT=${GATEWAY_HTTP_PORT}
       - USER_SERVER_URL=http://user-service:${USER_HTTP_PORT}
       - AUTH_SERVER_URL=http://auth-service:${AUTH_HTTP_PORT}
+      - MEDIA_SERVER_URL=http://media-service:${MEDIA_HTTP_PORT}
       - ALLOWED_ORIGINS=http://localhost:3000,https://localhost:3000,https://i4you.local.net,http://i4you.local.net
     env_file:
       - ./apps/gateway/.env
     depends_on:
       - user-service
       - auth-service
+      - media-service
     networks:
       - app-network
 
   nginx:
-    image: nginx:latest
-    container_name: nginx
+    build:
+      context: ./apps/nginx
+      dockerfile: Dockerfile.dev
+    image: i4you-nginx
+    container_name: i4you-nginx
     ports:
       - "80:80"
       - "443:443"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/certs:/etc/nginx/certs
     depends_on:
       - gateway-server
     networks:

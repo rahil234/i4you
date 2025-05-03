@@ -19,13 +19,15 @@ import { ValidationError } from '@/errors/ValidationError';
 import { MailService } from '@/services/mail.service';
 import { PasswordResetTemplate } from '@/utils/mail-templates';
 import { NotFoundError } from '@/errors/NotFoundError';
+import { UserGrpcService } from '@/services/user.grpc.service';
 
 @injectable()
 export class AuthService {
   constructor(
     @inject(TYPES.UserRepository) private userRepository: IUserRepository,
     @inject(TYPES.AdminRepository) private adminRepository: IAdminRepository,
-    @inject(TYPES.MailService) private mailService: MailService
+    @inject(TYPES.MailService) private mailService: MailService,
+    @inject(TYPES.UserGrpcService) private userGrpcService: UserGrpcService
   ) {}
 
   async login(loginDTO: LoginRequestDTO): Promise<LoginResponseDTO> {
@@ -256,6 +258,8 @@ export class AuthService {
       role,
       email: user.email,
     });
+
+    console.log('new Access Token: ', accessToken);
 
     const refreshToken = generateRefreshToken({
       sub: user._id,

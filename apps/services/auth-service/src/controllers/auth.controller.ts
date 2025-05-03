@@ -1,7 +1,6 @@
 import { inject, injectable } from 'inversify';
 
 import { TYPES } from '@/types';
-import { getUserById } from '@/grpc/user.client.helpers';
 import { AuthService } from '@/services/auth.service';
 import { handleAsync } from '@/utils/handle-async';
 import {
@@ -9,16 +8,20 @@ import {
   setAccessCookie,
   setRefreshCookie,
 } from '@/utils/cookie';
+import { UserGrpcService } from '@/services/user.grpc.service';
 
 @injectable()
 export class AuthController {
-  constructor(@inject(TYPES.AuthService) private authService: AuthService) {}
+  constructor(
+    @inject(TYPES.AuthService) private authService: AuthService,
+    @inject(TYPES.UserGrpcService) private userGrpcService: UserGrpcService
+  ) {}
 
   getUser = handleAsync(async (req, res) => {
     try {
       const { userId } = req.body;
       console.log('Getting user with ID:', userId);
-      const user = await getUserById(userId);
+      const user = await this.userGrpcService.findUserById(userId);
       console.log('User:', user);
       res.json(user);
     } catch (error) {

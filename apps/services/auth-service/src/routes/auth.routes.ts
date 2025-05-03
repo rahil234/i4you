@@ -1,43 +1,43 @@
-import express from 'express';
+import { Router } from 'express';
 import { AuthController } from '@/controllers/auth.controller';
 import { container } from '@/config/inversify.config';
 import { TYPES } from '@/types';
 
-const router = express.Router();
+const router = Router();
 
 const authController = container.get<AuthController>(TYPES.AuthController);
 
-/**
- * @swagger
- * /ap/v1/auth/get-user:
- *   post:
- *     summary: Get user by ID
- *     tags:
- *       - Auth
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               userId:
- *                 type: string
- *     responses:
- *       200:
- *         description: User found
- *       401:
- *         description: Unauthorized
- *       404:
- *         description: User not found
- */
-router.post('/get-user', authController.getUser);
+// /**
+//  * @swagger
+//  * /ap/v1/auth/get-user:
+//  *   post:
+//  *     summary: Get user by ID
+//  *     tags:
+//  *       - Auth
+//  *     security:
+//  *       - bearerAuth: []
+//  *     requestBody:
+//  *       required: true
+//  *       content:
+//  *         application/json:
+//  *           schema:
+//  *             type: object
+//  *             properties:
+//  *               userId:
+//  *                 type: string
+//  *     responses:
+//  *       200:
+//  *         description: User found
+//  *       401:
+//  *         description: Unauthorized
+//  *       404:
+//  *         description: User not found
+//  */
+// router.get('/get-user', authController.getUser);
 
 /**
  * @swagger
- * /refresh-token:
+ * /refresh-token-token:
  *   post:
  *     summary: Refresh access token
  *     tags:

@@ -1,4 +1,4 @@
-import type { User } from '@repo/shared';
+import { User, UserPreferences } from '@repo/shared';
 
 class UserDTO implements User {
   id: string;
@@ -9,6 +9,8 @@ class UserDTO implements User {
   bio: string;
   photos: string[];
   role: 'admin' | 'member';
+  onboarding?: boolean;
+  preferences: UserPreferences;
   location: string;
   phone: string;
   address: string;
@@ -25,9 +27,11 @@ class UserDTO implements User {
     this.bio = user.bio;
     this.photos = user.photos;
     this.location = user.location;
+    this.preferences = user.preferences;
     this.phone = user.phone;
     this.address = user.address;
     this.joined = user.createdAt;
+    this.onboarding = user.onboardingCompleted ? undefined : true;
     this.updatedAt = user.updatedAt;
   }
 }

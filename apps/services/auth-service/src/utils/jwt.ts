@@ -1,22 +1,17 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '@/config';
+import { UserJwtPayload } from '@repo/shared';
 
 /**
  * Generates an access token
  * @param payload Data to encode in the token
  * @returns Signed JWT access token
  */
-export const generateAccessToken = (payload: {
-  sub: string;
-  role: 'admin' | 'member';
-  email: string;
-}) => {
+export const generateAccessToken = (payload: UserJwtPayload) => {
   try {
-    const token = jwt.sign(payload, config.jwtSecret, {
+    return jwt.sign(payload, config.jwtSecret, {
       expiresIn: config.jwtExpiresIn,
     });
-    console.log(token);
-    return token;
   } catch (error) {
     throw new Error(
       `Access token generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`
@@ -25,14 +20,13 @@ export const generateAccessToken = (payload: {
 };
 
 /**
- * Generates a refresh token
+ * Generates a refresh-token token
  * @param payload Data to encode in the token
- * @returns Signed JWT refresh token
+ * @returns Signed JWT refresh-token token
  */
-export const generateRefreshToken = (payload: {
-  sub: string;
-  role: 'admin' | 'member';
-}) => {
+export const generateRefreshToken = (
+  payload: Pick<UserJwtPayload, 'sub' | 'role'>
+) => {
   try {
     return jwt.sign(payload, config.jwtSecret, { expiresIn: '7d' });
   } catch (error) {
@@ -64,10 +58,9 @@ export const verifyRefreshToken = (token: string): JwtPayload => {
  */
 export const generateResetToken = (payload: { sub: string }) => {
   try {
-    const token = jwt.sign(payload, config.jwtSecret, {
+    return jwt.sign(payload, config.jwtSecret, {
       expiresIn: '1h',
     });
-    return token;
   } catch (error) {
     throw new Error(
       `Access token generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`

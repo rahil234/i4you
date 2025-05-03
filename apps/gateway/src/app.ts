@@ -35,7 +35,6 @@ app.use(express.static(path.join(dirname, '../public')));
 
 app.use(cookieParser());
 
-// Serve Swagger and ReDoc
 app.use('/api-docs', swaggerUi.serve, async (req: Request, res: Response, next: NextFunction) => {
   const spec = await loadSpecs();
   swaggerUi.setup(spec)(req, res, next);
@@ -56,6 +55,9 @@ app.use(
     secret: env.JWT_SECRET,
     algorithms: ['HS256'],
     requestProperty: 'user',
+    onExpired: (req, res) => {
+      console.log('Token expired:', req.url);
+    },
   }).unless({
     path: [
       '/',
@@ -103,6 +105,7 @@ const createProxy = (target: string, pathRewrite: Record<string, string>) => {
 
 app.use('/api/v1/auth', createProxy(env.AUTH_SERVER_URL, { '^/api/v1/auth': '' }));
 app.use('/api/v1/user', createProxy(env.USER_SERVER_URL, { '^/api/v1/user': '' }));
+app.use('/api/v1/media', createProxy(env.MEDIA_SERVER_URL, { '^/api/v1/media': '' }));
 
 app.get('/', (_req, res) => {
   res.redirect('/api-docs');

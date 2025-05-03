@@ -1,23 +1,18 @@
+import { cookies } from 'next/headers';
+import { getUser } from '@/lib/auth/get-user';
+import { refreshToken } from '@/lib/auth/refresh-token';
 import { redirect } from 'next/navigation';
-import { getUser } from './get-user';
+import { UserData } from '@/types';
 import { User } from '@repo/shared';
 
-type UserData = {
-  user: {
-    id: string;
-    name: string;
-    email: string;
-  } | null;
-  token: string | null;
-};
+export async function getUserData(): Promise<User> {
+  try {
+    const cookieStore = await cookies();
 
-export async function getUserData(): Promise<UserData> {
-  const userData = await getUser();
+    const access_token = cookieStore.get('accessToken')?.value;
 
-  if (!userData) {
-    console.log('User data not found, redirecting to clear token');
+    return await getUser(access_token!);
+  } catch (error) {
     redirect('/clear-token');
   }
-
-  return userData;
 }

@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: gateway-server
-          image: gateway-server-image:latest
-          imagePullPolicy: Never
+          image: gateway-server-image
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 4000
           env:
@@ -29,6 +29,8 @@ spec:
               value: "http://auth-service:4001"
             - name: USER_SERVER_URL
               value: "http://user-service:4002"
+            - name: MEDIA_SERVER_URL
+              value: "http://media-service:4003"
             - name: JWT_SECRET
               value: "your_jwt_secret"
 ---

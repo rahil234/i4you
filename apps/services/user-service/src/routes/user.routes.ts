@@ -1,7 +1,8 @@
 import express from 'express';
-import type {UserController} from '@/controllers/user.controller';
-import {container} from "@/config/inversify.config";
-import {TYPES} from "@/types";
+import type { UserController } from '@/controllers/user.controller';
+import { container } from '@/config/inversify.config';
+import { TYPES } from '@/types';
+import { authenticateAndAuthorizeMiddleware } from '@/middlwares/authenticate-and-authorize.middleware';
 
 const router = express.Router();
 
@@ -61,6 +62,29 @@ router.patch('/:userId/status', userController.updateUserStatus);
  *       200:
  *         description: Login successful
  */
-router.get('/me', userController.getUser);
+router.get(
+  '/me',
+  authenticateAndAuthorizeMiddleware(['member']),
+  userController.getUser
+);
+
+/**
+ * @swagger
+ * /ap/v1/user/onboarding:
+ *   post:
+ *     summary: Upload user onBoarding data
+ *     tags:
+ *       - User
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: upload successful
+ */
+router.post(
+  '/onboarding',
+  authenticateAndAuthorizeMiddleware(['member']),
+  userController.onBoarding
+);
 
 export default router;

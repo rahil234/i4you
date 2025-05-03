@@ -17,16 +17,31 @@ export async function middleware(request: NextRequest) {
     pathname === '/signup' ||
     pathname === '/admin/login' ||
     pathname === '/favicon.ico' ||
+    pathname === '/refresh-token' ||
+    pathname === '/refresh-token-api' ||
     pathname === '/clear-token'
   ) {
     return NextResponse.next();
   }
 
-  // const token = request.cookies.get('accessToken')?.value;
-  // if (!token) return NextResponse.redirect(new URL('/login', request.url));
-  //
-  // const payload = await verifyToken(token);
-  // if (!payload) return NextResponse.redirect(new URL('/login', request.url));
+  const accessToken = request.cookies.get('accessToken')?.value;
+  const refreshToken = request.cookies.get('refreshToken')?.value;
 
-  return NextResponse.next(); // token is valid
+  const isAccessTokenValid = await verifyToken(accessToken);
+  const isRefreshTokenValid = await verifyToken(refreshToken);
+
+  if (!isRefreshTokenValid) {
+    return NextResponse.redirect(new URL('/clear-token', request.url));
+  }
+
+  if (!isAccessTokenValid && isRefreshTokenValid) {
+    if (pathname !== '/refresh-token-api') {
+      console.log('Access token expired, redirecting to refresh-token page', pathname);
+      const redirectTo = encodeURIComponent(request.nextUrl.pathname + request.nextUrl.search);
+      return NextResponse.redirect(new URL(`/refresh-token-api?redirect=${redirectTo}`, request.url));
+    }
+    return NextResponse.redirect(new URL('/clear-token', request.url));
+  }
+
+  return NextResponse.next();
 }

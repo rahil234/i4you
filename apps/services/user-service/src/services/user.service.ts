@@ -4,21 +4,25 @@ import { TYPES } from '@/types';
 import UserDTO from '@/dtos/user.dtos';
 import IAdminRepository from '@/repositories/interfaces/IAdminRepository';
 import { BadRequestError } from '@/errors/BadRequestError';
+import { OnboardingData, UserJwtPayload } from '@repo/shared';
 
 @injectable()
 export class UserService {
   constructor(
     @inject(TYPES.UserRepository) private userRepository: IUserRepository,
-    @inject(TYPES.AdminRepository) private adminRepository: IAdminRepository,
-  ) {
-    this.userRepository = userRepository;
-  }
+    @inject(TYPES.AdminRepository) private adminRepository: IAdminRepository
+  ) {}
 
-  async getUserById(id: string, role: 'admin' | 'member') {
+  async getUserById(id: string, role: UserJwtPayload['role'] = 'member') {
     if (role === 'admin') {
       return new UserDTO(await this.adminRepository.findById(id), role);
     }
     return new UserDTO(await this.userRepository.findById(id), role);
+  }
+
+  async getUsers() {
+    const users = await this.userRepository.findAll();
+    return users.map((user) => new UserDTO(user, 'member'));
   }
 
   async updateUserStatus(userId: string, status: string) {
@@ -30,11 +34,21 @@ export class UserService {
       throw new BadRequestError('Status is required');
     }
 
-    await this.userRepository.update(userId, { status: status as 'active' | 'suspended' });
+    await this.userRepository.update(userId, {
+      status: status as 'active' | 'suspended',
+    });
   }
 
-  async getUsers() {
-    const users = await this.userRepository.findAll();
-    return users.map((user) => new UserDTO(user, 'member'));
+  async onBoarding(userId: string, data: OnboardingData) {
+    const user = await this.userRepository.findById(userId);
+
+    if (!user) {
+      throw new BadRequestError('User not found');
+    }
+
+    await this.userRepository.update(userId, {
+      ...data,
+      onboardingCompleted: false,
+    });
   }
 }

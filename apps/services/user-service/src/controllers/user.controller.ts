@@ -3,22 +3,16 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from '@/types';
 import { UserService } from '@/services/user.service';
 import { handleAsync } from '@/utils/handle-async';
+import { AuthError } from '@/errors/AuthError';
 
 @injectable()
 export class UserController {
-  constructor(@inject(TYPES.UserService) private userService: UserService) {
-  }
+  constructor(@inject(TYPES.UserService) private userService: UserService) {}
 
   getUser = handleAsync(async (req, res) => {
-    const userId = req.header('X-User-Id');
-    const userRole = req.header('X-User-Role') as 'admin' | 'member';
+    const { id: userId, role } = req.user;
 
-    if (!userId) {
-      res.status(401).json({ message: 'Unauthorized' });
-      return;
-    }
-
-    const user = await this.userService.getUserById(userId, userRole);
+    const user = await this.userService.getUserById(userId, role);
 
     if (!user) {
       res.status(404).json({ message: 'User not found' });
@@ -29,22 +23,13 @@ export class UserController {
   });
 
   updateUserStatus = handleAsync(async (req, res) => {
-    const { userId } = req.params;
+    const { id: userId } = req.user;
     const { status } = req.body;
 
     if (!userId) {
       res.status(401).json({ message: 'Unauthorized' });
       return;
     }
-
-    console.log('updateUserStatus', userId, 'with status', status);
-
-    // const user = await this.userService.getUserById(userId, 'member');
-    //
-    // if (!user) {
-    //   res.status(404).json({ message: 'User not found' });
-    //   return;
-    // }
 
     await this.userService.updateUserStatus(userId, status);
 
@@ -54,5 +39,15 @@ export class UserController {
   getUsers = handleAsync(async (req, res) => {
     const users = await this.userService.getUsers();
     res.status(200).json(users);
+  });
+
+  onBoarding = handleAsync(async (req, res, next) => {
+    const { data } = req.body;
+
+    const userId = req.user.id;
+
+    await this.userService.onBoarding(userId, data);
+
+    res.status(200).json({ message: 'user onboarded successfully' });
   });
 }

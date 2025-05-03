@@ -1,5 +1,5 @@
-import env from '@/config/env.config';
 import { Secret, SignOptions } from 'jsonwebtoken';
+import env from '@/config/env.config';
 
 type JWTExpiresIn = SignOptions['expiresIn'];
 

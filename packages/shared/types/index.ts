@@ -10,6 +10,7 @@ export interface User {
   distance?: string;
   interests?: string[];
   avatar?: string;
+  onboarding?: boolean;
   status: 'active' | 'suspended';
 }
 
@@ -65,3 +66,29 @@ export interface PaginatedResponse<T> extends ApiResponse<T> {
   totalPages: number;
 }
 
+// Define the full onboarding data structure
+export interface OnboardingData {
+  // Basic info
+  name: string;
+  age: number;
+  bio: string;
+
+  // Photos
+  photos: string[];
+
+  // Interests
+  interests: string[];
+
+  // Preferences (reusing your existing type)
+  preferences: UserPreferences;
+
+  // Location
+  location: string;
+}
+
+
+export interface UserJwtPayload {
+  sub: string;
+  role: 'admin' | 'member';
+  email: string;
+}

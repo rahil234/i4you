@@ -6,8 +6,12 @@ if (!secret) {
   throw new Error('NEXT_PRIVATE_JWT_SECRET is not defined');
 }
 
-export async function verifyToken(token: string): Promise<JWTPayload | null> {
+export async function verifyToken(token?: string): Promise<JWTPayload | null> {
   try {
+    if (!token) {
+      return null;
+    }
+
     const { payload } = await jwtVerify(token, secret);
     return payload;
   } catch (err) {

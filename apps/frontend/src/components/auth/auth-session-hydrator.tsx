@@ -2,29 +2,26 @@
 
 import { useEffect } from 'react';
 import { useAuthStore } from '@/store/authStore';
+import { User } from '@repo/shared';
+import { useRouter } from 'next/navigation';
 
-type UserData = {
-  user: {
-    id: string;
-    name: string;
-    email: string;
-  } | null;
-  token: string | null;
-};
-
-export default function AuthSessionHydrator({ userData }: {userData: UserData}) {
+export default function AuthSessionHydrator({ user }: { user: User }) {
   const { setState } = useAuthStore();
 
-  if (!userData) {
+  const router = useRouter();
+
+  console.log('user from auth hydrator', user);
+
+  if (!user) {
     return null;
   }
-  console.log('userData from auth hydrator', userData);
-
-  const { user, token } = userData;
 
   useEffect(() => {
     if (user) {
-      setState({ user: user, accessToken: token, isAuthenticated: true, isLoading: false });
+      setState({ user, isAuthenticated: true, isLoading: false });
+      if (user.onboarding) {
+        router.push('/onboarding');
+      }
     } else {
       setState({ user: null, isAuthenticated: false, isLoading: false });
     }

@@ -2,8 +2,7 @@
   "name": "@repo/shared",
   "version": "1.0.0",
   "exports": {
-    "types": "./types/index.ts",
-    "proto": "./proto/"
+    "types": "./types/index.ts"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
