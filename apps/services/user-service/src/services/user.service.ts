@@ -48,7 +48,7 @@ export class UserService {
 
     await this.userRepository.update(userId, {
       ...data,
-      onboardingCompleted: false,
+      onboardingCompleted: true,
     });
   }
 }

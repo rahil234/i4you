@@ -1,23 +1,39 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { MapPin } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { OnboardingLayout } from '@/components/onboarding-layout';
 import { useOnboardingStore } from '@/store/onboardingStore';
 import { Input } from '@/components/ui/input';
+import { usePlacesAutocomplete } from '@/hooks/use-places-autocomplete';
 
-const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-
-if (!GOOGLE_MAPS_API_KEY) {
-  throw new Error('Google Maps API key is not defined in environment variables.');
-}
-
+const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '';
 
 export default function OnboardingLocation() {
   const { data, setLocation } = useOnboardingStore();
   const [isLocating, setIsLocating] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const { initAutocomplete, isLoaded } = usePlacesAutocomplete({
+    apiKey: GOOGLE_MAPS_API_KEY,
+    onPlaceSelect: (place) => {
+      if (place.formatted_address) {
+        setLocation(place.formatted_address);
+      }
+    },
+    options: {
+      // types: ["(cities)"],
+      componentRestrictions: { country: "in" },
+    },
+  });
+
+  useEffect(() => {
+    if (isLoaded && inputRef.current) {
+      initAutocomplete(inputRef.current);
+    }
+  }, [isLoaded, initAutocomplete]);
 
   const handleUseCurrentLocation = () => {
     setIsLocating(true);
@@ -69,6 +85,7 @@ export default function OnboardingLocation() {
             <div className="flex justify-between items-center space-x-2">
               <Input
                 id="location"
+                ref={inputRef}
                 value={data.location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="Enter your location"
