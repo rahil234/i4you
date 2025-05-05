@@ -209,6 +209,9 @@ importers:
         specifier: latest
         version: 5.0.4(@types/react@19.1.2)(immer@10.1.1)(react@19.1.0)(use-sync-external-store@1.5.0(react@19.1.0))
     devDependencies:
+      '@types/express':
+        specifier: ^5.0.1
+        version: 5.0.1
       '@types/jsonwebtoken':
         specifier: ^9.0.9
         version: 9.0.9

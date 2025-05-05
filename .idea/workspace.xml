@@ -5,28 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9634f5b5-f135-4866-b1d6-9eb36f37aa3e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/apps/gateway/src/instrumentation.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/gateway/src/middlewares/error-handling.middleware.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(api)/refresh-token-api/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(api)/refresh-token-api/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(user)/discover/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(user)/discover/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(user)/profile/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(user)/profile/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/components/user-profile-card.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/components/user-profile-card.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/services/user.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/services/user.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/store/matchesStore.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/store/matchesStore.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/store/onboardingStore.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/store/onboardingStore.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/types/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/types/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/gateway/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/gateway/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/gateway/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/gateway/src/app.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/controllers/user.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/controllers/user.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/dtos/user.dtos.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/dtos/user.dtos.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/repositories/interfaces/IUserRepository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/repositories/interfaces/IUserRepository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/repositories/user.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/repositories/user.repository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/routes/user.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/routes/user.routes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/services/user.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/services/user.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/shared/types/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/shared/types/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(api)/clear-token/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(api)/clear-token/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/login/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/utils/cookie.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/utils/cookie.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -321,7 +304,7 @@
       <workItem from="1746009242824" duration="98023000" />
       <workItem from="1746339200760" duration="6426000" />
       <workItem from="1746421900400" duration="1736000" />
-      <workItem from="1746423658305" duration="5413000" />
+      <workItem from="1746423658305" duration="6415000" />
     </task>
     <servers />
   </component>

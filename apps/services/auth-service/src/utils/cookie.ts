@@ -12,7 +12,6 @@ export const setAccessCookie = (res: Response, token: string) => {
     secure: isProd,
     sameSite: isProd ? 'none' : 'lax',
     path: '/',
-    domain: 'i4you.local.net',
     maxAge: 15 * 60 * 1000,
   };
 
@@ -30,7 +29,6 @@ export const setRefreshCookie = (res: Response, token: string) => {
     secure: isProd,
     sameSite: isProd ? 'none' : 'lax',
     path: '/',
-    domain: 'i4you.local.net',
     maxAge: 7 * 24 * 60 * 60 * 1000,
   };
 
@@ -46,7 +44,10 @@ export const clearAccessCookie = (res: Response) => {
 
 export const clearRefreshCookie = (res: Response) => {
   res.clearCookie('refreshToken', {
-    domain: 'i4you.local.net',
+    maxAge: 0,
+  });
+
+  res.clearCookie('accessToken', {
     maxAge: 0,
   });
 };
