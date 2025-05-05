@@ -1,0 +1,32 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+metadata:
+  name: i4you-prod
+build:
+  artifacts:
+    - image: user-service-image
+      context: apps/services/user-service
+      docker:
+        dockerfile: Dockerfile
+    - image: auth-service-image
+      context: apps/services/auth-service
+      docker:
+        dockerfile: Dockerfile
+    - image: media-service-image
+      context: apps/services/media-service
+      docker:
+        dockerfile: Dockerfile
+    - image: gateway-server-image
+      context: apps/gateway
+      docker:
+        dockerfile: Dockerfile
+  local:
+    push: false
+deploy:
+  kubectl:
+    manifests:
+      - k8s/user-service.yaml
+      - k8s/auth-service.yaml
+      - k8s/media-service.yaml
+      - k8s/gateway.yaml
+      - k8s/nginx.yaml

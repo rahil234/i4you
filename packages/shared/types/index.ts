@@ -4,14 +4,23 @@ export interface User {
   name: string;
   email: string;
   age: number;
+  status: 'active' | 'suspended';
   bio: string;
   photos: string[];
-  location: string;
-  distance?: string;
-  interests?: string[];
-  avatar?: string;
+  role: 'admin' | 'member';
   onboarding?: boolean;
-  status: 'active' | 'suspended';
+  interests?: string[];
+  stats?: {
+    matches: number;
+    likes: number;
+    activeDays: number;
+  };
+  preferences: UserPreferences;
+  location: string;
+  phone: string;
+  address: string;
+  joined: string;
+  updatedAt: string;
 }
 
 // Auth types

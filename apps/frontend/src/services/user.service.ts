@@ -9,6 +9,12 @@ class UserService {
         .then(res => res.data),
     );
 
+  getMyMatches = () => handleApi(() =>
+    api
+      .get('/user/matches')
+      .then(res => res.data),
+  );
+
   updateUserStatus = (userId: string, status: string) =>
     handleApi(() =>
       api

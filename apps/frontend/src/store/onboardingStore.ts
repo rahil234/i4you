@@ -284,6 +284,7 @@ export const useOnboardingStore = create<OnboardingStore>()(
           return Promise.reject(error);
         }
 
+        get().resetOnboarding();
         get().markStepCompleted('complete');
 
         return Promise.resolve();

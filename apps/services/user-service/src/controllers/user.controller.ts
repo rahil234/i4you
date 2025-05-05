@@ -41,6 +41,18 @@ export class UserController {
     res.status(200).json(users);
   });
 
+  getMatches = handleAsync(async (req, res) => {
+    const { id: userId } = req.user;
+
+    if (!userId) {
+      throw new AuthError('Unauthorized');
+    }
+
+    const matches = await this.userService.getMatches(userId);
+
+    res.status(200).json(matches);
+  });
+
   onBoarding = handleAsync(async (req, res, next) => {
     const { data } = req.body;
 

@@ -1,10 +1,10 @@
-import IUserRepository from '@/repositories/interfaces/IUserRepository';
 import { injectable, inject } from 'inversify';
+import IUserRepository from '@/repositories/interfaces/IUserRepository';
 import { TYPES } from '@/types';
 import UserDTO from '@/dtos/user.dtos';
-import IAdminRepository from '@/repositories/interfaces/IAdminRepository';
 import { BadRequestError } from '@/errors/BadRequestError';
-import { OnboardingData, UserJwtPayload } from '@repo/shared';
+import IAdminRepository from '@/repositories/interfaces/IAdminRepository';
+import { OnboardingData, User, UserJwtPayload } from '@repo/shared';
 
 @injectable()
 export class UserService {
@@ -37,6 +37,16 @@ export class UserService {
     await this.userRepository.update(userId, {
       status: status as 'active' | 'suspended',
     });
+  }
+
+  async getMatches(userId: string) {
+    const user = await this.userRepository.findById(userId);
+    if (!user) {
+      throw new BadRequestError('User not found');
+    }
+
+    const matches = await this.userRepository.getMatches(userId);
+    return matches.map((match) => new UserDTO(match, 'member'));
   }
 
   async onBoarding(userId: string, data: OnboardingData) {

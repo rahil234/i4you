@@ -1,3 +1,4 @@
+import '@/instrumentation';
 import express, { Request, Response, NextFunction } from 'express';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -11,6 +12,7 @@ import swaggerUi from 'swagger-ui-express';
 import { env } from '@/config';
 import httpLogger from 'express-logr';
 import { loadSpecs } from '@/config/swagger.config';
+import { errorHandlingMiddleware } from '@/middlewares/error-handling.middleware';
 
 const filePath = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filePath);
@@ -55,7 +57,7 @@ app.use(
     secret: env.JWT_SECRET,
     algorithms: ['HS256'],
     requestProperty: 'user',
-    onExpired: (req, res) => {
+    onExpired: (req) => {
       console.log('Token expired:', req.url);
     },
   }).unless({
@@ -111,14 +113,7 @@ app.get('/', (_req, res) => {
   res.redirect('/api-docs');
 });
 
-app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
-  if (err.name === 'UnauthorizedError') {
-    res.status(401).json({ error: 'Invalid or missing token' });
-  } else {
-    console.log('Unknown Error:', err);
-    next(err);
-  }
-});
+app.use(errorHandlingMiddleware());
 
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);

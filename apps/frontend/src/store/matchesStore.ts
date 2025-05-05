@@ -1,6 +1,7 @@
 import type { Match, User } from '@/types';
 import { create, StateCreator } from 'zustand/index';
 import { devtools } from 'zustand/middleware';
+import userService from '@/services/user.service';
 
 interface MatchesStore {
   matches: Match[];
@@ -17,7 +18,7 @@ interface MatchesStore {
 const matchStore: StateCreator<MatchesStore, [['zustand/devtools', never]]> = (set, get) => ({
   matches: [],
   potentialMatches: [],
-  loading: false,
+  loading: true,
   error: null,
 
   fetchMatches: async () => {
@@ -66,9 +67,6 @@ const matchStore: StateCreator<MatchesStore, [['zustand/devtools', never]]> = (s
   fetchPotentialMatches: async () => {
     set({ loading: true, error: null }, undefined, 'matchStore/fetchMatches/intial');
     try {
-      // In a real app, this would be an API call
-      // For demo purposes, we'll use sample data
-      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const sampleUsers: User[] = [
         {
@@ -103,7 +101,17 @@ const matchStore: StateCreator<MatchesStore, [['zustand/devtools', never]]> = (s
         },
       ];
 
-      set({ potentialMatches: sampleUsers, loading: false },undefined,'matchStore/fetchPotentialMatches/success');
+      const { data, error } = await userService.getMyMatches();
+
+      if (error) {
+        console.log('Error fetching potential matches:', error);
+        set({ error: 'Failed to fetch potential matches', loading: false });
+        return;
+      }
+
+      console.log('Potential matches response:', data);
+
+      set({ potentialMatches: data, loading: false }, undefined, 'matchStore/fetchPotentialMatches/success');
     } catch (error) {
       set({ error: 'Failed to fetch potential matches', loading: false });
     }
@@ -122,7 +130,7 @@ const matchStore: StateCreator<MatchesStore, [['zustand/devtools', never]]> = (s
 
         const newMatch: Match = {
           id: `match-${Date.now()}`,
-          userId: 'user1', // Current user ID
+          userId: 'user1',
           matchedUserId: userId,
           createdAt: new Date().toISOString(),
           user: matchedUser,
@@ -137,7 +145,7 @@ const matchStore: StateCreator<MatchesStore, [['zustand/devtools', never]]> = (s
       } else {
         set((state) => ({
           potentialMatches: state.potentialMatches.filter((user) => user.id !== userId),
-        }),undefined,'matchStore/likeUser');
+        }), undefined, 'matchStore/likeUser');
 
         return null;
       }

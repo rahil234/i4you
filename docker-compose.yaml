@@ -111,11 +111,15 @@ services:
       - app-network
 
   nginx:
-    build:
-      context: ./apps/nginx
-      dockerfile: Dockerfile.dev
-    image: i4you-nginx
+    #    build:
+    #      context: ./apps/nginx
+    #      dockerfile: Dockerfile.dev
+    #    image: i4you-nginx
+    image: nginx:latest
     container_name: i4you-nginx
+    volumes:
+      - ./apps/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./apps/nginx/certs:/etc/nginx/certs
     ports:
       - "80:80"
       - "443:443"
