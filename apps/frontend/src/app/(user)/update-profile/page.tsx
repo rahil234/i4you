@@ -25,7 +25,6 @@ export default function UpdateProfilePage() {
   });
   const [error, setError] = useState('');
 
-  // Sync formData with user data when the user becomes available
   useEffect(() => {
     if (user && !isLoading) {
       setFormData({
@@ -40,7 +39,7 @@ export default function UpdateProfilePage() {
   }, [user, isLoading]);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -91,10 +90,13 @@ export default function UpdateProfilePage() {
   };
 
   const handleRemovePhoto = (index: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      photos: prev.photos.filter((_, i) => i !== index),
-    }));
+    setFormData((prev) => {
+      const newPhotos = prev.photos.filter((_, i) => i !== index);
+      return {
+        ...prev,
+        photos: newPhotos,
+      };
+    });
     setError('');
   };
 
@@ -121,6 +123,7 @@ export default function UpdateProfilePage() {
         photos: formData.photos,
       };
 
+      console.log('Submitting updated user:', updatedUser);
       await updateUser(updatedUser);
       router.push('/profile');
     } catch (err) {
