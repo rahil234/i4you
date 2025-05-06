@@ -10,11 +10,11 @@ const prometheusExporter = new PrometheusExporter(
   },
   () => {
     console.log('Prometheus scrape endpoint: http://localhost:9464/metrics');
-  },
+  }
 );
 
 const sdk = new NodeSDK({
-  traceExporter: new ConsoleSpanExporter(),
+  // traceExporter: new ConsoleSpanExporter(),
   metricReader: prometheusExporter,
   instrumentations: [getNodeAutoInstrumentations()],
 });

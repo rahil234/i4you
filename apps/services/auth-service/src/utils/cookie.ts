@@ -42,7 +42,7 @@ export const clearAccessCookie = (res: Response) => {
   });
 };
 
-export const clearRefreshCookie = (res: Response) => {
+export const clearAuthCookie = (res: Response) => {
   res.clearCookie('refreshToken', {
     maxAge: 0,
   });

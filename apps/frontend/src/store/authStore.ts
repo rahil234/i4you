@@ -37,11 +37,10 @@ export const useAuthStore = AuthStore(
               return;
             }
 
-            const { user, token: accessToken } = data;
+            const { user } = data;
 
             set({
               user,
-              accessToken,
               isAuthenticated: true,
               isLoading: false,
             });
@@ -54,7 +53,7 @@ export const useAuthStore = AuthStore(
               set({ error: error, isLoading: false });
               return;
             }
-            set({ error: null, isLoading: false, user: data.user, accessToken: data.token, isAuthenticated: true });
+            set({ error: null, isLoading: false, user: data.user, isAuthenticated: true });
           },
 
           googleAuthLogin: async (token) => {
@@ -66,11 +65,10 @@ export const useAuthStore = AuthStore(
               return;
             }
 
-            const { user, token: accessToken } = data;
+            const { user } = data;
 
             set({
               user,
-              accessToken,
               isAuthenticated: true,
               isLoading: false,
             });
@@ -87,11 +85,10 @@ export const useAuthStore = AuthStore(
 
             console.log('signup data', data);
 
-            const { user, token: accessToken } = data;
+            const { user } = data;
 
             set({
               user,
-              accessToken,
               isAuthenticated: true,
               isLoading: false,
             });
@@ -124,18 +121,17 @@ export const useAuthStore = AuthStore(
 
             const { token } = data;
 
-            set({ accessToken: token, isLoading: false });
+            set({ isLoading: false });
             return token;
           },
 
-          setState: ({ isLoading, isAuthenticated, user, accessToken }) => {
-            set({ isLoading, isAuthenticated, user, accessToken });
+          setState: ({ isLoading, isAuthenticated, user }) => {
+            set({ isLoading, isAuthenticated, user });
           },
 
           clearState: async () => {
             set({
               user: null,
-              accessToken: null,
               isAuthenticated: false,
               isLoading: false,
               error: null,

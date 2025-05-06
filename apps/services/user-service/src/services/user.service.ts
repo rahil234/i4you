@@ -4,7 +4,10 @@ import { TYPES } from '@/types';
 import UserDTO from '@/dtos/user.dtos';
 import { BadRequestError } from '@/errors/BadRequestError';
 import IAdminRepository from '@/repositories/interfaces/IAdminRepository';
-import { OnboardingData, User, UserJwtPayload } from '@repo/shared';
+import { UserJwtPayload } from '@repo/shared';
+import OnboardingRequestDTO from '@/dtos/onboarding.request.dtos';
+import MatchesResponseDTO from '@/dtos/matchs.response.dtos';
+import AdminDTO from '@/dtos/admin.dtos';
 
 @injectable()
 export class UserService {
@@ -15,14 +18,14 @@ export class UserService {
 
   async getUserById(id: string, role: UserJwtPayload['role'] = 'member') {
     if (role === 'admin') {
-      return new UserDTO(await this.adminRepository.findById(id), role);
+      return new AdminDTO(await this.adminRepository.findById(id));
     }
-    return new UserDTO(await this.userRepository.findById(id), role);
+    return new UserDTO(await this.userRepository.findById(id));
   }
 
   async getUsers() {
     const users = await this.userRepository.findAll();
-    return users.map((user) => new UserDTO(user, 'member'));
+    return users.map((user) => new UserDTO(user));
   }
 
   async updateUserStatus(userId: string, status: string) {
@@ -46,15 +49,19 @@ export class UserService {
     }
 
     const matches = await this.userRepository.getMatches(userId);
-    return matches.map((match) => new UserDTO(match, 'member'));
+    return matches.map(
+      (match) => new MatchesResponseDTO(match, user.location?.coordinates)
+    );
   }
 
-  async onBoarding(userId: string, data: OnboardingData) {
+  async onBoarding(userId: string, data: OnboardingRequestDTO) {
     const user = await this.userRepository.findById(userId);
 
     if (!user) {
       throw new BadRequestError('User not found');
     }
+
+    console.log('Onboarding data:', data);
 
     await this.userRepository.update(userId, {
       ...data,

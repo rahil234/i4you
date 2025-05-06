@@ -9,7 +9,7 @@ import {
 } from '@/utils/jwt';
 import IUserRepository from '@/repositories/interfaces/IUserRepository';
 import { type LoginRequestDTO, LoginResponseDTO } from '@/dtos/login.dto';
-import type { RegisterRequestDTO } from '@/dtos/register.dto';
+import { RegisterRequestDTO, RegisterResponse } from '@/dtos/register.dto';
 import { TYPES } from '@/types';
 import { fetchGoogleUser } from '@/utils/google-auth';
 import { UserExistsError } from '@/errors/UserExistsError';
@@ -83,7 +83,7 @@ export class AuthService {
     });
   }
 
-  async register(registerDTO: RegisterRequestDTO): Promise<LoginResponseDTO> {
+  async register(registerDTO: RegisterRequestDTO): Promise<void> {
     console.log(
       `Registering user \nname: ${registerDTO.name}, email: ${registerDTO.email}, password: ${registerDTO.password}`
     );
@@ -110,7 +110,7 @@ export class AuthService {
       email: user.email,
     });
 
-    const verificationLink = `http://localhost:3000/verify?token=${verificationToken}`;
+    const verificationLink = `https://i4you.local.net/verify?token=${verificationToken}`;
 
     await this.mailService.sendMail({
       to: user.email,
@@ -119,25 +119,29 @@ export class AuthService {
         <h3>Hello ${user.name},</h3>
         <p>Thank you for registering on i4you!</p>
         <p>Click the link below to verify your email address:</p>
-        <a href="${verificationLink}">${verificationLink}</a>
+        <a href="${verificationLink}" 
+        style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;"
+        >
+        Verify Email
+        </a>
         <p>This link will expire in 1 hour.</p>
       `,
     });
 
-    const accessToken = generateAccessToken({
-      sub: user._id,
-      role: 'member',
-      email: user.email,
-    });
-    const refreshToken = generateRefreshToken({
-      sub: user._id,
-      role: 'member',
-    });
+    // const accessToken = generateAccessToken({
+    //   sub: user._id,
+    //   role: 'member',
+    //   email: user.email,
+    // });
+    // const refreshToken = generateRefreshToken({
+    //   sub: user._id,
+    //   role: 'member',
+    // });
 
-    return new LoginResponseDTO(accessToken, refreshToken, {
-      ...user,
-      id: user._id,
-    });
+    // return new RegisterResponse({
+    //   ...user,
+    //   id: user._id,
+    // });
   }
 
   async forgetPassword(email: string) {

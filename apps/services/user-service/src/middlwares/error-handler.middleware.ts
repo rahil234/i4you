@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import { AppError } from '@/errors/AppError';
-import { AuthError } from '@/errors/AuthError';
 
 export function errorHandlerMiddleware(
   err: any,

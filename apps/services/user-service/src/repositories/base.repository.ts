@@ -18,11 +18,10 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
   }
 
   async update(id: string, data: Partial<T>): Promise<T | null> {
-    return await this.model.findByIdAndUpdate(id, data, { new: true }).exec();
+    return this.model.findByIdAndUpdate(id, data, { new: true }).exec();
   }
 
   async delete(id: string): Promise<boolean> {
-    const result = await this.model.findByIdAndDelete(id).exec();
-    return Boolean(result);
+    return Boolean(await this.model.findByIdAndDelete(id).exec());
   }
 }

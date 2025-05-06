@@ -18,6 +18,8 @@ container.bind<AuthService>(TYPES.AuthService).to(AuthService);
 container.bind<AuthController>(TYPES.AuthController).to(AuthController);
 container.bind<MailService>(TYPES.MailService).to(MailService);
 container.bind<UserGrpcService>(TYPES.UserGrpcService).to(UserGrpcService);
-container.bind<GrpcClientProvider>(TYPES.GrpcClientProvider).to(GrpcClientProvider);
+container
+  .bind<GrpcClientProvider>(TYPES.GrpcClientProvider)
+  .to(GrpcClientProvider);
 
 export { container };

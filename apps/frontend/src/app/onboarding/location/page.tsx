@@ -20,12 +20,15 @@ export default function OnboardingLocation() {
     apiKey: GOOGLE_MAPS_API_KEY,
     onPlaceSelect: (place) => {
       if (place.formatted_address) {
-        setLocation(place.formatted_address);
+        setLocation({
+          coordinates: [place.geometry?.location.lat()!, place.geometry?.location.lng()!],
+          displayName: place.formatted_address,
+        });
       }
     },
     options: {
       // types: ["(cities)"],
-      componentRestrictions: { country: "in" },
+      componentRestrictions: { country: 'in' },
     },
   });
 
@@ -39,7 +42,10 @@ export default function OnboardingLocation() {
     setIsLocating(true);
 
     if (!navigator.geolocation) {
-      setLocation('Geolocation not supported');
+      setLocation(
+        {
+          error: 'Geolocation is not supported by this browser.',
+        });
       setIsLocating(false);
       return;
     }
@@ -57,9 +63,14 @@ export default function OnboardingLocation() {
           const state = data?.address?.state || '';
           const country = data?.address?.country || '';
 
-          setLocation(`${city}, ${state}, ${country}`);
+          setLocation({
+            coordinates: [latitude, longitude],
+            displayName: `${city}, ${state}, ${country}`,
+          });
         } catch (error) {
-          setLocation('Unable to get location');
+          setLocation({
+            error: 'Unable to fetch location data.',
+          });
           console.error('Error fetching location:', error);
         }
 
@@ -67,7 +78,7 @@ export default function OnboardingLocation() {
       },
       (error) => {
         console.error('Geolocation error:', error);
-        setLocation('Permission denied or unavailable');
+        setLocation({ error: 'Permission denied or unavailable' });
         setIsLocating(false);
       },
     );
@@ -86,8 +97,11 @@ export default function OnboardingLocation() {
               <Input
                 id="location"
                 ref={inputRef}
-                value={data.location}
-                onChange={(e) => setLocation(e.target.value)}
+                value={data.location.displayName}
+                onChange={(e) => setLocation({
+                  coordinates: data.location.coordinates,
+                  displayName: e.target.value,
+                })}
                 placeholder="Enter your location"
                 className="flex-1"
               />

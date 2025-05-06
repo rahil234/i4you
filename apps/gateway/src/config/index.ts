@@ -1,14 +1,14 @@
 import env from '@/config/env.config';
 
 interface Config {
-    env: typeof env;
+  env: typeof env;
 }
 
 const config: Config = {
-    env,
-}
+  env,
+};
 
-export {env};
+export { env };
 
 // const jwtSecret = process.env.JWT_SECRET;
 // const USER_SERVER_URL = process.env.USER_SERVER_URL;

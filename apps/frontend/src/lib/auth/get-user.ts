@@ -9,7 +9,7 @@ export async function getUser(accessToken: string): Promise<User> {
 
     let res = await fetch(`${API_URL}/api/v1/user/me`, {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Cookie: `accessToken=${accessToken}`,
       },
       cache: 'no-store',
     });

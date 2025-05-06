@@ -89,6 +89,7 @@ services:
         root: ./
     ports:
       - "${GATEWAY_HTTP_PORT}:${GATEWAY_HTTP_PORT}"
+      - "9464:9464"
     volumes:
       - ./apps/gateway:/app/apps/gateway
       - /app/node_modules
@@ -125,6 +126,16 @@ services:
       - "443:443"
     depends_on:
       - gateway-server
+    networks:
+      - app-network
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./apps/prometheus/:/etc/prometheus/
+    ports:
+      - "9090:9090"
+    restart: unless-stopped
     networks:
       - app-network
 

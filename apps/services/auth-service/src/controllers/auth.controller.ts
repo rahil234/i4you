@@ -4,7 +4,7 @@ import { TYPES } from '@/types';
 import { AuthService } from '@/services/auth.service';
 import { handleAsync } from '@/utils/handle-async';
 import {
-  clearRefreshCookie,
+  clearAuthCookie,
   setAccessCookie,
   setRefreshCookie,
 } from '@/utils/cookie';
@@ -79,13 +79,11 @@ export class AuthController {
   });
 
   register = handleAsync(async (req, res) => {
-    const { accessToken, user, refreshToken } = await this.authService.register(
-      req.body
-    );
+    await this.authService.register(req.body);
 
-    setRefreshCookie(res, refreshToken);
-
-    res.status(201).json({ accessToken, user });
+    res.status(201).json({
+      message: 'User created and send verification email successfully',
+    });
   });
 
   forgetPassword = handleAsync(async (req, res) => {
@@ -124,7 +122,7 @@ export class AuthController {
 
     await this.authService.verifyAccount(password, token);
 
-    res.status(200).json({ message: 'Account Verfication Successfull' });
+    res.status(200).json({ message: 'Account Verification Successfully' });
   });
 
   refreshToken = handleAsync(async (req, res) => {
@@ -154,7 +152,7 @@ export class AuthController {
   });
 
   logout = handleAsync((_req, res) => {
-    clearRefreshCookie(res);
+    clearAuthCookie(res);
     res.status(200).json({ message: 'Logged out' });
   });
 }

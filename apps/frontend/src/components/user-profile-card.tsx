@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Heart, X, Star, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { motion, type PanInfo, useAnimation, useMotionValue, useTransform } from 'motion/react';
+import { motion, type PanInfo, useAnimation, useMotionValue, useTransform } from 'framer-motion';
 import useMatchesStore from '@/store/matchesStore';
 import { User } from '@/types';
 
@@ -119,33 +119,30 @@ export function UserProfileCard({ user, onMatch }: UserProfileProps) {
   };
 
   return (
-    <div
+    <motion.div
       className="absolute w-full max-w-sm mx-auto"
+      animate={cardControls}
+      drag="x"
+      dragConstraints={{ left: 0, right: 0 }}
+      onDragEnd={handleDragEnd}
+      style={{ x, rotate, opacity: cardOpacity }}
     >
-      {/*<motion.div*/}
-      {/*  className="absolute w-full max-w-sm mx-auto"*/}
-      {/*  animate={cardControls}*/}
-      {/*  drag="x"*/}
-      {/*  dragConstraints={{ left: 0, right: 0 }}*/}
-      {/*  onDragEnd={handleDragEnd}*/}
-      {/*  style={{ x, rotate, opacity: cardOpacity }}*/}
-      {/*>*/}
       <Card
         className="overflow-hidden shadow-xl rounded-xl border-0 h-[70vh] max-h-[600px] relative i4you-card-shadow">
         {/* Like/Nope indicators */}
-        <motion.div
-          className="absolute top-10 right-5 z-10 transform rotate-[-30deg] border-4 border-green-500 rounded-lg px-4 py-1"
-          style={{ opacity: likeOpacity }}
-        >
-          <span className="text-green-500 font-extrabold text-3xl"> LIKE</span>
-        </motion.div>
+        {/*<motion.div*/}
+        {/*  className="absolute top-10 right-5 z-10 transform rotate-[-30deg] border-4 border-green-500 rounded-lg px-4 py-1"*/}
+        {/*  style={{ opacity: likeOpacity }}*/}
+        {/*>*/}
+        {/*  <span className="text-green-500 font-extrabold text-3xl"> LIKE</span>*/}
+        {/*</motion.div>*/}
 
-        <motion.div
-          className="absolute top-10 left-5 z-10 transform rotate-[30deg] border-4 border-red-500 rounded-lg px-4 py-1"
-          style={{ opacity: nopeOpacity }}
-        >
-          <span className="text-red-500 font-extrabold text-3xl">NOPE</span>
-        </motion.div>
+        {/*<motion.div*/}
+        {/*  className="absolute top-10 left-5 z-10 transform rotate-[30deg] border-4 border-red-500 rounded-lg px-4 py-1"*/}
+        {/*  style={{ opacity: nopeOpacity }}*/}
+        {/*>*/}
+        {/*  <span className="text-red-500 font-extrabold text-3xl">NOPE</span>*/}
+        {/*</motion.div>*/}
 
         {/* Photo gallery */
         }
@@ -173,9 +170,9 @@ export function UserProfileCard({ user, onMatch }: UserProfileProps) {
             ))}
           </div>
 
-          {/* Distance badge */}
+           Distance badge
           <div className="absolute top-4 left-4 bg-black/40 text-white px-2 py-1 rounded-full text-xs">
-            {user.distance}
+            {user.distance} away
           </div>
 
           {/* User info overlay */}
@@ -254,7 +251,6 @@ export function UserProfileCard({ user, onMatch }: UserProfileProps) {
           <span className="sr-only">Like</span>
         </Button>
       </div>
-      {/*</motion.div>*/}
-    </div>
+    </motion.div>
   );
 }

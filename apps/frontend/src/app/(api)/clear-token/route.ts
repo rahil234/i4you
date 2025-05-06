@@ -8,7 +8,7 @@ export async function GET() {
     httpOnly: true,
     path: '/',
     secure: true,
-    sameSite: 'none' as 'none',
+    sameSite: 'none',
     maxAge: 0,
   };
 

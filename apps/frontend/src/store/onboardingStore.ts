@@ -45,6 +45,7 @@ interface OnboardingStore {
   setName: (name: string) => void;
   setAge: (age: number) => void;
   setBio: (bio: string) => void;
+  setGender: (gender: string) => void;
 
   // Interests step
   setInterests: (interests: string[]) => void;
@@ -55,7 +56,7 @@ interface OnboardingStore {
   updatePreferences: (preferences: Partial<UserPreferences>) => void;
 
   // Location step
-  setLocation: (location: string) => void;
+  setLocation: (location: Partial<OnboardingData['location'] & { error: string }>) => void;
 
   // Utility functions
   resetOnboarding: () => void;
@@ -127,6 +128,7 @@ export const useOnboardingStore = create<OnboardingStore>()(
       data: {
         name: '',
         age: null,
+        gender: null,
         bio: '',
         photos: [],
         interests: [],
@@ -137,7 +139,10 @@ export const useOnboardingStore = create<OnboardingStore>()(
           showMe: 'all',
           lookingFor: 'relationship',
         },
-        location: '',
+        location: {
+          coordinates: [0, 0],
+          displayName: '',
+        },
       },
 
       setPhotos: (photos) =>
@@ -167,6 +172,13 @@ export const useOnboardingStore = create<OnboardingStore>()(
       setAge: (age) =>
         set((state) => ({
           data: { ...state.data, age },
+        })),
+
+      setGender: (
+        gender,
+      ) =>
+        set((state) => ({
+          data: { ...state.data, gender },
         })),
 
       setBio: (bio) =>
@@ -208,7 +220,7 @@ export const useOnboardingStore = create<OnboardingStore>()(
       // Location step setters
       setLocation: (location) =>
         set((state) => ({
-          data: { ...state.data, location },
+          data: { ...state.data, location: location as OnboardingData['location'] },
         })),
 
       // Utility functions
@@ -227,17 +239,20 @@ export const useOnboardingStore = create<OnboardingStore>()(
           data: {
             name: '',
             age: null,
+            gender: null,
             bio: '',
             photos: [],
             interests: [],
             preferences: {
               ageRange: [18, 35],
               distance: 25,
-              gender: 'all',
               showMe: 'all',
               lookingFor: 'relationship',
             },
-            location: '',
+            location: {
+              coordinates: [0, 0],
+              displayName: '',
+            },
           },
         }),
 
@@ -252,10 +267,10 @@ export const useOnboardingStore = create<OnboardingStore>()(
             return data.photos.length > 1;
 
           case 'about':
-            return !!data.name && !!data.age && !!data.bio;
+            return !!data.name && !!data.age && !!data.bio && !!data.gender;
 
           case 'interests':
-            return data.interests.length > 3;
+            return data.interests.length > 5;
 
           case 'preferences':
             return true;

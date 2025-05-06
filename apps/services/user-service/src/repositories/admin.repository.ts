@@ -1,10 +1,10 @@
 import { AdminModel, AdminDocument } from '@/models/admin.model';
-import IAuthRepository from '@/repositories/interfaces/IUserRepository';
+import IAdminRepository from '@/repositories/interfaces/IAdminRepository';
 import { BaseRepository } from '@/repositories/base.repository';
 
 export class AdminRepository
   extends BaseRepository<AdminDocument>
-  implements IAuthRepository
+  implements IAdminRepository
 {
   constructor() {
     super(AdminModel);

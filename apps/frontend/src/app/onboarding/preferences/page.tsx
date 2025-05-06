@@ -86,7 +86,7 @@ export default function OnboardingPreferences() {
           <div className="space-y-3">
             <div className="flex justify-between">
               <Label>Maximum distance</Label>
-              <span className="text-sm text-muted-foreground">{preferences.distance} miles</span>
+              <span className="text-sm text-muted-foreground">{preferences.distance} killometers</span>
             </div>
             <Slider
               defaultValue={[preferences.distance]}

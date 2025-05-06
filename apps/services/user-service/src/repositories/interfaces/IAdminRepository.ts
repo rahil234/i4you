@@ -1,8 +1,8 @@
 import IBaseRepository from '@/repositories/interfaces/IBaseRepositoryInterface';
-import { UserDocument } from '@/models/user.model';
+import { AdminDocument } from '@/models/admin.model';
 
-interface UserRepository extends IBaseRepository<UserDocument> {
-  findByEmail(email: string): Promise<UserDocument | null>;
+interface AdminRepository extends IBaseRepository<AdminDocument> {
+  findByEmail(email: string): Promise<AdminDocument | null>;
 }
 
-export default UserRepository;
+export default AdminRepository;

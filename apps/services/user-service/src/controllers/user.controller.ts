@@ -4,6 +4,7 @@ import { TYPES } from '@/types';
 import { UserService } from '@/services/user.service';
 import { handleAsync } from '@/utils/handle-async';
 import { AuthError } from '@/errors/AuthError';
+import OnboardingRequestDTO from '@/dtos/onboarding.request.dtos';
 
 @injectable()
 export class UserController {
@@ -50,6 +51,8 @@ export class UserController {
 
     const matches = await this.userService.getMatches(userId);
 
+    // console.log('matches:', matches);
+
     res.status(200).json(matches);
   });
 
@@ -58,7 +61,7 @@ export class UserController {
 
     const userId = req.user.id;
 
-    await this.userService.onBoarding(userId, data);
+    await this.userService.onBoarding(userId, new OnboardingRequestDTO(data));
 
     res.status(200).json({ message: 'user onboarded successfully' });
   });

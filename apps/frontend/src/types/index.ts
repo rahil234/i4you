@@ -1,13 +1,13 @@
 import { User as BaseUser } from '@repo/shared';
 
 // User types
-export interface User extends BaseUser {
+export interface User extends Omit<BaseUser, 'location'> {
   id: string;
   name: string;
   age: number;
   bio: string;
-  photos: string[];
   location: string;
+  photos: string[];
   distance?: string;
   interests?: string[];
   avatar?: string;
@@ -16,7 +16,6 @@ export interface User extends BaseUser {
 // Auth types
 export interface AuthState {
   user: Partial<User> | null;
-  accessToken: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
@@ -33,7 +32,6 @@ export type SetUserType = {
 export interface UserPreferences {
   ageRange: [number, number];
   distance: number;
-  gender: 'male' | 'female' | 'all';
   showMe: 'male' | 'female' | 'all';
   lookingFor: 'casual' | 'relationship' | 'friendship' | 'all';
 }
@@ -86,6 +84,7 @@ export interface OnboardingData {
   name: string;
   age: number | null;
   bio: string;
+  gender: string | null;
 
   // Photos
   photos: string[];
@@ -97,5 +96,5 @@ export interface OnboardingData {
   preferences: UserPreferences;
 
   // Location
-  location: string;
+  location: Omit<BaseUser['location'], 'type'>;
 }

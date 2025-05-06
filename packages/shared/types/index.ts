@@ -16,12 +16,26 @@ export interface User {
     activeDays: number;
   };
   preferences: UserPreferences;
-  location: string;
-  phone: string;
-  address: string;
+  location: {
+    type: 'Point';
+    coordinates: [number, number];
+    displayName: string;
+  };
   joined: string;
-  updatedAt: string;
+  updatedAt?: string;
 }
+
+// User types for the admin panel
+export interface AdminUser {
+  id: string;
+  name: string;
+  email: string;
+  role: 'admin' | 'member';
+  status: 'active' | 'suspended';
+  joined: string;
+  updatedAt?: string;
+}
+
 
 // Auth types
 export interface AuthState {
@@ -92,7 +106,11 @@ export interface OnboardingData {
   preferences: UserPreferences;
 
   // Location
-  location: string;
+  location: {
+    type: 'Point';
+    coordinates: [number, number];
+    displayName: string;
+  };
 }
 
 
