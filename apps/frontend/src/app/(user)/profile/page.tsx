@@ -17,6 +17,10 @@ export default function ProfilePage() {
     router.push('/login');
   };
 
+  const handleEditProfile = () => {
+    router.push('/update-profile');
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -53,7 +57,8 @@ export default function ProfilePage() {
               </h2>
               <p className="text-muted-foreground">{user.location}</p>
 
-              <Button variant="outline" size="sm" className="mt-2">
+              <Button variant="outline" size="sm" className="mt-2"
+                      onClick={handleEditProfile}>
                 <Edit className="h-3 w-3 mr-2" />
                 Edit Profile
               </Button>

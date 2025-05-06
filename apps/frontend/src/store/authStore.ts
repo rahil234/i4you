@@ -2,12 +2,14 @@ import type { AuthState } from '@/types';
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import AuthService from '@/services/auth.service';
+import UserService from '@/services/user.service';
 
 interface AuthStore extends AuthState {
   login: (email: string, password: string) => Promise<void>;
   adminLogin: (email: string, password: string) => Promise<void>;
   googleAuthLogin: (token: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
+  updateUser: (user: AuthState['user']) => Promise<void>;
   logout: () => Promise<void>;
   clearState: () => Promise<void>;
   refreshToken: () => Promise<string>;
@@ -92,6 +94,21 @@ export const useAuthStore = AuthStore(
               isAuthenticated: true,
               isLoading: false,
             });
+          },
+
+          updateUser: async (updatedUser: any) => {
+            set({ isLoading: true, error: null });
+            console.log('Updating user:', updatedUser);
+            const { data, error } = await UserService.updateUser(updatedUser);
+
+            if (error) {
+              set({ error: error, isLoading: false });
+              return;
+            }
+
+            console.log('Updated user data:', data);
+
+            set({ user: data, isLoading: false });
           },
 
           logout: async () => {

@@ -23,6 +23,20 @@ export class UserController {
     res.status(200).json(user);
   });
 
+  updateUser = handleAsync(async (req, res) => {
+    const { id } = req.user;
+    const { data } = req.body;
+
+    if (!id) {
+      res.status(401).json({ message: 'Unauthorized' });
+      return;
+    }
+
+    const newUser = await this.userService.updateUser(id, data);
+
+    res.status(200).json(newUser);
+  });
+
   updateUserStatus = handleAsync(async (req, res) => {
     const { id: userId } = req.user;
     const { status } = req.body;
@@ -50,9 +64,6 @@ export class UserController {
     }
 
     const matches = await this.userService.getMatches(userId);
-
-    // console.log('matches:', matches);
-
     res.status(200).json(matches);
   });
 

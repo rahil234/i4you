@@ -10,7 +10,7 @@ export default async function DashboardLayout({ children }: Readonly<{
 
   return (
     <div className="flex h-screen">
-      <AuthSessionHydrator userData={await getUserData()} />
+      <AuthSessionHydrator user={await getUserData()} />
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="border-b bg-white p-4 shadow-sm">

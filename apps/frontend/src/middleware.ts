@@ -30,17 +30,22 @@ export async function middleware(request: NextRequest) {
   const isAccessTokenValid = await verifyToken(accessToken);
   const isRefreshTokenValid = await verifyToken(refreshToken);
 
-  if (!isRefreshTokenValid) {
+  if (refreshToken && !isRefreshTokenValid) {
+    console.log('Refresh token expired, redirecting to clear-token page');
     return NextResponse.redirect(new URL('/clear-token', request.url));
   }
 
   if (!isAccessTokenValid && isRefreshTokenValid) {
-    if (pathname !== '/refresh-token-api') {
+    if (pathname === '/refresh-token-api') {
       console.log('Access token expired, redirecting to refresh-token page', pathname);
       const redirectTo = encodeURIComponent(request.nextUrl.pathname + request.nextUrl.search);
       return NextResponse.redirect(new URL(`/refresh-token-api?redirect=${redirectTo}`, request.url));
     }
     return NextResponse.redirect(new URL('/clear-token', request.url));
+  }
+
+  if (!isRefreshTokenValid && pathname.startsWith('/admin')) {
+    return NextResponse.redirect(new URL('/admin/login', request.url));
   }
 
   return NextResponse.next();

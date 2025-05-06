@@ -23,8 +23,27 @@ const userController = container.get<UserController>(TYPES.UserController);
  */
 router.get(
   '/me',
-  authenticateAndAuthorizeMiddleware(['member']),
+  authenticateAndAuthorizeMiddleware(['member', 'admin']),
   userController.getUser
+);
+
+/**
+ * @swagger
+ * /ap/v1/user/me:
+ *   get:
+ *     summary: Get user by token
+ *     tags:
+ *       - User
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Login successful
+ */
+router.patch(
+  '/me',
+  authenticateAndAuthorizeMiddleware(['member']),
+  userController.updateUser
 );
 
 /**

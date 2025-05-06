@@ -10,7 +10,7 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
   }
 
   async findById(id: string): Promise<T | null> {
-    return this.model.findById(id).exec();
+    return await this.model.findById(id).exec();
   }
 
   async findAll(): Promise<T[]> {

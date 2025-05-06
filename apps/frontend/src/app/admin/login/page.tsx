@@ -20,8 +20,9 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    await adminLogin(email, password);
-    if (!error) router.push('/admin');
+    await adminLogin(email, password).then(() => {
+      if (!error) router.push('/admin');
+    });
   };
 
   return (

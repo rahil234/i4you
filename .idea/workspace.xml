@@ -8,111 +8,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9634f5b5-f135-4866-b1d6-9eb36f37aa3e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/apps/gateway/.eslintignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/gateway/.prettierignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/gateway/.prettierrc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/gateway/eslint.config.mjs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/gateway/src/middlewares/request-logger.middleware.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/prometheus/prometheus.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/auth-service/src/middlwares/request-logger.middleware.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/media-service/src/middlwares/request-logger.middleware.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/user-service/src/dtos/admin.dtos.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/user-service/src/dtos/matchs.response.dtos.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/user-service/src/dtos/onboarding.request.dtos.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/user-service/src/middlwares/request-logger.middleware.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/services/user-service/src/utils/calculate-distance.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/frontend/src/app/(user)/update-profile/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/frontend/src/app/admin/login/layout.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.pnpmfile.cjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(api)/clear-token/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(api)/clear-token/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/forgot-password/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/forgot-password/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/login-with-otp/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/login-with-otp/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/signup/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/signup/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/verify-otp/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/verify-otp/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/verify/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/verify/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/onboarding/about/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/onboarding/about/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/onboarding/location/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/onboarding/location/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/onboarding/preferences/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/onboarding/preferences/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/components/user-profile-card.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/components/user-profile-card.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/lib/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/lib/api.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/lib/auth/get-user-data.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/lib/auth/get-user-data.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/lib/auth/get-user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/lib/auth/get-user.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(user)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(user)/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(user)/profile/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(user)/profile/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/admin/(protected)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/admin/(protected)/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/admin/(protected)/users/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/admin/(protected)/users/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/admin/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/admin/login/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/components/auth/auth-session-hydrator.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/components/auth/auth-session-hydrator.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/components/users-filter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/components/users-filter.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/components/users-table.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/components/users-table.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/middleware.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/middleware.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/services/user.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/services/user.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/frontend/src/store/authStore.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/store/authStore.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/store/matchesStore.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/store/matchesStore.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/store/onboardingStore.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/store/onboardingStore.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/types/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/types/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/gateway/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/gateway/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/gateway/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/gateway/src/app.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/gateway/src/config/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/gateway/src/config/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/gateway/src/config/swagger.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/gateway/src/config/swagger.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/gateway/src/env.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/gateway/src/env.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/gateway/src/instrumentation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/gateway/src/instrumentation.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/gateway/src/middlewares/error-handling.middleware.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/gateway/src/middlewares/error-handling.middleware.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/gateway/src/types/express.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/gateway/src/types/express.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/gateway/src/types/jwt-payload.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/gateway/src/types/jwt-payload.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/eslint.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/eslint.config.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/app.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/config/inversify.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/config/inversify.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/config/mail.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/config/mail.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/controllers/auth.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/controllers/auth.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/dtos/register.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/dtos/register.dto.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/errors/AppError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/errors/AppError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/errors/AuthError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/errors/AuthError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/errors/DatabaseError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/errors/DatabaseError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/errors/ForbiddenError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/errors/ForbiddenError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/errors/NotFoundError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/errors/NotFoundError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/errors/SuspendedUserError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/errors/SuspendedUserError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/errors/UserExistsError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/errors/UserExistsError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/errors/ValidationError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/errors/ValidationError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/grpc/user.client.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/grpc/user.client.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/providers/grpc.client.provider.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/providers/grpc.client.provider.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/services/auth.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/services/auth.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/services/mail.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/services/mail.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/utils/cookie.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/utils/cookie.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/utils/mail-templates.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/utils/mail-templates.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/media-service/eslint.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/media-service/eslint.config.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/media-service/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/media-service/src/app.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/media-service/src/errors/AppError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/media-service/src/errors/AppError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/media-service/src/errors/AuthError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/media-service/src/errors/AuthError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/media-service/src/errors/DatabaseError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/media-service/src/errors/DatabaseError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/media-service/src/errors/ForbiddenError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/media-service/src/errors/ForbiddenError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/media-service/src/errors/NotFoundError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/media-service/src/errors/NotFoundError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/media-service/src/errors/SuspendedUserError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/media-service/src/errors/SuspendedUserError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/media-service/src/errors/UserExistsError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/media-service/src/errors/UserExistsError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/media-service/src/errors/ValidationError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/media-service/src/errors/ValidationError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/media-service/src/grpc/user.client.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/media-service/src/grpc/user.client.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/media-service/src/providers/grpc.client.provider.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/media-service/src/providers/grpc.client.provider.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/eslint.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/eslint.config.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/app.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/config/db.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/config/db.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/config/grpc.server.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/config/grpc.server.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/config/inversify.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/config/inversify.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/prometheus/prometheus.yml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/prometheus/prometheus.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/controllers/user.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/controllers/user.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/dtos/user.dtos.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/dtos/user.dtos.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/env.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/env.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/errors/AppError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/errors/AppError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/errors/AuthError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/errors/AuthError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/errors/BadRequestError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/errors/BadRequestError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/errors/DatabaseError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/errors/DatabaseError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/errors/ForbiddenError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/errors/ForbiddenError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/errors/NotFoundError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/errors/NotFoundError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/errors/ValidationError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/errors/ValidationError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/grpc/grpc.user.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/grpc/grpc.user.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/middlwares/error-handler.middleware.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/middlwares/error-handler.middleware.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/models/admin.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/models/admin.model.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/models/user.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/models/user.model.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/repositories/admin.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/repositories/admin.repository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/dtos/admin.dtos.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/dtos/admin.dtos.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/repositories/base.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/repositories/base.repository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/repositories/interfaces/IAdminRepository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/repositories/interfaces/IAdminRepository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/repositories/interfaces/IBaseRepositoryInterface.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/repositories/interfaces/IBaseRepositoryInterface.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/repositories/user.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/repositories/user.repository.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/routes/user.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/routes/user.routes.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/services/user.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/services/user.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/types/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/types/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/packages/shared/types/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/shared/types/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,10 +40,10 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="JavaScript File" />
-        <option value="TypeScript JSX File" />
         <option value="Dockerfile" />
         <option value="Kubernetes Service" />
         <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
       </list>
     </option>
   </component>
@@ -204,44 +121,44 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Docker.docker-compose-old.yaml: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.docker-compose.yaml.chat-service: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.docker-compose.yaml.gateway-server: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.docker-compose.yaml: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;JavaScript Debug.i4you.local.com:3000.executor&quot;: &quot;Debug&quot;,
-    &quot;JavaScript Debug.i4you.local.net secure.executor&quot;: &quot;Debug&quot;,
-    &quot;JavaScript Debug.i4you.local.net.executor&quot;: &quot;Run&quot;,
-    &quot;JavaScript Debug.localhost:3000.executor&quot;: &quot;Debug&quot;,
-    &quot;JavaScript Debug.localhost:3001.executor&quot;: &quot;Debug&quot;,
-    &quot;Node.js.client.ts.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
-    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;22.11.0&quot;,
-    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;22.14.1&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/rahilk/Projects/i4you/apps/gateway&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;npm.frontend.executor&quot;: &quot;Run&quot;,
-    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/rahilk/Projects/i4you/apps/services/chat-service/node_modules/prettier&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.sync&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/rahilk/Projects/i4you/packages/proto-files/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Docker.docker-compose-old.yaml: Compose Deployment.executor": "Run",
+    "Docker.docker-compose.yaml.chat-service: Compose Deployment.executor": "Run",
+    "Docker.docker-compose.yaml.gateway-server: Compose Deployment.executor": "Run",
+    "Docker.docker-compose.yaml: Compose Deployment.executor": "Run",
+    "JavaScript Debug.i4you.local.com:3000.executor": "Debug",
+    "JavaScript Debug.i4you.local.net secure.executor": "Debug",
+    "JavaScript Debug.i4you.local.net.executor": "Debug",
+    "JavaScript Debug.localhost:3000.executor": "Debug",
+    "JavaScript Debug.localhost:3001.executor": "Debug",
+    "Node.js.client.ts.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "dev",
+    "javascript.nodejs.core.library.configured.version": "22.11.0",
+    "javascript.nodejs.core.library.typings.version": "22.14.1",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "/Users/rahilk/Projects/i4you/apps/frontend/src/app/admin",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "npm.frontend.executor": "Run",
+    "prettierjs.PrettierConfiguration.Package": "/Users/rahilk/Projects/i4you/apps/services/chat-service/node_modules/prettier",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "settings.sync",
+    "ts.external.directory.path": "/Users/rahilk/Projects/i4you/packages/proto-files/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mongo&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mongo"
     ]
   }
-}</component>
+}]]></component>
   <component name="ReactDesignerToolWindowState">
     <option name="myId2Visible">
       <map>
@@ -253,18 +170,18 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/apps/frontend/src/app/admin" />
       <recent name="$PROJECT_DIR$/apps/gateway" />
       <recent name="$PROJECT_DIR$/apps/services/auth-service" />
       <recent name="$PROJECT_DIR$/apps/services/media-service" />
       <recent name="$PROJECT_DIR$/apps/services/user-service/src/dtos" />
-      <recent name="$PROJECT_DIR$/apps/services/user-service/src/middlwares" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/apps/frontend/src/app/admin/login" />
       <recent name="$PROJECT_DIR$/apps/prometheus" />
       <recent name="$PROJECT_DIR$/apps" />
       <recent name="$PROJECT_DIR$/apps/services/auth-service/src/types" />
       <recent name="$PROJECT_DIR$/apps/frontend/src/app/(api)" />
-      <recent name="$PROJECT_DIR$/apps/frontend/src/app" />
     </key>
   </component>
   <component name="RunManager" selected="JavaScript Debug.i4you.local.net">
@@ -410,6 +327,7 @@
       <workItem from="1746423658305" duration="7303000" />
       <workItem from="1746430983411" duration="4265000" />
       <workItem from="1746447676692" duration="36773000" />
+      <workItem from="1746529496790" duration="6209000" />
     </task>
     <servers />
   </component>

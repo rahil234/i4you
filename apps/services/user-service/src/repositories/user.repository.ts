@@ -29,12 +29,17 @@ export class UserRepository
     const user = await UserModel.findById(userId);
     const coords = user?.location?.coordinates;
     const maxDistanceKm = user?.preferences?.distance;
+    const ageRange = user?.preferences?.ageRange;
+    const showMe = user?.preferences?.showMe;
 
-    if (!coords || !maxDistanceKm) {
-      throw new Error('User location or preference distance not found');
+    if (!coords || !maxDistanceKm || !ageRange || !showMe) {
+      throw new Error('User location or preferences not found');
     }
 
     const maxDistanceMeters = maxDistanceKm * 1000;
+
+    const genderFilter =
+      showMe === 'all' ? { $in: ['male', 'female', 'other'] } : showMe;
 
     const matches = await UserModel.aggregate([
       {
@@ -54,6 +59,10 @@ export class UserRepository
       {
         $match: {
           distance: { $lte: maxDistanceMeters },
+          age: { $gte: ageRange[0], $lte: ageRange[1] },
+          gender: genderFilter,
+          // 'preferences.showMe':
+          //   user.gender === 'other' ? 'all' : { $in: [user.gender, 'all'] },
         },
       },
     ]);

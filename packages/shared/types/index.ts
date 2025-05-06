@@ -6,6 +6,7 @@ export interface User {
   age: number;
   status: 'active' | 'suspended';
   bio: string;
+  gender: 'male' | 'female' | 'other';
   photos: string[];
   role: 'admin' | 'member';
   onboarding?: boolean;

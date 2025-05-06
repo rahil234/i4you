@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import {
   DropdownMenu,
@@ -13,20 +13,52 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { MoreHorizontal, Check, Ban, Eye } from 'lucide-react';
 import UserService from '@/services/user.service';
-import { User } from '@repo/shared';
+import type { User as BaseUser } from '@repo/shared';
 
-export function UsersTable() {
+type User = Omit<BaseUser, 'location'> & {
+  location: string;
+}
+
+type filterType = { search: string; status: string; gender: string };
+
+export function UsersTable({ filters }: { filters: filterType }) {
   const [users, setUsers] = useState<User[]>([]);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10);
 
   useEffect(() => {
-    (async () => {
-      const { data, error } = await UserService.getUsers();
+    console.log('Filters changed:', filters.search);
+  }, [filters]);
+
+  const filteredUsers = useMemo(() => {
+    return users.filter(user => {
+      return (
+        (filters.status === 'all' || user.status === filters.status) &&
+        (filters.gender === 'all' || user.gender === filters.gender) &&
+        (
+          user.name.toLowerCase().includes(filters.search.toLowerCase()) ||
+          user.email.toLowerCase().includes(filters.search.toLowerCase())
+        )
+      );
+    });
+  }, [users, filters]);
+
+  const paginatedUsers = useMemo(() => {
+    const start = (page - 1) * limit;
+    return filteredUsers.slice(start, start + limit);
+  }, [filteredUsers, page, limit]);
+
+  useEffect(() => {
+    UserService.getUsers({ page: 1, limit: 10 }).then(({ data, error }) => {
+      if (error) {
+        console.error('Error fetching users', error);
+        return;
+      }
 
       if (error) return;
 
-      console.log('Users', data);
       setUsers(data);
-    })();
+    });
   }, []);
 
   const handleSuspendUser = async (userId: string) => {
@@ -71,13 +103,13 @@ export function UsersTable() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {users && users.map((user) => (
+          {filteredUsers && filteredUsers.map((user) => (
             <TableRow key={user.id}>
               <TableCell>
                 <div className="flex items-center gap-3">
                   <Avatar>
-                    <AvatarImage src={user.avatar} alt={user.name} />
-                    <AvatarFallback>{user.initials}</AvatarFallback>
+                    <AvatarImage src={user.photos[0]} alt={user.name} />
+                    <AvatarFallback>{user.name[0].toUpperCase() || 'UN'}</AvatarFallback>
                   </Avatar>
                   <div>
                     <p className="font-medium">{user.name}</p>

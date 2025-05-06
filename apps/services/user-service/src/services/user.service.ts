@@ -28,11 +28,41 @@ export class UserService {
     return users.map((user) => new UserDTO(user));
   }
 
+  async updateUser(id: string, data: any) {
+    console.log(`Update user ${id} with data:`, data);
+
+    const user = await this.userRepository.findById(id);
+
+    if (!user) {
+      throw new BadRequestError('User not found');
+    }
+
+    const newUser = await this.userRepository.update(id, {
+      ...data,
+      location: data.location
+        ? {
+            type: 'Point',
+            coordinates: user.location?.coordinates || [0, 0],
+            displayName: data.location,
+          }
+        : undefined,
+    });
+
+    if (!newUser) {
+      throw new BadRequestError('Failed to update user');
+    }
+
+    return new UserDTO(newUser);
+  }
+
   async updateUserStatus(userId: string, status: string) {
-    const user = await this.userRepository.findById(userId);
+    // @ts-expect-error some unknown error
+    const user = await this.userRepository.findAll({ _id: userId });
+
     if (!user) {
       throw new Error('User not found');
     }
+
     if (!status) {
       throw new BadRequestError('Status is required');
     }

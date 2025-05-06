@@ -3,19 +3,16 @@ class AdminDTO implements Omit<AdminDTO, 'location'> {
   name: string;
   email: string;
   role: 'admin' | 'member';
-  location: string;
   joined: string;
   status: 'active' | 'suspended';
 
-  constructor(user: any, role?: 'admin' | 'member') {
+  constructor(user: any) {
     this.id = user._id;
     this.name = user.name;
     this.email = user.email;
-    this.role = role || user.role;
+    this.role = 'admin';
     this.status = user.status;
     this.joined = user.createdAt;
-
-    this.location = user.location.displayName;
   }
 }
 

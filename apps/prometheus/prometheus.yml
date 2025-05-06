@@ -6,3 +6,4 @@ scrape_configs:
     static_configs:
       - targets: [ 'gateway-server:9464' ]
 
+remote_write:

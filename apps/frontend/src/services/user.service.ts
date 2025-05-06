@@ -22,12 +22,18 @@ class UserService {
         .then(res => res.data),
     );
 
-  getUsers = () =>
+  getUsers = ({ page, limit }: { page: number; limit: number }) =>
     handleApi(() =>
       api
         .get('/user')
         .then(res => res.data),
     );
+
+  updateUser = (data: any) =>
+    handleApi(() =>
+      api
+        .patch('/user/me', { data })
+        .then(res => res.data));
 }
 
 export default new UserService();
