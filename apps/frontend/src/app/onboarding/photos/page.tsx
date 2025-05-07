@@ -1,79 +1,91 @@
-"use client"
-
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Upload, ChevronLeft, ChevronRight } from "lucide-react"
-import { OnboardingProgress } from "@/components/onboarding-progress"
+'use client';
+import { Upload, X } from 'lucide-react';
+import { OnboardingLayout } from '@/components/onboarding-layout';
+import { useOnboardingStore } from '@/store/onboardingStore';
+import mediaService from '@/services/media.service';
 
 export default function OnboardingPhotos() {
-  const router = useRouter()
-  const [photos, setPhotos] = useState<string[]>(["/placeholder.svg?height=300&width=300"])
+  const { data, addPhoto, removePhoto } = useOnboardingStore();
+  const photos = data.photos;
 
-  const handleNext = () => {
-    router.push("/onboarding/about")
-  }
+  const uploadPhoto = async (file: File) => {
+    try {
 
-  const handleBack = () => {
-    router.push("/onboarding")
-  }
+      const { data, error } = await mediaService.getUploadUrl(file);
 
-  const handleAddPhoto = () => {
-    // In a real app, this would open a file picker
-    // For demo purposes, we'll just add a placeholder
-    setPhotos([...photos, "/placeholder.svg?height=300&width=300"])
-  }
+      if (error) {
+        throw new Error('Failed to get upload URL');
+      }
+
+      const { url, key } = data;
+
+      const { error: uploadImageError } = await mediaService.uploadImage(file, url);
+
+      if (uploadImageError) {
+        console.log('Error uploading image:', uploadImageError);
+        return;
+      }
+
+      const bucketName = 'i4you-bucket';
+      const bucketRegion = 'ap-south-1';
+
+      const imageUrl = `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${key}`;
+
+      addPhoto(imageUrl);
+    } catch (error) {
+      console.error('Error uploading photo:', error);
+    }
+  };
+
+  const handleAddPhoto = async () => {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    fileInput.onchange = async () => {
+      if (fileInput.files && fileInput.files[0]) {
+        const file = fileInput.files[0];
+        await uploadPhoto(file);
+      }
+    };
+    fileInput.click();
+  };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <OnboardingProgress step={1} totalSteps={5} />
+    <OnboardingLayout currentStep="photos">
+      <div className="w-full max-w-md mx-auto">
+        <h1 className="text-3xl font-bold mb-2">Add your photos</h1>
+        <p className="text-muted-foreground mb-6">
+          Add at least 2 photos to continue. Profiles with photos get more matches!
+        </p>
 
-      <div className="flex-1 flex flex-col items-center justify-center p-4">
-        <div className="w-full max-w-md">
-          <h1 className="text-3xl font-bold mb-2">Add your photos</h1>
-          <p className="text-muted-foreground mb-6">
-            Add at least 2 photos to continue. Profiles with photos get more matches!
-          </p>
-
-          <div className="grid grid-cols-3 gap-2 mb-8">
-            {photos.map((photo, index) => (
-              <div key={index} className="aspect-square rounded-lg overflow-hidden relative">
-                <img
-                  src={photo || "/placeholder.svg"}
-                  alt={`Profile photo ${index + 1}`}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            ))}
-
-            {photos.length < 6 && (
+        <div className="grid grid-cols-3 gap-2 mb-8">
+          {photos.map((photo, index) => (
+            <div key={index} className="aspect-square rounded-lg relative group">
+              <img
+                src={photo || '/placeholder.svg'}
+                alt={`Profile photo ${index + 1}`}
+                className="w-full h-full object-cover rounded-lg group-hover:opacity-75 transition-opacity"
+              />
               <button
-                onClick={handleAddPhoto}
-                className="aspect-square rounded-lg border-2 border-dashed border-muted-foreground/50 flex items-center justify-center hover:bg-muted/50 transition-colors"
+                onClick={() => removePhoto(index)}
+                className="absolute size-5 -top-1 -right-1 bg-red-500 rounded-full opacity-0 p-1 group-hover:opacity-100 transition flex items-center justify-center"
+                aria-label="Delete photo"
               >
-                <Upload className="h-6 w-6 text-muted-foreground" />
+                <X />
               </button>
-            )}
-          </div>
+            </div>
+          ))}
 
-          <div className="flex justify-between">
-            <Button variant="outline" onClick={handleBack} className="flex items-center">
-              <ChevronLeft className="mr-2 h-4 w-4" />
-              Back
-            </Button>
-
-            <Button
-              onClick={handleNext}
-              className="i4you-gradient hover:opacity-90 transition-opacity"
-              disabled={photos.length < 1}
+          {photos.length < 6 && (
+            <button
+              onClick={handleAddPhoto}
+              className="aspect-square rounded-lg border-2 border-dashed border-muted-foreground/50 flex items-center justify-center hover:bg-muted/50 transition-colors"
             >
-              Next
-              <ChevronRight className="ml-2 h-4 w-4" />
-            </Button>
-          </div>
+              <Upload className="h-6 w-6 text-muted-foreground" />
+            </button>
+          )}
         </div>
       </div>
-    </div>
-  )
+    </OnboardingLayout>
+  );
 }
-

@@ -15,12 +15,12 @@ spec:
       containers:
         - name: auth-service
           image: auth-service-image:latest
-          imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 4001
           env:
             - name: NODE_ENV
-              value: "development"
+              value: "production"
             - name: ALLOWED_ORIGINS
               value: "http://localhost:3000,http://localhost:3001"
             - name: AUTH_SERVER_URL

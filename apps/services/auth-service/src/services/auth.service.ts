@@ -9,7 +9,7 @@ import {
 } from '@/utils/jwt';
 import IUserRepository from '@/repositories/interfaces/IUserRepository';
 import { type LoginRequestDTO, LoginResponseDTO } from '@/dtos/login.dto';
-import type { RegisterRequestDTO } from '@/dtos/register.dto';
+import { RegisterRequestDTO, RegisterResponse } from '@/dtos/register.dto';
 import { TYPES } from '@/types';
 import { fetchGoogleUser } from '@/utils/google-auth';
 import { UserExistsError } from '@/errors/UserExistsError';
@@ -19,13 +19,15 @@ import { ValidationError } from '@/errors/ValidationError';
 import { MailService } from '@/services/mail.service';
 import { PasswordResetTemplate } from '@/utils/mail-templates';
 import { NotFoundError } from '@/errors/NotFoundError';
+import { UserGrpcService } from '@/services/user.grpc.service';
 
 @injectable()
 export class AuthService {
   constructor(
     @inject(TYPES.UserRepository) private userRepository: IUserRepository,
     @inject(TYPES.AdminRepository) private adminRepository: IAdminRepository,
-    @inject(TYPES.MailService) private mailService: MailService
+    @inject(TYPES.MailService) private mailService: MailService,
+    @inject(TYPES.UserGrpcService) private userGrpcService: UserGrpcService
   ) {}
 
   async login(loginDTO: LoginRequestDTO): Promise<LoginResponseDTO> {
@@ -61,6 +63,25 @@ export class AuthService {
     });
   }
 
+  async changePassword(
+    id: string,
+    currentPassword: string,
+    newPassword: string
+  ) {
+    const user = await this.userRepository.find({ _id: id });
+
+    if (!user) {
+      throw new ValidationError('User not found');
+    }
+
+    if (!(await comparePassword(currentPassword, user?.password))) {
+      throw new ValidationError('Invalid credentials');
+    }
+
+    const hashedPassword = await hashPassword(newPassword);
+    await this.userRepository.update(id, { password: hashedPassword });
+  }
+
   async adminLogin(loginDTO: LoginRequestDTO): Promise<LoginResponseDTO> {
     const user = await this.adminRepository.findByEmail(loginDTO.email);
     if (!user || !(await comparePassword(loginDTO.password, user.password))) {
@@ -81,7 +102,7 @@ export class AuthService {
     });
   }
 
-  async register(registerDTO: RegisterRequestDTO): Promise<LoginResponseDTO> {
+  async register(registerDTO: RegisterRequestDTO): Promise<void> {
     console.log(
       `Registering user \nname: ${registerDTO.name}, email: ${registerDTO.email}, password: ${registerDTO.password}`
     );
@@ -108,7 +129,7 @@ export class AuthService {
       email: user.email,
     });
 
-    const verificationLink = `http://localhost:3000/verify?token=${verificationToken}`;
+    const verificationLink = `https://i4you.local.net/verify?token=${verificationToken}`;
 
     await this.mailService.sendMail({
       to: user.email,
@@ -117,25 +138,29 @@ export class AuthService {
         <h3>Hello ${user.name},</h3>
         <p>Thank you for registering on i4you!</p>
         <p>Click the link below to verify your email address:</p>
-        <a href="${verificationLink}">${verificationLink}</a>
+        <a href="${verificationLink}" 
+        style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;"
+        >
+        Verify Email
+        </a>
         <p>This link will expire in 1 hour.</p>
       `,
     });
 
-    const accessToken = generateAccessToken({
-      sub: user._id,
-      role: 'member',
-      email: user.email,
-    });
-    const refreshToken = generateRefreshToken({
-      sub: user._id,
-      role: 'member',
-    });
+    // const accessToken = generateAccessToken({
+    //   sub: user._id,
+    //   role: 'member',
+    //   email: user.email,
+    // });
+    // const refreshToken = generateRefreshToken({
+    //   sub: user._id,
+    //   role: 'member',
+    // });
 
-    return new LoginResponseDTO(accessToken, refreshToken, {
-      ...user,
-      id: user._id,
-    });
+    // return new RegisterResponse({
+    //   ...user,
+    //   id: user._id,
+    // });
   }
 
   async forgetPassword(email: string) {
@@ -243,8 +268,6 @@ export class AuthService {
       user = await this.userRepository.findById(userId);
     }
 
-    console.log('refresh token user', user);
-
     if (!user) {
       throw new Error('User not found');
     }
@@ -258,6 +281,8 @@ export class AuthService {
       role,
       email: user.email,
     });
+
+    console.log('new Access Token: ', accessToken);
 
     const refreshToken = generateRefreshToken({
       sub: user._id,

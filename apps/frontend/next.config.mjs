@@ -1,3 +1,5 @@
+import pwa from 'next-pwa';
+
 let userConfig = undefined;
 try {
   userConfig = await import('./user-next.config');
@@ -5,23 +7,18 @@ try {
   // ignore error
 }
 
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
-  },
-  typescript: {
+  }, typescript: {
     ignoreBuildErrors: true,
-  },
-  images: {
+  }, images: {
     unoptimized: true,
-  },
-  experimental: {
-    webpackBuildWorker: true,
-    parallelServerBuildTraces: true,
-    parallelServerCompiles: true,
-  },
-  devIndicators: false
+  }, allowedDevOrigins: ['i4you.local.net'], experimental: {
+    webpackBuildWorker: true, parallelServerBuildTraces: true, parallelServerCompiles: true,
+  }, devIndicators: false,
 };
 
 
@@ -31,13 +28,9 @@ function mergeConfig(nextConfig, userConfig) {
   }
 
   for (const key in userConfig) {
-    if (
-      typeof nextConfig[key] === 'object' &&
-      !Array.isArray(nextConfig[key])
-    ) {
+    if (typeof nextConfig[key] === 'object' && !Array.isArray(nextConfig[key])) {
       nextConfig[key] = {
-        ...nextConfig[key],
-        ...userConfig[key],
+        ...nextConfig[key], ...userConfig[key],
       };
     } else {
       nextConfig[key] = userConfig[key];
@@ -47,4 +40,13 @@ function mergeConfig(nextConfig, userConfig) {
 
 mergeConfig(nextConfig, userConfig);
 
-export default nextConfig;
+// Wrap with PWA plugin
+const pwaConfig = pwa({
+  dest: 'public',
+  register: true,
+  disable: process.env.NODE_ENV === 'development',
+  skipWaiting: true,
+});
+
+
+export default pwaConfig(nextConfig);

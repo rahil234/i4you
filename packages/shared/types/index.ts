@@ -4,14 +4,39 @@ export interface User {
   name: string;
   email: string;
   age: number;
-  bio: string;
-  photos: string[];
-  location: string;
-  distance?: string;
-  interests?: string[];
-  avatar?: string;
   status: 'active' | 'suspended';
+  bio: string;
+  gender: 'male' | 'female' | 'other';
+  photos: string[];
+  role: 'admin' | 'member';
+  onboarding?: boolean;
+  interests?: string[];
+  stats?: {
+    matches: number;
+    likes: number;
+    activeDays: number;
+  };
+  preferences: UserPreferences;
+  location: {
+    type: 'Point';
+    coordinates: [number, number];
+    displayName: string;
+  };
+  joined: string;
+  updatedAt?: string;
 }
+
+// User types for the admin panel
+export interface AdminUser {
+  id: string;
+  name: string;
+  email: string;
+  role: 'admin' | 'member';
+  status: 'active' | 'suspended';
+  joined: string;
+  updatedAt?: string;
+}
+
 
 // Auth types
 export interface AuthState {
@@ -65,3 +90,33 @@ export interface PaginatedResponse<T> extends ApiResponse<T> {
   totalPages: number;
 }
 
+// Define the full onboarding data structure
+export interface OnboardingData {
+  // Basic info
+  name: string;
+  age: number;
+  bio: string;
+
+  // Photos
+  photos: string[];
+
+  // Interests
+  interests: string[];
+
+  // Preferences (reusing your existing type)
+  preferences: UserPreferences;
+
+  // Location
+  location: {
+    type: 'Point';
+    coordinates: [number, number];
+    displayName: string;
+  };
+}
+
+
+export interface UserJwtPayload {
+  sub: string;
+  role: 'admin' | 'member';
+  email: string;
+}

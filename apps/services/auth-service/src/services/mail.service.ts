@@ -16,5 +16,6 @@ export class MailService {
       subject,
       html,
     });
+    console.log(`Email sent to ${to} with subject "${subject}" successfully.`);
   }
 }

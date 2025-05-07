@@ -1,34 +1,31 @@
-// noinspection DuplicatedCode
-
-import { Model, Document } from 'mongoose';
+import { Model, Document, RootFilterQuery } from 'mongoose';
 import IBaseRepository from './interfaces/IBaseRepositoryInterface';
 
 export class BaseRepository<T extends Document> implements IBaseRepository<T> {
-    protected model: Model<T>;
+  constructor(protected model: Model<T>) {}
 
-    constructor(model: Model<T>) {
-        this.model = model;
-    }
+  async create(data: Partial<T>) {
+    const entity = new this.model(data);
+    return entity.save();
+  }
 
-    async create(data: Partial<T>): Promise<T> {
-        const entity = new this.model(data);
-        return entity.save();
-    }
+  async findById(id: string) {
+    return await this.model.findById(id).exec();
+  }
 
-    async findById(id: string): Promise<T | null> {
-        return this.model.findById(id).exec();
-    }
+  async findAll(): Promise<T[]> {
+    return this.model.find().exec();
+  }
 
-    async findAll(): Promise<T[]> {
-        return this.model.find().exec();
-    }
+  async find(query: RootFilterQuery<T>) {
+    return this.model.find(query).exec();
+  }
 
-    async update(id: string, data: Partial<T>): Promise<T | null> {
-        return this.model.findByIdAndUpdate(id, data, { new: true }).exec();
-    }
+  async update(id: string, data: Partial<T>) {
+    return this.model.findByIdAndUpdate(id, data, { new: true }).exec();
+  }
 
-    async delete(id: string): Promise<boolean> {
-        const result = await this.model.findByIdAndDelete(id).exec();
-        return !!result;
-    }
+  async delete(id: string) {
+    return Boolean(await this.model.findByIdAndDelete(id).exec());
+  }
 }

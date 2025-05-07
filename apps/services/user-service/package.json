@@ -7,7 +7,9 @@
     "dev": "tsx watch src/app.ts",
     "build": "tsc && tsc-alias && tsc-esm-fix",
     "debug": "node --inspect=0.0.0.0:9221 --import tsx src/app.ts",
-    "build:noemit": "tsc --project ./tsconfig.json --noEmit"
+    "build:noemit": "tsc --project ./tsconfig.json --noEmit",
+    "lint": "eslint --ext .ts src",
+    "lint:fix": "eslint --fix --ext .ts src"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.13.3",
@@ -23,6 +25,7 @@
     "debug": "~2.6.9",
     "env-config": "workspace:*",
     "express": "^4.21.2",
+    "express-auth-middleware": "workspace:*",
     "express-logr": "workspace:*",
     "inversify": "^7.2.0",
     "jsonwebtoken": "^9.0.2",
@@ -35,16 +38,25 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.18.0",
     "@protobuf-ts/plugin": "^2.9.4",
     "@repo/shared": "workspace:*",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.9",
+    "@typescript-eslint/eslint-plugin": "^8.29.0",
+    "@typescript-eslint/parser": "^8.29.0",
+    "eslint": "^9.22.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.2",
+    "globals": "^16.0.0",
+    "prettier": "^3.4.2",
     "ts-proto": "^2.6.1",
     "tsc-alias": "^1.8.15",
     "tsc-esm-fix": "^3.1.2",
     "tsx": "^4.19.3",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.26.1"
   },
   "packageManager": "pnpm@10.6.4+sha512.da3d715bfd22a9a105e6e8088cfc7826699332ded60c423b14ec613a185f1602206702ff0fe4c438cb15c979081ce4cb02568e364b15174503a63c7a8e2a5f6c"
 }

@@ -1,15 +1,17 @@
-import {Document} from 'mongoose';
+import { Document, RootFilterQuery } from 'mongoose';
 
 interface IBaseRepository<T extends Document> {
-    create(data: Partial<T>): Promise<T>;
+  create(data: Partial<T>): Promise<T>;
 
-    findById(id: string): Promise<T | null>;
+  findById(id: string): Promise<T | null>;
 
-    findAll(): Promise<T[]>;
+  findAll(): Promise<T[]>;
 
-    update(id: string, data: Partial<T>): Promise<T | null>;
+  find(query: RootFilterQuery<T>): Promise<T[]>;
 
-    delete(id: string): Promise<boolean>;
+  update(id: string, data: Partial<T>): Promise<T | null>;
+
+  delete(id: string): Promise<boolean>;
 }
 
 export default IBaseRepository;

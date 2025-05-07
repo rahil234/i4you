@@ -2,16 +2,18 @@ import type { AuthState } from '@/types';
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import AuthService from '@/services/auth.service';
+import UserService from '@/services/user.service';
 
 interface AuthStore extends AuthState {
   login: (email: string, password: string) => Promise<void>;
   adminLogin: (email: string, password: string) => Promise<void>;
   googleAuthLogin: (token: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
+  updateUser: (user: AuthState['user']) => Promise<void>;
   logout: () => Promise<void>;
   clearState: () => Promise<void>;
   refreshToken: () => Promise<string>;
-  setState: ({}: Partial<AuthState>) => void;
+  setState: (state: Partial<AuthState>) => void;
 }
 
 const AuthStore = create<AuthStore>();
@@ -37,11 +39,10 @@ export const useAuthStore = AuthStore(
               return;
             }
 
-            const { user, token: accessToken } = data;
+            const { user } = data;
 
             set({
               user,
-              accessToken,
               isAuthenticated: true,
               isLoading: false,
             });
@@ -54,7 +55,7 @@ export const useAuthStore = AuthStore(
               set({ error: error, isLoading: false });
               return;
             }
-            set({ error: null, isLoading: false, user: data.user, accessToken: data.token, isAuthenticated: true });
+            set({ error: null, isLoading: false, user: data.user, isAuthenticated: true });
           },
 
           googleAuthLogin: async (token) => {
@@ -66,11 +67,10 @@ export const useAuthStore = AuthStore(
               return;
             }
 
-            const { user, token: accessToken } = data;
+            const { user } = data;
 
             set({
               user,
-              accessToken,
               isAuthenticated: true,
               isLoading: false,
             });
@@ -87,14 +87,28 @@ export const useAuthStore = AuthStore(
 
             console.log('signup data', data);
 
-            const { user, token: accessToken } = data;
+            const { user } = data;
 
             set({
               user,
-              accessToken,
               isAuthenticated: true,
               isLoading: false,
             });
+          },
+
+          updateUser: async (updatedUser: any) => {
+            set({ isLoading: true, error: null });
+            console.log('Updating user:', updatedUser);
+            const { data, error } = await UserService.updateUser(updatedUser);
+
+            if (error) {
+              set({ error: error, isLoading: false });
+              return;
+            }
+
+            console.log('Updated user data:', data);
+
+            set({ user: data, isLoading: false });
           },
 
           logout: async () => {
@@ -124,18 +138,17 @@ export const useAuthStore = AuthStore(
 
             const { token } = data;
 
-            set({ accessToken: token, isLoading: false });
+            set({ isLoading: false });
             return token;
           },
 
-          setState: ({ isLoading, isAuthenticated, user, accessToken }) => {
-            set({ isLoading, isAuthenticated, user, accessToken });
+          setState: ({ isLoading, isAuthenticated, user }) => {
+            set({ isLoading, isAuthenticated, user });
           },
 
           clearState: async () => {
             set({
               user: null,
-              accessToken: null,
               isAuthenticated: false,
               isLoading: false,
               error: null,
@@ -147,9 +160,10 @@ export const useAuthStore = AuthStore(
       {
         name: 'auth-storage',
         partialize: (state) => ({
-          user: state.user,
+          // user: state.user,
           isAuthenticated: state.isAuthenticated,
         }),
+        skipHydration: true,
       },
     ), { name: 'auth-store', enabled: true },
   ),

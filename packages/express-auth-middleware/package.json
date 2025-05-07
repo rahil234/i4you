@@ -1,0 +1,37 @@
+{
+  "name": "express-auth-middleware",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "import": {
+      "default": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "require": {
+      "default": "./dist/cjs/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build:esm": "tsc --project tsconfig.esm.json",
+    "build:cjs": "tsc --project tsconfig.cjs.json",
+    "build": "pnpm run build:esm && pnpm run build:cjs"
+  },
+  "peerDependencies": {
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/express": "^5.0.0"
+  },
+  "devDependencies": {
+
+  },
+  "files": ["dist","package.json"],
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}

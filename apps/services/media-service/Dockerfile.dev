@@ -1,0 +1,16 @@
+FROM node:23-alpine
+
+WORKDIR /app
+
+RUN corepack enable
+
+COPY --from=root /package*.json /pnpm*.yaml ./
+COPY --from=root /packages /app/packages
+
+COPY package.json /app/apps/services/media-service/
+
+RUN pnpm install
+
+COPY . /app/apps/services/media-service
+
+CMD ["pnpm", "run", "--filter=media-service", "dev"]

@@ -1,20 +1,27 @@
 import { inject, injectable } from 'inversify';
 
 import { TYPES } from '@/types';
-import { getUserById } from '@/grpc/user.client.helpers';
 import { AuthService } from '@/services/auth.service';
 import { handleAsync } from '@/utils/handle-async';
-import { setRefreshCookie } from '@/utils/cookie';
+import {
+  clearAuthCookie,
+  setAccessCookie,
+  setRefreshCookie,
+} from '@/utils/cookie';
+import { UserGrpcService } from '@/services/user.grpc.service';
 
 @injectable()
 export class AuthController {
-  constructor(@inject(TYPES.AuthService) private authService: AuthService) {}
+  constructor(
+    @inject(TYPES.AuthService) private authService: AuthService,
+    @inject(TYPES.UserGrpcService) private userGrpcService: UserGrpcService
+  ) {}
 
   getUser = handleAsync(async (req, res) => {
     try {
       const { userId } = req.body;
       console.log('Getting user with ID:', userId);
-      const user = await getUserById(userId);
+      const user = await this.userGrpcService.findUserById(userId);
       console.log('User:', user);
       res.json(user);
     } catch (error) {
@@ -28,6 +35,8 @@ export class AuthController {
       req.body
     );
 
+    setAccessCookie(res, accessToken);
+
     setRefreshCookie(res, refreshToken);
 
     console.log('User:', user, 'Token:', accessToken);
@@ -39,6 +48,7 @@ export class AuthController {
     const { accessToken, refreshToken, user } =
       await this.authService.adminLogin(req.body);
 
+    setAccessCookie(res, accessToken);
     setRefreshCookie(res, refreshToken);
 
     console.log('User:', user, 'Token:', accessToken);
@@ -51,7 +61,6 @@ export class AuthController {
 
     console.log('Google login token:', token);
 
-    // verify the token
     if (!token) {
       res.status(401).json({ message: 'Unauthorized' });
       return;
@@ -59,6 +68,8 @@ export class AuthController {
 
     const { accessToken, refreshToken, user } =
       await this.authService.googleLogin(token);
+
+    setAccessCookie(res, accessToken);
 
     setRefreshCookie(res, refreshToken);
 
@@ -68,13 +79,27 @@ export class AuthController {
   });
 
   register = handleAsync(async (req, res) => {
-    const { accessToken, user, refreshToken } = await this.authService.register(
-      req.body
-    );
+    await this.authService.register(req.body);
 
-    setRefreshCookie(res, refreshToken);
+    res.status(201).json({
+      message: 'User created and send verification email successfully',
+    });
+  });
 
-    res.status(201).json({ accessToken, user });
+  changePassword = handleAsync(async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+    const { id } = req.user;
+
+    if (!currentPassword || !newPassword) {
+      res
+        .status(400)
+        .json({ message: 'currentPassword and newPassword is required' });
+      return;
+    }
+
+    await this.authService.changePassword(id, currentPassword, newPassword);
+
+    res.status(200).json({ message: 'Password Changed Successfully' });
   });
 
   forgetPassword = handleAsync(async (req, res) => {
@@ -113,7 +138,7 @@ export class AuthController {
 
     await this.authService.verifyAccount(password, token);
 
-    res.status(200).json({ message: 'Account Verfication Successfull' });
+    res.status(200).json({ message: 'Account Verification Successfully' });
   });
 
   refreshToken = handleAsync(async (req, res) => {
@@ -130,7 +155,12 @@ export class AuthController {
       refreshToken: newRefreshToken,
     } = await this.authService.refreshToken(refreshToken);
 
-    console.log('Access token:\n', accessToken);
+    if (!accessToken) {
+      res.status(401).json({ message: 'Unauthorized' });
+      return;
+    }
+
+    setAccessCookie(res, accessToken);
 
     setRefreshCookie(res, newRefreshToken);
 
@@ -138,7 +168,7 @@ export class AuthController {
   });
 
   logout = handleAsync((_req, res) => {
-    res.clearCookie('refreshToken');
+    clearAuthCookie(res);
     res.status(200).json({ message: 'Logged out' });
   });
 }

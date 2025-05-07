@@ -8,17 +8,10 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 
-import { Heart, Loader2 } from 'lucide-react';
+import { Flame, Loader2 } from 'lucide-react';
 import AuthService from '@/services/auth.service';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 export default function VerifyAccountPage() {
   const [password, setPassword] = useState('');
@@ -32,16 +25,28 @@ export default function VerifyAccountPage() {
 
   if (!token) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-teal-50 to-teal-100 p-4">
-        <Card className="w-full max-w-md shadow-lg">
-          <CardHeader className="space-y-1 text-center">
-            <div className="flex justify-center mb-2">
-              <Heart className="h-12 w-12 text-teal-500" />
+      <div className="flex min-h-screen flex-col items-center justify-center p-4">
+        <div className="absolute top-4 right-4">
+          <ThemeToggle />
+        </div>
+
+        <div className="w-full max-w-md space-y-8">
+          <div className="text-center">
+            <div className="flex justify-center mb-4">
+              <div className="i4you-gradient p-4 rounded-full">
+                <Flame className="h-10 w-10 text-white" />
+              </div>
             </div>
-            <CardTitle className="text-2xl font-bold">Invalid Link</CardTitle>
-            <CardDescription>Verification token is missing or invalid</CardDescription>
-          </CardHeader>
-        </Card>
+            <h1 className="text-3xl font-bold">Invalid Link</h1>
+            <p className="mt-2 text-muted-foreground">Verification token is missing or invalid</p>
+          </div>
+
+          <div className="text-center mt-6">
+            <Link href="/login" className="text-primary hover:underline">
+              Back to login
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }
@@ -69,55 +74,64 @@ export default function VerifyAccountPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-teal-50 to-teal-100 p-4">
-      <Card className="w-full max-w-md shadow-lg">
-        <CardHeader className="space-y-1 text-center">
-          <div className="flex justify-center mb-2">
-            <Heart className="h-12 w-12 text-teal-500" />
-          </div>
-          <CardTitle className="text-2xl font-bold">Verify Account</CardTitle>
-          <CardDescription>Set a password to complete your verification</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleVerify}>
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  minLength={8}
-                />
-                <p className="text-xs text-muted-foreground">Enter the password you used to register.</p>
-              </div>
+    <div className="flex min-h-screen flex-col items-center justify-center p-4">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
 
-              {error && <div className="rounded-md bg-red-50 p-3 text-sm text-red-500">{error}</div>}
-              {success && <div className="rounded-md bg-green-50 p-3 text-sm text-green-500">{success}</div>}
-
-              <Button className="w-full" type="submit" disabled={isLoading}>
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Verifying...
-                  </>
-                ) : (
-                  'Verify and Set Password'
-                )}
-              </Button>
+      <div className="w-full max-w-md space-y-8">
+        <div className="text-center">
+          <div className="flex justify-center mb-4">
+            <div className="i4you-gradient p-4 rounded-full">
+              <Flame className="h-10 w-10 text-white" />
             </div>
-          </form>
-        </CardContent>
-        <CardFooter className="flex justify-center">
-          <div className="text-center text-sm">
-            <Link href="/login" className="text-teal-500 hover:underline">
+          </div>
+          <h1 className="text-3xl font-bold">Verify Account</h1>
+          <p className="mt-2 text-muted-foreground">Complete your email verification.</p>
+        </div>
+
+        <form onSubmit={handleVerify} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={8}
+              className="py-6"
+            />
+            <p className="text-xs text-muted-foreground">Enter the password you used to register.</p>
+          </div>
+
+          {error && <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>}
+          {success && <div className="rounded-md bg-green-100 p-3 text-sm text-green-600">{success}</div>}
+
+          <Button
+            className="w-full py-6 i4you-gradient hover:opacity-90 transition-opacity"
+            type="submit"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Verifying...
+              </>
+            ) : (
+              'Verify and Set Password'
+            )}
+          </Button>
+        </form>
+
+        <div className="text-center">
+          <p className="text-sm text-muted-foreground">
+            <Link href="/login" className="text-primary hover:underline">
               Back to login
             </Link>
-          </div>
-        </CardFooter>
-      </Card>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

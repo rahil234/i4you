@@ -1,43 +1,43 @@
-import express from 'express';
+import { Router } from 'express';
 import { AuthController } from '@/controllers/auth.controller';
 import { container } from '@/config/inversify.config';
 import { TYPES } from '@/types';
 
-const router = express.Router();
+const router = Router();
 
 const authController = container.get<AuthController>(TYPES.AuthController);
 
-/**
- * @swagger
- * /api/v1/auth/get-user:
- *   post:
- *     summary: Get user by ID
- *     tags:
- *       - Auth
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               userId:
- *                 type: string
- *     responses:
- *       200:
- *         description: User found
- *       401:
- *         description: Unauthorized
- *       404:
- *         description: User not found
- */
-router.post('/get-user', authController.getUser);
+// /**
+//  * @swagger
+//  * /ap/v1/auth/get-user:
+//  *   post:
+//  *     summary: Get user by ID
+//  *     tags:
+//  *       - Auth
+//  *     security:
+//  *       - bearerAuth: []
+//  *     requestBody:
+//  *       required: true
+//  *       content:
+//  *         application/json:
+//  *           schema:
+//  *             type: object
+//  *             properties:
+//  *               userId:
+//  *                 type: string
+//  *     responses:
+//  *       200:
+//  *         description: User found
+//  *       401:
+//  *         description: Unauthorized
+//  *       404:
+//  *         description: User not found
+//  */
+// router.get('/get-user', authController.getUser);
 
 /**
  * @swagger
- * /refresh-token:
+ * /refresh-token-token:
  *   post:
  *     summary: Refresh access token
  *     tags:
@@ -59,7 +59,7 @@ router.post('/refresh-token', authController.refreshToken);
 
 /**
  * @swagger
- * /api/v1/auth/login:
+ * /ap/v1/auth/login:
  *   post:
  *     summary: Login user
  *     tags:
@@ -85,7 +85,7 @@ router.post('/login', authController.login);
 
 /**
  * @swagger
- * /api/v1/auth/login:
+ * /ap/v1/auth/login:
  *   post:
  *     summary: Login user
  *     tags:
@@ -111,7 +111,7 @@ router.post('/login/admin', authController.adminLogin);
 
 /**
  * @swagger
- * /api/v1/auth/register:
+ * /ap/v1/auth/register:
  *   post:
  *     summary: Register user
  *     tags:
@@ -135,10 +135,9 @@ router.post('/login/admin', authController.adminLogin);
  */
 router.post('/register', authController.register);
 
-
 /**
  * @swagger
- * /api/v1/auth/login:
+ * /ap/v1/auth/login:
  *   post:
  *     summary: Login user
  *     tags:
@@ -162,10 +161,9 @@ router.post('/register', authController.register);
  */
 router.post('/forgot-password', authController.forgetPassword);
 
-
 /**
  * @swagger
- * /api/v1/auth/login:
+ * /ap/v1/auth/login:
  *   post:
  *     summary: Login user
  *     tags:
@@ -191,7 +189,7 @@ router.post('/reset-password', authController.resetPassword);
 
 /**
  * @swagger
- * /api/v1/auth/login:
+ * /ap/v1/auth/login:
  *   post:
  *     summary: Login user
  *     tags:
@@ -217,6 +215,32 @@ router.post('/verify-account', authController.verifyAccount);
 
 /**
  * @swagger
+ * /ap/v1/auth/login:
+ *   post:
+ *     summary: Login user
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *       401:
+ *         description: Unauthorized
+ */
+router.patch('/change-password', authController.changePassword);
+
+/**
+ * @swagger
  * /logout:
  *   post:
  *     summary: Logout user
@@ -230,7 +254,7 @@ router.post('/logout', authController.logout);
 
 /**
  * @swagger
- * api/v1/auth/login/google:
+ * ap/v1/auth/login/google:
  *   post:
  *     summary: Login with Google
  *     tags:

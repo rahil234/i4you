@@ -43,18 +43,6 @@ export class RegisterResponse {
     registerResponseSchema.parse(data);
   }
 
-  get accessToken(): string {
-    return this.data.accessToken;
-  }
-
-  get refreshToken(): string {
-    return this.data.refreshToken;
-  }
-
-  get user() {
-    return this.data.user;
-  }
-
   toString(): string {
     return `Token: ${this.data.accessToken}, User: ${this.data.user.name} (${this.data.user.email})`;
   }

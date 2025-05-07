@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: media-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: media-service
+  template:
+    metadata:
+      labels:
+        app: media-service
+    spec:
+      containers:
+        - name: media-service
+          image: media-service-image:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 4001
+          env:
+            - name: NODE_ENV
+              value: "development"
+            - name: ALLOWED_ORIGINS
+              value: "http://localhost:3000,http://localhost:3001"
+            - name: AUTH_SERVER_URL
+              value: "http://auth-service:3001"
+            - name: USER_SERVER_URL
+              value: "http://user-service:3000"
+            - name: PORT
+              value: "4001"
+            - name: USER_GRPC_SERVER_URL
+              value: "localhost:50051"
+            - name: JWT_SECRET
+              value: your_jwt_secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: media-service
+spec:
+  type: NodePort
+  selector:
+    app: media-service
+  ports:
+    - port: 4001
+      targetPort: 4001
+      nodePort: 30080

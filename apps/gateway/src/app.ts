@@ -1,49 +1,61 @@
+import '@/instrumentation';
 import express, { Request, Response, NextFunction } from 'express';
 import * as path from 'node:path';
-import {fileURLToPath} from 'node:url';
+import { fileURLToPath } from 'node:url';
+import cookieParser from 'cookie-parser';
 import redoc from 'redoc-express';
 import { expressjwt } from 'express-jwt';
 import cors from 'cors';
-import cookieParser from 'cookie-parser';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import swaggerUi from 'swagger-ui-express';
 
 import { env } from '@/config';
-import httpLogger from 'express-logr';
 import { loadSpecs } from '@/config/swagger.config';
+import { errorHandlingMiddleware } from '@/middlewares/error-handling.middleware';
+import { requestLogger } from '@/middlewares/request-logger.middleware';
 
 const filePath = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filePath);
 
 const app = express();
 
-app.use(httpLogger() as () => void);
-app.use(httpLogger({ logFilePath: path.join(dirname, 'logs/gateway.log') }) as () => void);
-
 app.use(cookieParser());
 
 const ALLOWED_ORIGINS = env.ALLOWED_ORIGINS;
 
-const allowedOrigins = ALLOWED_ORIGINS ? ALLOWED_ORIGINS.split(',') : ['http://localhost:3000'];
+const allowedOrigins = ALLOWED_ORIGINS
+  ? ALLOWED_ORIGINS.split(',')
+  : ['http://localhost:3000'];
 
-app.use(cors({
-  origin: allowedOrigins,
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
 
 app.use(express.static(path.join(dirname, '../public')));
 
+app.use(cookieParser());
 
-// Serve Swagger and ReDoc
-app.use('/api-docs', swaggerUi.serve, async (req: Request, res: Response, next: NextFunction) => {
-  const spec = await loadSpecs();
-  swaggerUi.setup(spec)(req, res, next);
-});
+app.use(requestLogger());
 
-app.get('/docs', redoc({
-  title: 'I4You Docs',
-  specUrl: '/api-docs-json',
-}));
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  async (req: Request, res: Response, next: NextFunction) => {
+    const spec = await loadSpecs();
+    swaggerUi.setup(spec)(req, res, next);
+  }
+);
+
+app.get(
+  '/docs',
+  redoc({
+    title: 'I4You Docs',
+    specUrl: '/ap-docs-json',
+  })
+);
 
 app.get('/api-docs-json', async (_req, res) => {
   const spec = await loadSpecs();
@@ -54,7 +66,17 @@ app.use(
   expressjwt({
     secret: env.JWT_SECRET,
     algorithms: ['HS256'],
+    getToken: (req) => {
+      const token = req.cookies['accessToken'];
+      if (token) {
+        return token;
+      }
+      return null;
+    },
     requestProperty: 'user',
+    onExpired: (req) => {
+      console.log('Token expired:', req.url);
+    },
   }).unless({
     path: [
       '/',
@@ -71,7 +93,7 @@ app.use(
       '/api/v1/auth/health',
       '/api/v1/user/health',
     ],
-  }),
+  })
 );
 
 const createProxy = (target: string, pathRewrite: Record<string, string>) => {
@@ -87,9 +109,6 @@ const createProxy = (target: string, pathRewrite: Record<string, string>) => {
           proxyReq.setHeader('X-User-Role', req.user?.role || 'member');
         }
       },
-      proxyRes: (proxyRes, req, _res) => {
-        console.log(req.url, ': Response: ', proxyRes.statusCode);
-      },
       error: (err, _req, res) => {
         console.error('Proxy error:', err);
         if ('status' in res) {
@@ -100,21 +119,24 @@ const createProxy = (target: string, pathRewrite: Record<string, string>) => {
   });
 };
 
-app.use('/api/v1/auth', createProxy(env.AUTH_SERVER_URL, { '^/api/v1/auth': '' }));
-app.use('/api/v1/user', createProxy(env.USER_SERVER_URL, { '^/api/v1/user': '' }));
+app.use(
+  '/api/v1/auth',
+  createProxy(env.AUTH_SERVER_URL, { '^/api/v1/auth': '' })
+);
+app.use(
+  '/api/v1/user',
+  createProxy(env.USER_SERVER_URL, { '^/api/v1/user': '' })
+);
+app.use(
+  '/api/v1/media',
+  createProxy(env.MEDIA_SERVER_URL, { '^/api/v1/media': '' })
+);
 
 app.get('/', (_req, res) => {
   res.redirect('/api-docs');
 });
 
-app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
-  if (err.name === 'UnauthorizedError') {
-    res.status(401).json({ error: 'Invalid or missing token' });
-  } else {
-    console.log('Unknown Error:', err);
-    next(err);
-  }
-});
+app.use(errorHandlingMiddleware());
 
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);

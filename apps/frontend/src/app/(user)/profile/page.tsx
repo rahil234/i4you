@@ -3,31 +3,12 @@ import { UserLayout } from '@/components/user-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Settings, Heart, Calendar, LogOut, Edit, Plus } from 'lucide-react';
+import { Settings, Heart, Calendar, LogOut, Edit } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { useRouter } from 'next/navigation';
 
 export default function ProfilePage() {
-  const user = {
-    name: 'John Doe',
-    age: 30,
-    location: 'New York, NY',
-    bio: 'Software developer who loves hiking and photography. Looking for someone who shares my passion for adventure and technology.',
-    interests: ['Hiking', 'Photography', 'Coding', 'Travel', 'Coffee'],
-    photos: [
-      '/placeholder.svg?height=200&width=200',
-      '/placeholder.svg?height=200&width=200',
-      '/placeholder.svg?height=200&width=200',
-      '/placeholder.svg?height=200&width=200',
-    ],
-    stats: {
-      likes: 24,
-      matches: 12,
-      daysActive: 30,
-    },
-  };
-
-  const { user: user2, isLoading, logout } = useAuthStore();
+  const { user, isLoading, logout } = useAuthStore();
 
   const router = useRouter();
 
@@ -36,11 +17,19 @@ export default function ProfilePage() {
     router.push('/login');
   };
 
+  const handleEditProfile = () => {
+    router.push('/update-profile');
+  };
+
+  const handleChangePassword = () => {
+    router.push('/change-password');
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (!user2) {
+  if (!user) {
     return <div>User not found</div>;
   }
 
@@ -58,24 +47,32 @@ export default function ProfilePage() {
           <CardContent className="pt-6">
             <div className="flex flex-col items-center mb-6">
               <Avatar className="h-24 w-24 mb-4">
-                <AvatarImage src="/placeholder.svg?height=96&width=96" alt={user2?.name} />
+                <AvatarImage src={user.photos && user.photos[0]} alt={user?.name} />
                 <AvatarFallback>
-                  {user.name
+                  {user.name && user.name
                     .split(' ')
                     .map((n) => n[0])
-                    .join('')}
+                    .join('').toUpperCase()}
                 </AvatarFallback>
               </Avatar>
 
               <h2 className="text-xl font-bold">
-                {user2.name}, {user2.age}
+                {user.name}, {user.age}
               </h2>
               <p className="text-muted-foreground">{user.location}</p>
 
-              <Button variant="outline" size="sm" className="mt-2">
-                <Edit className="h-3 w-3 mr-2" />
-                Edit Profile
-              </Button>
+              <div className="flex space-x-2 mt-2">
+                <Button variant="outline" size="sm" className="mt-2"
+                        onClick={handleChangePassword}>
+                  <Edit className="h-3 w-3 mr-2" />
+                  Change Password
+                </Button>
+                <Button variant="outline" size="sm" className="mt-2"
+                        onClick={handleEditProfile}>
+                  <Edit className="h-3 w-3 mr-2" />
+                  Edit Profile
+                </Button>
+              </div>
             </div>
 
             <div className="space-y-4">
@@ -87,7 +84,7 @@ export default function ProfilePage() {
               <div>
                 <h3 className="font-medium mb-2">Interests</h3>
                 <div className="flex flex-wrap gap-2">
-                  {user.interests.map((interest, index) => (
+                  {user.interests && user.interests.map((interest, index) => (
                     <span key={index}
                           className="text-xs bg-slate-100 text-slate-800 px-2 py-1 rounded-full">
                       {interest}
@@ -105,21 +102,16 @@ export default function ProfilePage() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 gap-2">
-              {user.photos.map((photo, index) => (
+              {user.photos && user.photos.map((photo, index) => (
                 <div key={index}
                      className="aspect-square relative rounded-md overflow-hidden bg-slate-100">
                   <img
-                    src={photo || '/placeholder.svg'}
+                    src={photo}
                     alt={`Photo ${index + 1}`}
                     className="object-cover w-full h-full"
                   />
                 </div>
               ))}
-              <Button variant="outline"
-                      className="aspect-square flex flex-col items-center justify-center">
-                <Plus className="h-6 w-6 mb-1" />
-                <span className="text-xs">Add Photo</span>
-              </Button>
             </div>
           </CardContent>
         </Card>
@@ -134,7 +126,7 @@ export default function ProfilePage() {
                 <div className="bg-slate-100 rounded-full p-3 mb-2">
                   <Heart className="h-5 w-5 text-teal-500" />
                 </div>
-                <span className="text-lg font-bold">{user.stats.likes}</span>
+                <span className="text-lg font-bold">{user.stats && user.stats.likes}</span>
                 <span className="text-xs text-muted-foreground">Likes</span>
               </div>
 
@@ -142,7 +134,7 @@ export default function ProfilePage() {
                 <div className="bg-slate-100 rounded-full p-3 mb-2">
                   <Heart className="h-5 w-5 text-pink-500 fill-pink-500" />
                 </div>
-                <span className="text-lg font-bold">{user.stats.matches}</span>
+                <span className="text-lg font-bold">{user.stats && user.stats.matches}</span>
                 <span className="text-xs text-muted-foreground">Matches</span>
               </div>
 
@@ -150,7 +142,7 @@ export default function ProfilePage() {
                 <div className="bg-slate-100 rounded-full p-3 mb-2">
                   <Calendar className="h-5 w-5 text-blue-500" />
                 </div>
-                <span className="text-lg font-bold">{user.stats.daysActive}</span>
+                <span className="text-lg font-bold">{user.stats && user.stats.activeDays}</span>
                 <span className="text-xs text-muted-foreground">Days</span>
               </div>
             </div>

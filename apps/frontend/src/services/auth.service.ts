@@ -66,7 +66,7 @@ export class AuthService {
 
     return handleApi(() =>
       axios
-        .post(`${baseURL}/auth/refresh-token`, {}, { withCredentials: true })
+        .post(`${baseURL}/api/v1/auth/refresh-token`, {}, { withCredentials: true })
         .then(res => res.data),
     );
   };
