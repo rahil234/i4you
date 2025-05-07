@@ -34,6 +34,13 @@ class UserService {
       api
         .patch('/user/me', { data })
         .then(res => res.data));
+
+  changePassword = (data: { currentPassword: string; newPassword: string }) =>
+    handleApi(() =>
+      api
+        .patch('/auth/change-password', { data })
+        .then(res => res.data),
+    );
 }
 
 export default new UserService();

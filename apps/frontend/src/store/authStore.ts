@@ -160,7 +160,7 @@ export const useAuthStore = AuthStore(
       {
         name: 'auth-storage',
         partialize: (state) => ({
-          user: state.user,
+          // user: state.user,
           isAuthenticated: state.isAuthenticated,
         }),
         skipHydration: true,

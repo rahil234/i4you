@@ -86,6 +86,22 @@ export class AuthController {
     });
   });
 
+  changePassword = handleAsync(async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+    const { id } = req.user;
+
+    if (!currentPassword || !newPassword) {
+      res
+        .status(400)
+        .json({ message: 'currentPassword and newPassword is required' });
+      return;
+    }
+
+    await this.authService.changePassword(id, currentPassword, newPassword);
+
+    res.status(200).json({ message: 'Password Changed Successfully' });
+  });
+
   forgetPassword = handleAsync(async (req, res) => {
     const { email } = req.body;
 

@@ -1,8 +1,7 @@
 'use client';
 
 import type React from 'react';
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,30 +11,80 @@ import { ThemeToggle } from '@/components/theme-toggle';
 import { useAuthStore } from '@/store/authStore';
 import GoogleLogo from '@/components/auth/google-logo';
 import { useGoogleLogin } from '@react-oauth/google';
+import { z } from 'zod';
+
+// Define Zod schema for form validation
+const signupSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters long'),
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(8, 'Password must be at least 8 characters long'),
+});
+
+type SignupForm = z.infer<typeof signupSchema>;
 
 export default function SignupPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
+  const [formData, setFormData] = useState<SignupForm>({ name: '', email: '', password: '' });
+  const [errors, setErrors] = useState<Partial<Record<keyof SignupForm, string>>>({});
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
 
   const { register, googleAuthLogin, isLoading, error, signUpError } = useAuthStore();
 
   const resetState = () => {
-    setEmail('');
-    setPassword('');
-    setName('');
+    setFormData({ name: '', email: '', password: '' });
+    setErrors({});
     setSuccess(null);
+    setIsSubmitted(false);
+    setIsFormValid(false);
+  };
+
+  // Validate form
+  const validateForm = () => {
+    const result = signupSchema.safeParse(formData);
+
+    if (result.success) {
+      setErrors({});
+      setIsFormValid(true);
+    } else {
+      const newErrors: Partial<Record<keyof SignupForm, string>> = {};
+      result.error.issues.forEach((issue) => {
+        const field = issue.path[0] as keyof SignupForm;
+        newErrors[field] = issue.message;
+      });
+      setErrors(newErrors);
+      setIsFormValid(false);
+    }
+  };
+
+  // Validate only after submission or input changes post-submission
+  useEffect(() => {
+    if (isSubmitted) {
+      validateForm();
+    }
+  }, [formData, isSubmitted]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitted(true);
 
-    await register(name, email, password);
+    const result = signupSchema.safeParse(formData);
+    if (!result.success) {
+      validateForm();
+      return;
+    }
 
-    resetState();
+    await register(formData.name, formData.email, formData.password);
 
-    setSuccess('Account created successfully! Please check your email for verification.');
+    if (!error && !signUpError) {
+      resetState();
+      setSuccess('Account created successfully! Please check your email for verification.');
+    }
   };
 
   const googleLogin = useGoogleLogin({
@@ -92,51 +141,61 @@ export default function SignupPage() {
             <Label htmlFor="name">Full Name</Label>
             <Input
               id="name"
+              name="name"
               placeholder="John Doe"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              className="py-6"
+              value={formData.name}
+              onChange={handleInputChange}
+              className={`py-6 ${errors.name && isSubmitted ? 'border-destructive' : ''}`}
             />
+            {errors.name && isSubmitted && (
+              <p className="text-sm text-destructive">{errors.name}</p>
+            )}
           </div>
+
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
+              name="email"
               type="email"
               placeholder="name@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="py-6"
+              value={formData.email}
+              onChange={handleInputChange}
+              className={`py-6 ${errors.email && isSubmitted ? 'border-destructive' : ''}`}
             />
+            {errors.email && isSubmitted && (
+              <p className="text-sm text-destructive">{errors.email}</p>
+            )}
           </div>
+
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
             <Input
               id="password"
+              name="password"
               type="password"
               placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={8}
-              className="py-6"
+              value={formData.password}
+              onChange={handleInputChange}
+              className={`py-6 ${errors.password && isSubmitted ? 'border-destructive' : ''}`}
             />
-            <p className="text-xs text-muted-foreground">Password must be at least 8 characters long</p>
+            {errors.password && isSubmitted ? (
+              <p className="text-sm text-destructive">{errors.password}</p>
+            ) : (
+              <p className="text-xs text-muted-foreground">Password must be at least 8 characters long</p>
+            )}
           </div>
 
-          {(signUpError || error) &&
-            <div
-              className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{signUpError || error}</div>
-          }
+          {(signUpError || error) && (
+            <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{signUpError || error}</div>
+          )}
 
           {success && <div className="rounded-md bg-success/10 p-3 text-sm text-success">{success}</div>}
 
           <Button
             className="w-full py-6 i4you-gradient hover:opacity-90 transition-opacity"
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading || (isSubmitted && !isFormValid)}
           >
             {isLoading ? (
               <>

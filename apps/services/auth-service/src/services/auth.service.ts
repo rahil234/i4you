@@ -63,6 +63,25 @@ export class AuthService {
     });
   }
 
+  async changePassword(
+    id: string,
+    currentPassword: string,
+    newPassword: string
+  ) {
+    const user = await this.userRepository.find({ _id: id });
+
+    if (!user) {
+      throw new ValidationError('User not found');
+    }
+
+    if (!(await comparePassword(currentPassword, user?.password))) {
+      throw new ValidationError('Invalid credentials');
+    }
+
+    const hashedPassword = await hashPassword(newPassword);
+    await this.userRepository.update(id, { password: hashedPassword });
+  }
+
   async adminLogin(loginDTO: LoginRequestDTO): Promise<LoginResponseDTO> {
     const user = await this.adminRepository.findByEmail(loginDTO.email);
     if (!user || !(await comparePassword(loginDTO.password, user.password))) {

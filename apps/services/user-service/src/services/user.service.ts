@@ -56,8 +56,7 @@ export class UserService {
   }
 
   async updateUserStatus(userId: string, status: string) {
-    // @ts-expect-error some unknown error
-    const user = await this.userRepository.findAll({ _id: userId });
+    const user = await this.userRepository.find({ _id: userId });
 
     if (!user) {
       throw new Error('User not found');

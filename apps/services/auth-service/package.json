@@ -10,7 +10,7 @@
     "lint": "eslint --ext .ts src",
     "lint:fix": "eslint --fix --ext .ts src",
     "format": "prettier --write .",
-    "build:noemit": "tsc --project tsconfig-olg.json --noEmit"
+    "build:noemit": "tsc --project tsconfig.json --noEmit"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.12.6",

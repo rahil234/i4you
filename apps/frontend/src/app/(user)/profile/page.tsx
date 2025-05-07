@@ -21,6 +21,10 @@ export default function ProfilePage() {
     router.push('/update-profile');
   };
 
+  const handleChangePassword = () => {
+    router.push('/change-password');
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -57,11 +61,18 @@ export default function ProfilePage() {
               </h2>
               <p className="text-muted-foreground">{user.location}</p>
 
-              <Button variant="outline" size="sm" className="mt-2"
-                      onClick={handleEditProfile}>
-                <Edit className="h-3 w-3 mr-2" />
-                Edit Profile
-              </Button>
+              <div className="flex space-x-2 mt-2">
+                <Button variant="outline" size="sm" className="mt-2"
+                        onClick={handleChangePassword}>
+                  <Edit className="h-3 w-3 mr-2" />
+                  Change Password
+                </Button>
+                <Button variant="outline" size="sm" className="mt-2"
+                        onClick={handleEditProfile}>
+                  <Edit className="h-3 w-3 mr-2" />
+                  Edit Profile
+                </Button>
+              </div>
             </div>
 
             <div className="space-y-4">

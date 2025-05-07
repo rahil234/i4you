@@ -8,28 +8,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9634f5b5-f135-4866-b1d6-9eb36f37aa3e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/apps/frontend/src/app/(user)/update-profile/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/frontend/src/app/admin/login/layout.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/frontend/public/icons/apple-icon-120.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/frontend/public/icons/icon-192x192.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/frontend/public/icons/icon-512x512.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/frontend/public/manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/frontend/public/screenshots/home-mobile.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/frontend/public/screenshots/home-wide.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/frontend/src/app/(user)/change-password/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(user)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(user)/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/next.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/next.config.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/login/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/signup/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(auth)/signup/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/(user)/profile/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/(user)/profile/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/admin/(protected)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/admin/(protected)/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/admin/(protected)/users/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/admin/(protected)/users/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/admin/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/admin/login/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/components/auth/auth-session-hydrator.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/components/auth/auth-session-hydrator.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/components/users-filter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/components/users-filter.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/components/users-table.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/components/users-table.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/frontend/src/middleware.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/middleware.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/frontend/src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/app/layout.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/frontend/src/services/user.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/services/user.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/frontend/src/store/authStore.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/frontend/src/store/authStore.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/prometheus/prometheus.yml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/prometheus/prometheus.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/controllers/user.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/controllers/user.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/dtos/admin.dtos.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/dtos/admin.dtos.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/controllers/auth.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/controllers/auth.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/repositories/base.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/repositories/base.repository.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/repositories/interfaces/IBaseRepositoryInterface.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/repositories/interfaces/IBaseRepositoryInterface.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/routes/auth.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/routes/auth.routes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/src/services/auth.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/src/services/auth.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/services/auth-service/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/auth-service/tsconfig.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/repositories/base.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/repositories/base.repository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/repositories/user.repository.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/repositories/user.repository.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/routes/user.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/routes/user.routes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/repositories/interfaces/IBaseRepositoryInterface.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/repositories/interfaces/IBaseRepositoryInterface.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/services/user-service/src/services/user.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apps/services/user-service/src/services/user.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/shared/types/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/shared/types/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,11 +44,11 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="JavaScript File" />
         <option value="Dockerfile" />
         <option value="Kubernetes Service" />
-        <option value="TypeScript File" />
         <option value="TypeScript JSX File" />
+        <option value="TypeScript File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -130,7 +135,7 @@
     "Docker.docker-compose.yaml: Compose Deployment.executor": "Run",
     "JavaScript Debug.i4you.local.com:3000.executor": "Debug",
     "JavaScript Debug.i4you.local.net secure.executor": "Debug",
-    "JavaScript Debug.i4you.local.net.executor": "Debug",
+    "JavaScript Debug.i4you.local.net.executor": "Run",
     "JavaScript Debug.localhost:3000.executor": "Debug",
     "JavaScript Debug.localhost:3001.executor": "Debug",
     "Node.js.client.ts.executor": "Run",
@@ -140,7 +145,7 @@
     "javascript.nodejs.core.library.configured.version": "22.11.0",
     "javascript.nodejs.core.library.typings.version": "22.14.1",
     "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "/Users/rahilk/Projects/i4you/apps/frontend/src/app/admin",
+    "last_opened_file_path": "/Users/rahilk/Projects/i4you/apps/frontend/public/icons",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -170,18 +175,18 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/apps/frontend/public/icons" />
+      <recent name="$PROJECT_DIR$/apps/frontend/public" />
+      <recent name="$PROJECT_DIR$/apps/frontend/src/app/(user)" />
       <recent name="$PROJECT_DIR$/apps/frontend/src/app/admin" />
       <recent name="$PROJECT_DIR$/apps/gateway" />
-      <recent name="$PROJECT_DIR$/apps/services/auth-service" />
-      <recent name="$PROJECT_DIR$/apps/services/media-service" />
-      <recent name="$PROJECT_DIR$/apps/services/user-service/src/dtos" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/apps/frontend/public/icons" />
       <recent name="$PROJECT_DIR$/apps/frontend/src/app/admin/login" />
       <recent name="$PROJECT_DIR$/apps/prometheus" />
       <recent name="$PROJECT_DIR$/apps" />
       <recent name="$PROJECT_DIR$/apps/services/auth-service/src/types" />
-      <recent name="$PROJECT_DIR$/apps/frontend/src/app/(api)" />
     </key>
   </component>
   <component name="RunManager" selected="JavaScript Debug.i4you.local.net">
@@ -327,7 +332,9 @@
       <workItem from="1746423658305" duration="7303000" />
       <workItem from="1746430983411" duration="4265000" />
       <workItem from="1746447676692" duration="36773000" />
-      <workItem from="1746529496790" duration="6209000" />
+      <workItem from="1746529496790" duration="16395000" />
+      <workItem from="1746593876757" duration="9607000" />
+      <workItem from="1746614241521" duration="3450000" />
     </task>
     <servers />
   </component>

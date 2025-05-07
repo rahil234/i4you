@@ -215,6 +215,32 @@ router.post('/verify-account', authController.verifyAccount);
 
 /**
  * @swagger
+ * /ap/v1/auth/login:
+ *   post:
+ *     summary: Login user
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *       401:
+ *         description: Unauthorized
+ */
+router.patch('/change-password', authController.changePassword);
+
+/**
+ * @swagger
  * /logout:
  *   post:
  *     summary: Logout user

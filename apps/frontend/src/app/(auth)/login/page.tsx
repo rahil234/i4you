@@ -1,8 +1,7 @@
 'use client';
 
 import type React from 'react';
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -13,16 +12,65 @@ import useAuthStore from '@/store/authStore';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { useGoogleLogin } from '@react-oauth/google';
 import GoogleLogo from '@/components/auth/google-logo';
+import { z } from 'zod';
+
+// Define Zod schema for form validation
+const loginSchema = z.object({
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(8, 'Password must be at least 8 characters long'),
+});
+
+type LoginForm = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState<LoginForm>({ email: '', password: '' });
+  const [errors, setErrors] = useState<Partial<Record<keyof LoginForm, string>>>({});
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const router = useRouter();
   const { login, googleAuthLogin, isLoading, error } = useAuthStore();
 
+  // Validate form
+  const validateForm = () => {
+    const result = loginSchema.safeParse(formData);
+
+    if (result.success) {
+      setErrors({});
+      setIsFormValid(true);
+    } else {
+      const newErrors: Partial<Record<keyof LoginForm, string>> = {};
+      result.error.issues.forEach((issue) => {
+        const field = issue.path[0] as keyof LoginForm;
+        newErrors[field] = issue.message;
+      });
+      setErrors(newErrors);
+      setIsFormValid(false);
+    }
+  };
+
+  // Validate only after submission or input changes post-submission
+  useEffect(() => {
+    if (isSubmitted) {
+      validateForm();
+    }
+  }, [formData, isSubmitted]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    await login(email, password);
+    setIsSubmitted(true);
+
+    const result = loginSchema.safeParse(formData);
+    if (!result.success) {
+      validateForm();
+      return;
+    }
+
+    await login(formData.email, formData.password);
     if (!error)
       router.push('/discover');
   };
@@ -81,13 +129,15 @@ export default function LoginPage() {
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
-              type="email"
+              name="email"
               placeholder="name@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="py-6"
+              value={formData.email}
+              onChange={handleInputChange}
+              className={`py-6 ${errors.email && isSubmitted ? 'border-destructive' : ''}`}
             />
+            {errors.email && isSubmitted && (
+              <p className="text-sm text-destructive">{errors.email}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -99,13 +149,16 @@ export default function LoginPage() {
             </div>
             <Input
               id="password"
+              name="password"
               type="password"
               placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="py-6"
+              value={formData.password}
+              onChange={handleInputChange}
+              className={`py-6 ${errors.password && isSubmitted ? 'border-destructive' : ''}`}
             />
+            {errors.password && isSubmitted && (
+              <p className="text-sm text-destructive">{errors.password}</p>
+            )}
           </div>
 
           {error && <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>}
@@ -113,7 +166,7 @@ export default function LoginPage() {
           <Button
             type="submit"
             className="w-full py-6 i4you-gradient hover:opacity-90 transition-opacity"
-            disabled={isLoading}
+            disabled={isLoading || (isSubmitted && !isFormValid)}
           >
             {isLoading ? (
               <>
