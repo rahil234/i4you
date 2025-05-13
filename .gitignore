@@ -142,7 +142,7 @@ dist
 
 # next.js
 /.next/
-/out/
+/out
 
 # prod
 /build

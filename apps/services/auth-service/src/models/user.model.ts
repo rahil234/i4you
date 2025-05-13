@@ -6,7 +6,6 @@ export interface UserDocument extends Document {
   email: string;
   password: string;
   isVerified: boolean;
-  onBoarding: boolean;
   status: 'active' | 'suspended';
   createdAt: Date;
 }
@@ -16,7 +15,6 @@ const userSchema = new Schema<UserDocument>({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   isVerified: { type: Boolean, default: false },
-  onBoarding: { type: Boolean, default: false },
   status: { type: String, enum: ['active', 'suspended'], default: 'active' },
   createdAt: { type: Date, default: Date.now },
 });

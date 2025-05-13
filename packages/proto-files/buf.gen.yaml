@@ -6,7 +6,4 @@ plugins:
     opt: env=node,useOptionals=messages,outputServices=grpc-js
     strategy: all
     types:
-      - "greeter.v2"
-      - "user.v1"
-    exclude_types:
-      - "greeter.v1"
+      - "user.v2"

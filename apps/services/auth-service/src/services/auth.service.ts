@@ -20,6 +20,9 @@ import { MailService } from '@/services/mail.service';
 import { PasswordResetTemplate } from '@/utils/mail-templates';
 import { NotFoundError } from '@/errors/NotFoundError';
 import { UserGrpcService } from '@/services/user.grpc.service';
+import { env } from '@/config';
+
+const APP_URL = env.APP_URL;
 
 @injectable()
 export class AuthService {
@@ -68,13 +71,13 @@ export class AuthService {
     currentPassword: string,
     newPassword: string
   ) {
-    const user = await this.userRepository.find({ _id: id });
+    const user = (await this.userRepository.find({ _id: id }))[0];
 
     if (!user) {
       throw new ValidationError('User not found');
     }
 
-    if (!(await comparePassword(currentPassword, user?.password))) {
+    if (!(await comparePassword(currentPassword, user.password))) {
       throw new ValidationError('Invalid credentials');
     }
 
@@ -129,7 +132,7 @@ export class AuthService {
       email: user.email,
     });
 
-    const verificationLink = `https://i4you.local.net/verify?token=${verificationToken}`;
+    const verificationLink = `${APP_URL}/verify?token=${verificationToken}`;
 
     await this.mailService.sendMail({
       to: user.email,
@@ -230,7 +233,8 @@ export class AuthService {
       const newUser = await this.userRepository.create({
         name: googleUser.given_name,
         email: googleUser.email,
-        password: '123456789', // default password
+        password: '123456789',
+        isVerified: true,
       });
       console.log('New user created', newUser);
       user = newUser;

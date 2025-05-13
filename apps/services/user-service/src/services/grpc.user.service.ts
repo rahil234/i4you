@@ -1,18 +1,17 @@
+import { inject, injectable } from 'inversify';
 import { handleUnaryCall } from '@grpc/grpc-js';
 import {
-  GetUserRequest,
-  GetUserResponse,
-  UserServiceHandlers,
-} from 'proto-files/server/userServer';
+  GetUserByIdRequest,
+  GetUserByIdResponse,
+} from 'proto-files/generated/user/v2/user';
 import { UserService } from '@/services/user.service';
-import { inject, injectable } from 'inversify';
 import { TYPES } from '@/types';
 
 @injectable()
 export class UserGrpcService {
   constructor(@inject(TYPES.UserService) private userService: UserService) {}
 
-  getUser: handleUnaryCall<GetUserRequest, GetUserResponse> = async (
+  getUser: handleUnaryCall<GetUserByIdRequest, GetUserByIdResponse> = async (
     call,
     callback
   ) => {
@@ -34,7 +33,7 @@ export class UserGrpcService {
         return;
       }
 
-      const userResponse: GetUserResponse = {
+      const userResponse: GetUserByIdResponse = {
         id: user.id.toString(),
         name: user.name,
         email: user.email,
@@ -57,7 +56,7 @@ export class UserGrpcService {
     }
   };
 
-  handlers(): UserServiceHandlers {
+  handlers() {
     return {
       getUser: this.getUser,
     };

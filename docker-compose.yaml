@@ -17,6 +17,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=${AUTH_HTTP_PORT}
+      - APP_URL=https://i4you.local.net
       - USER_GRPC_SERVER_URL=user-service:${USER_GRPC_PORT}
       - MONGODB_URI=mongodb://host.docker.internal:27017/I4you-userDB
     env_file:
@@ -111,6 +112,28 @@ services:
     networks:
       - app-network
 
+  frontend:
+    image: frontend-image
+    pull_policy: never
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile.dev
+      additional_contexts:
+        root: ./
+    volumes:
+      - /app/node_modules
+      - /app/apps/frontend/node_modules
+      - ./apps/frontend:/app/apps/frontend
+      - ./packages:/app/packages
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - apps/frontend/.env.development
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
   nginx:
     #    build:
     #      context: ./apps/nginx
@@ -126,16 +149,6 @@ services:
       - "443:443"
     depends_on:
       - gateway-server
-    networks:
-      - app-network
-
-  prometheus:
-    image: prom/prometheus:latest
-    volumes:
-      - ./apps/prometheus/:/etc/prometheus/
-    ports:
-      - "9090:9090"
-    restart: unless-stopped
     networks:
       - app-network
 

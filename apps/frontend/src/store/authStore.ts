@@ -118,6 +118,7 @@ export const useAuthStore = AuthStore(
               return;
             }
             await getState().clearState();
+            set({ isAuthenticated: false, isLoading: false, user: null });
             console.log('Logged out');
           },
 

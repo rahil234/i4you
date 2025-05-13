@@ -8,7 +8,7 @@ import { TYPES } from '@/types';
 import { AuthController } from '@/controllers/auth.controller';
 import { MailService } from '@/services/mail.service';
 import { UserGrpcService } from '@/services/user.grpc.service';
-import { GrpcClientProvider } from '@/grpc/user.client';
+import { GrpcClientProvider } from '@/providers/grpc.client.provider';
 
 const container = new Container();
 
@@ -20,6 +20,7 @@ container.bind<MailService>(TYPES.MailService).to(MailService);
 container.bind<UserGrpcService>(TYPES.UserGrpcService).to(UserGrpcService);
 container
   .bind<GrpcClientProvider>(TYPES.GrpcClientProvider)
-  .to(GrpcClientProvider);
+  .to(GrpcClientProvider)
+  .inSingletonScope();
 
 export { container };

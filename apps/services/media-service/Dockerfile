@@ -32,4 +32,4 @@ RUN pnpm install --prod
 
 COPY --from=build /app/apps/services/media-service/dist ./dist
 
-ENTRYPOINT ["node", "dist/app.js"]
+CMD ["node", "dist/app.js"]

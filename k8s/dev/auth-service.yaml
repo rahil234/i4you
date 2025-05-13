@@ -21,6 +21,8 @@ spec:
           env:
             - name: NODE_ENV
               value: "production"
+            - name: APP_URL
+              value: "https://i4you.local.net"
             - name: ALLOWED_ORIGINS
               value: "http://localhost:3000,http://localhost:3001"
             - name: AUTH_SERVER_URL

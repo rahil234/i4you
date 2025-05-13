@@ -10,7 +10,7 @@ const userController = container.get<UserController>(TYPES.UserController);
 
 /**
  * @swagger
- * /ap/v1/user/me:
+ * /api/v1/user/me:
  *   get:
  *     summary: Get user by token
  *     tags:
@@ -29,7 +29,7 @@ router.get(
 
 /**
  * @swagger
- * /ap/v1/user/me:
+ * /api/v1/user/me:
  *   get:
  *     summary: Get user by token
  *     tags:
@@ -48,7 +48,7 @@ router.patch(
 
 /**
  * @swagger
- * /ap/v1/user/matches:
+ * /api/v1/user/matches:
  *   get:
  *     summary: Get all user's matches
  *     tags:
@@ -110,7 +110,7 @@ router.get(
 
 /**
  * @swagger
- * /ap/v1/user/onboarding:
+ * /api/v1/user/onboarding:
  *   post:
  *     summary: Upload user onBoarding data
  *     tags:
@@ -129,7 +129,7 @@ router.post(
 
 /**
  * @swagger
- * /ap/v1/user:
+ * /api/v1/user:
  *   get:
  *     summary: Get all user's
  *     tags:
@@ -148,7 +148,7 @@ router.get(
 
 /**
  * @swagger
- * /ap/v1/user/:userId/status:
+ * /api/v1/user/:userId/status:
  *   patch:
  *     summary: Update user status
  *     tags:

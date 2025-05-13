@@ -9,7 +9,7 @@ importers:
   .:
     devDependencies:
       pnpm:
-        specifier: ^10.8.1
+        specifier: 10.10.0
         version: 10.10.0
       turbo:
         specifier: ^2.4.4
@@ -388,12 +388,6 @@ importers:
       express:
         specifier: ^4.21.2
         version: 4.21.2
-      express-auth-middleware:
-        specifier: workspace:*
-        version: link:../../../packages/express-auth-middleware
-      express-logr:
-        specifier: workspace:*
-        version: link:../../../packages/express-logr
       inversify:
         specifier: ^7.2.0
         version: 7.5.1(reflect-metadata@0.2.2)
@@ -896,6 +890,9 @@ importers:
       '@types/node':
         specifier: ^22.15.2
         version: 22.15.3
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
 
   packages/express-auth-middleware:
     dependencies:
