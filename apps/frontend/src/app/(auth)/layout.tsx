@@ -1,8 +1,7 @@
 import type React from 'react';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { verifyToken } from '@/lib/auth/verify-token';
-import GoogleProviderWrapper from '@/app/(auth)/google-provider';
+import { AuthProvider } from '@/app/(auth)/auth-provider';
 
 export default async function AuthLayout({ children }: Readonly<{
   children: React.ReactNode
@@ -16,8 +15,8 @@ export default async function AuthLayout({ children }: Readonly<{
   }
 
   return (
-    <GoogleProviderWrapper>
+    <AuthProvider>
       <div className="min-h-screen  bg-background">{children}</div>
-    </GoogleProviderWrapper>
+    </AuthProvider>
   );
 }

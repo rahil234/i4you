@@ -3,18 +3,19 @@
 import type React from 'react';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { z } from 'zod';
 import { useRouter } from 'next/navigation';
+import { Flame, Loader2 } from 'lucide-react';
+import { FacebookProvider } from 'react-facebook';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Flame, Loader2, Facebook } from 'lucide-react';
 import useAuthStore from '@/store/authStore';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { useGoogleLogin } from '@react-oauth/google';
-import GoogleLogo from '@/components/auth/google-logo';
-import { z } from 'zod';
+import FacebookLoginButton from '@/components/auth/facebook-login-button';
+import GoogleLoginButton from '@/components/auth/google-login-button';
 
-// Define Zod schema for form validation
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters long'),
@@ -22,15 +23,19 @@ const loginSchema = z.object({
 
 type LoginForm = z.infer<typeof loginSchema>;
 
+const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
+const facebookClientId = process.env.NEXT_PUBLIC_FACEBOOK_CLIENT_ID!;
+
+if (!googleClientId || !facebookClientId) throw new Error('NEXT_PUBLIC_GOOGLE_CLIENT_ID or NEXT_PUBLIC_FACEBOOK_CLIENT_ID is not defined');
+
 export default function LoginPage() {
   const [formData, setFormData] = useState<LoginForm>({ email: '', password: '' });
   const [errors, setErrors] = useState<Partial<Record<keyof LoginForm, string>>>({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const router = useRouter();
-  const { login, googleAuthLogin, isLoading, error } = useAuthStore();
+  const { login, isLoading, error } = useAuthStore();
 
-  // Validate form
   const validateForm = () => {
     const result = loginSchema.safeParse(formData);
 
@@ -48,7 +53,6 @@ export default function LoginPage() {
     }
   };
 
-  // Validate only after submission or input changes post-submission
   useEffect(() => {
     if (isSubmitted) {
       validateForm();
@@ -75,14 +79,6 @@ export default function LoginPage() {
       router.push('/discover');
   };
 
-  const googleLogin = useGoogleLogin({
-    onSuccess: async (res) => {
-      await googleAuthLogin(res.access_token);
-      router.push('/discover');
-    },
-    onError: error => console.log('Login Failed:', error),
-  });
-
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4">
       <div className="absolute top-4 right-4">
@@ -101,19 +97,10 @@ export default function LoginPage() {
         </div>
 
         <div className="space-y-4">
-          <Button variant="outline" className="w-full py-6 relative"
-                  onClick={() => googleLogin()}
-                  disabled={isLoading}
-          >
-            <GoogleLogo className="h-5 w-5 absolute left-4" />
-            <span>Continue with Google</span>
-          </Button>
-
-          <Button variant="outline" className="w-full py-6 relative">
-            <Facebook className="h-5 w-5 absolute left-4 text-blue-600" />
-            <span>Continue with Facebook</span>
-          </Button>
-
+          <div className="flex flex-col gap-4">
+            <GoogleLoginButton />
+            <FacebookLoginButton />
+          </div>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t" />

@@ -78,6 +78,28 @@ export class AuthController {
     res.json({ accessToken, user });
   });
 
+  facebookLogin = handleAsync(async (req, res) => {
+    const { token } = req.body;
+
+    console.log('Facebook login token:', token);
+
+    if (!token) {
+      res.status(401).json({ message: 'Unauthorized' });
+      return;
+    }
+
+    const { accessToken, refreshToken, user } =
+      await this.authService.facebookLogin(token);
+
+    setAccessCookie(res, accessToken);
+
+    setRefreshCookie(res, refreshToken);
+
+    console.log('User:', user, 'Token:', accessToken, 'Refresh:', refreshToken);
+
+    res.json({ accessToken, user });
+  });
+
   register = handleAsync(async (req, res) => {
     await this.authService.register(req.body);
 

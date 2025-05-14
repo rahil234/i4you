@@ -84,6 +84,7 @@ app.use(
       '/api/v1/auth/login',
       '/api/v1/auth/login/admin',
       '/api/v1/auth/login/google',
+      '/api/v1/auth/login/facebook',
       '/api/v1/auth/forgot-password',
       '/api/v1/auth/reset-password',
       '/api/v1/auth/verify-account',

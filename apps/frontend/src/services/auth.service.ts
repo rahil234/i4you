@@ -24,6 +24,13 @@ export class AuthService {
         .then(res => res.data),
     );
 
+  facebookAuthLogin = (token: string) =>
+    handleApi(() =>
+      api
+        .post('/auth/login/facebook', { token }, { withCredentials: true })
+        .then(res => res.data),
+    );
+
   register = (name: string, email: string, password: string) =>
     handleApi(() =>
       api

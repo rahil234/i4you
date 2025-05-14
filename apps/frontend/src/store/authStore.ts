@@ -8,6 +8,7 @@ interface AuthStore extends AuthState {
   login: (email: string, password: string) => Promise<void>;
   adminLogin: (email: string, password: string) => Promise<void>;
   googleAuthLogin: (token: string) => Promise<void>;
+  facebookAuthLogin: (token: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   updateUser: (user: AuthState['user']) => Promise<void>;
   logout: () => Promise<void>;
@@ -61,6 +62,25 @@ export const useAuthStore = AuthStore(
           googleAuthLogin: async (token) => {
             set({ isLoading: true, error: null });
             const { data, error } = await AuthService.googleAuthLogin(token);
+
+            if (error) {
+              set({ error: error, isLoading: false });
+              return;
+            }
+
+            const { user } = data;
+
+            set({
+              user,
+              isAuthenticated: true,
+              isLoading: false,
+            });
+          },
+
+          facebookAuthLogin: async (token) => {
+            set({ isLoading: true, error: null });
+
+            const { data, error } = await AuthService.facebookAuthLogin(token);
 
             if (error) {
               set({ error: error, isLoading: false });
