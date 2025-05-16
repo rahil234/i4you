@@ -17,10 +17,10 @@
     }
   },
   "scripts": {
-    "build:esm": "tsc -p tsconfig.esm.json",
-    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:esm": "node_modules/.bin/tsc -p tsconfig.esm.json",
+    "build:cjs": "node_modules/.bin/tsc -p tsconfig.cjs.json",
     "build": "npm run build:esm && npm run build:cjs",
-    "dev": "tsc --watch",
+    "dev": "node_modules/.bin/tsc --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {

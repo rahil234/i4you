@@ -16,7 +16,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "lint": "eslint src/"
+    "lint": "eslint src"
   },
   "dependencies": {
     "react": "^19.0.0"
