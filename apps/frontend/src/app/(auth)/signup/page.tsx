@@ -6,14 +6,13 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Flame, Loader2, Facebook } from 'lucide-react';
+import { Flame, Loader2 } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { useAuthStore } from '@/store/authStore';
-import GoogleLogo from '@/components/auth/google-logo';
-import { useGoogleLogin } from '@react-oauth/google';
 import { z } from 'zod';
+import GoogleLoginButton from '@/components/auth/google-login-button';
+import FacebookLoginButton from '@/components/auth/facebook-login-button';
 
-// Define Zod schema for form validation
 const signupSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters long'),
   email: z.string().email('Please enter a valid email address'),
@@ -29,7 +28,7 @@ export default function SignupPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
 
-  const { register, googleAuthLogin, isLoading, error, signUpError } = useAuthStore();
+  const { register, isLoading, success: storeSuccess, error, signUpError } = useAuthStore();
 
   const resetState = () => {
     setFormData({ name: '', email: '', password: '' });
@@ -64,6 +63,15 @@ export default function SignupPage() {
     }
   }, [formData, isSubmitted]);
 
+  useEffect(() => {
+    if (storeSuccess) {
+      resetState();
+      setSuccess('Account created successfully! Please check your email for verification.');
+    } else if (error || signUpError) {
+      setSuccess(null);
+    }
+  }, [storeSuccess, error, signUpError]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -87,14 +95,6 @@ export default function SignupPage() {
     }
   };
 
-  const googleLogin = useGoogleLogin({
-    onSuccess: async (res) => {
-      console.log('Google Login Success:', res);
-      await googleAuthLogin(res.access_token);
-    },
-    onError: error => console.log('Login Failed:', error),
-  });
-
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4">
       <div className="absolute top-4 right-4">
@@ -113,19 +113,10 @@ export default function SignupPage() {
         </div>
 
         <div className="space-y-4">
-          <Button variant="outline" className="w-full py-6 relative"
-                  onClick={() => googleLogin()}
-                  disabled={isLoading}
-          >
-            <GoogleLogo className="h-5 w-5 absolute left-4" />
-            <span>Continue with Google</span>
-          </Button>
-
-          <Button variant="outline" className="w-full py-6 relative">
-            <Facebook className="h-5 w-5 absolute left-4 text-blue-600" />
-            <span>Continue with Facebook</span>
-          </Button>
-
+          <div className="flex flex-col gap-4">
+            <GoogleLoginButton type={'signup'} />
+            <FacebookLoginButton type={'signup'} />
+          </div>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t" />

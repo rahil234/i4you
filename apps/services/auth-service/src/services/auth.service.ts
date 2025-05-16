@@ -9,9 +9,10 @@ import {
 } from '@/utils/jwt';
 import IUserRepository from '@/repositories/interfaces/IUserRepository';
 import { type LoginRequestDTO, LoginResponseDTO } from '@/dtos/login.dto';
-import { RegisterRequestDTO, RegisterResponse } from '@/dtos/register.dto';
+import { RegisterRequestDTO } from '@/dtos/register.dto';
 import { TYPES } from '@/types';
 import { fetchGoogleUser } from '@/utils/google-auth';
+import { fetchFacebookUser } from '@/utils/facebook-auth';
 import { UserExistsError } from '@/errors/UserExistsError';
 import IAdminRepository from '@/repositories/interfaces/IAdminRepository';
 import { SuspendedUserError } from '@/errors/SuspendedUserError';
@@ -19,8 +20,8 @@ import { ValidationError } from '@/errors/ValidationError';
 import { MailService } from '@/services/mail.service';
 import { PasswordResetTemplate } from '@/utils/mail-templates';
 import { NotFoundError } from '@/errors/NotFoundError';
-import { UserGrpcService } from '@/services/user.grpc.service';
 import { env } from '@/config';
+import { createError } from 'http-errors';
 
 const APP_URL = env.APP_URL;
 
@@ -29,8 +30,7 @@ export class AuthService {
   constructor(
     @inject(TYPES.UserRepository) private userRepository: IUserRepository,
     @inject(TYPES.AdminRepository) private adminRepository: IAdminRepository,
-    @inject(TYPES.MailService) private mailService: MailService,
-    @inject(TYPES.UserGrpcService) private userGrpcService: UserGrpcService
+    @inject(TYPES.MailService) private mailService: MailService
   ) {}
 
   async login(loginDTO: LoginRequestDTO): Promise<LoginResponseDTO> {
@@ -149,21 +149,6 @@ export class AuthService {
         <p>This link will expire in 1 hour.</p>
       `,
     });
-
-    // const accessToken = generateAccessToken({
-    //   sub: user._id,
-    //   role: 'member',
-    //   email: user.email,
-    // });
-    // const refreshToken = generateRefreshToken({
-    //   sub: user._id,
-    //   role: 'member',
-    // });
-
-    // return new RegisterResponse({
-    //   ...user,
-    //   id: user._id,
-    // });
   }
 
   async forgetPassword(email: string) {
@@ -221,23 +206,44 @@ export class AuthService {
     await this.userRepository.update(userId, { isVerified: true });
   }
 
+  async googleRegister(token: string): Promise<void> {
+    const googleUser = await fetchGoogleUser(token);
+    if (!googleUser) {
+      throw createError.BadRequest('Invalid credentials');
+    }
+
+    const user = await this.userRepository.findByEmail(googleUser.email);
+
+    if (user) {
+      throw createError.Conflict(
+        'User already exists with this email. Please login.'
+      );
+    }
+
+    const hashedPassword = await hashPassword(googleUser.email);
+
+    const newUser = await this.userRepository.create({
+      name: googleUser.given_name,
+      email: googleUser.email,
+      password: hashedPassword,
+      isVerified: true,
+    });
+
+    if (!newUser) {
+      throw createError.Internal('Failed to create user. try again later.');
+    }
+  }
+
   async googleLogin(token: string): Promise<LoginResponseDTO> {
     const googleUser = await fetchGoogleUser(token);
     if (!googleUser) {
       throw new Error('Invalid credentials');
     }
 
-    let user = await this.userRepository.findByEmail(googleUser.email);
+    const user = await this.userRepository.findByEmail(googleUser.email);
 
     if (!user) {
-      const newUser = await this.userRepository.create({
-        name: googleUser.given_name,
-        email: googleUser.email,
-        password: '123456789',
-        isVerified: true,
-      });
-      console.log('New user created', newUser);
-      user = newUser;
+      throw createError.BadRequest('User not found. Please register first.');
     }
 
     const accessToken = generateAccessToken({
@@ -256,6 +262,29 @@ export class AuthService {
       name: user.name,
       email: user.email,
     });
+  }
+
+  async facebookRegister(token: string): Promise<LoginResponseDTO> {
+    const facebookUser = await fetchFacebookUser(token);
+
+    if (!facebookUser) {
+      throw createError.BadRequest('Invalid User');
+    }
+
+    console.log('Facebook user:', facebookUser);
+
+    throw createError.NotImplemented('NOT IMPLEMENTED');
+  }
+
+  async facebookLogin(token: string): Promise<LoginResponseDTO> {
+    const facebookUser = await fetchFacebookUser(token);
+    if (!facebookUser) {
+      throw new Error('Invalid credentials');
+    }
+
+    console.log('Facebook user:', facebookUser);
+
+    throw new ValidationError('NOT IMPLEMENTED');
   }
 
   async refreshToken(token: string): Promise<LoginResponseDTO> {

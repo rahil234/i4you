@@ -1,5 +1,7 @@
 import { inject, injectable } from 'inversify';
 
+import { createError } from 'http-errors';
+
 import { TYPES } from '@/types';
 import { AuthService } from '@/services/auth.service';
 import { handleAsync } from '@/utils/handle-async';
@@ -17,19 +19,6 @@ export class AuthController {
     @inject(TYPES.UserGrpcService) private userGrpcService: UserGrpcService
   ) {}
 
-  getUser = handleAsync(async (req, res) => {
-    try {
-      const { userId } = req.body;
-      console.log('Getting user with ID:', userId);
-      const user = await this.userGrpcService.findUserById(userId);
-      console.log('User:', user);
-      res.json(user);
-    } catch (error) {
-      console.error('Error getting user:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  });
-
   login = handleAsync(async (req, res) => {
     const { accessToken, refreshToken, user } = await this.authService.login(
       req.body
@@ -44,6 +33,14 @@ export class AuthController {
     res.json({ accessToken, user });
   });
 
+  register = handleAsync(async (req, res) => {
+    await this.authService.register(req.body);
+
+    res.status(201).json({
+      message: 'User created and send verification email successfully',
+    });
+  });
+
   adminLogin = handleAsync(async (req, res) => {
     const { accessToken, refreshToken, user } =
       await this.authService.adminLogin(req.body);
@@ -54,6 +51,19 @@ export class AuthController {
     console.log('User:', user, 'Token:', accessToken);
 
     res.json({ accessToken, user });
+  });
+
+  googleRegister = handleAsync(async (req, res, next) => {
+    const { token } = req.body;
+
+    if (!token) {
+      console.error('Required Google token is missing');
+      next(createError.Unauthorized('Google token is required'));
+    }
+
+    await this.authService.googleRegister(token);
+
+    res.json({ message: 'User registered successfully' });
   });
 
   googleLogin = handleAsync(async (req, res) => {
@@ -78,12 +88,42 @@ export class AuthController {
     res.json({ accessToken, user });
   });
 
-  register = handleAsync(async (req, res) => {
-    await this.authService.register(req.body);
+  facebookRegister = handleAsync(async (req, res, next) => {
+    const { token } = req.body;
 
-    res.status(201).json({
-      message: 'User created and send verification email successfully',
-    });
+    if (!token) {
+      next(createError.Unauthorized('Facebook token is required'));
+    }
+
+    const user = await this.authService.facebookRegister(token);
+
+    if (!user) {
+      next(
+        createError.Internal('Registration failed. Please try again later.')
+      );
+    }
+
+    res.json({ message: 'User registered successfully' });
+  });
+
+  facebookLogin = handleAsync(async (req, res, next) => {
+    const { token } = req.body;
+
+    if (!token) {
+      next(createError.Unauthorized('Facebook token is required'));
+      return;
+    }
+
+    const { accessToken, refreshToken, user } =
+      await this.authService.facebookLogin(token);
+
+    setAccessCookie(res, accessToken);
+
+    setRefreshCookie(res, refreshToken);
+
+    console.log('User:', user, 'Token:', accessToken, 'Refresh:', refreshToken);
+
+    res.json({ accessToken, user });
   });
 
   changePassword = handleAsync(async (req, res) => {
