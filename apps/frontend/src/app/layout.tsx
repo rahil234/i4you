@@ -35,7 +35,11 @@ export default function RootLayout({ children }: Readonly<{
       <meta name="apple-mobile-web-app-title" content="I4You" />
     </head>
     <body className={inter.className}>
-    <ThemeProvider>{children}</ThemeProvider>
+    <ThemeProvider>
+      <div className={'transition-colors duration-1000'}>
+        {children}
+      </div>
+    </ThemeProvider>
     </body>
     </html>
   );
