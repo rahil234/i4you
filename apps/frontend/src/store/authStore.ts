@@ -14,7 +14,7 @@ interface AuthStore extends AuthState {
   googleAuthRegister: (token: string) => Promise<void>;
   facebookAuthRegister: (token: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
-  updateUser: (user: Pick<User, 'name' | 'location'>) => Promise<void>;
+  updateUser: (user: Partial<User>) => Promise<void>;
   logout: () => Promise<void>;
   clearState: () => Promise<void>;
   refreshToken: () => Promise<string>;

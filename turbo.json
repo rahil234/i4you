@@ -12,6 +12,11 @@
       ],
       "cache": true
     },
+    "test": {
+      "dependsOn": [
+        "^test"
+      ]
+    },
     "install": {
       "cache": true
     },

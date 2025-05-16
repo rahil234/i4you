@@ -9,6 +9,9 @@
     "esModuleInterop": true,
     "allowImportingTsExtensions": false
   },
-  "include": ["."],
-  "exclude": ["dist", "build", "node_modules"]
+  "include": [
+    "./"
+  ],
+  "exclude": [
+    "dist", "build", "node_modules"]
 }

@@ -1,32 +1,8 @@
 services:
 
-  auth-service:
-    image: auth-service-image
-    pull_policy: never
-    build:
-      context: ./apps/services/auth-service
-      dockerfile: Dockerfile.dev
-      additional_contexts:
-        root: ./
-    volumes:
-      - ./apps/services/auth-service:/app/apps/services/auth-service
-      - /app/apps/services/auth-service/node_modules
-      - ./packages:/app/packages
-    ports:
-      - "3001:3001"
-    environment:
-      - NODE_ENV=production
-      - PORT=${AUTH_HTTP_PORT}
-      - APP_URL=https://i4you.local.net
-      - USER_GRPC_SERVER_URL=user-service:${USER_GRPC_PORT}
-      - MONGODB_URI=mongodb://host.docker.internal:27017/I4you-userDB
-    env_file:
-      - ./apps/services/auth-service/.env
-    networks:
-      - app-network
-
   user-service:
     image: user-service-image
+    container_name: user-service
     pull_policy: never
     build:
       context: ./apps/services/user-service
@@ -47,8 +23,37 @@ services:
     networks:
       - app-network
 
+  auth-service:
+    image: auth-service-image
+    container_name: auth-service
+    pull_policy: never
+    build:
+      context: ./apps/services/auth-service
+      dockerfile: Dockerfile.dev
+      additional_contexts:
+        root: ./
+    volumes:
+      - ./apps/services/auth-service:/app/apps/services/auth-service
+      - /app/apps/services/auth-service/node_modules
+      - ./packages:/app/packages
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=${AUTH_HTTP_PORT}
+      - APP_URL=https://i4you.local.net
+      - USER_GRPC_SERVER_URL=user-service:${USER_GRPC_PORT}
+      - MONGODB_URI=mongodb://host.docker.internal:27017/I4you-userDB
+    env_file:
+      - ./apps/services/auth-service/.env
+    depends_on:
+      - user-service
+    networks:
+      - app-network
+
   media-service:
     image: media-service-image
+    container_name: media-service
     pull_policy: never
     build:
       context: ./apps/services/media-service
@@ -71,6 +76,9 @@ services:
       - app-network
 
   #  chat-service:
+  #    image: chat-service-image
+  #    container_name: chat-service
+  #    pull_policy: never
   #    build: apps/services/chat-service
   #    ports:
   #      - "6000:6000"
@@ -82,6 +90,7 @@ services:
 
   gateway-server:
     image: gateway-server-image
+    container_name: gateway-server
     pull_policy: never
     build:
       context: ./apps/gateway
@@ -112,37 +121,11 @@ services:
     networks:
       - app-network
 
-  frontend:
-    image: frontend-image
-    pull_policy: never
-    build:
-      context: ./apps/frontend
-      dockerfile: Dockerfile.dev
-      additional_contexts:
-        root: ./
-    volumes:
-      - /app/node_modules
-      - /app/apps/frontend/node_modules
-      - ./apps/frontend:/app/apps/frontend
-      - ./packages:/app/packages
-    environment:
-      - NODE_ENV=development
-    env_file:
-      - apps/frontend/.env.development
-    ports:
-      - "3000:3000"
-    networks:
-      - app-network
-
   nginx:
-    #    build:
-    #      context: ./apps/nginx
-    #      dockerfile: Dockerfile.dev
-    #    image: i4you-nginx
     image: nginx:latest
     container_name: i4you-nginx
     volumes:
-      - ./apps/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./apps/nginx/nginx.dev.conf:/etc/nginx/nginx.conf
       - ./apps/nginx/certs:/etc/nginx/certs
     ports:
       - "80:80"

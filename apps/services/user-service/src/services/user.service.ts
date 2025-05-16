@@ -43,7 +43,8 @@ export class UserService {
         ? {
             type: 'Point',
             coordinates: user.location?.coordinates || [0, 0],
-            displayName: data.location,
+            displayName:
+              data.location?.displayName || user.location?.displayName,
           }
         : undefined,
     });

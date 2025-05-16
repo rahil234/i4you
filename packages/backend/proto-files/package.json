@@ -20,8 +20,8 @@
     }
   },
   "scripts": {
-    "prebuild": "buf generate",
-    "build": "tsc && tsc-alias"
+    "prebuild": "node_modules/.bin/buf generate",
+    "build": "node_modules/.bin/tsc && tsc-alias"
   },
   "dependencies": {
     "@bufbuild/protobuf": "^2.2.5",

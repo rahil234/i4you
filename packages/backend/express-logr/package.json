@@ -18,11 +18,11 @@
     }
   },
   "scripts": {
-    "build:esm": "tsc -p tsconfig.esm.json",
-    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:esm": "node_modules/.bin/tsc -p tsconfig.esm.json",
+    "build:cjs": "node_modules/.bin/tsc -p tsconfig.cjs.json",
     "build": "npm run build:esm && npm run build:cjs",
-    "build:noemit": "tsc --noEmit",
-    "dev": "tsc --watch",
+    "build:noemit": "node_modules/.bin/tsc --noEmit",
+    "dev": "node_modules/.bin/tsc --watch",
     "prepublish": "echo prepublish"
   },
   "devDependencies": {

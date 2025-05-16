@@ -1,0 +1,24 @@
+{
+  "name": "http-errors",
+  "version": "0.0.0",
+  "description": "This will create common http errors",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "http",
+    "error"
+  ],
+  "license": "ISC",
+  "author": "rahil234"
+}
