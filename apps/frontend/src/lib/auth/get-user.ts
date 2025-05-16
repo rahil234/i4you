@@ -11,8 +11,6 @@ if (!API_URL) {
 export async function getUser(accessToken: string): Promise<User> {
   try {
 
-    console.log('Fetching user from URL:', `${API_URL}/api/v1/user/me`);
-
     let res = await fetch(`${API_URL}/api/v1/user/me`, {
       headers: {
         Cookie: `accessToken=${accessToken}`,
