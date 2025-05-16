@@ -8,15 +8,19 @@ import { Button } from '@/components/ui/button';
 import { useGoogleLogin } from '@react-oauth/google';
 import useAuthStore from '@/store/authStore';
 
-export default function GoogleLoginButton() {
+export default function GoogleLoginButton({ type }: { type: 'login' | 'signup' }) {
   const router = useRouter();
 
-  const { googleAuthLogin, isLoading, error } = useAuthStore();
+  const { googleAuthLogin, googleAuthRegister, isLoading, error, signUpError } = useAuthStore();
 
   const googleLogin = useGoogleLogin({
     onSuccess: async (res) => {
-      await googleAuthLogin(res.access_token);
-      if (!error) {
+      if (type === 'signup') {
+        await googleAuthRegister(res.access_token);
+      } else {
+        await googleAuthLogin(res.access_token);
+      }
+      if (!error && !signUpError) {
         router.push('/discover');
       }
     },
@@ -24,7 +28,7 @@ export default function GoogleLoginButton() {
   });
 
   return (
-    <Button variant="outline" className="w-full py-6 relative"
+    <Button variant="outline" className="w-full py-6 relative transition-colors duration-0"
             onClick={() => googleLogin()}
             disabled={isLoading}
     >

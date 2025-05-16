@@ -8,26 +8,31 @@ import useAuthStore from '@/store/authStore';
 
 const FBButton = () => {
   return (
-    <div className="w-full py-3 rounded-md relative border border-input bg-background hover:bg-accent hover:text-accent-foreground">
+    <div
+      className="w-full py-3 rounded-md relative border border-input bg-background hover:bg-accent hover:text-accent-foreground">
       <FaFacebookF className="size-5 absolute left-4 text-blue-600" />
       <span>Continue with Facebook</span>
     </div>
   );
 };
 
-export default function FacebookLoginButton() {
+export default function FacebookLoginButton({ type }: { type: 'signup' | 'login' }) {
   const router = useRouter();
 
-  const { facebookAuthLogin, isLoading, error } = useAuthStore();
+  const { facebookAuthLogin, facebookAuthRegister, isLoading, error } = useAuthStore();
 
   return (
     <LoginButton
       children={<FBButton />}
-      scope="public_profile,email"
+      scope="public_profile"
       onSuccess={async (res) => {
         if (res.status === 'connected') {
           const { accessToken } = res.authResponse;
-          await facebookAuthLogin(accessToken);
+          if (type === 'signup') {
+            await facebookAuthRegister(accessToken);
+          } else {
+            await facebookAuthLogin(accessToken);
+          }
 
           if (error) {
             console.error('Error logging in with Facebook:', error);
