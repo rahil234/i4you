@@ -1,5 +1,8 @@
 'use client';
+
 import { UserLayout } from '@/components/user-layout';
+import type React from 'react';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -7,9 +10,55 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useAuthStore } from '@/store/authStore';
 import { useRouter } from 'next/navigation';
-import { useState, FormEvent, useEffect } from 'react';
-import { Save, ArrowLeft, Upload, X } from 'lucide-react';
+import { useState, type FormEvent, useEffect } from 'react';
+import { Save, ArrowLeft, X, Camera, User as UserIcon, Info, Heart } from 'lucide-react';
 import mediaService from '@/services/media.service';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { LocationInput } from '@/components/location/location-input';
+import { User } from '@repo/shared';
+
+// Interest categories from the onboarding page
+const interestCategories = [
+  {
+    name: 'Lifestyle',
+    interests: ['Travel', 'Fitness', 'Cooking', 'Reading', 'Photography', 'Art', 'Music', 'Dancing', 'Yoga', 'Hiking'],
+  },
+  {
+    name: 'Sports',
+    interests: [
+      'Football',
+      'Basketball',
+      'Tennis',
+      'Swimming',
+      'Cycling',
+      'Running',
+      'Golf',
+      'Volleyball',
+      'Skiing',
+      'Surfing',
+    ],
+  },
+  {
+    name: 'Entertainment',
+    interests: [
+      'Movies',
+      'TV Shows',
+      'Gaming',
+      'Concerts',
+      'Theater',
+      'Comedy',
+      'Festivals',
+      'Board Games',
+      'Podcasts',
+      'Anime',
+    ],
+  },
+  {
+    name: 'Food & Drink',
+    interests: ['Coffee', 'Wine', 'Foodie', 'Vegan', 'Craft Beer', 'Brunch', 'Baking', 'BBQ', 'Sushi', 'Cocktails'],
+  },
+];
 
 export default function UpdateProfilePage() {
   const { user, isLoading, updateUser } = useAuthStore();
@@ -18,35 +67,73 @@ export default function UpdateProfilePage() {
   const [formData, setFormData] = useState({
     name: '',
     age: '',
-    location: '',
+    location: {} as User['location'],
     bio: '',
-    interests: '',
+    gender: '',
     photos: [] as string[],
   });
+
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [error, setError] = useState('');
+  const [activeTab, setActiveTab] = useState('basic');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (user && !isLoading) {
       setFormData({
         name: user.name || '',
         age: user.age?.toString() || '',
-        location: user.location || '',
+        location: {
+          type: 'Point',
+          coordinates: [0, 0],
+          displayName: user.location ? user.location : '',
+        },
         bio: user.bio || '',
-        interests: user.interests?.join(', ') || '',
+        gender: user.gender || '',
         photos: user.photos || [],
       });
+
+      setSelectedInterests(user.interests || []);
     }
   }, [user, isLoading]);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleLocationChange = (location: Omit<User['location'], 'type'>) => {
+    setFormData((prev) => ({
+      ...prev,
+      location: {
+        ...prev.location,
+        coordinates: location.coordinates,
+        displayName: location.displayName,
+      },
+    }));
+  };
+
+  const toggleInterest = (interest: string) => {
+    if (selectedInterests.includes(interest)) {
+      setSelectedInterests(selectedInterests.filter((i) => i !== interest));
+    } else {
+      if (selectedInterests.length < 12) {
+        setSelectedInterests([...selectedInterests, interest]);
+      }
+    }
+  };
+
   const uploadPhoto = async (file: File) => {
     try {
+      setError('');
+
+      // Show loading state
+      const tempId = Date.now().toString();
+      setFormData((prev) => ({
+        ...prev,
+        photos: [...prev.photos, `loading-${tempId}`],
+      }));
+
       const { data, error } = await mediaService.getUploadUrl(file);
       if (error) {
         throw new Error('Failed to get upload URL');
@@ -62,12 +149,17 @@ export default function UpdateProfilePage() {
       const bucketRegion = 'ap-south-1';
       const imageUrl = `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${key}`;
 
+      // Replace loading placeholder with actual image URL
       setFormData((prev) => ({
         ...prev,
-        photos: [...prev.photos, imageUrl],
+        photos: prev.photos.map((p) => (p === `loading-${tempId}` ? imageUrl : p)),
       }));
-      setError('');
     } catch (err) {
+      // Remove loading placeholder on error
+      setFormData((prev) => ({
+        ...prev,
+        photos: prev.photos.filter((p) => !p.startsWith('loading-')),
+      }));
       setError('Failed to upload photo. Please try again.');
     }
   };
@@ -103,9 +195,11 @@ export default function UpdateProfilePage() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
+    setIsSubmitting(true);
 
     if (!user) {
       setError('User data not available. Please try again.');
+      setIsSubmitting(false);
       return;
     }
 
@@ -113,21 +207,19 @@ export default function UpdateProfilePage() {
       const updatedUser = {
         ...user,
         name: formData.name,
-        age: parseInt(formData.age) || user.age || 18,
+        age: Number.parseInt(formData.age) || user.age || 18,
         location: formData.location,
         bio: formData.bio,
-        interests: formData.interests
-          .split(',')
-          .map((interest) => interest.trim())
-          .filter((interest) => interest),
-        photos: formData.photos,
+        gender: formData.gender as 'male' | 'female' | 'other',
+        interests: selectedInterests,
+        photos: formData.photos.filter((p) => !p.startsWith('loading-')),
       };
 
-      console.log('Submitting updated user:', updatedUser);
       await updateUser(updatedUser);
       router.push('/profile');
     } catch (err) {
       setError('Failed to update profile. Please try again.');
+      setIsSubmitting(false);
     }
   };
 
@@ -138,7 +230,9 @@ export default function UpdateProfilePage() {
   if (isLoading || !user) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <div className="animate-pulse text-gray-500">Loading...</div>
+        <div className="i4you-gradient p-3 rounded-full">
+          <Heart className="h-6 w-6 text-white animate-pulse" />
+        </div>
       </div>
     );
   }
@@ -146,154 +240,262 @@ export default function UpdateProfilePage() {
   return (
     <UserLayout>
       <div className="w-full max-w-md mx-auto pb-20 pt-6 px-4">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Edit Profile</h1>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={handleCancel}
-            className="hover:bg-gray-100 transition-colors"
-          >
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold dark:text-black">Edit Profile</h1>
+          <Button variant="outline" size="icon" onClick={handleCancel} className="hover:bg-gray-100 transition-colors">
             <ArrowLeft className="h-5 w-5" />
           </Button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <Card className="shadow-sm border-0">
-            <CardHeader>
-              <CardTitle className="text-xl font-semibold">Personal Information</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-5">
-              <div className="space-y-2">
-                <Label htmlFor="name" className="text-sm font-medium">
-                  Name
-                </Label>
-                <Input
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                  className="h-10 rounded-lg transition-all focus:ring-2 focus:ring-teal-500"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="age" className="text-sm font-medium">
-                  Age
-                </Label>
-                <Input
-                  id="age"
-                  name="age"
-                  type="number"
-                  value={formData.age}
-                  onChange={handleInputChange}
-                  min="18"
-                  required
-                  className="h-10 rounded-lg transition-all focus:ring-2 focus:ring-teal-500"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="location" className="text-sm font-medium">
-                  Location
-                </Label>
-                <Input
-                  id="location"
-                  name="location"
-                  value={formData.location}
-                  onChange={handleInputChange}
-                  className="h-10 rounded-lg transition-all focus:ring-2 focus:ring-teal-500"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="bio" className="text-sm font-medium">
-                  About Me
-                </Label>
-                <Textarea
-                  id="bio"
-                  name="bio"
-                  value={formData.bio}
-                  onChange={handleInputChange}
-                  rows={5}
-                  className="rounded-lg transition-all focus:ring-2 focus:ring-teal-500"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="interests" className="text-sm font-medium">
-                  Interests (comma-separated)
-                </Label>
-                <Input
-                  id="interests"
-                  name="interests"
-                  value={formData.interests}
-                  onChange={handleInputChange}
-                  placeholder="e.g., hiking, reading, music"
-                  className="h-10 rounded-lg transition-all focus:ring-2 focus:ring-teal-500"
-                />
-              </div>
-            </CardContent>
-          </Card>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="basic" className="flex items-center gap-1">
+              <UserIcon className="h-3.5 w-3.5" />
+              <span>Basic</span>
+            </TabsTrigger>
+            <TabsTrigger value="interests" className="flex items-center gap-1">
+              <Heart className="h-3.5 w-3.5" />
+              <span>Interests</span>
+            </TabsTrigger>
+            <TabsTrigger value="photos" className="flex items-center gap-1">
+              <Camera className="h-3.5 w-3.5" />
+              <span>Photos</span>
+            </TabsTrigger>
+          </TabsList>
 
-          <Card className="shadow-sm border-0">
-            <CardHeader>
-              <CardTitle className="text-xl font-semibold">Photos</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-3 gap-3 mb-6">
-                {formData.photos.map((photo, index) => (
-                  <div key={index} className="aspect-square rounded-lg relative group">
-                    <img
-                      src={photo}
-                      alt={`Profile photo ${index + 1}`}
-                      className="w-full h-full object-cover rounded-lg group-hover:opacity-75 transition-opacity"
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <TabsContent value="basic">
+              <Card className="shadow-sm border border-gray-100">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg flex items-center">
+                    <UserIcon className="h-4 w-4 mr-2 text-primary" />
+                    Personal Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-5">
+                  <div className="space-y-2">
+                    <Label htmlFor="name" className="text-sm font-medium">
+                      Name
+                    </Label>
+                    <Input
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      required
+                      className="h-11 rounded-lg transition-all focus-visible:ring-2 focus-visible:ring-primary"
                     />
-                    <button
-                      onClick={() => handleRemovePhoto(index)}
-                      className="absolute size-6 -top-2 -right-2 bg-red-500 rounded-full opacity-0 p-1 group-hover:opacity-100 transition flex items-center justify-center"
-                      aria-label="Delete photo"
-                    >
-                      <X className="h-4 w-4 text-white" />
-                    </button>
                   </div>
-                ))}
-                {formData.photos.length < 6 && (
-                  <button
-                    type="button"
-                    onClick={handleAddPhoto}
-                    className="aspect-square rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors"
-                  >
-                    <Upload className="h-6 w-6 text-gray-500" />
-                  </button>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="age" className="text-sm font-medium">
+                      Age
+                    </Label>
+                    <Input
+                      id="age"
+                      name="age"
+                      type="number"
+                      value={formData.age}
+                      onChange={handleInputChange}
+                      min="18"
+                      required
+                      className="h-11 rounded-lg transition-all focus-visible:ring-2 focus-visible:ring-primary"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">Gender</Label>
+                    <RadioGroup
+                      value={formData.gender}
+                      onValueChange={(value) => setFormData((prev) => ({ ...prev, gender: value }))}
+                      className="flex space-x-4"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="male" id="male" />
+                        <Label htmlFor="male">Male</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="female" id="female" />
+                        <Label htmlFor="female">Female</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="other" id="other" />
+                        <Label htmlFor="other">Other</Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+
+                  <div className="space-y-2">
+                    <LocationInput
+                      name="location"
+                      value={formData.location.displayName}
+                      onChange={(val) => handleLocationChange(val)}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="bio" className="text-sm font-medium flex items-center">
+                      <Info className="h-3.5 w-3.5 mr-1 text-muted-foreground" />
+                      About Me
+                    </Label>
+                    <Textarea
+                      id="bio"
+                      name="bio"
+                      value={formData.bio}
+                      onChange={handleInputChange}
+                      rows={4}
+                      className="rounded-lg transition-all focus-visible:ring-2 focus-visible:ring-primary resize-none"
+                      placeholder="Tell others about yourself..."
+                    />
+                    <p className="text-xs text-muted-foreground text-right">{formData.bio.length}/500 characters</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="interests">
+              <Card className="shadow-sm border border-gray-100">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg flex items-center">
+                    <Heart className="h-4 w-4 mr-2 text-primary" />
+                    Your Interests
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground mb-2">
+                    Select up to 12 interests to help us find your perfect match
+                  </p>
+                  <p className="text-sm text-primary mb-6">{selectedInterests.length}/12 selected</p>
+
+                  <div className="space-y-6">
+                    {interestCategories.map((category) => (
+                      <div key={category.name}>
+                        <h2 className="font-semibold mb-2">{category.name}</h2>
+                        <div className="flex flex-wrap gap-2">
+                          {category.interests.map((interest) => (
+                            <button
+                              type="button"
+                              key={interest}
+                              onClick={() => toggleInterest(interest)}
+                              className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
+                                selectedInterests.includes(interest)
+                                  ? 'bg-primary text-white'
+                                  : 'bg-muted hover:bg-muted/80'
+                              }`}
+                              disabled={!selectedInterests.includes(interest) && selectedInterests.length >= 12}
+                            >
+                              {interest}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="photos">
+              <Card className="shadow-sm border border-gray-100">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg flex items-center">
+                    <Camera className="h-4 w-4 mr-2 text-primary" />
+                    Profile Photos
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-3 gap-3 mb-6">
+                    {formData.photos.map((photo, index) => (
+                      <div key={index} className="aspect-square rounded-lg relative group">
+                        {photo.startsWith('loading-') ? (
+                          <div className="w-full h-full flex items-center justify-center bg-gray-100 rounded-lg">
+                            <div
+                              className="animate-spin rounded-full h-6 w-6 border-2 border-t-transparent border-primary"></div>
+                          </div>
+                        ) : (
+                          <>
+                            <img
+                              src={photo || '/placeholder.svg'}
+                              alt={`Profile photo ${index + 1}`}
+                              className="w-full h-full object-cover rounded-lg group-hover:opacity-90 transition-opacity"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => handleRemovePhoto(index)}
+                              className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                              aria-label="Delete photo"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    ))}
+
+                    {formData.photos.length < 6 && (
+                      <button
+                        type="button"
+                        onClick={handleAddPhoto}
+                        className="aspect-square rounded-lg border-2 border-dashed border-gray-300 flex flex-col items-center justify-center hover:bg-gray-50 transition-colors"
+                      >
+                        <Camera className="h-6 w-6 text-gray-400 mb-1" />
+                        <span className="text-xs text-gray-500">Add Photo</span>
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="bg-blue-50 p-3 rounded-lg flex items-start space-x-3">
+                    <Info className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
+                    <div className="text-sm text-blue-700">
+                      <p className="font-medium mb-1">Photo tips:</p>
+                      <ul className="list-disc pl-4 space-y-1">
+                        <li>Clear face photos get more matches</li>
+                        <li>Show your interests and personality</li>
+                        <li>Include at least 3 photos for best results</li>
+                      </ul>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+
+            {error &&
+              <div className="bg-red-50 border border-red-200 text-red-600 rounded-lg p-3 text-sm">{error}</div>}
+
+            <div className="flex gap-4 pt-2">
+              <Button
+                type="submit"
+                className="w-full py-6 i4you-gradient hover:opacity-90 transition-opacity text-white"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <div
+                      className="animate-spin rounded-full h-4 w-4 border-2 border-t-transparent border-current mr-2"></div>
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4 mr-2" />
+                    Save Changes
+                  </>
                 )}
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Add up to 6 photos. Profiles with photos get more matches!
-              </p>
-            </CardContent>
-          </Card>
-
-          {error && (
-            <p className="text-red-500 text-sm bg-red-50 p-3 rounded-lg">{error}</p>
-          )}
-
-          <div className="flex gap-4">
-            <Button
-              type="submit"
-              className="w-full bg-teal-500 hover:bg-teal-600 text-white transition-colors"
-            >
-              <Save className="h-4 w-4 mr-2" />
-              Save Changes
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full hover:bg-gray-100 transition-colors"
-              onClick={handleCancel}
-            >
-              Cancel
-            </Button>
-          </div>
-        </form>
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-1/3 py-6 hover:bg-gray-50 transition-colors"
+                onClick={handleCancel}
+                disabled={isSubmitting}
+              >
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </Tabs>
       </div>
     </UserLayout>
-  );
+  )
+    ;
 }
