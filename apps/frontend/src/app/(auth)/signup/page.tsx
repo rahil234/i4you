@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Flame, Loader2} from 'lucide-react';
+import { Flame, Loader2 } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { useAuthStore } from '@/store/authStore';
 import { z } from 'zod';
@@ -28,7 +28,7 @@ export default function SignupPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
 
-  const { register, isLoading, error, signUpError } = useAuthStore();
+  const { register, isLoading, success: storeSuccess, error, signUpError } = useAuthStore();
 
   const resetState = () => {
     setFormData({ name: '', email: '', password: '' });
@@ -62,6 +62,15 @@ export default function SignupPage() {
       validateForm();
     }
   }, [formData, isSubmitted]);
+
+  useEffect(() => {
+    if (storeSuccess) {
+      resetState();
+      setSuccess('Account created successfully! Please check your email for verification.');
+    } else if (error || signUpError) {
+      setSuccess(null);
+    }
+  }, [storeSuccess, error, signUpError]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -105,8 +114,8 @@ export default function SignupPage() {
 
         <div className="space-y-4">
           <div className="flex flex-col gap-4">
-            <GoogleLoginButton />
-            <FacebookLoginButton />
+            <GoogleLoginButton type={'signup'} />
+            <FacebookLoginButton type={'signup'} />
           </div>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">

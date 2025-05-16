@@ -254,6 +254,26 @@ router.post('/logout', authController.logout);
 
 /**
  * @swagger
+ * /api/v1/auth/register/google:
+ *   post:
+ *     summary: Register with Google
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login successful
+ */
+router.post('/register/google', authController.googleRegister);
+
+/**
+ * @swagger
  * /api/v1/auth/login/google:
  *   post:
  *     summary: Login with Google
@@ -293,5 +313,25 @@ router.post('/login/google', authController.googleLogin);
  *         description: Facebook Login successful
  */
 router.post('/login/facebook', authController.facebookLogin);
+
+/**
+ * @swagger
+ * /api/v1/auth/register/facebook:
+ *   post:
+ *     summary: Login with Facebook
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Facebook Login successful
+ */
+router.post('/register/facebook', authController.facebookRegister);
 
 export default router;

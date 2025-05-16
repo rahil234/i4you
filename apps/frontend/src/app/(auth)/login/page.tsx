@@ -6,8 +6,6 @@ import Link from 'next/link';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import { Flame, Loader2 } from 'lucide-react';
-import { FacebookProvider } from 'react-facebook';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -98,8 +96,8 @@ export default function LoginPage() {
 
         <div className="space-y-4">
           <div className="flex flex-col gap-4">
-            <GoogleLoginButton />
-            <FacebookLoginButton />
+            <GoogleLoginButton type={'login'}/>
+            <FacebookLoginButton type={'login'}/>
           </div>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">

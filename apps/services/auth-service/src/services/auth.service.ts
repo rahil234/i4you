@@ -21,6 +21,7 @@ import { MailService } from '@/services/mail.service';
 import { PasswordResetTemplate } from '@/utils/mail-templates';
 import { NotFoundError } from '@/errors/NotFoundError';
 import { env } from '@/config';
+import { createError } from 'http-errors';
 
 const APP_URL = env.APP_URL;
 
@@ -205,23 +206,44 @@ export class AuthService {
     await this.userRepository.update(userId, { isVerified: true });
   }
 
+  async googleRegister(token: string): Promise<void> {
+    const googleUser = await fetchGoogleUser(token);
+    if (!googleUser) {
+      throw createError.BadRequest('Invalid credentials');
+    }
+
+    const user = await this.userRepository.findByEmail(googleUser.email);
+
+    if (user) {
+      throw createError.Conflict(
+        'User already exists with this email. Please login.'
+      );
+    }
+
+    const hashedPassword = await hashPassword(googleUser.email);
+
+    const newUser = await this.userRepository.create({
+      name: googleUser.given_name,
+      email: googleUser.email,
+      password: hashedPassword,
+      isVerified: true,
+    });
+
+    if (!newUser) {
+      throw createError.Internal('Failed to create user. try again later.');
+    }
+  }
+
   async googleLogin(token: string): Promise<LoginResponseDTO> {
     const googleUser = await fetchGoogleUser(token);
     if (!googleUser) {
       throw new Error('Invalid credentials');
     }
 
-    let user = await this.userRepository.findByEmail(googleUser.email);
+    const user = await this.userRepository.findByEmail(googleUser.email);
 
     if (!user) {
-      const newUser = await this.userRepository.create({
-        name: googleUser.given_name,
-        email: googleUser.email,
-        password: '123456789',
-        isVerified: true,
-      });
-      console.log('New user created', newUser);
-      user = newUser;
+      throw createError.BadRequest('User not found. Please register first.');
     }
 
     const accessToken = generateAccessToken({
@@ -242,6 +264,18 @@ export class AuthService {
     });
   }
 
+  async facebookRegister(token: string): Promise<LoginResponseDTO> {
+    const facebookUser = await fetchFacebookUser(token);
+
+    if (!facebookUser) {
+      throw createError.BadRequest('Invalid User');
+    }
+
+    console.log('Facebook user:', facebookUser);
+
+    throw createError.NotImplemented('NOT IMPLEMENTED');
+  }
+
   async facebookLogin(token: string): Promise<LoginResponseDTO> {
     const facebookUser = await fetchFacebookUser(token);
     if (!facebookUser) {
@@ -251,36 +285,6 @@ export class AuthService {
     console.log('Facebook user:', facebookUser);
 
     throw new ValidationError('NOT IMPLEMENTED');
-    //
-    // let user = await this.userRepository.findByEmail(facebookUser.email);
-    //
-    // if (!user) {
-    //   const newUser = await this.userRepository.create({
-    //     name: facebookUser.given_name,
-    //     email: facebookUser.email,
-    //     password: '123456789',
-    //     isVerified: true,
-    //   });
-    //   console.log('New user created', newUser);
-    //   user = newUser;
-    // }
-    //
-    // const accessToken = generateAccessToken({
-    //   sub: user._id,
-    //   role: 'member',
-    //   email: user.email,
-    // });
-    //
-    // const refreshToken = generateRefreshToken({
-    //   sub: user._id,
-    //   role: 'member',
-    // });
-    //
-    // return new LoginResponseDTO(accessToken, refreshToken, {
-    //   id: user._id,
-    //   name: user.name,
-    //   email: user.email,
-    // });
   }
 
   async refreshToken(token: string): Promise<LoginResponseDTO> {
