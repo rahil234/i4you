@@ -19,6 +19,7 @@ export interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
+  success: string | null;
   signUpError: string | null;
 }
 

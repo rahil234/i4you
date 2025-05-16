@@ -17,10 +17,17 @@ export class AuthService {
         .then(res => res.data),
     );
 
-  googleAuthLogin = (token: string) =>
+  googleAuth = (token: string, type: 'register' | 'login') =>
     handleApi(() =>
       api
-        .post('/auth/login/google', { token }, { withCredentials: true })
+        .post(`/auth/${type}/google`, { token }, { withCredentials: true })
+        .then(res => res.data),
+    );
+
+  facebookAuth = (token: string, type: 'register' | 'login') =>
+    handleApi(() =>
+      api
+        .post(`/auth/${type}/facebook`, { token }, { withCredentials: true })
         .then(res => res.data),
     );
 
@@ -29,11 +36,6 @@ export class AuthService {
       api
         .post('/auth/register', { name, email, password })
         .then(res => res.data),
-    );
-
-  getUser = () =>
-    handleApi(() =>
-      api.get('/user/me').then(res => res.data),
     );
 
   logout = () =>
