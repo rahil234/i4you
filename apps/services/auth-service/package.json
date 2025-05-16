@@ -26,6 +26,7 @@
     "debug": "~2.6.9",
     "env-config": "workspace:*",
     "express": "^4.21.2",
+    "http-errors": "workspace:*",
     "inversify": "^7.2.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.12.1",

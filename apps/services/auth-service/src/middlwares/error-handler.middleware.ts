@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { AppError } from '@/errors/AppError';
+import { HttpError } from 'http-errors';
 
 export function errorHandlerMiddleware(
   err: any,
@@ -8,6 +9,12 @@ export function errorHandlerMiddleware(
   _next: NextFunction
 ) {
   if (err instanceof AppError) {
+    res.status(err.statusCode).json({
+      status: 'error',
+      message: err.message,
+    });
+    return;
+  } else if (err instanceof HttpError) {
     res.status(err.statusCode).json({
       status: 'error',
       message: err.message,
