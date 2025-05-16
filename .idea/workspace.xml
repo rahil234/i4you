@@ -1,79 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AnalysisUIOptions">
-    <option name="SPLITTER_PROPORTION" value="0.59833336" />
-  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9634f5b5-f135-4866-b1d6-9eb36f37aa3e" name="Changes" comment="add Facebook and Google registration endpoints and update auth logic">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="570b08d3-8ee4-4005-8ba6-f60410980e8f" name="Changes" comment="Packages restructured into appropriate dirs.">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Kubernetes Service" />
-        <option value="TypeScript JSX File" />
-        <option value="TypeScript File" />
-        <option value="Dockerfile" />
-        <option value="JavaScript File" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="main" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;rahil234&quot;
-  }
-}</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/rahil234/i4you.git&quot;,
-    &quot;accountId&quot;: &quot;631a840d-7ebc-4241-a99d-3a106d6796b2&quot;
-  }
-}</component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/apps/frontend/src/app/onboarding/photos/page.tsx" root0="FORCE_HIGHLIGHTING" />
-  </component>
-  <component name="KubernetesApiPersistence">{}</component>
-  <component name="KubernetesApiProvider">{
-  &quot;configuredContexts&quot;: [
-    {
-      &quot;name&quot;: &quot;gke_i4you-457707_asia-south1_i4you-cluster&quot;,
-      &quot;kubeConfigUrl&quot;: &quot;file:///Users/rahilk/.kube/config&quot;
-    },
-    {
-      &quot;name&quot;: &quot;orbstack&quot;,
-      &quot;kubeConfigUrl&quot;: &quot;file:///Users/rahilk/.kube/config&quot;
-    }
-  ],
-  &quot;isMigrated&quot;: true
-}</component>
-  <component name="KubernetesSettings">
-    <option name="contextConfigFilePath" value="file://$USER_HOME$/.kube/config" />
-    <option name="contextName" value="gke_i4you-457707_asia-south1_i4you-cluster" />
-    <specSources>
-      <SpecSource>
-        <option name="pathOrUrl" value="https://github.com/cert-manager/cert-manager/releases/download/v1.1.1/cert-manager.yaml" />
-      </SpecSource>
-      <SpecSource>
-        <option name="pathOrUrl" value="https://skaffold.dev/docs/references/yaml/" />
-      </SpecSource>
-    </specSources>
   </component>
   <component name="NamedScopeManager">
     <order>
@@ -84,287 +25,19 @@
       <scope name="Chat shared" />
     </order>
   </component>
-  <component name="PackageJsonUpdateNotifier">
-    <dismissed value="$PROJECT_DIR$/apps/frontend/package.json" />
-    <dismissed value="$PROJECT_DIR$/apps/gateway/package.json" />
-    <dismissed value="$PROJECT_DIR$/apps/services/user-service/package.json" />
-  </component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
-  </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 6
-}</component>
-  <component name="ProjectId" id="2tfM3KvgDz9HGkfgg4Oocmgc5Tx" />
-  <component name="ProjectViewState">
-    <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showLibraryContents" value="true" />
-  </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Docker.auth-service/Dockerfile.executor": "Run",
-    "Docker.docker-compose-old.yaml: Compose Deployment.executor": "Run",
-    "Docker.docker-compose.yaml.chat-service: Compose Deployment.executor": "Run",
-    "Docker.docker-compose.yaml.gateway-server: Compose Deployment.executor": "Run",
-    "Docker.docker-compose.yaml: Compose Deployment.executor": "Run",
-    "JavaScript Debug.i4you.local.com:3000.executor": "Debug",
-    "JavaScript Debug.i4you.local.net secure.executor": "Debug",
-    "JavaScript Debug.i4you.local.net.executor": "Debug",
-    "JavaScript Debug.localhost:3000.executor": "Debug",
-    "JavaScript Debug.localhost:3001.executor": "Debug",
-    "Node.js.client.ts.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feat-facebook-auth",
-    "javascript.nodejs.core.library.configured.version": "22.11.0",
-    "javascript.nodejs.core.library.typings.version": "22.14.1",
-    "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "/Users/rahilk/Projects/i4you",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "npm.frontend.executor": "Run",
-    "prettierjs.PrettierConfiguration.Package": "/Users/rahilk/Projects/i4you/node_modules/prettier",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "settings.sync",
-    "ts.external.directory.path": "/Users/rahilk/Projects/i4you/apps/frontend/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
-  },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mongo"
-    ]
+    "git-widget-placeholder": "dev",
+    "ts.external.directory.path": "/Users/rahilk/Projects/i4you/apps/frontend/node_modules/typescript/lib"
   }
 }]]></component>
-  <component name="ReactDesignerToolWindowState">
-    <option name="myId2Visible">
-      <map>
-        <entry key="com.intellij.reactbuddy.reactComponents" value="false" />
-        <entry key="com.intellij.reactbuddy.reactInspector" value="false" />
-        <entry key="com.intellij.reactbuddy.storybook" value="false" />
-      </map>
-    </option>
-  </component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/packages/proto-files/src/proto/user" />
-      <recent name="$PROJECT_DIR$/apps/services/auth-service" />
-      <recent name="$PROJECT_DIR$/apps" />
-      <recent name="$PROJECT_DIR$/k8s/prod" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/apps/services/user-service/src/services" />
-      <recent name="$PROJECT_DIR$/apps/frontend/public/icons" />
-      <recent name="$PROJECT_DIR$/apps/frontend/src/app/admin/login" />
-      <recent name="$PROJECT_DIR$/apps/prometheus" />
-      <recent name="$PROJECT_DIR$/apps" />
-    </key>
-  </component>
-  <component name="RunManager" selected="JavaScript Debug.i4you.local.net">
-    <configuration name="i4you.local.net secure" type="JavascriptDebugType" uri="https://i4you.local.net">
-      <method v="2" />
-    </configuration>
-    <configuration name="i4you.local.net" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://i4you.local.net">
-      <method v="2" />
-    </configuration>
-    <configuration name="localhost:3000" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="https://localhost:3000">
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
-      <deployment type="docker-compose.yml">
-        <settings />
-      </deployment>
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="docker-deploy" factoryName="docker-image" temporary="true">
-      <deployment type="docker-image">
-        <settings />
-      </deployment>
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="docker-deploy" factoryName="dockerfile" temporary="true">
-      <deployment type="dockerfile">
-        <settings />
-      </deployment>
-      <method v="2" />
-    </configuration>
-    <configuration name="auth-service/Dockerfile" type="docker-deploy" factoryName="dockerfile" temporary="true" server-name="Docker">
-      <deployment type="dockerfile">
-        <settings>
-          <option name="buildOnly" value="true" />
-          <option name="sourceFilePath" value="apps/services/auth-service/Dockerfile" />
-        </settings>
-      </deployment>
-      <method v="2" />
-    </configuration>
-    <configuration name="docker-compose.yaml.gateway-server: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
-      <deployment type="docker-compose.yml">
-        <settings>
-          <option name="services">
-            <list>
-              <option value="gateway-server" />
-            </list>
-          </option>
-          <option name="sourceFilePath" value="docker-compose.yaml" />
-        </settings>
-      </deployment>
-      <method v="2" />
-    </configuration>
-    <configuration name="frontend" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="frontend" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Compound.Start And Debug Server">
     <list>
       <item itemvalue="Compound.Start And Debug Server" />
       <item itemvalue="Docker.docker-compose.yaml[auth-service, gateway-server, user-service]: Compose Deployment" />
-      <item itemvalue="Docker.auth-service/Dockerfile" />
-      <item itemvalue="Docker.docker-compose.yaml.gateway-server: Compose Deployment" />
-      <item itemvalue="JavaScript Debug.i4you.local.net secure" />
-      <item itemvalue="JavaScript Debug.i4you.local.net" />
-      <item itemvalue="JavaScript Debug.localhost:3000" />
-      <item itemvalue="npm.frontend" />
     </list>
-    <recent_temporary>
-      <list>
-        <item itemvalue="JavaScript Debug.i4you.local.net" />
-        <item itemvalue="Docker.auth-service/Dockerfile" />
-        <item itemvalue="JavaScript Debug.localhost:3000" />
-        <item itemvalue="npm.frontend" />
-        <item itemvalue="Docker.docker-compose.yaml.gateway-server: Compose Deployment" />
-      </list>
-    </recent_temporary>
   </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-js-predefined-d6986cc7102b-6a121458b545-JavaScript-WS-251.25410.117" />
-      </set>
-    </attachedChunks>
-  </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
-    <task active="true" id="Default" summary="Default task">
-      <changelist id="9634f5b5-f135-4866-b1d6-9eb36f37aa3e" name="Changes" comment="" />
-      <created>1740738474560</created>
-      <option name="number" value="Default" />
-      <option name="presentableId" value="Default" />
-      <updated>1740738474560</updated>
-      <workItem from="1740738475673" duration="5191000" />
-      <workItem from="1740848644778" duration="226000" />
-      <workItem from="1740848877608" duration="96000" />
-      <workItem from="1740848979185" duration="94000" />
-      <workItem from="1740849077607" duration="45000" />
-      <workItem from="1740849127060" duration="951000" />
-      <workItem from="1740850088796" duration="2000" />
-      <workItem from="1740905014508" duration="243000" />
-      <workItem from="1741194187413" duration="644000" />
-      <workItem from="1741241660213" duration="5954000" />
-      <workItem from="1741287032707" duration="16287000" />
-      <workItem from="1741664508842" duration="1225000" />
-      <workItem from="1741667308954" duration="2147000" />
-      <workItem from="1741689992772" duration="7000" />
-      <workItem from="1741691161482" duration="9128000" />
-      <workItem from="1741829175099" duration="682000" />
-      <workItem from="1741829865803" duration="4584000" />
-      <workItem from="1741851161725" duration="1315000" />
-      <workItem from="1741852661373" duration="12206000" />
-      <workItem from="1741973294796" duration="33171000" />
-      <workItem from="1742219600349" duration="44021000" />
-      <workItem from="1742397325458" duration="103158000" />
-      <workItem from="1742808907696" duration="85000" />
-      <workItem from="1742809011346" duration="10851000" />
-      <workItem from="1742834397346" duration="474000" />
-      <workItem from="1742859735178" duration="9340000" />
-      <workItem from="1742874869908" duration="68266000" />
-      <workItem from="1743152049249" duration="3896000" />
-      <workItem from="1744458884994" duration="3634000" />
-      <workItem from="1744494309915" duration="2951000" />
-      <workItem from="1744497276329" duration="15393000" />
-      <workItem from="1744567555896" duration="2338000" />
-      <workItem from="1744643039171" duration="2069000" />
-      <workItem from="1744645125377" duration="7108000" />
-      <workItem from="1744694685883" duration="9000" />
-      <workItem from="1744694698518" duration="1281000" />
-      <workItem from="1744695995169" duration="14118000" />
-      <workItem from="1744713571054" duration="2444000" />
-      <workItem from="1744724470296" duration="8307000" />
-      <workItem from="1744831965421" duration="2499000" />
-      <workItem from="1744980640757" duration="1026000" />
-      <workItem from="1745038865028" duration="781000" />
-      <workItem from="1745079134916" duration="5438000" />
-      <workItem from="1745086335491" duration="1566000" />
-      <workItem from="1745125954797" duration="14557000" />
-      <workItem from="1745209116515" duration="3230000" />
-      <workItem from="1745230719763" duration="51762000" />
-      <workItem from="1745388430741" duration="3501000" />
-      <workItem from="1745583066463" duration="7515000" />
-      <workItem from="1745592427838" duration="28170000" />
-      <workItem from="1745672773735" duration="38828000" />
-      <workItem from="1745782743784" duration="6922000" />
-      <workItem from="1745826922829" duration="536000" />
-      <workItem from="1745827879467" duration="9246000" />
-      <workItem from="1745861298161" duration="3305000" />
-      <workItem from="1745900152440" duration="1931000" />
-      <workItem from="1745902104167" duration="4240000" />
-      <workItem from="1745916109757" duration="25345000" />
-      <workItem from="1745988171464" duration="1451000" />
-      <workItem from="1746009242824" duration="98023000" />
-      <workItem from="1746339200760" duration="6426000" />
-      <workItem from="1746421900400" duration="1736000" />
-      <workItem from="1746423658305" duration="7303000" />
-      <workItem from="1746430983411" duration="4265000" />
-      <workItem from="1746447676692" duration="36773000" />
-      <workItem from="1746529496790" duration="16395000" />
-      <workItem from="1746593876757" duration="9607000" />
-      <workItem from="1746614241521" duration="54313000" />
-      <workItem from="1746784347238" duration="9706000" />
-      <workItem from="1746849195694" duration="15188000" />
-      <workItem from="1746972338789" duration="66000" />
-      <workItem from="1747034958103" duration="8559000" />
-      <workItem from="1747047464860" duration="12798000" />
-      <workItem from="1747112849810" duration="32000" />
-      <workItem from="1747112911335" duration="15494000" />
-    </task>
     <servers />
-  </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
-  </component>
-  <component name="UnknownFeatures">
-    <option featureType="com.intellij.fileTypeFactory" implementationName="*.t" />
-    <option featureType="com.intellij.fileTypeFactory" implementationName=".env" />
-    <option featureType="com.intellij.fileTypeFactory" implementationName="*.test" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="add Facebook and Google registration endpoints and update auth logic" />
-    <option name="LAST_COMMIT_MESSAGE" value="add Facebook and Google registration endpoints and update auth logic" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <default-breakpoints>
-        <breakpoint suspend="NONE" type="javascript-exception" />
-      </default-breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
