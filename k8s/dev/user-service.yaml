@@ -20,7 +20,7 @@ spec:
             - containerPort: 4002
           env:
             - name: NODE_ENV
-              value: "prod"
+              value: "production"
             - name: PORT
               value: "4002"
             - name: AUTH_SERVER_URL

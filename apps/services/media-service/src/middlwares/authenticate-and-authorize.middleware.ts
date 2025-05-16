@@ -1,37 +1,25 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import { AuthError } from '@/errors/AuthError';
+import { ForbiddenError } from '@/errors/ForbiddenError';
+import { UserJwtPayload } from '@repo/shared';
 
 export const authenticateAndAuthorizeMiddleware = (
-  roles: Array<'admin' | 'customer' | 'seller'>
+  roles: Array<UserJwtPayload['role']> = []
 ) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers.authorization?.split(' ')[1];
+  return (req: Request, _res: Response, next: NextFunction) => {
+    const userId = req.headers['x-user-id'] as string;
+    const userRole = req.headers['x-user-role'] as UserJwtPayload['role'];
 
-    if (!token) {
-      res.status(401).json({ message: 'Unauthorized' });
-      return;
+    if (!userId || !userRole) {
+      return next(new AuthError('User not authenticated'));
     }
 
-    const JWT_SECRET = process.env.JWT_SECRET;
+    req.user = { id: userId, role: userRole };
 
-    if (!JWT_SECRET) {
-      res.status(500).json({ message: 'Internal server error' });
-      return;
+    if (roles.length && !roles.includes(userRole as 'member' | 'admin')) {
+      return next(new ForbiddenError('Unauthorized'));
     }
 
-    jwt.verify(token, JWT_SECRET, async (err, user) => {
-      if (err) {
-        next(err);
-        return;
-      }
-
-      req.user = user as Request['user'];
-
-      if (roles.length && (!req.user || !roles.includes(req.user.role))) {
-        res.status(403).json({ message: 'Permission denied' });
-        return;
-      }
-      next();
-    });
+    next();
   };
 };

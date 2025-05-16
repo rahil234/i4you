@@ -3,7 +3,7 @@
 import { cookies, headers } from 'next/headers';
 import { verifyToken } from '@/lib/auth/verify-token';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PRIVATE_API_URL;
 
 export async function refreshToken(): Promise<string | null> {
   const cookieHeader = (await headers()).get('cookie') || '';

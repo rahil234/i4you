@@ -17,7 +17,7 @@ spec:
           image: media-service-image:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 4001
+            - containerPort: 4003
           env:
             - name: NODE_ENV
               value: "development"
@@ -28,7 +28,7 @@ spec:
             - name: USER_SERVER_URL
               value: "http://user-service:3000"
             - name: PORT
-              value: "4001"
+              value: "4003"
             - name: USER_GRPC_SERVER_URL
               value: "localhost:50051"
             - name: JWT_SECRET
@@ -43,6 +43,6 @@ spec:
   selector:
     app: media-service
   ports:
-    - port: 4001
-      targetPort: 4001
-      nodePort: 30080
+    - port: 4003
+      targetPort: 4003
+      nodePort: 30060

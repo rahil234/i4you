@@ -9,7 +9,7 @@ const authController = container.get<AuthController>(TYPES.AuthController);
 
 // /**
 //  * @swagger
-//  * /ap/v1/auth/get-user:
+//  * /api/v1/auth/get-user:
 //  *   post:
 //  *     summary: Get user by ID
 //  *     tags:
@@ -37,7 +37,7 @@ const authController = container.get<AuthController>(TYPES.AuthController);
 
 /**
  * @swagger
- * /refresh-token-token:
+ * /api/v1/auth/refresh-token:
  *   post:
  *     summary: Refresh access token
  *     tags:
@@ -59,7 +59,7 @@ router.post('/refresh-token', authController.refreshToken);
 
 /**
  * @swagger
- * /ap/v1/auth/login:
+ * /api/v1/auth/login:
  *   post:
  *     summary: Login user
  *     tags:
@@ -85,9 +85,9 @@ router.post('/login', authController.login);
 
 /**
  * @swagger
- * /ap/v1/auth/login:
+ * /api/v1/auth/login/admin:
  *   post:
- *     summary: Login user
+ *     summary: Login Admin
  *     tags:
  *       - Auth
  *     requestBody:
@@ -111,7 +111,7 @@ router.post('/login/admin', authController.adminLogin);
 
 /**
  * @swagger
- * /ap/v1/auth/register:
+ * /api/v1/auth/register:
  *   post:
  *     summary: Register user
  *     tags:
@@ -137,7 +137,7 @@ router.post('/register', authController.register);
 
 /**
  * @swagger
- * /ap/v1/auth/login:
+ * /api/v1/auth/login:
  *   post:
  *     summary: Login user
  *     tags:
@@ -163,7 +163,7 @@ router.post('/forgot-password', authController.forgetPassword);
 
 /**
  * @swagger
- * /ap/v1/auth/login:
+ * /api/v1/auth/login:
  *   post:
  *     summary: Login user
  *     tags:
@@ -189,7 +189,7 @@ router.post('/reset-password', authController.resetPassword);
 
 /**
  * @swagger
- * /ap/v1/auth/login:
+ * /api/v1/auth/login:
  *   post:
  *     summary: Login user
  *     tags:
@@ -215,7 +215,7 @@ router.post('/verify-account', authController.verifyAccount);
 
 /**
  * @swagger
- * /ap/v1/auth/login:
+ * /api/v1/auth/login:
  *   post:
  *     summary: Login user
  *     tags:
@@ -241,7 +241,7 @@ router.patch('/change-password', authController.changePassword);
 
 /**
  * @swagger
- * /logout:
+ * /api/v1/auth/logout:
  *   post:
  *     summary: Logout user
  *     tags:
@@ -254,7 +254,7 @@ router.post('/logout', authController.logout);
 
 /**
  * @swagger
- * ap/v1/auth/login/google:
+ * /api/v1/auth/login/google:
  *   post:
  *     summary: Login with Google
  *     tags:

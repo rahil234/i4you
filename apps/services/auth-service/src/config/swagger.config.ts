@@ -22,7 +22,7 @@ const options = {
       },
     ],
   },
-  apis: [path.join(dirname, '../routes/*.ts')],
+  apis: [path.join(dirname, '../routes/*.{ts,js}')],
 };
 
 export const swaggerSpec = swaggerJSDoc(options);

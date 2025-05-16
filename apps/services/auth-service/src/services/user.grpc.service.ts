@@ -1,5 +1,8 @@
 import { injectable, inject } from 'inversify';
-import { GetUserResponse } from 'proto-files/generated/user/v1/user.js';
+import {
+  GetUserByEmailResponse,
+  GetUserByIdResponse,
+} from 'proto-files/generated/user/v2/user';
 import { TYPES } from '@/types';
 import { GrpcClientProvider } from '@/providers/grpc.client.provider';
 
@@ -13,22 +16,29 @@ export class UserGrpcService {
     this.userServiceClient = grpcClientProvider.userClient;
   }
 
-  async findUserById(id: string): Promise<GetUserResponse> {
+  async findUserById(id: string): Promise<GetUserByIdResponse> {
     console.log('Finding user by ID:', id);
     return new Promise((resolve, reject) => {
-      this.userServiceClient.getUser({ id }, (err, response) => {
-        if (err) return reject(err);
-        resolve(response);
-      });
+      this.userServiceClient.getUserById(
+        { id },
+        (err: any, response: GetUserByIdResponse) => {
+          if (err) return reject(err);
+          resolve(response);
+        }
+      );
     });
   }
 
-  // async findUserByEmail(email: string) {
-  //   return new Promise((resolve, reject) => {
-  //     this.userServiceClient.getUser({ id: '' }, (err, response) => {
-  //       if (err) return reject(err);
-  //       resolve(response);
-  //     });
-  //   });
-  // }
+  async findUserByEmail(email: string): Promise<GetUserByEmailResponse> {
+    console.log('Finding user by Email:', email);
+    return new Promise((resolve, reject) => {
+      this.userServiceClient.getUserByEmail(
+        { email },
+        (err: any, response: GetUserByEmailResponse) => {
+          if (err) return reject(err);
+          resolve(response);
+        }
+      );
+    });
+  }
 }

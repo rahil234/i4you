@@ -1,6 +1,6 @@
 services:
   auth-service:
-    image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/auth-service-image:v0.0.3
+    image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/auth-service-image:v0.0.6
     pull_policy: never
     build:
       platforms:
@@ -22,7 +22,7 @@ services:
       - app-network
 
   user-service:
-    image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/user-service-image:v0.0.1
+    image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/user-service-image:v0.0.2
     pull_policy: never
     build:
       platforms:
@@ -38,6 +38,31 @@ services:
       - MONGODB_URI=mongodb://host.docker.internal:27017/I4you-userDB
     env_file:
       - ./apps/services/user-service/.env
+    networks:
+      - app-network
+
+  media-service:
+    image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/media-service-image:v0.0.1
+    pull_policy: never
+    build:
+      platforms:
+        - linux/amd64
+      context: ./apps/services/media-service
+      dockerfile: Dockerfile
+      additional_contexts:
+        root: ./
+    volumes:
+      - ./apps/services/media-service:/app/apps/services/media-service
+      - /app/apps/services/media-service/node_modules
+      - ./packages:/app/packages
+    ports:
+      - "3003:3003"
+    environment:
+      - NODE_ENV=production
+      - PORT=${MEDIA_HTTP_PORT}
+      - USER_GRPC_SERVER_URL=user-service:${USER_GRPC_PORT}
+    env_file:
+      - ./apps/services/media-service/.env
     networks:
       - app-network
 
@@ -58,12 +83,35 @@ services:
       - PORT=${GATEWAY_HTTP_PORT}
       - USER_SERVER_URL=http://user-service:${USER_HTTP_PORT}
       - AUTH_SERVER_URL=http://auth-service:${AUTH_HTTP_PORT}
+      - MEDIA_SERVER_URL=http://auth-service:${MEDIA_HTTP_PORT}
       - ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001
     env_file:
       - ./apps/gateway/.env
     depends_on:
       - user-service
       - auth-service
+    networks:
+      - app-network
+
+  frontend:
+    image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/frontend-image:v0.0.2
+    pull_policy: never
+    build:
+      platforms:
+        - linux/amd64
+      context: ./apps/frontend
+      dockerfile: Dockerfile
+      additional_contexts:
+        root: ./
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_APP_URL=https://i4you.ddns.net
+      - NEXT_PUBLIC_API_URL=https://i4you.ddns.net
+      - NEXT_PRIVATE_API_URL=http://gateway-server:4000
+      - NEXT_PUBLIC_GOOGLE_CLIENT_ID=802008925355-dtft0lvcs3af92jjcqqbbitudp4et8ts.apps.googleusercontent.com
+      - NEXT_PRIVATE_JWT_SECRET=your_jwt_secret
+      - NEXT_PUBLIC_WEB_SOCKET_URL=wss://i4you.ddns.net
+      - NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=AIzaSyDnetUxIAKDv-8s2yAcLD01azNlu_qG-j8
     networks:
       - app-network
 

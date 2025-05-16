@@ -8,7 +8,6 @@ import { useAuthStore } from '@/store/authStore';
 import { useRouter } from 'next/navigation';
 import { useState, FormEvent } from 'react';
 import { Lock, ArrowLeft } from 'lucide-react';
-import { AuthService } from '@/services/auth.service';
 import UserService from '@/services/user.service';
 
 export default function ChangePasswordPage() {

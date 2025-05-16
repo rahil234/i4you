@@ -14,6 +14,7 @@ export async function getUserData(): Promise<User> {
     if (!access_token) {
       const refresh_token = cookieStore.get('refreshToken')?.value;
       if (!refresh_token) {
+        console.log('No access token or refresh token found');
         redirect('/clear-token');
       }
     }

@@ -4,7 +4,7 @@ import { UserRepository } from '@/repositories/user.repository';
 import { UserService } from '@/services/user.service';
 import { TYPES } from '@/types';
 import { UserController } from '@/controllers/user.controller';
-import { UserGrpcService } from '@/grpc/grpc.user.service';
+import { UserGrpcService } from '@/services/grpc.user.service';
 import { AdminRepository } from '@/repositories/admin.repository';
 import IAdminRepository from '@/repositories/interfaces/IAdminRepository';
 

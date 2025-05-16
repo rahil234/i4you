@@ -21,7 +21,7 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
     return this.model.find().exec();
   }
 
-  async find(filter) {
+  async find(filter: RootFilterQuery<T>) {
     return this.model.find(filter).exec();
   }
 

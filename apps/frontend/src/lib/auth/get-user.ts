@@ -2,7 +2,11 @@
 
 import { User } from '@repo/shared';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PRIVATE_API_URL;
+
+if (!API_URL) {
+  throw new Error('NEXT_PRIVATE_API_URL is not defined');
+}
 
 export async function getUser(accessToken: string): Promise<User> {
   try {

@@ -148,6 +148,10 @@ process.on('unhandledRejection', (reason, promise) => {
 
 const PORT = env.PORT;
 
-app.listen(PORT, () => {
+app.listen(PORT, (error) => {
+  if (error) {
+    console.error('Error starting server:', error);
+    return;
+  }
   console.log(`Reverse proxy with JWT validation running on port ${PORT}`);
 });

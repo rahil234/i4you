@@ -1,9 +1,9 @@
 import { Server, ServerCredentials } from '@grpc/grpc-js';
 
-import { UserServiceService } from 'proto-files/server/userServer';
+import { UserServiceService } from 'proto-files/generated/user/v2/user';
 
 import { env } from '@/config/env.config';
-import { UserGrpcService } from '@/grpc/grpc.user.service';
+import { UserGrpcService } from '@/services/grpc.user.service';
 import { container } from '@/config/inversify.config';
 import { TYPES } from '@/types';
 
