@@ -1,5 +1,27 @@
 services:
 
+  validate-service:
+    image: validate-service-image
+    container_name: validate-service
+    pull_policy: never
+    build:
+      context: ./apps/services/validate-service
+      dockerfile: Dockerfile.dev
+      additional_contexts:
+        root: ./
+    volumes:
+      - ./apps/services/validate-service:/app/apps/services/validate-service
+      - /app/apps/services/validate-service/node_modules
+      - ./packages:/app/packages
+    environment:
+      - NODE_ENV=development
+      - PORT=${VALIDATE_HTTP_PORT}
+      - JWT_SECRET=your_jwt_secret
+    env_file:
+      - ./apps/services/validate-service/.env
+    networks:
+      - app-network
+
   user-service:
     image: user-service-image
     container_name: user-service
@@ -11,7 +33,7 @@ services:
         root: ./
     volumes:
       - ./apps/services/user-service:/app/apps/services/user-service
-      - /app/apps/services/auth-service/node_modules
+      - /app/apps/services/user-service/node_modules
       - ./packages:/app/packages
     environment:
       - NODE_ENV=development
@@ -75,18 +97,26 @@ services:
     networks:
       - app-network
 
-  #  chat-service:
-  #    image: chat-service-image
-  #    container_name: chat-service
-  #    pull_policy: never
-  #    build: apps/services/chat-service
-  #    ports:
-  #      - "6000:6000"
-  #    volumes:
-  #      - ./apps/services/chat-service:/app
-  #      - /app/node_modules
-  #    depends_on:
-  #      - user-service
+  chat-service:
+    image: chat-service-image
+    container_name: chat-service
+    pull_policy: never
+    build:
+      context: apps/services/chat-service
+      dockerfile: Dockerfile.dev
+      additional_contexts:
+        root: ./
+    ports:
+      - "6000:6000"
+    environment:
+      - MONGO_URI=mongodb://host.docker.internal:27017/I4you-chatDB
+    volumes:
+      - ./apps/services/chat-service:/app/apps/services/chat-service
+      - /app/apps/services/chat-service/node_modules
+    depends_on:
+      - user-service
+    networks:
+      - app-network
 
   gateway-server:
     image: gateway-server-image
@@ -132,6 +162,8 @@ services:
       - "443:443"
     depends_on:
       - gateway-server
+      - validate-service
+      - chat-service
     networks:
       - app-network
 
