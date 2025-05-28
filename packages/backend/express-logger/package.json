@@ -1,6 +1,6 @@
 {
   "name": "@i4you/express-logger",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": false,
   "type": "module",
   "main": "./dist/cjs/index.js",
