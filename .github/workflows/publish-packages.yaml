@@ -27,12 +27,6 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: Install dependencies
-        run: pnpm install
-
       - name: Publish valid packages
         run: |
           find packages -type f -name package.json | while read pkgfile; do
