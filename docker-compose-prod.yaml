@@ -76,6 +76,7 @@ services:
       - NEXT_PUBLIC_API_URL=https://i4you.ddns.net
       - NEXT_PRIVATE_API_URL=http://gateway-server:4000
       - NEXT_PUBLIC_GOOGLE_CLIENT_ID=802008925355-dtft0lvcs3af92jjcqqbbitudp4et8ts.apps.googleusercontent.com
+      - NEXT_PUBLIC_FACEBOOK_CLIENT_ID=1349042066334542
       - NEXT_PRIVATE_JWT_SECRET=your_jwt_secret
       - NEXT_PUBLIC_WEB_SOCKET_URL=wss://i4you.ddns.net
       - NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=AIzaSyDnetUxIAKDv-8s2yAcLD01azNlu_qG-j8
