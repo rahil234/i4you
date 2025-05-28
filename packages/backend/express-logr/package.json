@@ -1,5 +1,5 @@
 {
-  "name": "@i4you/express-logr",
+  "name": "@i4you/express-logger",
   "version": "1.0.1",
   "private": false,
   "type": "module",
