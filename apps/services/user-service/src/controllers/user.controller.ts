@@ -38,7 +38,8 @@ export class UserController {
   });
 
   updateUserStatus = handleAsync(async (req, res) => {
-    const { id: userId } = req.user;
+    const { userId } = req.params;
+
     const { status } = req.body;
 
     if (!userId) {
@@ -67,7 +68,7 @@ export class UserController {
     res.status(200).json(matches);
   });
 
-  onBoarding = handleAsync(async (req, res, next) => {
+  onBoarding = handleAsync(async (req, res) => {
     const { data } = req.body;
 
     const userId = req.user.id;

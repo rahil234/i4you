@@ -1,6 +1,6 @@
 {
-  "name": "http-errors",
-  "version": "0.0.0",
+  "name": "@i4you/http-errors",
+  "version": "0.0.1",
   "description": "This will create common http errors",
   "type": "module",
   "main": "./dist/index.js",

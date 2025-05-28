@@ -1,5 +1,5 @@
 {
-  "name": "env-config",
+  "name": "@i4you/env-config",
   "version": "1.0.2",
   "type": "module",
   "main": "./dist/cjs/index.js",

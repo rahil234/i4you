@@ -1,9 +1,7 @@
 {
-  "name": "proto-files",
+  "name": "@i4you/proto-files",
   "version": "1.0.0",
   "description": "",
-  "license": "ISC",
-  "author": "",
   "type": "commonjs",
   "exports": {
     "./client/*": {
@@ -32,5 +30,7 @@
     "ts-proto": "^2.7.0",
     "tsc-alias": "^1.8.15",
     "typescript": "^5.8.3"
-  }
+  },
+  "author": "Rahil234",
+  "license": "ISC"
 }

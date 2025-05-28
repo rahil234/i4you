@@ -1,16 +1,14 @@
 {
-  "name": "@repo/ui",
-  "version": "0.0.0",
-  "private": true,
-  "license": "MIT",
+  "name": "@i4you/ui",
+  "version": "1.0.0",
   "sideEffects": false,
   "files": [
     "dist"
   ],
   "exports": {
     "./Button": {
-        "types": "./dist/button.d.ts",
-        "default": "./dist/button.js"
+      "types": "./dist/button.d.ts",
+      "default": "./dist/button.js"
     }
   },
   "scripts": {
@@ -25,5 +23,8 @@
     "@repo/typescript-config": "workspace:*",
     "@types/node": "^22.13.10",
     "@types/react": "^19.0.10"
-  }
+  },
+  "author": "Rahil234",
+  "description": "UI components for i4you",
+  "license": "MIT"
 }
