@@ -11,8 +11,6 @@ RUN corepack enable && pnpm install --frozen-lockfile
 
 COPY . ./apps/frontend
 
-COPY .env.production ./apps/frontend/.env
-
 RUN pnpm run --filter=frontend build
 
 RUN pnpm prune --prod
