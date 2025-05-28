@@ -25,14 +25,6 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Debug Token (Base64 - be careful!)
-        run: echo "$NPM_TOKEN" | base64
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Show .npmrc file
-        run: cat ~/.npmrc
-
       - name: Publish valid packages
         run: |
           find packages -type f -name package.json | while read pkgfile; do
