@@ -9,15 +9,6 @@ services:
       dockerfile: Dockerfile
       additional_contexts:
         root: ./
-    ports:
-      - "3001:3001"
-    environment:
-      - NODE_ENV=development
-      - PORT=${AUTH_HTTP_PORT}
-      - USER_GRPC_SERVER_URL=user-service:${USER_GRPC_PORT}
-      - MONGODB_URI=mongodb://host.docker.internal:27017/I4you-userDB
-    env_file:
-      - ./apps/services/auth-service/.env
     networks:
       - app-network
 
@@ -31,13 +22,6 @@ services:
       dockerfile: Dockerfile
       additional_contexts:
         root: ./
-    environment:
-      - NODE_ENV=development
-      - PORT=${USER_HTTP_PORT}
-      - GRPC_PORT=${USER_GRPC_PORT}
-      - MONGODB_URI=mongodb://host.docker.internal:27017/I4you-userDB
-    env_file:
-      - ./apps/services/user-service/.env
     networks:
       - app-network
 
@@ -55,14 +39,6 @@ services:
       - ./apps/services/media-service:/app/apps/services/media-service
       - /app/apps/services/media-service/node_modules
       - ./packages:/app/packages
-    ports:
-      - "3003:3003"
-    environment:
-      - NODE_ENV=production
-      - PORT=${MEDIA_HTTP_PORT}
-      - USER_GRPC_SERVER_URL=user-service:${USER_GRPC_PORT}
-    env_file:
-      - ./apps/services/media-service/.env
     networks:
       - app-network
 
@@ -77,16 +53,7 @@ services:
       additional_contexts:
         root: ./
     ports:
-      - "${GATEWAY_HTTP_PORT}:${GATEWAY_HTTP_PORT}"
-    environment:
-      - NODE_ENV=development
-      - PORT=${GATEWAY_HTTP_PORT}
-      - USER_SERVER_URL=http://user-service:${USER_HTTP_PORT}
-      - AUTH_SERVER_URL=http://auth-service:${AUTH_HTTP_PORT}
-      - MEDIA_SERVER_URL=http://auth-service:${MEDIA_HTTP_PORT}
-      - ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001
-    env_file:
-      - ./apps/gateway/.env
+      - "4000:4000"
     depends_on:
       - user-service
       - auth-service
