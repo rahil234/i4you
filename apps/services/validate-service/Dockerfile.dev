@@ -4,13 +4,10 @@ WORKDIR /app
 
 RUN corepack enable
 
-COPY --from=root /package*.json /pnpm*.yaml ./
-COPY --from=root /packages /app/packages
+COPY package.json ./
 
-COPY package.json /app/apps/services/validate-service/
+RUN pnpm install
 
-RUN pnpm install --filter=validate-service
+COPY . .
 
-COPY . /app/apps/services/validate-service
-
-CMD ["pnpm", "run", "--filter=validate-service", "dev"]
+CMD ["pnpm", "run", "dev"]

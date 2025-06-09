@@ -6,7 +6,6 @@ import { connectDB } from '@/config/db.config';
 import setupSwaggerDocs, { swaggerSpec } from '@/config/swagger.config';
 import { errorHandlerMiddleware } from '@/middlwares/error-handler.middleware';
 import { requestLogger } from '@/middlwares/request-logger.middleware';
-import { getDistanceInKm } from '@/utils/calculate-distance';
 
 const app = express();
 

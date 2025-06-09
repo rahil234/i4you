@@ -6,6 +6,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { ChatService } from './chat.service';
 
 @WebSocketGateway({
   cors: {
@@ -17,6 +18,8 @@ export class ChatGateway {
   @WebSocketServer()
   server: Server;
 
+  constructor(private readonly chatService: ChatService) {}
+
   @SubscribeMessage('join')
   handleConnection(client: Socket) {
     console.log('Client connected:', client.id);
@@ -27,21 +30,68 @@ export class ChatGateway {
     console.log('Client disconnected:', client.id);
   }
 
-  // Join a room
-  @SubscribeMessage('joinRoom')
-  async handleJoinRoom(client: Socket, room: string) {
-    console.log('Client', client.id, 'joining room', room);
-    await client.join(room);
-    console.log('client joined room', room);
-    client.emit('joinedRoom', `You have joined room: ${room}`);
-    console.log('client emited romm', room);
-    client.to(room).emit('roomMessage', {
+  @SubscribeMessage('createRoom')
+  async handleCreateRoom(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() user2: string,
+  ) {
+    const user1 = client.handshake.headers['x-user-id'] as string;
+
+    console.log('User1:', user1, 'User2:', user2);
+
+    let chat = await this.chatService.findChatByParticipants(user1, user2);
+
+    if (!chat) {
+      console.log('Creating new chat for participants:', user1, user2);
+      chat = await this.chatService.createChat({
+        participants: [user1, user2],
+        messages: [],
+      });
+    } else {
+      console.log('Chat already exists:', chat);
+    }
+
+    await client.join(chat._id);
+    client.emit('joinedRoom', `You have joined room: ${chat._id}`);
+    this.server.to(chat._id).emit('roomMessage', {
       sender: 'System',
-      message: `${client.id} has joined the room ${room}`,
+      message: `${client.id} has joined the room.`,
     });
+
+    console.log(`Client ${client.id} joined chat room: ${chat.id}`);
   }
 
-  // Leave a room
+  @SubscribeMessage('joinRoom')
+  async handleJoinRoom(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() user2: string,
+  ) {
+    const user1 = client.handshake.headers['x-user-id'] as string;
+
+    console.log('User1:', user1, 'User2:', user2);
+
+    let chat = await this.chatService.findChatByParticipants(user1, user2);
+
+    if (!chat) {
+      console.log('Creating new chat for participants:', user1, user2);
+      chat = await this.chatService.createChat({
+        participants: [user1, user2],
+        messages: [],
+      });
+    } else {
+      console.log('Chat already exists:', chat);
+    }
+
+    await client.join(chat._id);
+    client.emit('joinedRoom', `You have joined room: ${chat._id}`);
+    this.server.to(chat._id).emit('roomMessage', {
+      sender: 'System',
+      message: `${client.id} has joined the room.`,
+    });
+
+    console.log(`Client ${client.id} joined chat room: ${chat.id}`);
+  }
+
   @SubscribeMessage('leaveRoom')
   async handleLeaveRoom(client: Socket, room: string) {
     await client.leave(room);
@@ -52,7 +102,7 @@ export class ChatGateway {
     });
   }
 
-  // Send message to a specific room
+  // Send a message to a specific room
   @SubscribeMessage('roomMessage')
   handleRoomMessage(
     client: Socket,
@@ -64,7 +114,6 @@ export class ChatGateway {
     });
   }
 
-  // Broadcast to all (optional, from previous example)
   @SubscribeMessage('message')
   handleMessage(
     @ConnectedSocket() client: Socket,
@@ -72,9 +121,10 @@ export class ChatGateway {
     payload: {
       sender: string;
       message: string;
+      chatId: string;
     },
   ): void {
     console.log('Received message:', payload);
-    client.emit('message', payload);
+    client.to(payload.chatId).emit('message', payload);
   }
 }

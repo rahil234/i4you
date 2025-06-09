@@ -34,9 +34,18 @@ const ignorePaths = new Set([
 ]);
 
 app.get('/', (req, res) => {
-  const originalUri = req.headers['x-original-uri'] as string;
+  const forwardedUri = req.headers['x-forwarded-uri'] as string; // e.g. /api/v1/user
+  const forwardedHost = req.headers['x-forwarded-host'] as string; // e.g. example.com
+  const forwardedMethod = req.headers['x-forwarded-method'] as string; // e.g. GET
 
-  if (originalUri && ignorePaths.has(originalUri)) {
+  console.log('Requested:', forwardedMethod, forwardedHost + forwardedUri);
+
+  if (!forwardedUri.startsWith('/api')) {
+    res.sendStatus(200);
+    return;
+  }
+
+  if (forwardedUri && ignorePaths.has(forwardedUri)) {
     res.sendStatus(200);
     return;
   }

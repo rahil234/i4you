@@ -6,8 +6,9 @@ export const requestLogger = (): RequestHandler => (req, res, next) => {
   res.on('finish', () => {
     const duration = Date.now() - start;
     const timestamp = new Date().toISOString();
+
     console.log(
-      `${timestamp} ${req.method} ${req.originalUrl} - ${res.statusCode} - ${duration}ms`
+      `${timestamp} ${req.method} ${req.url} - ${res.statusCode} - ${duration}ms`
     );
   });
 

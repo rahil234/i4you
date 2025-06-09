@@ -20,29 +20,29 @@ spec:
             - containerPort: 4003
           env:
             - name: NODE_ENV
-              value: "development"
-            - name: ALLOWED_ORIGINS
-              value: "http://localhost:3000,http://localhost:3001"
-            - name: AUTH_SERVER_URL
-              value: "http://auth-service:3001"
-            - name: USER_SERVER_URL
-              value: "http://user-service:3000"
+              value: "production"
             - name: PORT
               value: "4003"
-            - name: USER_GRPC_SERVER_URL
-              value: "localhost:50051"
             - name: JWT_SECRET
-              value: your_jwt_secret
+              value: "your_jwt_secret"
+            - name: AWS_REGION
+              value: "ap-south-1"
+            - name: AWS_ACCESS_KEY_ID
+              value: "ID"
+            - name: AWS_SECRET_ACCESS_KEY
+              value: "KEY"
+            - name: AWS_BUCKET_NAME
+              value: "i4you-bucket"
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: media-service
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: media-service
   ports:
     - port: 4003
       targetPort: 4003
-      nodePort: 30060

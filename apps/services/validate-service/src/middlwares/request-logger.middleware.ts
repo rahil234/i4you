@@ -7,12 +7,18 @@ export const requestLogger = (): RequestHandler => (req, res, next) => {
     const duration = Date.now() - start;
     const timestamp = new Date().toISOString();
 
-    const originalUri = req.headers['x-original-uri'] as string;
-    const originalMethoed = req.headers['x-original-methoed'] as string;
+    const forwardedUri = req.headers['x-forwarded-uri'] as string;
+    const forwardedMethod = req.headers['x-forwarded-method'] as string;
 
-    console.log(
-      `${timestamp} ${originalMethoed} ${originalUri} - ${res.statusCode} - ${duration}ms`
-    );
+    if (
+      forwardedUri.startsWith('/api') ||
+      forwardedUri.startsWith('/socket.io') ||
+      res.statusCode >= 400
+    ) {
+      console.log(
+        `${timestamp} ${forwardedMethod} ${forwardedUri} - ${res.statusCode} - ${duration}ms`
+      );
+    }
   });
 
   next();

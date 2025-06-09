@@ -1,131 +1,143 @@
-// This is a simple WebSocket client implementation
-// In a real app, you would use a more robust solution
+'use client';
+
+import { io, ManagerOptions, Socket, SocketOptions } from 'socket.io-client';
 
 type MessageHandler = (message: any) => void
-type StatusHandler = (status: "connected" | "disconnected" | "error") => void
+type StatusHandler = (status: 'connected' | 'disconnected' | 'error') => void
 
-class WebSocketClient {
-  private socket: WebSocket | null = null
-  private messageHandlers: MessageHandler[] = []
-  private statusHandlers: StatusHandler[] = []
-  private reconnectAttempts = 0
-  private maxReconnectAttempts = 5
-  private reconnectTimeout: NodeJS.Timeout | null = null
-  private url: string
-  private isConnecting = false
+class SocketIOClient {
+  private socket: Socket | null = null;
+  private messageHandlers: MessageHandler[] = [];
+  private statusHandlers: StatusHandler[] = [];
+  private reconnectAttempts = 0;
+  private maxReconnectAttempts = 5;
+  private reconnectTimeout: NodeJS.Timeout | null = null;
+  private readonly url: string;
+  private readonly options: Partial<ManagerOptions & SocketOptions>;
+  private isConnecting = false;
 
-  constructor(url: string) {
-    this.url = url
+  constructor(url: string, options: Partial<ManagerOptions & SocketOptions>) {
+    this.url = url;
+    this.options = options;
   }
 
   connect() {
-    if (this.socket?.readyState === WebSocket.OPEN || this.isConnecting) return
+    if (this.socket?.connected || this.isConnecting) return;
 
-    this.isConnecting = true
+    this.isConnecting = true;
 
     try {
-      this.socket = new WebSocket(this.url)
+      this.socket = io(this.url, {
+        ...this.options,
+        autoConnect: false,
+        reconnection: false,
+      });
 
-      this.socket.onopen = () => {
-        this.reconnectAttempts = 0
-        this.isConnecting = false
-        this.notifyStatusChange("connected")
-      }
+      this.socket.connect();
 
-      this.socket.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data)
-          this.notifyMessageHandlers(data)
-        } catch (error) {
-          console.error("Error parsing WebSocket message:", error)
-        }
-      }
+      this.socket.on('connect', () => {
+        this.reconnectAttempts = 0;
+        this.isConnecting = false;
+        this.notifyStatusChange('connected');
+      });
 
-      this.socket.onclose = () => {
-        this.isConnecting = false
-        this.notifyStatusChange("disconnected")
-        this.attemptReconnect()
-      }
+      this.socket.on('disconnect', () => {
+        this.isConnecting = false;
+        this.notifyStatusChange('disconnected');
+        this.attemptReconnect();
+      });
 
-      this.socket.onerror = (error) => {
-        this.isConnecting = false
-        console.error("WebSocket error:", error)
-        this.notifyStatusChange("error")
-        this.socket?.close()
-      }
+      this.socket.on('connect_error', (err) => {
+        console.error('Socket.IO error:', err);
+        this.isConnecting = false;
+        this.notifyStatusChange('error');
+        this.socket?.disconnect();
+        this.attemptReconnect();
+      });
+
+      this.socket.on('message', (data: any) => {
+        this.notifyMessageHandlers(data);
+      });
     } catch (error) {
-      this.isConnecting = false
-      console.error("Error creating WebSocket:", error)
-      this.notifyStatusChange("error")
-      this.attemptReconnect()
+      this.isConnecting = false;
+      console.error('Error creating Socket.IO connection:', error);
+      this.notifyStatusChange('error');
+      this.attemptReconnect();
     }
   }
 
   disconnect() {
     if (this.reconnectTimeout) {
-      clearTimeout(this.reconnectTimeout)
-      this.reconnectTimeout = null
+      clearTimeout(this.reconnectTimeout);
+      this.reconnectTimeout = null;
     }
 
     if (this.socket) {
-      this.socket.close()
-      this.socket = null
+      this.socket.disconnect();
+      this.socket = null;
     }
   }
 
   send(message: any) {
-    if (this.socket?.readyState === WebSocket.OPEN) {
-      this.socket.send(JSON.stringify(message))
-      return true
+    if (this.socket?.connected) {
+      this.socket.emit('message', message);
+      return true;
     }
-    return false
+    return false;
+  }
+
+  joinRoom(chatId: string) {
+    if (this.socket?.connected) {
+      this.socket.emit('joinRoom', chatId);
+      return true;
+    }
+    return false;
   }
 
   onMessage(handler: MessageHandler) {
-    this.messageHandlers.push(handler)
+    this.messageHandlers.push(handler);
     return () => {
-      this.messageHandlers = this.messageHandlers.filter((h) => h !== handler)
-    }
+      this.messageHandlers = this.messageHandlers.filter((h) => h !== handler);
+    };
   }
 
   onStatusChange(handler: StatusHandler) {
-    this.statusHandlers.push(handler)
+    this.statusHandlers.push(handler);
     return () => {
-      this.statusHandlers = this.statusHandlers.filter((h) => h !== handler)
-    }
+      this.statusHandlers = this.statusHandlers.filter((h) => h !== handler);
+    };
   }
 
   private notifyMessageHandlers(message: any) {
-    this.messageHandlers.forEach((handler) => handler(message))
+    this.messageHandlers.forEach((handler) => handler(message));
   }
 
-  private notifyStatusChange(status: "connected" | "disconnected" | "error") {
-    this.statusHandlers.forEach((handler) => handler(status))
+  private notifyStatusChange(status: 'connected' | 'disconnected' | 'error') {
+    this.statusHandlers.forEach((handler) => handler(status));
   }
 
   private attemptReconnect() {
-    if (this.reconnectAttempts >= this.maxReconnectAttempts) return
+    console.log(`Attempting to reconnect... (${this.reconnectAttempts + 1}/${this.maxReconnectAttempts})`);
+    if (this.reconnectAttempts >= this.maxReconnectAttempts) return;
 
-    this.reconnectAttempts++
-
-    const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts), 30000)
+    this.reconnectAttempts++;
+    const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts), 30000);
 
     this.reconnectTimeout = setTimeout(() => {
-      this.connect()
-    }, delay)
+      this.connect();
+    }, delay);
   }
 }
 
-// Create a singleton instance
-let wsClient: WebSocketClient | null = null
+let socketClient: SocketIOClient | null = null;
 
-export function getWebSocketClient() {
-  if (!wsClient) {
-    // In a real app, this would be your WebSocket server URL
-    // For demo purposes, we'll use a mock URL
-    wsClient = new WebSocketClient("wss://mock-chat-server.example.com")
+export function getSocketClient() {
+  if (!socketClient) {
+    console.log('Creating new SocketIOClient instance');
+    socketClient = new SocketIOClient('https://i4you.local.net', {
+      path: '/socket.io/chat',
+      transports: ['websocket'],
+    });
   }
-
-  return wsClient
+  return socketClient;
 }
-

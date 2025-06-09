@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: socket-proxy-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: socket-proxy-nginx
+  template:
+    metadata:
+      labels:
+        app: socket-proxy-nginx
+    spec:
+      containers:
+        - name: socket-proxy-nginx
+          image: socket-nginx-image:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: socket-proxy-nginx
+spec:
+  type: ClusterIP
+  selector:
+    app: socket-proxy-nginx
+  ports:
+    - port: 80
+      targetPort: 80

@@ -4,11 +4,10 @@ WORKDIR /app
 
 RUN corepack enable
 
-COPY --from=root /package.json /pnpm*.yaml ./
-COPY --from=root /packages /app/packages
-
-COPY . /app/apps/services/user-service
+COPY package.json ./
 
 RUN pnpm install
 
-CMD ["pnpm", "run", "--filter=user-service", "dev"]
+COPY . .
+
+CMD ["pnpm", "run", "dev"]

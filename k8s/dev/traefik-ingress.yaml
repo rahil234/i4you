@@ -1,0 +1,56 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: i4you-ingress
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: |
+      default-jwt-auth@kubernetescrd,default-strip-api-v1@kubernetescrd
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - i4you.local.net
+      secretName: i4you-cert
+  rules:
+    - host: i4you.local.net
+      http:
+        paths:
+          - path: /socket.io
+            pathType: Prefix
+            backend:
+              service:
+                name: socket-proxy-nginx
+                port:
+                  number: 80
+
+          - path: /api/v1/auth
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-service
+                port:
+                  number: 4001
+
+          - path: /api/v1/user
+            pathType: Prefix
+            backend:
+              service:
+                name: user-service
+                port:
+                  number: 4002
+
+          - path: /api/v1/media
+            pathType: Prefix
+            backend:
+              service:
+                name: media-service
+                port:
+                  number: 4003
+
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 3000

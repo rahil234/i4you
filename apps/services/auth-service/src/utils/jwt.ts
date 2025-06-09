@@ -1,6 +1,6 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '@/config';
-import { UserJwtPayload } from '@repo/shared';
+import { UserJwtPayload } from '@i4you/shared';
 
 /**
  * Generates an access token

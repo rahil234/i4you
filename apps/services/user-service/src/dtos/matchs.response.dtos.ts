@@ -1,4 +1,4 @@
-import { User } from '@repo/shared';
+import { User } from '@i4you/shared';
 
 class MatchesResponseDTO
   implements

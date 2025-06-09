@@ -5,19 +5,36 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
     cert-manager.io/cluster-issuer: "letsencrypt"
+    nginx.ingress.kubernetes.io/use-forwarded-headers: "true"
+    nginx.ingress.kubernetes.io/enable-websockets: "true"
 spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - i4you.ddns.net
+      secretName: i4you-tls-secret
   rules:
     - host: i4you.ddns.net
       http:
         paths:
-          - path: /
+          - path: /api
             pathType: Prefix
             backend:
               service:
                 name: gateway-server
                 port:
                   number: 4000
-  tls:
-    - hosts:
-        - i4you.ddns.net
-      secretName: i4you-tls-secret  # cert-manager will create this
+          - path: /api-docs
+            pathType: Prefix
+            backend:
+              service:
+                name: gateway-server
+                port:
+                  number: 4000
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 3000

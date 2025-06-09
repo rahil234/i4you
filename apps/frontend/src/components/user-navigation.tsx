@@ -5,17 +5,17 @@ import {usePathname} from "next/navigation"
 import {Heart, MessageCircle, User} from "lucide-react"
 import {cn} from "@/lib/utils"
 import useMatchesStore from "@/store/matchesStore"
-import useMessagesStore from "@/store/messagesStore"
 import {Logo} from "@/components/logo"
+import useChatStore from '@/store/chatStore';
 
 export function UserNavigation() {
     const pathname = usePathname()
     const {matches} = useMatchesStore()
-    const {messages} = useMessagesStore()
+    const {messages} = useChatStore()
 
     // Calculate total unread messages
     const totalUnread = Object.values(messages).reduce((total, chatMessages) => {
-        const unreadCount = chatMessages.filter((msg) => msg.senderId !== "user1" && msg.status !== "read").length
+        const unreadCount = chatMessages.filter((msg) => msg.sender !== "user1" && msg.status !== "read").length
         return total + unreadCount
     }, 0)
 

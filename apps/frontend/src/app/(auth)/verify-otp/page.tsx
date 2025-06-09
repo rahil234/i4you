@@ -6,13 +6,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Flame, Loader2 } from 'lucide-react';
 import { OTPInput } from '@/components/ui/otp-input';
-import { createClient } from '@supabase/supabase-js';
 import { ThemeToggle } from '@/components/theme-toggle';
-
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export default function VerifyOTPPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -39,14 +33,6 @@ export default function VerifyOTPPage() {
     setError(null);
 
     try {
-      // Verify the OTP
-      const { error: verifyError } = await supabase.auth.verifyOtp({
-        email,
-        token: otp,
-        type: 'email',
-      });
-
-      if (verifyError) throw verifyError;
 
       setSuccess('OTP verified successfully!');
 
@@ -69,15 +55,6 @@ export default function VerifyOTPPage() {
     setSuccess(null);
 
     try {
-      // Resend OTP
-      const { error: otpError } = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          shouldCreateUser: true,
-        },
-      });
-
-      if (otpError) throw otpError;
 
       setSuccess('New OTP sent to your email. Please check your inbox.');
     } catch (err: any) {

@@ -1,4 +1,4 @@
-import { HttpError } from './HttpError';
+import { HttpError } from './HttpError.js';
 
 type CreateErrorType = {
   (statusCode: number, message: string, errorCode?: string, data?: any): HttpError;

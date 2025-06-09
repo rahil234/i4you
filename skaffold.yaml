@@ -1,58 +1,76 @@
-apiVersion: skaffold/v4beta13
+#nonk8s
+apiVersion: skaffold/v4beta11
 kind: Config
 metadata:
-  name: i-you
+  name: i4you
 build:
   artifacts:
-    - image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/auth-service-image
-      context: apps/services/auth-service
-      buildpacks:
-        builder: gcr.io/buildpacks/builder:v1
-    - image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/frontend-image
-      context: apps/frontend
-      buildpacks:
-        builder: gcr.io/buildpacks/builder:v1
-    - image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/gateway-server-image
-      context: apps/gateway
-      buildpacks:
-        builder: gcr.io/buildpacks/builder:v1
-    - image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/media-service-image
-      context: apps/services/media-service
-      buildpacks:
-        builder: gcr.io/buildpacks/builder:v1
-    - image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/user-service-image
-      context: apps/services/user-service
-      buildpacks:
-        builder: gcr.io/buildpacks/builder:v1
-    - image: auth-service-image
-      context: apps/services/chat-service
-      docker:
-        dockerfile: Dockerfile
-    - image: frontend-image
-      context: apps/frontend
+    - image: validate-service-image
+      context: apps/services/validate-service
       docker:
         dockerfile: Dockerfile.dev
-    - image: gateway-server-image
-      context: apps/gateway
-      docker:
-        dockerfile: Dockerfile.dev
+      sync:
+        manual:
+          - src: 'src/**/*'
+            dest: .
     - image: user-service-image
       context: apps/services/user-service
       docker:
         dockerfile: Dockerfile.dev
+      sync:
+        manual:
+          - src: 'src/**/*'
+            dest: .
+    - image: auth-service-image
+      context: apps/services/auth-service
+      docker:
+        dockerfile: Dockerfile.dev
+      sync:
+        manual:
+          - src: 'src/**/*'
+            dest: .
+    - image: media-service-image
+      context: apps/services/media-service
+      docker:
+        dockerfile: Dockerfile.dev
+      sync:
+        manual:
+          - src: 'src/**/*'
+            dest: .
+    - image: chat-service-image
+      context: apps/services/chat-service
+      docker:
+        dockerfile: Dockerfile.dev
+      sync:
+        manual:
+          - src: 'src/**/*'
+            dest: .
+    - image: frontend-image
+      context: apps/frontend
+      docker:
+        dockerfile: Dockerfile.dev
+      sync:
+        manual:
+          - src: 'src/**/*'
+            dest: .
+    - image: socket-nginx-image
+      context: apps/nginx
+      docker:
+        dockerfile: Dockerfile.dev
+  local:
+    push: false
+    useBuildkit: true
+    concurrency: 0
+
 manifests:
   rawYaml:
-    - skaffold.yaml
-    - k8s/dev/auth-service.yaml
-    - k8s/dev/frontend.yaml
-    - k8s/dev/gateway-server.yaml
-    - k8s/dev/ingress.yaml
-    - k8s/dev/media-service.yaml
+    - k8s/dev/validate-service.yaml
     - k8s/dev/user-service.yaml
-    - k8s/prod/auth-service.yaml
-    - k8s/prod/cluster-issuer.yaml
-    - k8s/prod/frontend.yaml
-    - k8s/prod/gateway-server.yaml
-    - k8s/prod/ingress.yaml
-    - k8s/prod/media-service.yaml
-    - k8s/prod/user-service.yaml
+    - k8s/dev/auth-service.yaml
+    - k8s/dev/media-service.yaml
+    - k8s/dev/chat-service.yaml
+    - k8s/dev/frontend.yaml
+    - k8s/dev/nginx-socket-proxy.yaml
+    - k8s/dev/traefik-ingress.yaml
+    - k8s/dev/traefik-strip-path-middleware.yaml
+    - k8s/dev/traefik-validate-middleware.yaml
