@@ -1,6 +1,6 @@
 import { Server, ServerCredentials } from '@grpc/grpc-js';
 
-import { UserServiceService } from 'proto-files/generated/user/v2/user';
+import { UserServiceService } from '@i4you/proto-files/generated/user/v2/user';
 
 import { env } from '@/config/env.config';
 import { UserGrpcService } from '@/services/grpc.user.service';

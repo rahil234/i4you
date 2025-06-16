@@ -1,34 +1,44 @@
-FROM node:23-alpine AS build
+# === STAGE 1: merge-overrides ===
+FROM node:22-alpine AS overrides
 
 WORKDIR /app
 
 RUN corepack enable
 
-COPY --from=root package*.json pnpm*.yaml ./
-COPY --from=root packages ./packages
+# Only copy what's needed for merge-overrides
+COPY package.json pnpm-overrides.json ./
 
-COPY package.json ./apps/services/user-service/
+# Run merge-overrides once
+RUN npx merge-overrides
+
+# === STAGE 2: build ===
+FROM node:22-alpine AS build
+
+WORKDIR /app
+
+RUN corepack enable
+
+COPY --from=overrides /app/package.json /app/
 
 RUN pnpm install
 
-COPY . ./apps/services/user-service/
+COPY . .
 
-RUN pnpm --filter user-service run build
+RUN pnpm run build
 
-FROM node:23-alpine AS runtime
+# === STAGE 3: runtime ===
+FROM node:22-alpine AS runtime
 
 WORKDIR /app
 
 RUN corepack enable
 
-COPY --from=build /app/packages ./packages
-COPY --from=build /app/pnpm-*.yaml /app/package*.json ./
+COPY --from=overrides /app/package.json /app/
 
-WORKDIR /app/apps/services/user-service
-
-COPY --from=build /app/apps/services/user-service/package*.json ./
-COPY --from=build /app/apps/services/user-service/dist ./dist
+COPY --from=build /app/pnpm-*.yaml ./
 
 RUN pnpm install --prod
 
-CMD ["node", "dist/app.js"]
+COPY --from=build /app/dist ./dist
+
+CMD ["pnpm", "run", "dev"]

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: user-service
-          image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/user-service-image:v0.0.1
+          image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/user-service-image:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 4002
@@ -29,8 +29,10 @@ spec:
               value: "http://user-service:3000"
             - name: GRPC_PORT
               value: "50051"
+            - name: JWT_SECRET
+              value: "your_jwt_secret"
             - name: MONGODB_URI
-              value: "mongodb+srv://rahilsardar234:tPPNaEcGk980awe2@i4you-cluster.kdpj0cj.mongodb.net"
+              value: "mongodb+srv://rahilsardar234:NOKCk3dcykTN0P32@i4you-cluster.kdpj0cj.mongodb.net/I4You-userDB"
 ---
 apiVersion: v1
 kind: Service

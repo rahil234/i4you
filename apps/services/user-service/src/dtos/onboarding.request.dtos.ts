@@ -1,4 +1,4 @@
-import { User } from '@repo/shared';
+import { User } from '@i4you/shared';
 
 class OnboardingRequestDTO
   implements Omit<User, 'id' | 'joined' | 'email' | 'status' | 'role'>

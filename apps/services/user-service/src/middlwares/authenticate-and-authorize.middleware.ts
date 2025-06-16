@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { AuthError } from '@/errors/AuthError';
 import { ForbiddenError } from '@/errors/ForbiddenError';
-import { UserJwtPayload } from '@repo/shared';
+import { UserJwtPayload } from '@i4you/shared';
 
 export const authenticateAndAuthorizeMiddleware = (
   roles: Array<UserJwtPayload['role']> = []

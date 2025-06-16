@@ -1,5 +1,5 @@
+.turbo
 node_modules
-generated
 src
 buf.gen.yaml
 buf.yaml

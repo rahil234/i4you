@@ -4,13 +4,10 @@ WORKDIR /app
 
 RUN corepack enable
 
-COPY --from=root /package*.json /pnpm*.yaml ./
-COPY --from=root /packages /app/packages
-
-COPY package.json /app/apps/services/media-service/
+COPY package.json ./
 
 RUN pnpm install
 
-COPY . /app/apps/services/media-service
+COPY . .
 
-CMD ["pnpm", "run", "--filter=media-service", "dev"]
+CMD ["pnpm", "run", "dev"]

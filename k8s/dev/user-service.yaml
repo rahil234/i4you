@@ -29,18 +29,23 @@ spec:
               value: "http://user-service:3000"
             - name: GRPC_PORT
               value: "50051"
+            - name: JWT_SECRET
+              value: "your_jwt_secret"
             - name: MONGODB_URI
-              value: "mongodb://host.docker.internal:27017/I4you-userDB"
+              value: "mongodb+srv://rahilsardar234:NOKCk3dcykTN0P32@i4you-cluster.kdpj0cj.mongodb.net/I4You-userDB"
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: user-service
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: user-service
   ports:
-    - port: 4002
+    - name: http
+      port: 4002
       targetPort: 4002
-      nodePort: 30090
+    - name: grpc
+      port: 50051
+      targetPort: 50051

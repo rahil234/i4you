@@ -12,6 +12,8 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@i4you/env-config": "latest",
+    "@i4you/express-logger": "latest",
     "@opentelemetry/auto-instrumentations-node": "^0.58.0",
     "@opentelemetry/exporter-prometheus": "^0.200.0",
     "@opentelemetry/sdk-metrics": "^2.0.0",
@@ -21,10 +23,8 @@
     "cookie-parser": "~1.4.7",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
-    "env-config": "workspace:*",
     "express": "^4.21.2",
     "express-jwt": "^8.5.1",
-    "express-logr": "workspace:*",
     "http-proxy-middleware": "^3.0.3",
     "morgan": "~1.9.1",
     "redoc-express": "^2.1.0",

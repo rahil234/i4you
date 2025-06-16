@@ -21,7 +21,7 @@ import { MailService } from '@/services/mail.service';
 import { PasswordResetTemplate } from '@/utils/mail-templates';
 import { NotFoundError } from '@/errors/NotFoundError';
 import { env } from '@/config';
-import { createError } from 'http-errors';
+import { createError } from '@i4you/http-errors';
 
 const APP_URL = env.APP_URL;
 

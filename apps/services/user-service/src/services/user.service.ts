@@ -4,7 +4,7 @@ import { TYPES } from '@/types';
 import UserDTO from '@/dtos/user.dtos';
 import { BadRequestError } from '@/errors/BadRequestError';
 import IAdminRepository from '@/repositories/interfaces/IAdminRepository';
-import { UserJwtPayload } from '@repo/shared';
+import { UserJwtPayload } from '@i4you/shared';
 import OnboardingRequestDTO from '@/dtos/onboarding.request.dtos';
 import MatchesResponseDTO from '@/dtos/matchs.response.dtos';
 import AdminDTO from '@/dtos/admin.dtos';

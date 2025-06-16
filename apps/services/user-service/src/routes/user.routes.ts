@@ -86,7 +86,7 @@ router.patch(
  *                         description: User ID
  *                       name:
  *                         type: string
- *                         description: User name
+ *                         description: Username
  *                       photos:
  *                         type: array
  *                         items:

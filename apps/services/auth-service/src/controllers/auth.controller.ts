@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 
-import { createError } from 'http-errors';
+import { createError } from '@i4you/http-errors';
 
 import { TYPES } from '@/types';
 import { AuthService } from '@/services/auth.service';

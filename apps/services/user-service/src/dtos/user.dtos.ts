@@ -1,4 +1,4 @@
-import { User, UserPreferences } from '@repo/shared';
+import { User, UserPreferences } from '@i4you/shared';
 
 class UserDTO implements Omit<User, 'location'> {
   id: string;

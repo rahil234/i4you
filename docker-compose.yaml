@@ -7,12 +7,9 @@ services:
     build:
       context: ./apps/services/validate-service
       dockerfile: Dockerfile.dev
-      additional_contexts:
-        root: ./
     volumes:
-      - ./apps/services/validate-service:/app/apps/services/validate-service
-      - /app/apps/services/validate-service/node_modules
-      - ./packages:/app/packages
+      - ./apps/services/validate-service:/app
+      - /app/node_modules
     environment:
       - NODE_ENV=development
       - PORT=${VALIDATE_HTTP_PORT}
@@ -29,12 +26,9 @@ services:
     build:
       context: ./apps/services/user-service
       dockerfile: Dockerfile.dev
-      additional_contexts:
-        root: ./
     volumes:
-      - ./apps/services/user-service:/app/apps/services/user-service
-      - /app/apps/services/user-service/node_modules
-      - ./packages:/app/packages
+      - ./apps/services/user-service:/app
+      - /app/node_modules
     environment:
       - NODE_ENV=development
       - PORT=${USER_HTTP_PORT}
@@ -52,12 +46,9 @@ services:
     build:
       context: ./apps/services/auth-service
       dockerfile: Dockerfile.dev
-      additional_contexts:
-        root: ./
     volumes:
-      - ./apps/services/auth-service:/app/apps/services/auth-service
-      - /app/apps/services/auth-service/node_modules
-      - ./packages:/app/packages
+      - ./apps/services/auth-service:/app
+      - /app/node_modules
     ports:
       - "3001:3001"
     environment:
@@ -80,12 +71,9 @@ services:
     build:
       context: ./apps/services/media-service
       dockerfile: Dockerfile.dev
-      additional_contexts:
-        root: ./
     volumes:
-      - ./apps/services/media-service:/app/apps/services/media-service
-      - /app/apps/services/media-service/node_modules
-      - ./packages:/app/packages
+      - ./apps/services/media-service:/app
+      - /app/node_modules
     ports:
       - "3003:3003"
     environment:
@@ -104,50 +92,14 @@ services:
     build:
       context: apps/services/chat-service
       dockerfile: Dockerfile.dev
-      additional_contexts:
-        root: ./
-    ports:
-      - "6000:6000"
     environment:
+      - PORT=3004
       - MONGO_URI=mongodb://host.docker.internal:27017/I4you-chatDB
     volumes:
-      - ./apps/services/chat-service:/app/apps/services/chat-service
-      - /app/apps/services/chat-service/node_modules
-    depends_on:
-      - user-service
-    networks:
-      - app-network
-
-  gateway-server:
-    image: gateway-server-image
-    container_name: gateway-server
-    pull_policy: never
-    build:
-      context: ./apps/gateway
-      dockerfile: Dockerfile.dev
-      additional_contexts:
-        root: ./
-    ports:
-      - "${GATEWAY_HTTP_PORT}:${GATEWAY_HTTP_PORT}"
-      - "9464:9464"
-    volumes:
-      - ./apps/gateway:/app/apps/gateway
+      - ./apps/services/chat-service:/app
       - /app/node_modules
-      - /app/apps/services/auth-service/node_modules
-      - ./packages:/app/packages
-    environment:
-      - NODE_ENV=development
-      - PORT=${GATEWAY_HTTP_PORT}
-      - USER_SERVER_URL=http://user-service:${USER_HTTP_PORT}
-      - AUTH_SERVER_URL=http://auth-service:${AUTH_HTTP_PORT}
-      - MEDIA_SERVER_URL=http://media-service:${MEDIA_HTTP_PORT}
-      - ALLOWED_ORIGINS=http://localhost:3000,https://localhost:3000,https://i4you.local.net,http://i4you.local.net
-    env_file:
-      - ./apps/gateway/.env
     depends_on:
       - user-service
-      - auth-service
-      - media-service
     networks:
       - app-network
 
@@ -161,7 +113,6 @@ services:
       - "80:80"
       - "443:443"
     depends_on:
-      - gateway-server
       - validate-service
       - chat-service
     networks:

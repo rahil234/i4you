@@ -14,7 +14,6 @@ app.use(express.json());
 app.use(cookieParser());
 
 const ignorePaths = new Set([
-  '/',
   '/public',
   '/api/v1/auth/login',
   '/api/v1/auth/login/admin',
@@ -33,34 +32,46 @@ const ignorePaths = new Set([
   '/api/v1/media/health',
 ]);
 
-app.get('/', (req, res) => {
-  const originalUri = req.headers['x-original-uri'] as string;
+app.get('/validate', (req, res) => {
+  const forwardedUri = req.headers['x-forwarded-uri'] as string; // e.g., /api/v1/user
+  // const forwardedHost = req.headers['x-forwarded-host'] as string; // e.g., example.com
+  // const forwardedMethod = req.headers['x-forwarded-method'] as string; // e.g., GET
+  //
+  // console.log('Requested:', forwardedMethod, forwardedHost + forwardedUri);
 
-  if (originalUri && ignorePaths.has(originalUri)) {
+  if (
+    forwardedUri.startsWith('/api') ||
+    forwardedUri.startsWith('/socket.io')
+  ) {
+    if (forwardedUri && ignorePaths.has(forwardedUri)) {
+      res.sendStatus(200);
+      return;
+    }
+
+    const token = req.cookies.accessToken;
+
+    if (!token) {
+      res.status(401).json({ message: 'Missing access token' });
+      return;
+    }
+
+    try {
+      const payload = jwt.verify(token, env.JWT_SECRET) as {
+        sub: string;
+        role: string;
+      };
+
+      // Inject user info in response headers
+      res.set('X-User-ID', payload.sub);
+      res.set('X-User-Role', payload.role);
+
+      res.sendStatus(200);
+    } catch (err) {
+      res.status(401).json({ message: 'Invalid or expired token' });
+    }
+  } else {
     res.sendStatus(200);
     return;
-  }
-
-  const token = req.cookies.accessToken;
-
-  if (!token) {
-    res.status(401).json({ message: 'Missing access token' });
-    return;
-  }
-
-  try {
-    const payload = jwt.verify(token, env.JWT_SECRET) as {
-      sub: string;
-      role: string;
-    };
-
-    // Inject user info in response headers
-    res.set('X-User-ID', payload.sub);
-    res.set('X-User-Role', payload.role);
-
-    res.sendStatus(200);
-  } catch (err) {
-    res.status(401).json({ message: 'Invalid or expired token' });
   }
 });
 
