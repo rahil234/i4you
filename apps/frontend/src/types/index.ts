@@ -46,16 +46,6 @@ export interface Match {
   user: User;
 }
 
-// Message types
-export interface Message {
-  id: string;
-  matchId: string;
-  senderId: string;
-  content: string;
-  createdAt: string;
-  status?: 'sent' | 'delivered' | 'read';
-}
-
 // API response types
 export interface ApiResponse<T> {
   data: T;
@@ -98,4 +88,42 @@ export interface OnboardingData {
 
   // Location
   location: Omit<BaseUser['location'], 'type'>;
+}
+
+export interface Message {
+  id: string;
+  chatId: string;
+  content: string;
+  sender: string;
+  timestamp: string;
+  status?: 'sent' | 'delivered' | 'read';
+}
+
+export type ChatUser = Partial<User> & {
+  id: string
+  initials?: string;
+  avatar: string;
+  lastActive?: string;
+  isOnline?: boolean;
+  lastMessage?: Message;
+}
+
+export interface Chat {
+  id: string;
+  participants: ChatUser[];
+  lastMessage?: Message;
+  unreadCount: number;
+}
+
+export interface ChatContextType {
+  chats: Chat[];
+  messages: Record<string, Message[]>;
+  currentUser: ChatUser | null;
+  connectionStatus: 'connected' | 'disconnected' | 'error' | 'connecting';
+  joinChat: (chatId: string) => void;
+  sendMessage: (chatId: string, content: string) => void;
+  markAsRead: (chatId: string) => void;
+  isTyping: Record<string, boolean>;
+  startTyping: (chatId: string) => void;
+  stopTyping: (chatId: string) => void;
 }

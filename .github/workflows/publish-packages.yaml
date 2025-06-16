@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'packages/**'
-      - '.github/workflows/publish-packages.yaml'
 
 jobs:
   publish:
@@ -16,16 +13,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Use Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
           registry-url: 'https://registry.npmjs.org/'
-
-      - name: Authenticate with npm
-        run: echo "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+          always-auth: true
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish valid packages
         run: |

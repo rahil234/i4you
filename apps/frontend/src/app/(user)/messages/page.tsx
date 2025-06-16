@@ -2,11 +2,9 @@
 
 import { ConversationsList } from "@/components/conversations-list"
 import { UserLayout } from "@/components/user-layout"
-import { ChatProvider } from "@/contexts/chat-context"
 
 export default function MessagesPage() {
   return (
-    <ChatProvider>
       <UserLayout>
         <div className="md:container mx-auto max-w-6xl md:p-4 md:pt-6 h-[calc(100vh-64px)]">
           <div className="md:border md:rounded-lg md:shadow-sm h-full overflow-hidden bg-white">
@@ -23,7 +21,6 @@ export default function MessagesPage() {
           </div>
         </div>
       </UserLayout>
-    </ChatProvider>
   )
 }
 

@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: media-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: media-service
+  template:
+    metadata:
+      labels:
+        app: media-service
+    spec:
+      containers:
+        - name: media-service
+          image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/media-service-image:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 4003
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "4003"
+            - name: JWT_SECRET
+              value: "your_jwt_secret"
+            - name: AWS_REGION
+              value: "ap-south-1"
+            - name: AWS_ACCESS_KEY_ID
+              value: ""
+            - name: AWS_SECRET_ACCESS_KEY
+              value: ""
+            - name: AWS_BUCKET_NAME
+              value: "i4you-bucket"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: media-service
+spec:
+  type: NodePort
+  selector:
+    app: media-service
+  ports:
+    - port: 4003
+      targetPort: 4003
+      nodePort: 30060

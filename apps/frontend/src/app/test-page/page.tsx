@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button} from '@repo/ui/Button';
+import {Button} from '@i4you/ui/Button';
 
 const Page = () => {
     return (

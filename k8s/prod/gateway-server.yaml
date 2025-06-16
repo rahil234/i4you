@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: gateway-server
-          image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/gateway-server-image:v0.0.1
+          image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/gateway-server-image:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 4000
@@ -29,6 +29,8 @@ spec:
               value: "http://auth-service:4001"
             - name: USER_SERVER_URL
               value: "http://user-service:4002"
+            - name: MEDIA_SERVER_URL
+              value: "http://media-service:4003"
             - name: JWT_SECRET
               value: "your_jwt_secret"
 ---

@@ -2,7 +2,7 @@ import { injectable, inject } from 'inversify';
 import {
   GetUserByEmailResponse,
   GetUserByIdResponse,
-} from 'proto-files/generated/user/v2/user';
+} from '@i4you/proto-files/generated/user/v2/user';
 import { TYPES } from '@/types';
 import { GrpcClientProvider } from '@/providers/grpc.client.provider';
 

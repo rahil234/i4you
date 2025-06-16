@@ -1,22 +1,44 @@
-FROM node:18-alpine AS builder
+# === STAGE 1: merge-overrides ===
+FROM node:22-alpine AS overrides
 
 WORKDIR /app
 
-COPY --from=root package*.json pnpm*.yaml turbo.json ./
-COPY --from=root packages packages
+RUN corepack enable
 
-COPY package.json ./apps/frontend/
+# Only copy what's needed for merge-overrides
+COPY package.json pnpm-overrides.json ./
 
-RUN corepack enable && pnpm install --frozen-lockfile
+# Run merge-overrides once
+RUN npx merge-overrides
 
-COPY . ./apps/frontend
+# === STAGE 2: build ===
+FROM node:22-alpine AS build
 
-COPY .env.production ./apps/frontend/.env
+WORKDIR /app
 
-RUN pnpm run --filter=frontend build
+RUN corepack enable
 
-RUN pnpm prune --prod
+COPY --from=overrides /app/package.json /app/
 
-EXPOSE 3000
+RUN pnpm install
 
-CMD ["pnpm", "run", "--filter=frontend", "start"]
+COPY . .
+
+RUN pnpm run build
+
+# === STAGE 3: runtime ===
+FROM node:22-alpine AS runtime
+
+WORKDIR /app
+
+RUN corepack enable
+
+COPY --from=overrides /app/package.json /app/
+
+COPY --from=build /app/pnpm-*.yaml ./
+
+RUN pnpm install --prod
+
+COPY --from=build /app/.next ./.next
+
+CMD ["pnpm", "run", "start"]

@@ -3,7 +3,7 @@ import { handleUnaryCall } from '@grpc/grpc-js';
 import {
   GetUserByIdRequest,
   GetUserByIdResponse,
-} from 'proto-files/generated/user/v2/user';
+} from '@i4you/proto-files/generated/user/v2/user';
 import { UserService } from '@/services/user.service';
 import { TYPES } from '@/types';
 

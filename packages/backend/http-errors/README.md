@@ -1,17 +1,17 @@
-# @your-scope/http-errors
+# @I4You/http-errors
 
 Custom HTTP Error Generator for Express.js and microservices.
 
 ## Install
 ```bash
-npm install @your-scope/http-errors
+npm install @i4you/http-errors
 # or
-yarn add @your-scope/http-errors
+yarn add @i4you/http-errors
 ```
 
 ## Usage
 ```ts
-import { createError } from '@your-scope/http-errors';
+import { createError } from '@i4you/http-errors';
 
 // Named Error
 next(createError.NotFound('User not found', 'USER_NOT_FOUND'));

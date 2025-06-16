@@ -1,26 +1,16 @@
 import { Request, Response, NextFunction } from 'express';
-import { AppError } from '@/errors/AppError';
+import { HttpError } from '@i4you/http-errors';
 
 export function errorHandlerMiddleware(
-  err: any,
+  err: unknown,
   _req: Request,
   res: Response,
   _next: NextFunction
 ) {
-  if (err instanceof AppError) {
+  if (err instanceof HttpError) {
     res.status(err.statusCode).json({
       status: 'error',
       message: err.message,
-      type: err.type,
-    });
-    return;
-  }
-  if (err.type === 'AUTH_ERROR') {
-    console.log('AuthError:', err);
-    res.status(err.statusCode).json({
-      status: 'error',
-      message: err.message,
-      type: err.type,
     });
     return;
   }

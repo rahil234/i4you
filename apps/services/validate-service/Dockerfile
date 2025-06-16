@@ -1,35 +1,25 @@
+# === STAGE 1: build ===
 FROM node:22-alpine AS build
 
 WORKDIR /app
 
-RUN corepack enable
+COPY package.json ./
 
-COPY --from=root package*.json pnpm*.yaml ./
-COPY --from=root packages ./packages
+RUN npm install
 
-COPY package.json ./apps/services/validate-service/
+COPY . .
 
-RUN pnpm install
+RUN npm run build
 
-COPY . ./apps/services/validate-service/
-
-RUN pnpm --filter validate-service run build
-
+# === STAGE 2: runtime ===
 FROM node:22-alpine AS runtime
 
 WORKDIR /app
 
-RUN corepack enable
+COPY --from=build /app/package*.json /app/
 
-COPY --from=build /app/packages ./packages
-COPY --from=build /app/pnpm-*.yaml /app/package*.json ./
+RUN npm install --prod
 
-WORKDIR /app/apps/services/validate-service
+COPY --from=build /app/dist ./dist
 
-COPY --from=build /app/apps/services/validate-service/package*.json ./
-
-RUN pnpm install --prod
-
-COPY --from=build /app/apps/services/validate-service/dist ./dist
-
-ENTRYPOINT ["node", "dist/app.js"]
+CMD ["npm", "run", "start"]

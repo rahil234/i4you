@@ -4,27 +4,23 @@ import pwa from 'next-pwa';
 const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
-  },
-  typescript: {
+  }, typescript: {
     ignoreBuildErrors: true,
-  },
-  images: {
+  }, images: {
     unoptimized: true,
   },
-  allowedDevOrigins: ['i4you.local.net'], experimental: {
+  allowedDevOrigins: ['i4you.local.net'],
+  experimental: {
     webpackBuildWorker: true, parallelServerBuildTraces: true, parallelServerCompiles: true,
   },
   devIndicators: false,
-  // output: 'standalone',
 };
 
-// Wrap with PWA plugin
 const pwaConfig = pwa({
   dest: 'public',
   register: true,
   disable: process.env.NODE_ENV === 'development',
   skipWaiting: true,
 });
-
 
 export default pwaConfig(nextConfig);
