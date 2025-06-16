@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: validate-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: validate-service
+  template:
+    metadata:
+      labels:
+        app: validate-service
+    spec:
+      containers:
+        - name: validate-service
+          image: validate-service-image:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "5000"
+            - name: APP_URL
+              value: "https://i4you.ddns.net"
+            - name: USER_GRPC_SERVER_URL
+              value: "localhost:50051"
+            - name: JWT_SECRET
+              value: your_jwt_secret
+            - name: JWT_EXPIRES_IN
+              value: 15m
+            - name: MONGODB_URI
+              value: "mongodb+srv://rahilsardar234:NOKCk3dcykTN0P32@i4you-cluster.kdpj0cj.mongodb.net/I4You-userDB"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: validate-service
+spec:
+  type: ClusterIP
+  selector:
+    app: validate-service
+  ports:
+    - port: 80
+      targetPort: 5000

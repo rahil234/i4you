@@ -1,44 +1,25 @@
-# === STAGE 1: merge-overrides ===
-FROM node:22-alpine AS overrides
-
-WORKDIR /app
-
-RUN corepack enable
-
-# Only copy what's needed for merge-overrides
-COPY package.json pnpm-overrides.json ./
-
-# Run merge-overrides once
-RUN npx merge-overrides
-
-# === STAGE 2: build ===
+# === STAGE 1: build ===
 FROM node:22-alpine AS build
 
 WORKDIR /app
 
-RUN corepack enable
+COPY package.json ./
 
-COPY --from=overrides /app/package.json /app/
-
-RUN pnpm install
+RUN npm install
 
 COPY . .
 
-RUN pnpm run build
+RUN npm run build
 
-# === STAGE 3: runtime ===
+# === STAGE 2: runtime ===
 FROM node:22-alpine AS runtime
 
 WORKDIR /app
 
-RUN corepack enable
+COPY --from=build /app/package*.json /app/
 
-COPY --from=overrides /app/package.json /app/
-
-COPY --from=build /app/pnpm-*.yaml ./
-
-RUN pnpm install --prod
+RUN npm install --prod
 
 COPY --from=build /app/dist ./dist
 
-CMD ["pnpm", "run", "start"]
+CMD ["npm", "run", "start"]
