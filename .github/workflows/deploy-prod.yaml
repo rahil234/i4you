@@ -35,4 +35,4 @@ jobs:
           sudo install skaffold /usr/local/bin/
 
       - name: Deploy to Production using Skaffold
-        run: skaffold deploy -p production
+        run: skaffold build -p production
