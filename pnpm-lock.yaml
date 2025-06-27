@@ -24,11 +24,11 @@ importers:
         specifier: ^3.9.1
         version: 3.10.0(react-hook-form@7.56.4(react@19.1.0))
       '@i4you/shared':
-        specifier: workspace:*
-        version: link:../../packages/shared
+        specifier: latest
+        version: 1.0.0
       '@i4you/ui':
-        specifier: workspace:*
-        version: link:../../packages/frontend/ui
+        specifier: latest
+        version: 1.0.0
       '@radix-ui/react-accordion':
         specifier: ^1.2.2
         version: 1.2.11(@types/react-dom@19.1.5(@types/react@19.1.6))(@types/react@19.1.6)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -283,11 +283,11 @@ importers:
   apps/gateway:
     dependencies:
       '@i4you/env-config':
-        specifier: workspace:*
-        version: link:../../packages/backend/env-config
+        specifier: latest
+        version: 1.0.2
       '@i4you/express-logger':
-        specifier: workspace:*
-        version: link:../../packages/backend/express-logger
+        specifier: latest
+        version: 1.0.2
       '@opentelemetry/auto-instrumentations-node':
         specifier: ^0.58.0
         version: 0.58.1(@opentelemetry/api@1.9.0)(@opentelemetry/core@2.0.1(@opentelemetry/api@1.9.0))
@@ -401,11 +401,11 @@ importers:
         specifier: ^0.7.13
         version: 0.7.15
       '@i4you/env-config':
-        specifier: workspace:*
-        version: link:../../../packages/backend/env-config
+        specifier: latest
+        version: 1.0.2
       '@i4you/http-errors':
-        specifier: workspace:*
-        version: link:../../../packages/backend/http-errors
+        specifier: latest
+        version: 0.0.2
       '@i4you/proto-files':
         specifier: ^1.0.2
         version: 1.0.2
@@ -471,8 +471,8 @@ importers:
         specifier: ^9.18.0
         version: 9.27.0
       '@i4you/shared':
-        specifier: workspace:*
-        version: link:../../../packages/shared
+        specifier: latest
+        version: 1.0.0
       '@protobuf-ts/plugin':
         specifier: ^2.9.4
         version: 2.11.0
@@ -661,17 +661,17 @@ importers:
         specifier: ^0.7.13
         version: 0.7.15
       '@i4you/env-config':
-        specifier: workspace:*
-        version: link:../../../packages/backend/env-config
+        specifier: latest
+        version: 1.0.2
       '@i4you/express-auth-middleware':
-        specifier: workspace:*
-        version: link:../../../packages/backend/express-auth-middleware
+        specifier: latest
+        version: 1.0.0(@types/express@5.0.2)(@types/jsonwebtoken@9.0.9)(express@4.21.2)(jsonwebtoken@9.0.2)
       '@i4you/express-logger':
-        specifier: workspace:*
-        version: link:../../../packages/backend/express-logger
+        specifier: latest
+        version: 1.0.2
       '@i4you/proto-files':
-        specifier: workspace:*
-        version: link:../../../packages/backend/proto-files/package
+        specifier: latest
+        version: 1.0.2
       '@protobuf-ts/runtime':
         specifier: ^2.9.5
         version: 2.11.0
@@ -737,8 +737,8 @@ importers:
         specifier: ^9.18.0
         version: 9.27.0
       '@i4you/shared':
-        specifier: workspace:*
-        version: link:../../../packages/shared
+        specifier: latest
+        version: 1.0.0
       '@protobuf-ts/plugin':
         specifier: ^2.9.4
         version: 2.11.0
@@ -945,20 +945,20 @@ importers:
         specifier: ^0.7.13
         version: 0.7.15
       '@i4you/env-config':
-        specifier: workspace:*
-        version: link:../../../packages/backend/env-config
+        specifier: latest
+        version: 1.0.2
       '@i4you/express-auth-middleware':
-        specifier: workspace:*
-        version: link:../../../packages/backend/express-auth-middleware
+        specifier: latest
+        version: 1.0.0(@types/express@5.0.2)(@types/jsonwebtoken@9.0.9)(express@4.21.2)(jsonwebtoken@9.0.2)
       '@i4you/express-logger':
-        specifier: workspace:*
-        version: link:../../../packages/backend/express-logger
+        specifier: latest
+        version: 1.0.2
       '@i4you/http-errors':
-        specifier: workspace:*
-        version: link:../../../packages/backend/http-errors
+        specifier: latest
+        version: 0.0.2
       '@i4you/proto-files':
-        specifier: workspace:*
-        version: link:../../../packages/backend/proto-files/package
+        specifier: latest
+        version: 1.0.2
       '@protobuf-ts/runtime':
         specifier: ^2.9.5
         version: 2.11.0
@@ -1004,6 +1004,9 @@ importers:
       morgan:
         specifier: ~1.9.1
         version: 1.9.1
+      redis:
+        specifier: ^5.5.6
+        version: 5.5.6
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -1021,8 +1024,8 @@ importers:
         specifier: ^9.18.0
         version: 9.27.0
       '@i4you/shared':
-        specifier: workspace:*
-        version: link:../../../packages/shared
+        specifier: latest
+        version: 1.0.0
       '@protobuf-ts/plugin':
         specifier: ^2.9.4
         version: 2.11.0
@@ -1078,10 +1081,10 @@ importers:
   apps/services/validate-service:
     dependencies:
       '@i4you/env-config':
-        specifier: ^1.0.2
+        specifier: latest
         version: 1.0.2
       '@i4you/http-errors':
-        specifier: 0.0.2
+        specifier: latest
         version: 0.0.2
       cookie-parser:
         specifier: ~1.4.7
@@ -2418,11 +2421,28 @@ packages:
   '@i4you/env-config@1.0.2':
     resolution: {integrity: sha512-QuwDXL662m1iOw/BejU4YL3KF0q7UxB6aj/rmAi8d/X2U4eNIVojTTNMI5v6wnulTK4UusaXWqEwZxKbQI/HnQ==}
 
+  '@i4you/express-auth-middleware@1.0.0':
+    resolution: {integrity: sha512-WI0kbl9K5z/oDaDH1Vjl7x0n5eoI3bz+pFmLElqTK9eRom8oElDn7eJQlHteM1rI698wtFz8fQlYDYycIxljfA==}
+    peerDependencies:
+      '@types/express': ^5.0.0
+      '@types/jsonwebtoken': ^9.0.9
+      express: ^4.21.2
+      jsonwebtoken: ^9.0.2
+
+  '@i4you/express-logger@1.0.2':
+    resolution: {integrity: sha512-yI0KhIXg3QubWUPiKHiDn4aC3tzCc7Ebk/YGdJasNKuBPhM62QdjPNI5uf1f26c8gFpOUk7lOw/YcXY+QPNiwA==}
+
   '@i4you/http-errors@0.0.2':
     resolution: {integrity: sha512-psV1cXkmpFB4rZsIG55KoSQKnuKVgKQ5knv95Zxkf100qXZTqgCUIdezNqrjXE9K9GOuS/J0ap/n6K2j9Y8vRg==}
 
   '@i4you/proto-files@1.0.2':
     resolution: {integrity: sha512-Papepuu4cWvCv5W/O6z5Q67+zD/sAudzNcdooq/eUc/zPa5Ds2rgICKKlUnzYjNwq58CZF2CnKZy5wMVJ2+UOQ==}
+
+  '@i4you/shared@1.0.0':
+    resolution: {integrity: sha512-2KPCxsEoOm6rnkm50mGVfm9dmSAE0thez+KibKc7TVIDzhSEx/hbngPqMvZ032r2faCU+6813hHhuz5gtAa/MQ==}
+
+  '@i4you/ui@1.0.0':
+    resolution: {integrity: sha512-czJtd8y8NJObEgi9KdDkDdQDG7AiUtZsZcpRlZAVhKkJL6GUwUDZ2uzJbLIpDAwamkn/75qfHvN4kjgGkDx7Zw==}
 
   '@img/sharp-darwin-arm64@0.34.2':
     resolution: {integrity: sha512-OfXHZPppddivUJnqyKoi5YVeHRkkNE2zUFT2gbpKxp/JZCFYEYubnMg+gOp6lWfasPrTS+KPosKqdI+ELYVDtg==}
@@ -4267,6 +4287,34 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
 
+  '@redis/bloom@5.5.6':
+    resolution: {integrity: sha512-bNR3mxkwtfuCxNOzfV8B3R5zA1LiN57EH6zK4jVBIgzMzliNuReZXBFGnXvsi80/SYohajn78YdpYI+XNpqL+A==}
+    engines: {node: '>= 18'}
+    peerDependencies:
+      '@redis/client': ^5.5.6
+
+  '@redis/client@5.5.6':
+    resolution: {integrity: sha512-M3Svdwt6oSfyfQdqEr0L2HOJH2vK7GgCFx1NfAQvpWAT4+ljoT1L5S5cKT3dA9NJrxrOPDkdoTPWJnIrGCOcmw==}
+    engines: {node: '>= 18'}
+
+  '@redis/json@5.5.6':
+    resolution: {integrity: sha512-AIsoe3SsGQagqAmSQHaqxEinm5oCWr7zxPWL90kKaEdLJ+zw8KBznf2i9oK0WUFP5pFssSQUXqnscQKe2amfDQ==}
+    engines: {node: '>= 18'}
+    peerDependencies:
+      '@redis/client': ^5.5.6
+
+  '@redis/search@5.5.6':
+    resolution: {integrity: sha512-JSqasYqO0mVcHL7oxvbySRBBZYRYhFl3W7f0Da7BW8M/r0Z9wCiVrdjnN4/mKBpWZkoJT/iuisLUdPGhpKxBew==}
+    engines: {node: '>= 18'}
+    peerDependencies:
+      '@redis/client': ^5.5.6
+
+  '@redis/time-series@5.5.6':
+    resolution: {integrity: sha512-jkpcgq3NOI3TX7xEAJ3JgesJTxAx7k0m6lNxNsYdEM8KOl+xj7GaB/0CbLkoricZDmFSEAz7ClA1iK9XkGHf+Q==}
+    engines: {node: '>= 18'}
+    peerDependencies:
+      '@redis/client': ^5.5.6
+
   '@rollup/plugin-babel@5.3.1':
     resolution: {integrity: sha512-WFfdLWU/xVWKeRQnKmIAQULUI7Il0gZnBIH/ZFO069wYIfPu+8zrfp/KMW0atmELoRDq8FbiP3VCss9MhCut7Q==}
     engines: {node: '>= 10.0.0'}
@@ -5528,6 +5576,10 @@ packages:
   clsx@2.1.1:
     resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
     engines: {node: '>=6'}
+
+  cluster-key-slot@1.1.2:
+    resolution: {integrity: sha512-RMr0FhtfXemyinomL4hrWcYJxmX6deFdCxpJzhDttxgO1+bcCnkk+9drydLVDmAMG7NE6aN/fl4F7ucU/90gAA==}
+    engines: {node: '>=0.10.0'}
 
   cmdk@1.0.4:
     resolution: {integrity: sha512-AnsjfHyHpQ/EFeAnG216WY7A5LiYCoZzCSygiLvfXC3H3LFGCprErteUcszaVluGOhuOTbJS3jWHrSDYPBBygg==}
@@ -8057,6 +8109,10 @@ packages:
   redent@3.0.0:
     resolution: {integrity: sha512-6tDA8g98We0zd0GvVeMT9arEOnTw9qM03L9cJXaCjrip1OO764RDBLBfrB4cwzNGDj5OA5ioymC9GkizgWJDUg==}
     engines: {node: '>=8'}
+
+  redis@5.5.6:
+    resolution: {integrity: sha512-hbpqBfcuhWHOS9YLNcXcJ4akNr7HFX61Dq3JuFZ9S7uU7C7kvnzuH2PDIXOP62A3eevvACoG8UacuXP3N07xdg==}
+    engines: {node: '>= 18'}
 
   redoc-express@2.1.0:
     resolution: {integrity: sha512-gq6FvghNirD3dCJ7w8Z6escXYHnU1Hk50baQsIeGunQQ9YRoy6qR/MjEOJtDEKaPNB2NgkIzQ9ESNX5/27zkDA==}
@@ -10861,6 +10917,15 @@ snapshots:
     dependencies:
       dotenv: 16.5.0
 
+  '@i4you/express-auth-middleware@1.0.0(@types/express@5.0.2)(@types/jsonwebtoken@9.0.9)(express@4.21.2)(jsonwebtoken@9.0.2)':
+    dependencies:
+      '@types/express': 5.0.2
+      '@types/jsonwebtoken': 9.0.9
+      express: 4.21.2
+      jsonwebtoken: 9.0.2
+
+  '@i4you/express-logger@1.0.2': {}
+
   '@i4you/http-errors@0.0.2':
     dependencies:
       dotenv: 16.5.0
@@ -10869,6 +10934,12 @@ snapshots:
     dependencies:
       '@bufbuild/protobuf': 2.5.1
       '@grpc/grpc-js': 1.13.4
+
+  '@i4you/shared@1.0.0': {}
+
+  '@i4you/ui@1.0.0':
+    dependencies:
+      react: 19.1.0
 
   '@img/sharp-darwin-arm64@0.34.2':
     optionalDependencies:
@@ -13022,6 +13093,26 @@ snapshots:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
 
+  '@redis/bloom@5.5.6(@redis/client@5.5.6)':
+    dependencies:
+      '@redis/client': 5.5.6
+
+  '@redis/client@5.5.6':
+    dependencies:
+      cluster-key-slot: 1.1.2
+
+  '@redis/json@5.5.6(@redis/client@5.5.6)':
+    dependencies:
+      '@redis/client': 5.5.6
+
+  '@redis/search@5.5.6(@redis/client@5.5.6)':
+    dependencies:
+      '@redis/client': 5.5.6
+
+  '@redis/time-series@5.5.6(@redis/client@5.5.6)':
+    dependencies:
+      '@redis/client': 5.5.6
+
   '@rollup/plugin-babel@5.3.1(@babel/core@7.27.3)(@types/babel__core@7.20.5)(rollup@2.79.2)':
     dependencies:
       '@babel/core': 7.27.3
@@ -14570,6 +14661,8 @@ snapshots:
   clone@1.0.4: {}
 
   clsx@2.1.1: {}
+
+  cluster-key-slot@1.1.2: {}
 
   cmdk@1.0.4(@types/react-dom@19.1.5(@types/react@19.1.6))(@types/react@19.1.6)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
@@ -17400,6 +17493,14 @@ snapshots:
     dependencies:
       indent-string: 4.0.0
       strip-indent: 3.0.0
+
+  redis@5.5.6:
+    dependencies:
+      '@redis/bloom': 5.5.6(@redis/client@5.5.6)
+      '@redis/client': 5.5.6
+      '@redis/json': 5.5.6(@redis/client@5.5.6)
+      '@redis/search': 5.5.6(@redis/client@5.5.6)
+      '@redis/time-series': 5.5.6(@redis/client@5.5.6)
 
   redoc-express@2.1.0: {}
 
