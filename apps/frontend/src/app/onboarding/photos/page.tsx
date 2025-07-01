@@ -10,27 +10,18 @@ export default function OnboardingPhotos() {
 
   const uploadPhoto = async (file: File) => {
     try {
-
       const { data, error } = await mediaService.getUploadUrl(file);
+      if (error) throw new Error('Failed to get upload URL');
 
-      if (error) {
-        throw new Error('Failed to get upload URL');
-      }
+      const { url, fields } = data;
 
-      const { url, key } = data;
-
-      const { error: uploadImageError } = await mediaService.uploadImage(file, url);
-
+      const { data: uploaded, error: uploadImageError } = await mediaService.uploadImage(file, url, fields);
       if (uploadImageError) {
-        console.log('Error uploading image:', uploadImageError);
+        console.error('Error uploading image:', uploadImageError);
         return;
       }
 
-      const bucketName = 'i4you-bucket';
-      const bucketRegion = 'ap-south-1';
-
-      const imageUrl = `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${key}`;
-
+      const imageUrl = uploaded.secure_url;
       addPhoto(imageUrl);
     } catch (error) {
       console.error('Error uploading photo:', error);

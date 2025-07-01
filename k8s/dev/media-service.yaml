@@ -33,6 +33,12 @@ spec:
               value: "KEY"
             - name: AWS_BUCKET_NAME
               value: "i4you-bucket"
+            - name: CLOUDINARY_CLOUD_NAME
+              value: "snapcart-website"
+            - name: CLOUDINARY_API_KEY
+              value: "415286569897134"
+            - name: CLOUDINARY_API_SECRET
+              value: "cNEdzuyNazOMmXPLLMf_9kCNsDo"
 
 ---
 apiVersion: v1

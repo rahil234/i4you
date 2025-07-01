@@ -10,12 +10,20 @@ class MediaService {
         .then(res => res.data),
     );
 
-  uploadImage = (file: File, url: string) =>
-    handleApi(() =>
-      axios
-        .put(url, file)
-        .then(res => res.data),
-    );
+  uploadImage = (file: File, url: string, fields: any) =>
+    handleApi(async () => {
+      const formData = new FormData();
+      formData.append('file', file);
+      Object.entries(fields).forEach(([key, value]) => {
+        formData.append(key, value as string);
+      });
+
+      const res = await axios
+        .post(url, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+      return res.data;
+    });
 }
 
 export default new MediaService();
