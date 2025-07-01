@@ -16,7 +16,7 @@ import mediaService from '@/services/media.service';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { LocationInput } from '@/components/location/location-input';
-import { User } from '@repo/shared';
+import { User } from '@i4you/shared';
 
 // Interest categories from the onboarding page
 const interestCategories = [
@@ -127,7 +127,6 @@ export default function UpdateProfilePage() {
     try {
       setError('');
 
-      // Show loading state
       const tempId = Date.now().toString();
       setFormData((prev) => ({
         ...prev,
@@ -135,27 +134,24 @@ export default function UpdateProfilePage() {
       }));
 
       const { data, error } = await mediaService.getUploadUrl(file);
-      if (error) {
-        throw new Error('Failed to get upload URL');
-      }
+      if (error) throw new Error('Failed to get upload URL');
 
-      const { url, key } = data;
-      const { error: uploadImageError } = await mediaService.uploadImage(file, url);
-      if (uploadImageError) {
-        throw new Error('Error uploading image');
-      }
+      const { url, fields } = data;
 
-      const bucketName = 'i4you-bucket';
-      const bucketRegion = 'ap-south-1';
-      const imageUrl = `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${key}`;
+      const { data: uploaded, error: uploadImageError } = await mediaService.uploadImage(
+        file,
+        url,
+        fields
+      );
+      if (uploadImageError) throw new Error('Error uploading image');
 
-      // Replace loading placeholder with actual image URL
+      const imageUrl = uploaded.secure_url;
+
       setFormData((prev) => ({
         ...prev,
         photos: prev.photos.map((p) => (p === `loading-${tempId}` ? imageUrl : p)),
       }));
     } catch (err) {
-      // Remove loading placeholder on error
       setFormData((prev) => ({
         ...prev,
         photos: prev.photos.filter((p) => !p.startsWith('loading-')),
