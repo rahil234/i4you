@@ -37,6 +37,14 @@ build:
             dest: .
       docker:
         dockerfile: Dockerfile.dev
+    - image: match-service-image
+      context: apps/services/match-service
+      sync:
+        manual:
+          - src: src/**/*
+            dest: .
+      docker:
+        dockerfile: Dockerfile.dev
     - image: chat-service-image
       context: apps/services/chat-service
       sync:
@@ -62,11 +70,23 @@ build:
     useBuildkit: true
     concurrency: 0
 manifests:
+  helm:
+    releases:
+      - name: strimzi-kafka-operator
+        remoteChart: strimzi/strimzi-kafka-operator
+        namespace: kafka
+        createNamespace: true
+        version: 0.46.1
+        setValues:
+          watchAnyNamespace: false
+          watchNamespaces[0]: kafka
   rawYaml:
+    - k8s/dev/kafka-namespace.yaml
     - k8s/dev/validate-service.yaml
     - k8s/dev/user-service.yaml
     - k8s/dev/auth-service.yaml
     - k8s/dev/media-service.yaml
+    - k8s/dev/match-service.yaml
     - k8s/dev/chat-service.yaml
     - k8s/dev/frontend.yaml
     - k8s/dev/nginx-socket-proxy.yaml
@@ -74,8 +94,34 @@ manifests:
     - k8s/dev/traefik-strip-path-middleware.yaml
     - k8s/dev/traefik-validate-middleware.yaml
     - k8s/dev/redis.yaml
+    - k8s/dev/kafka-kraft.yaml
 
 profiles:
+  - name: strimzi
+    build:
+      artifacts:
+      - image: validate-service-image
+        context: apps/services/validate-service
+        docker:
+          dockerfile: Dockerfile.dev
+      local:
+        push: false
+        useBuildkit: true
+        concurrency: 0
+    manifests:
+      rawYaml:
+          - k8s/dev/kafka-namespace.yaml
+      helm:
+        releases:
+          - name: strimzi-kafka-operator
+            remoteChart: strimzi/strimzi-kafka-operator
+            namespace: kafka
+            createNamespace: false
+            version: 0.46.1
+            setValues:
+              watchAnyNamespace: false
+              watchNamespaces[0]: kafka
+
   - name: production
     build:
       artifacts:
