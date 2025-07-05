@@ -6,14 +6,7 @@ import { connectDB } from '@/config/db.config';
 import setupSwaggerDocs, { swaggerSpec } from '@/config/swagger.config';
 import { errorHandlerMiddleware } from '@/middlwares/error-handler.middleware';
 import { requestLogger } from '@/middlwares/request-logger.middleware';
-import { connectRedis } from '@/config/redis.config';
-import { KafkaService } from '@/events/kafka/KafkaService';
-import { container } from '@/config/inversify.config';
-import { UserService } from '@/services/user.service';
-import { TYPES } from '@/types';
-
-const userService = container.get<UserService>(TYPES.UserService);
-const kafkaService = container.get<KafkaService>(TYPES.KafkaService);
+import { startKafkaListener } from './events/kafka/start-consumer';
 
 const app = express();
 
@@ -38,22 +31,15 @@ app.use(errorHandlerMiddleware);
 
 const startServer = async () => {
   await connectDB();
-  await connectRedis();
-  await kafkaService.connect().then(() => {
-    console.log('Kafka Producer connected successfully');
-    setInterval(() => {
-      userService
-        .likeUser('rahil', 'fathima')
-        .then(() => {
-          console.log('User like event emitted successfully');
-        })
-        .catch((err) => {
-          console.error('Error emitting user like event', err);
-        });
-    }, 2000);
-  });
+  startKafkaListener()
+    .then(() => {
+      console.log('Kafka listener started successfully');
+    })
+    .catch((err) => {
+      console.error('Failed to start Kafka listener:', err);
+    });
   app.listen(env.PORT, () => {
-    console.log('User Server running on port ', env.PORT);
+    console.log('Match Server running on port ', env.PORT);
   });
 };
 

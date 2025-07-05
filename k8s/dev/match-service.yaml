@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: match-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: match-service
+  template:
+    metadata:
+      labels:
+        app: match-service
+    spec:
+      containers:
+        - name: match-service
+          image: match-service-image:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 4005
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "4005"
+            - name: MONGODB_URI
+              value: "mongodb+srv://rahilsardar234:NOKCk3dcykTN0P32@i4you-cluster.kdpj0cj.mongodb.net/I4You-userDB"
+            - name: REDIS_HOST
+              value: "redis.redis-local.svc.cluster.local"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_PASSWORD
+              value: "password"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: match-service
+spec:
+  type: ClusterIP
+  selector:
+    app: match-service
+  ports:
+    - name: http
+      port: 4005
+      targetPort: 4005
+    - name: grpc
+      port: 50055
+      targetPort: 50055
