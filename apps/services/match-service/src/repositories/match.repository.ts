@@ -1,61 +1,58 @@
 import { MatchModel, MatchDocument } from '@/models/match.model';
-import IUserRepository from '@/repositories/interfaces/IMatchRepository';
 import { BaseRepository } from '@/repositories/base.repository';
+import IMatchRepository from '@/repositories/interfaces/IMatchRepository';
 import { injectable } from 'inversify';
+import mongoose from 'mongoose';
 
 @injectable()
 export class MatchRepository
   extends BaseRepository<MatchDocument>
-  implements IUserRepository
+  implements IMatchRepository
 {
   constructor() {
     super(MatchModel);
   }
 
-  async findByEmail(email: string): Promise<MatchDocument | null> {
-    return this.model.findOne({ email }).exec();
+  /**
+   * Create a new match between two users (sorted order).
+   */
+  async createMatch(userId1: string, userId2: string): Promise<MatchDocument> {
+    const [userA, userB] =
+      userId1 < userId2 ? [userId1, userId2] : [userId2, userId1];
+
+    const match = new MatchModel({
+      userA: new mongoose.Types.ObjectId(userA),
+      userB: new mongoose.Types.ObjectId(userB),
+      status: 'matched',
+    });
+
+    return await match.save();
   }
 
+  /**
+   * Get all matches for a given user.
+   */
   async getMatches(userId: string): Promise<MatchDocument[]> {
-    const user = await MatchModel.findById(userId);
-    const coords = user?.location?.coordinates;
-    const maxDistanceKm = user?.preferences?.distance;
-    const ageRange = user?.preferences?.ageRange;
-    const showMe = user?.preferences?.showMe;
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+    return await MatchModel.find({
+      status: 'matched',
+      $or: [{ userA: userObjectId }, { userB: userObjectId }],
+    }).exec();
+  }
 
-    if (!coords || !maxDistanceKm || !ageRange || !showMe) {
-      throw new Error('User location or preferences not found');
-    }
+  /**
+   * (Optional) Check if a match already exists
+   */
+  async isMatchExists(userId1: string, userId2: string): Promise<boolean> {
+    const [userA, userB] =
+      userId1 < userId2 ? [userId1, userId2] : [userId2, userId1];
 
-    const maxDistanceMeters = maxDistanceKm * 1000;
+    const match = await MatchModel.findOne({
+      userA,
+      userB,
+      status: 'matched',
+    });
 
-    const genderFilter =
-      showMe === 'all' ? { $in: ['male', 'female', 'other'] } : showMe;
-
-    return MatchModel.aggregate([
-      {
-        $geoNear: {
-          near: {
-            type: 'Point',
-            coordinates: coords,
-          },
-          distanceField: 'distance',
-          spherical: true,
-          query: {
-            _id: { $ne: user._id },
-            onboardingCompleted: true,
-          },
-        },
-      },
-      {
-        $match: {
-          distance: { $lte: maxDistanceMeters },
-          age: { $gte: ageRange[0], $lte: ageRange[1] },
-          gender: genderFilter,
-          // 'preferences.showMe':
-          //   user.gender === 'other' ? 'all' : { $in: [user.gender, 'all'] },
-        },
-      },
-    ]);
+    return !!match;
   }
 }

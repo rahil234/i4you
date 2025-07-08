@@ -1,4 +1,4 @@
-import { Kafka, Producer } from 'kafkajs';
+import { Kafka, logLevel, Producer } from 'kafkajs';
 import IKafkaService from './interfaces/IKafkaService';
 
 export class KafkaService implements IKafkaService {
@@ -8,6 +8,7 @@ export class KafkaService implements IKafkaService {
     const kafka = new Kafka({
       clientId: 'match-service',
       brokers: ['kafka-cluster-kafka-brokers.kafka.svc.cluster.local:9092'],
+      logLevel: logLevel.WARN,
     });
 
     this.producer = kafka.producer();

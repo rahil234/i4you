@@ -9,5 +9,5 @@ export const consumer = kafka.consumer({ groupId: 'match-service-group' });
 
 export const initKafkaConsumer = async () => {
   await consumer.connect();
-  await consumer.subscribe({ topic: 'user-events', fromBeginning: false });
+  await consumer.subscribe({ topic: 'user.events', fromBeginning: false });
 };

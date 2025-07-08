@@ -16,16 +16,7 @@ export class UserRepository
     return this.model.findOne({ email }).exec();
   }
 
-  // async getMatches(userId: string): Promise<UserDocument[]> {
-  //   console.log('Fetching matches for user:', userId);
-  //   return this.model
-  //     .find({ _id: { $ne: userId }, onboardingCompleted: true })
-  //     .exec();
-  // }
-
   async getMatches(userId: string): Promise<UserDocument[]> {
-    console.log('Fetching matches for user:', userId);
-
     const user = await UserModel.findById(userId);
     const coords = user?.location?.coordinates;
     const maxDistanceKm = user?.preferences?.distance;
@@ -41,7 +32,7 @@ export class UserRepository
     const genderFilter =
       showMe === 'all' ? { $in: ['male', 'female', 'other'] } : showMe;
 
-    const matches = await UserModel.aggregate([
+    return UserModel.aggregate([
       {
         $geoNear: {
           near: {
@@ -66,9 +57,5 @@ export class UserRepository
         },
       },
     ]);
-
-    console.log('Matches found:', matches);
-
-    return matches;
   }
 }

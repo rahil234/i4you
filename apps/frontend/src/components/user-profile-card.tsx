@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Heart, X, Star, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { motion, type PanInfo, useAnimation, useMotionValue, useTransform } from 'framer-motion';
+import { motion, type PanInfo, useAnimation, useMotionValue, useTransform } from 'motion/react';
 import useMatchesStore from '@/store/matchesStore';
 import { User } from '@/types';
 

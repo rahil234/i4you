@@ -35,6 +35,13 @@ class UserService {
         .patch('/user/me', { data })
         .then(res => res.data));
 
+  likeUser = (userId: string) =>
+    handleApi(() =>
+      api
+        .post(`/user/${userId}/like`)
+        .then(res => res.data),
+    );
+
   changePassword = (data: { currentPassword: string; newPassword: string }) =>
     handleApi(() =>
       api

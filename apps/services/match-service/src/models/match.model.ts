@@ -1,80 +1,23 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface MatchDocument extends Document {
-  name: string;
-  email: string;
-  password: string;
-  age: number;
-  gender: 'male' | 'female' | 'other';
-  bio: string;
-  photos: string[];
-  interests: string[];
-  preferences: {
-    ageRange: [number, number];
-    distance: number;
-    gender: 'male' | 'female' | 'other';
-    showMe: 'male' | 'female' | 'all';
-    lookingFor: 'casual' | 'relationship' | 'friendship' | 'all';
-  };
-  location: {
-    type: 'Point';
-    coordinates: [number, number];
-    displayName: string;
-  };
-  onboardingCompleted: boolean;
-  status: 'active' | 'suspended';
+  userA: mongoose.Types.ObjectId;
+  userB: mongoose.Types.ObjectId;
   createdAt: Date;
-  updatedAt: Date;
+  status: 'matched' | 'blocked';
 }
 
-const locationSchema = new Schema({
-  type: {
+const MatchSchema: Schema = new Schema<MatchDocument>({
+  userA: { type: Schema.Types.ObjectId, required: true },
+  userB: { type: Schema.Types.ObjectId, required: true },
+  createdAt: { type: Date, default: Date.now },
+  status: {
     type: String,
-    enum: ['Point'],
-    default: 'Point',
-  },
-  coordinates: {
-    type: [Number],
-  },
-  displayName: {
-    type: String,
+    enum: ['matched', 'blocked'],
+    default: 'matched',
   },
 });
 
-const userSchema = new Schema<MatchDocument>(
-  {
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    age: { type: Number, required: true },
-    gender: { type: String, required: true, enum: ['male', 'female', 'other'] },
-    bio: { type: String, required: true },
-    photos: { type: [String], required: true },
-    interests: { type: [String], required: true },
-    preferences: {
-      ageRange: { type: [Number], required: true },
-      distance: { type: Number, required: true },
-      gender: {
-        type: String,
-        required: true,
-        enum: ['male', 'female', 'other'],
-      },
-      showMe: { type: String, required: true, enum: ['male', 'female', 'all'] },
-      lookingFor: {
-        type: String,
-        required: true,
-        enum: ['casual', 'relationship', 'friendship', 'all'],
-      },
-    },
-    location: locationSchema,
-    onboardingCompleted: { type: Boolean, default: false },
-    status: { type: String, enum: ['active', 'suspended'], default: 'active' },
-  },
-  {
-    timestamps: true,
-  }
-);
+MatchSchema.index({ userA: 1, userB: 1 }, { unique: true });
 
-userSchema.index({ location: '2dsphere' });
-
-export const MatchModel = mongoose.model<MatchDocument>('User', userSchema);
+export const MatchModel = mongoose.model<MatchDocument>('Match', MatchSchema);

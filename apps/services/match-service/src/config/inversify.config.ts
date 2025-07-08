@@ -6,10 +6,13 @@ import { KafkaService } from '@/events/kafka/KafkaService';
 import IKafkaService from '@/events/kafka/interfaces/IKafkaService';
 import IMatchRepository from '@/repositories/interfaces/IMatchRepository';
 import { MatchRepository } from '@/repositories/match.repository';
+import ILikeRepository from '@/repositories/interfaces/ILikeRepository';
+import { LikeRepository } from '@/repositories/like.repository';
 
 const container = new Container();
 
 container.bind<IMatchRepository>(TYPES.MatchRepository).to(MatchRepository);
+container.bind<ILikeRepository>(TYPES.LikeRepository).to(LikeRepository);
 container.bind<MatchService>(TYPES.MatchService).to(MatchService);
 container.bind<MatchController>(TYPES.MatchController).to(MatchController);
 

@@ -42,6 +42,11 @@ spec:
         tls: false
         configuration:
           externalTrafficPolicy: Local
+          brokers:
+            - broker: 0
+              advertisedHost: 198.19.249.2
+              advertisedPort: 31092
+              nodePort: 31092
       - name: tls
         port: 9093
         type: internal
@@ -59,5 +64,5 @@ spec:
       default.replication.factor: 1
       min.insync.replicas: 1
   entityOperator:
-    topicOperator: {}
-    userOperator: {}
+    topicOperator: { }
+    userOperator: { }

@@ -13,7 +13,6 @@ export const startKafkaListener = async () => {
       const key = message.key?.toString();
       const payload = JSON.parse(message.value?.toString() || '{}');
 
-      console.log(`Received message with key: ${key}`, payload);
       if (key === 'user_liked') {
         await matchService.handleLike(payload.userId, payload.likedUserId);
       }

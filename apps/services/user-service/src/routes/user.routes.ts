@@ -148,6 +148,25 @@ router.get(
 
 /**
  * @swagger
+ * /user/:userId/like:
+ *   get:
+ *     summary: Get all user's
+ *     tags:
+ *       - User
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Get all users
+ */
+router.post(
+  '/:userId/like',
+  authenticateAndAuthorizeMiddleware(['member']),
+  userController.likeUser
+);
+
+/**
+ * @swagger
  * /api/v1/user/:userId/status:
  *   patch:
  *     summary: Update user status

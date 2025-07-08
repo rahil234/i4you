@@ -7,8 +7,13 @@ import setupSwaggerDocs, { swaggerSpec } from '@/config/swagger.config';
 import { errorHandlerMiddleware } from '@/middlwares/error-handler.middleware';
 import { requestLogger } from '@/middlwares/request-logger.middleware';
 import { startKafkaListener } from './events/kafka/start-consumer';
+import { container } from './config/inversify.config';
+import { KafkaService } from '@/events/kafka/KafkaService';
+import { TYPES } from '@/types';
 
 const app = express();
+
+const kafkaService = container.get<KafkaService>(TYPES.KafkaService);
 
 app.use(express.json());
 
@@ -31,13 +36,21 @@ app.use(errorHandlerMiddleware);
 
 const startServer = async () => {
   await connectDB();
-  startKafkaListener()
-    .then(() => {
-      console.log('Kafka listener started successfully');
-    })
-    .catch((err) => {
-      console.error('Failed to start Kafka listener:', err);
-    });
+  startKafkaListener().catch((err) => {
+    console.error('Failed to start Kafka listener:', err);
+  });
+  await kafkaService.connect().then(() => {
+    console.log('Kafka Producer connected successfully');
+    //   setInterval(() => {
+    //     kafkaService.emit('match.events', 'match_found', {
+    //       user1: '12345',
+    //       user2: '67890',
+    //       matchId: 'match12345',
+    //       timestamp: new Date().toISOString(),
+    //     });
+    //     console.log('Emitted match event to Kafka');
+    //   }, 5000);
+  });
   app.listen(env.PORT, () => {
     console.log('Match Server running on port ', env.PORT);
   });

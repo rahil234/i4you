@@ -10,7 +10,7 @@ import MatchesResponseDTO from '@/dtos/matchs.response.dtos';
 import AdminDTO from '@/dtos/admin.dtos';
 import ICacheService from '@/services/interfaces/ICacheService';
 import IUserService from '@/services/interfaces/IUserService';
-import IKafkaService from '@/events/interfaces/IKafkaService';
+import IKafkaService from '@/events/kafka/interfaces/IKafkaService';
 
 @injectable()
 export class UserService implements IUserService {
@@ -54,7 +54,7 @@ export class UserService implements IUserService {
       throw new BadRequestError('User not found');
     }
 
-    await this.cacheService.del(`user:${id}`);
+    await this.cacheService.del(`member:${id}`);
 
     const newUser = await this.userRepository.update(id, {
       ...data,
@@ -86,7 +86,7 @@ export class UserService implements IUserService {
       throw new BadRequestError('Status is required');
     }
 
-    await this.cacheService.del(`user:${userId}`);
+    await this.cacheService.del(`member:${userId}`);
 
     await this.userRepository.update(userId, {
       status: status as 'active' | 'suspended',
@@ -106,15 +106,44 @@ export class UserService implements IUserService {
   }
 
   async likeUser(userId: string, likedUserId: string) {
-    // maybe call userRepository.likeUser(...)
+    console.log(`User ${userId} liked user ${likedUserId}`);
 
-    await this.kafkaService.emit('user-events', 'user_liked', {
+    await this.kafkaService.emit('user.events', 'user_liked', {
       userId,
       likedUserId,
       timestamp: new Date().toISOString(),
     });
 
     return { message: 'User liked successfully' };
+  }
+
+  async userMatched(userA: string, userB: string) {
+    const user1 = await this.userRepository.findById(userA);
+    const user2 = await this.userRepository.findById(userB);
+
+    if (!user1 || !user2) {
+      throw new BadRequestError('One or both users not found');
+    }
+
+    console.log(`User ${user1.name} matched with user ${user2.id}`);
+
+    await this.kafkaService.emit('notification.events', 'user_matched', {
+      userId: user1.id,
+      matchedUserId: user2.id,
+      name: user2.name,
+      photo: user2.photos[0],
+      timestamp: new Date().toISOString(),
+    });
+
+    await this.kafkaService.emit('notification.events', 'user_matched', {
+      userId: user2.id,
+      matchedUserId: user1.id,
+      name: user1.name,
+      photo: user1.photos[0],
+      timestamp: new Date().toISOString(),
+    });
+
+    return;
   }
 
   async onBoarding(userId: string, data: OnboardingRequestDTO) {

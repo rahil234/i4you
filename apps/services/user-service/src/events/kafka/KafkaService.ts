@@ -1,5 +1,5 @@
 import { Kafka, Producer } from 'kafkajs';
-import IKafkaService from '@/events/interfaces/IKafkaService';
+import IKafkaService from '@/events/kafka/interfaces/IKafkaService';
 
 export class KafkaService implements IKafkaService {
   private producer: Producer;

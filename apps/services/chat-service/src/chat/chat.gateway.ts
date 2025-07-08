@@ -1,12 +1,14 @@
 import {
   ConnectedSocket,
   MessageBody,
+  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
+import { AuthenticatedSocket } from '../types/authenticated-socket';
 
 @WebSocketGateway({
   cors: {
@@ -14,11 +16,25 @@ import { ChatService } from './chat.service';
     credentials: true,
   },
 })
-export class ChatGateway {
+export class ChatGateway implements OnGatewayInit {
   @WebSocketServer()
   server: Server;
 
   constructor(private readonly chatService: ChatService) {}
+
+  afterInit(server: Server) {
+    server.use((socket, next) => {
+      const userId = socket.handshake.headers['x-user-id'] as string;
+      const userRole = socket.handshake.headers['x-user-role'] as string;
+      if (!userId || !userRole) {
+        return next(
+          new Error('Missing x-user-id header or x-user-role header'),
+        );
+      }
+      (socket as AuthenticatedSocket).user = { id: userId, role: userRole };
+      next();
+    });
+  }
 
   @SubscribeMessage('join')
   handleConnection(client: Socket) {
@@ -32,10 +48,10 @@ export class ChatGateway {
 
   @SubscribeMessage('createRoom')
   async handleCreateRoom(
-    @ConnectedSocket() client: Socket,
+    @ConnectedSocket() client: AuthenticatedSocket,
     @MessageBody() user2: string,
   ) {
-    const user1 = client.handshake.headers['x-user-id'] as string;
+    const user1 = client.user.id;
 
     console.log('User1:', user1, 'User2:', user2);
 
@@ -105,8 +121,7 @@ export class ChatGateway {
   // Send a message to a specific room
   @SubscribeMessage('roomMessage')
   handleRoomMessage(
-    client: Socket,
-    payload: { room: string; sender: string; message: string },
+    @MessageBody() payload: { room: string; sender: string; message: string },
   ): void {
     this.server.to(payload.room).emit('roomMessage', {
       sender: payload.sender,
