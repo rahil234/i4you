@@ -13,7 +13,7 @@ export function UserLayout({ children, className, hideNavigation = false }: User
     <div className={cn("min-h-screen bg-gray-50", className)}>
       <main
         className={cn(
-          hideNavigation && "pb-0",
+          hideNavigation && "pb-0 overflow-hidden",
         )}
       >
         {children}

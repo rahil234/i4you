@@ -1,4 +1,4 @@
-import { User as BaseUser } from '@repo/shared';
+import { User as BaseUser } from '@i4you/shared';
 
 // User types
 export interface User extends Omit<BaseUser, 'location'> {

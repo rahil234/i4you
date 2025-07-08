@@ -6,6 +6,8 @@ import ChatService from '@/services/chat.service';
 import { Chat, Message } from '@/types';
 import useAuthStore from '@/store/authStore';
 import { User } from '@i4you/shared';
+import { StateCreator } from 'zustand/index';
+import { devtools } from 'zustand/middleware';
 
 export type ChatUser = Partial<User> & {
   id: string;
@@ -61,22 +63,11 @@ const chat1 = {
   unreadCount: 0,
 };
 
-const useChatStore = create<ChatStore>((set, get) => {
-  const initialState = {
-    chats: [chat1],
-    messages: {},
-    currentUser: useAuthStore.getState().user as ChatUser,
-    connectionStatus: 'connecting' as 'connecting' | 'connected' | 'disconnected' | 'error',
-    isTyping: {},
-    isLoadingChats: true,
-    chatsError: null,
-  };
-
+const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set, get) => {
   let wsClient;
 
   wsClient = getSocketClient();
 
-  // Message handler
   wsClient.onMessage((message) => {
     if (message.type === 'message') {
       const newMessage: Message = {
@@ -109,7 +100,6 @@ const useChatStore = create<ChatStore>((set, get) => {
     }
   });
 
-  // Status handler
   wsClient.onStatusChange((status) => {
     set({ connectionStatus: status });
   });
@@ -118,24 +108,31 @@ const useChatStore = create<ChatStore>((set, get) => {
     wsClient.connect();
   }
 
+  console.log('chat store initialized');
+
   // Fetch chats asynchronously
   (async () => {
-    try {
-      const { data, error } = await ChatService.fetchChats();
-      if (error) {
-        set({ isLoadingChats: false, chatsError: error });
-      } else {
-        set({ chats: data, isLoadingChats: false });
-      }
-    } catch (err) {
-      set({ isLoadingChats: false, chatsError: 'Failed to fetch chats' });
+    const { data, error } = await ChatService.fetchChats();
+    if (error) {
+      set({ isLoadingChats: false, chatsError: error });
+    } else {
+      set({ chats: data, isLoadingChats: false });
     }
   })();
 
   return {
-    ...initialState,
+    chats: [chat1],
+    messages: {},
+    currentUser: useAuthStore.getState().user as ChatUser,
+    connectionStatus: 'connecting' as 'connecting' | 'connected' | 'disconnected' | 'error',
+    isTyping: {},
+    isLoadingChats: true,
+    chatsError: null,
+
     setChats: (chats) => set({ chats }),
+
     setCurrentUser: (user) => set({ currentUser: user }),
+
     joinChat: (chatId) => {
       if (wsClient.send({ type: 'ping' })) {
         wsClient.joinRoom(chatId);
@@ -148,6 +145,7 @@ const useChatStore = create<ChatStore>((set, get) => {
         });
       }
     },
+
     sendMessage: (chatId, content) => {
 
       if (!content.trim() || !get().currentUser) return;
@@ -189,6 +187,7 @@ const useChatStore = create<ChatStore>((set, get) => {
         }));
       }, 1000);
     },
+
     markAsRead: (chatId) => {
       set((state) => ({
         chats: state.chats?.map((chat) =>
@@ -204,13 +203,24 @@ const useChatStore = create<ChatStore>((set, get) => {
 
       wsClient.send({ type: 'read_receipt', chatId });
     },
+
     startTyping: (chatId) => {
       wsClient.send({ type: 'typing', chatId, isTyping: true });
     },
+
     stopTyping: (chatId) => {
       wsClient.send({ type: 'typing', chatId, isTyping: false });
     },
   };
-});
+};
+
+const ChatStore = create<ChatStore>();
+
+export const useChatStore = ChatStore(
+  devtools(
+    chatStore,
+    { name: 'auth-store', enabled: true },
+  ),
+);
 
 export default useChatStore;

@@ -137,6 +137,7 @@ export function getSocketClient() {
     socketClient = new SocketIOClient('https://i4you.local.net', {
       path: '/socket.io/chat',
       transports: ['websocket'],
+      withCredentials: true,
     });
   }
   return socketClient;

@@ -17,12 +17,12 @@ spec:
           image: chat-service-image:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 4003
+            - containerPort: 4004
           env:
             - name: NODE_ENV
               value: "production"
             - name: PORT
-              value: "4003"
+              value: "4004"
             - name: MONGODB_URI
               value: "mongodb+srv://rahilsardar234:NOKCk3dcykTN0P32@i4you-cluster.kdpj0cj.mongodb.net/I4You-chatDB"
 ---
@@ -35,5 +35,5 @@ spec:
   selector:
     app: chat-service
   ports:
-    - port: 4003
-      targetPort: 4003
+    - port: 4004
+      targetPort: 4004

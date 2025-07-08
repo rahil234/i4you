@@ -1,9 +1,7 @@
 import { cookies } from 'next/headers';
 import { getUser } from '@/lib/auth/get-user';
-import { refreshToken } from '@/lib/auth/refresh-token';
 import { redirect } from 'next/navigation';
-import { UserData } from '@/types';
-import { User } from '@repo/shared';
+import { User } from '@i4you/shared';
 
 export async function getUserData(): Promise<User> {
   try {

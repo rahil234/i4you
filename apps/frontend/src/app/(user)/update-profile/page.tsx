@@ -18,7 +18,6 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { LocationInput } from '@/components/location/location-input';
 import { User } from '@i4you/shared';
 
-// Interest categories from the onboarding page
 const interestCategories = [
   {
     name: 'Lifestyle',
@@ -492,6 +491,5 @@ export default function UpdateProfilePage() {
         </Tabs>
       </div>
     </UserLayout>
-  )
-    ;
+  );
 }
