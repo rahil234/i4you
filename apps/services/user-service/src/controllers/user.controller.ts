@@ -68,6 +68,23 @@ export class UserController {
     res.status(200).json(matches);
   });
 
+  likeUser = handleAsync(async (req, res) => {
+    const { userId } = req.params;
+
+    if (!userId) {
+      res.status(401).json({ message: 'Unauthorized' });
+      return;
+    }
+
+    const match = await this.userService.likeUser(userId, req.user.id);
+
+    if (match) {
+      res.status(200).json(match);
+    } else {
+      res.status(404).json({ message: 'No match found' });
+    }
+  });
+
   onBoarding = handleAsync(async (req, res) => {
     const { data } = req.body;
 

@@ -5,6 +5,7 @@ import userService from '@/services/user.service';
 
 interface MatchesStore {
   matches: Match[];
+  newMatches: Match[];
   potentialMatches: User[];
   loading: boolean;
   error: string | null;
@@ -13,10 +14,13 @@ interface MatchesStore {
   likeUser: (userId: string) => Promise<Match | null>;
   dislikeUser: (userId: string) => Promise<void>;
   unmatchUser: (matchId: string) => Promise<void>;
+  pushNewMatch: (newMatch: Match) => void;
+  closeMatch: () => void;
 }
 
 const matchStore: StateCreator<MatchesStore, [['zustand/devtools', never]]> = (set, get) => ({
   matches: [],
+  newMatches: [],
   potentialMatches: [],
   loading: true,
   error: null,
@@ -127,41 +131,47 @@ const matchStore: StateCreator<MatchesStore, [['zustand/devtools', never]]> = (s
   },
 
   likeUser: async (userId) => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
-      const isMatch = Math.random() < 0.2;
+    const { data, error } = await userService.likeUser(userId);
 
-      if (isMatch) {
-        const matchedUser = get().potentialMatches.find((user) => user.id === userId);
-
-        if (!matchedUser) return null;
-
-        const newMatch: Match = {
-          id: `match-${Date.now()}`,
-          userId: 'user1',
-          matchedUserId: userId,
-          createdAt: new Date().toISOString(),
-          user: matchedUser,
-        };
-
-        set((state) => ({
-          matches: [...state.matches, newMatch],
-          potentialMatches: state.potentialMatches.filter((user) => user.id !== userId),
-        }));
-
-        return newMatch;
-      } else {
-        set((state) => ({
-          potentialMatches: state.potentialMatches.filter((user) => user.id !== userId),
-        }), undefined, 'matchStore/likeUser');
-
-        return null;
-      }
-    } catch (error) {
+    if (error) {
+      console.log('Error liking user:', error);
       set({ error: 'Failed to like user' });
       return null;
     }
+
+    console.log('Like user response:', data);
+
+    // const isMatch = Math.random() < 0.2;
+
+    // if (isMatch) {
+    //   const matchedUser = get().potentialMatches.find((user) => user.id === userId);
+    //
+    //   if (!matchedUser) return null;
+
+    // const newMatch: Match = {
+    //   id: `match-${Date.now()}`,
+    //   userId: 'user1',
+    //   matchedUserId: userId,
+    //   createdAt: new Date().toISOString(),
+    //   user: matchedUser,
+    // };
+
+    // set((state) => ({
+    //   matches: [...state.matches, newMatch],
+    //   potentialMatches: state.potentialMatches.filter((user) => user.id !== userId),
+    // }));
+
+    //   return null;
+    // } else {
+    // }
+
+    set((state) => ({
+      potentialMatches: state.potentialMatches.filter((user) => user.id !== userId),
+    }), undefined, 'matchStore/likeUser');
+
+    return null;
   },
 
   dislikeUser: async (userId) => {
@@ -187,6 +197,25 @@ const matchStore: StateCreator<MatchesStore, [['zustand/devtools', never]]> = (s
       set({ error: 'Failed to unmatch user' });
     }
   },
+
+  pushNewMatch: (newMatch: Match) => {
+    set((state) => ({
+      newMatches: [...state.newMatches, newMatch],
+    }), undefined, 'matchStore/pushNewMatch');
+    console.log('🥰Pushed new match to store:', newMatch);
+    // setTimeout(() => {
+    //   set((state) => ({
+    //     newMatches: state.newMatches.filter((match) => match.id !== newMatch.id),
+    //   }), undefined, 'matchStore/pushNewMatch/cleanup');
+    // }, 5000);
+  },
+
+  closeMatch: () => {
+    set(() => ({
+      newMatches: get().newMatches.slice(1),
+    }), undefined, 'matchStore/closeMatch');
+  },
+
 });
 
 export const useMatchesStore = create<MatchesStore>()(

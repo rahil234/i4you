@@ -37,8 +37,24 @@ build:
             dest: .
       docker:
         dockerfile: Dockerfile.dev
+    - image: match-service-image
+      context: apps/services/match-service
+      sync:
+        manual:
+          - src: src/**/*
+            dest: .
+      docker:
+        dockerfile: Dockerfile.dev
     - image: chat-service-image
       context: apps/services/chat-service
+      sync:
+        manual:
+          - src: src/**/*
+            dest: .
+      docker:
+        dockerfile: Dockerfile.dev
+    - image: notification-service-image
+      context: apps/services/notification-service
       sync:
         manual:
           - src: src/**/*
@@ -63,11 +79,14 @@ build:
     concurrency: 0
 manifests:
   rawYaml:
+    - k8s/dev/kafka-topics.yaml
     - k8s/dev/validate-service.yaml
     - k8s/dev/user-service.yaml
     - k8s/dev/auth-service.yaml
     - k8s/dev/media-service.yaml
+    - k8s/dev/match-service.yaml
     - k8s/dev/chat-service.yaml
+    - k8s/dev/notification-service.yaml
     - k8s/dev/frontend.yaml
     - k8s/dev/nginx-socket-proxy.yaml
     - k8s/dev/traefik-ingress.yaml

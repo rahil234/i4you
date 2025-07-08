@@ -8,8 +8,6 @@ if (!API_URL) {
   throw new Error('NEXT_PRIVATE_API_URL is not defined');
 }
 
-console.log(`API_URL: ${API_URL}`);
-
 export async function getUser(accessToken: string): Promise<User> {
   try {
 

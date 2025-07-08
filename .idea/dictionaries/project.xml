@@ -1,8 +1,14 @@
 <component name="ProjectDictionaryState">
   <dictionary name="project">
     <words>
+      <w>buildkit</w>
+      <w>dest</w>
+      <w>insync</w>
+      <w>jbod</w>
       <w>konghq</w>
+      <w>nodeport</w>
       <w>skaffold</w>
+      <w>strimzi</w>
       <w>traefik</w>
     </words>
   </dictionary>

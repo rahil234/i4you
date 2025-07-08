@@ -47,6 +47,14 @@ spec:
                 port:
                   number: 4003
 
+          - path: /api/v1/chat
+            pathType: Prefix
+            backend:
+              service:
+                name: chat-service
+                port:
+                  number: 4004
+
           - path: /
             pathType: Prefix
             backend:

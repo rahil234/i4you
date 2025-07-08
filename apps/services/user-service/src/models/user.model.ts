@@ -12,7 +12,6 @@ export interface UserDocument extends Document {
   preferences: {
     ageRange: [number, number];
     distance: number;
-    gender: 'male' | 'female' | 'other';
     showMe: 'male' | 'female' | 'all';
     lookingFor: 'casual' | 'relationship' | 'friendship' | 'all';
   };

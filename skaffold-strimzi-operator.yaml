@@ -1,0 +1,20 @@
+#nonk8s
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: i4you-strimzi-operator
+manifests:
+  helm:
+    releases:
+      - name: strimzi-kafka-operator
+        remoteChart: strimzi/strimzi-kafka-operator
+        namespace: kafka
+        createNamespace: true
+        version: 0.46.1
+        setValues:
+          watchAnyNamespace: false
+          watchNamespaces[0]: kafka
+
+  rawYaml:
+    - k8s/dev/kafka-namespace.yaml
+    - k8s/dev/kafka-kraft.yaml

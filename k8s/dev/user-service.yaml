@@ -16,6 +16,14 @@ spec:
         - name: user-service
           image: user-service-image:latest
           imagePullPolicy: IfNotPresent
+#          livenessProbe:
+#            httpGet:
+#              path: /health
+#              port: 4002
+#            initialDelaySeconds: 5
+#            periodSeconds: 5
+#            failureThreshold: 3
+#            timeoutSeconds: 2
           ports:
             - containerPort: 4002
           env:
@@ -33,6 +41,12 @@ spec:
               value: "your_jwt_secret"
             - name: MONGODB_URI
               value: "mongodb+srv://rahilsardar234:NOKCk3dcykTN0P32@i4you-cluster.kdpj0cj.mongodb.net/I4You-userDB"
+            - name: REDIS_HOST
+              value: "redis.redis-local.svc.cluster.local"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_PASSWORD
+              value: "password"
 ---
 apiVersion: v1
 kind: Service

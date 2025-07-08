@@ -8,9 +8,11 @@ import Logo from '/public/favicon.ico';
 import { UserLayout } from '@/components/user-layout';
 import useMatchesStore from '@/store/matchesStore';
 import { UserProfileCard } from '@/components/user-profile-card';
+import useAuthStore from '@/store/authStore';
 
 export default function DiscoverPage() {
-  const { potentialMatches, fetchPotentialMatches, loading } = useMatchesStore();
+  const { user } = useAuthStore();
+  const { potentialMatches, fetchPotentialMatches, loading, newMatches, closeMatch } = useMatchesStore();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [matchAnimation, setMatchAnimation] = useState(false);
   const [currentMatch, setCurrentMatch] = useState<any>(null);
@@ -18,6 +20,15 @@ export default function DiscoverPage() {
   useEffect(() => {
     fetchPotentialMatches();
   }, [fetchPotentialMatches]);
+
+  useEffect(() => {
+    if (newMatches.length > 0) {
+      setCurrentMatch(newMatches[0]);
+      setMatchAnimation(true);
+    } else {
+      setMatchAnimation(false);
+    }
+  }, [newMatches]);
 
   const handleMatch = (match: any) => {
     setCurrentMatch(match);
@@ -28,9 +39,19 @@ export default function DiscoverPage() {
     }, 3000);
   };
 
-  const closeMatchAnimation = () => {
-    setMatchAnimation(false);
-    setCurrentIndex((prevIndex) => prevIndex + 1);
+  const handleSendMessage = () => {
+    // if (currentMatch) {
+    //   const matchData: Match = {
+    //     userAId: user.id,
+    //     userBId: currentMatch.id,
+    //     name: currentMatch.name,
+    //     photo: currentMatch.photo,
+    //     timestamp: new Date(),
+    //   };
+    //   useMatchesStore.getState().sendMatchNotification(matchData);
+    //   closeMatchAnimation();
+    // }
+    console.log('Sending message to match:', currentMatch, 'needs implementation');
   };
 
   useEffect(() => {
@@ -60,7 +81,7 @@ export default function DiscoverPage() {
           <h1 className="text-2xl text-black font-bold">I4You</h1>
         </div>
       </div>
-      <div className="flex flex-col items-center max-w-md mx-auto pb-20 pt-4 px-4 min-h-[calc(100vh-64px)]">
+      <div className="flex flex-col items-center max-w-md mx-auto pt-4 px-4">
 
         <div className="relative w-full h-[calc(100vh-200px)] flex items-center justify-center">
           <AnimatePresence>
@@ -85,23 +106,23 @@ export default function DiscoverPage() {
         {matchAnimation && currentMatch && (
           <div
             className="fixed inset-0 i4you-gradient flex flex-col items-center justify-center z-50 match-animation"
-            onClick={closeMatchAnimation}
+            onClick={closeMatch}
           >
             <div className="text-center p-8">
               <h2 className="text-4xl font-bold text-white mb-4">It's a Match!</h2>
-              <p className="text-xl text-white mb-8">You and {currentMatch.user.name} liked each other</p>
+              <p className="text-xl text-white mb-8">You and {currentMatch?.name} liked each other</p>
               <div className="flex justify-center gap-8">
                 <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white">
                   <img
-                    src="/placeholder.svg?height=96&width=96"
+                    src={user?.photos[0]}
                     alt="Your profile"
                     className="w-full h-full object-cover"
                   />
                 </div>
                 <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white">
                   <img
-                    src={currentMatch.user.photos[0] || '/placeholder.svg'}
-                    alt={currentMatch.user.name}
+                    src={currentMatch.photo}
+                    alt={currentMatch.name}
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -109,13 +130,16 @@ export default function DiscoverPage() {
               <div className="mt-8 space-y-4">
                 <button
                   className="bg-white text-primary px-8 py-3 rounded-full font-semibold shadow-lg w-full"
-                  onClick={closeMatchAnimation}
+                  onClick={handleSendMessage}
                 >
                   Send a Message
                 </button>
                 <button
                   className="bg-transparent text-white border border-white px-8 py-3 rounded-full font-semibold w-full"
-                  onClick={closeMatchAnimation}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    closeMatch();
+                  }}
                 >
                   Keep Swiping
                 </button>

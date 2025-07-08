@@ -6,9 +6,10 @@ import {
 } from '@i4you/proto-files/generated/user/v2/user';
 import { UserService } from '@/services/user.service';
 import { TYPES } from '@/types';
+import IUserGrpcService from '@/services/interfaces/IUserGrpcService';
 
 @injectable()
-export class UserGrpcService {
+export class UserGrpcService implements IUserGrpcService{
   constructor(@inject(TYPES.UserService) private userService: UserService) {}
 
   getUser: handleUnaryCall<GetUserByIdRequest, GetUserByIdResponse> = async (

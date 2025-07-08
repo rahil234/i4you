@@ -4,7 +4,7 @@ import { devtools, persist } from 'zustand/middleware';
 import AuthService from '@/services/auth.service';
 import UserService from '@/services/user.service';
 import { StateCreator } from 'zustand/index';
-import { User } from '@repo/shared';
+import { User } from '@i4you/shared';
 
 interface AuthStore extends AuthState {
   login: (email: string, password: string) => Promise<void>;
@@ -21,7 +21,7 @@ interface AuthStore extends AuthState {
   setState: (state: Partial<AuthState>) => void;
 }
 
-const authStore: StateCreator<AuthStore, [['zustand/devtools', never]]> = (set, getState) => ({
+const authStore: StateCreator<AuthStore> = (set, getState) => ({
   user: null,
   accessToken: null,
   isAuthenticated: true,

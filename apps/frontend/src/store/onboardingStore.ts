@@ -71,7 +71,7 @@ interface OnboardingStore {
 const STEP_ORDER: OnboardingStep[] = ['about', 'photos', 'interests', 'preferences', 'location', 'complete'];
 
 
-const onboardingStore: StateCreator<OnboardingStore, [['zustand/devtools', never]]> = (set, get) => ({
+const onboardingStore: StateCreator<OnboardingStore> = (set, get) => ({
   currentStep: 'photos',
 
   setCurrentStep: (step) => set({ currentStep: step }),
