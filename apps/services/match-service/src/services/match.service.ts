@@ -3,14 +3,81 @@ import { TYPES } from '@/types';
 import ILikeRepository from '@/repositories/interfaces/ILikeRepository';
 import IMatchRepository from '@/repositories/interfaces/IMatchRepository';
 import IKafkaService from '@/events/kafka/interfaces/IKafkaService';
+import { UserGrpcService } from '@/services/user.grpc.service';
+import { User } from '@i4you/proto-files/generated/user/v2/user';
+
+export interface Match {
+  id: string;
+  matchedUserId: string;
+  createdAt: string;
+  user: Omit<
+    Partial<User>,
+    | 'password'
+    | 'email'
+    | 'onboardingCompleted'
+    | 'gender'
+    | 'status'
+    | 'createdAt'
+    | 'updatedAt'
+  >;
+}
 
 @injectable()
 export class MatchService {
   constructor(
     @inject(TYPES.KafkaService) private kafkaService: IKafkaService,
     @inject(TYPES.MatchRepository) private matchRepository: IMatchRepository,
-    @inject(TYPES.LikeRepository) private likeRepository: ILikeRepository
+    @inject(TYPES.LikeRepository) private likeRepository: ILikeRepository,
+    @inject(TYPES.UserGrpcService) private userGrpcService: UserGrpcService
   ) {}
+
+  async getMatches(userId: string): Promise<Match[]> {
+    console.log(`Fetching matches for user ${userId}`);
+
+    try {
+      const matches = await this.matchRepository.getMatches(userId);
+      console.log(`Found ${matches.length} matches for user ${userId}`);
+
+      console.log(
+        `Fetching user details for ${matches.length} matches...`,
+        matches
+      );
+
+      const populatedMatches = await Promise.all(
+        matches.map(async (match) => {
+          const matchId = String(
+            String(match.userA) === userId ? match.userB : match.userA
+          );
+
+          const userData = await this.userGrpcService.findUserById(matchId);
+
+          console.log(`Fetched user data for match ${matchId}:`, userData.id);
+
+          return {
+            id: match.id,
+            matchedUserId: matchId,
+            createdAt: match.createdAt.toISOString(),
+            user: {
+              id: userData.user?.id,
+              name: userData.user?.name,
+              age: userData.user?.age,
+              bio: userData.user?.bio,
+              location: userData.user?.location,
+              photos: userData.user?.photos || [],
+              interests: userData.user?.interests || [],
+            },
+          };
+        })
+      );
+
+      console.log('populatedMatches:', populatedMatches);
+
+      return populatedMatches;
+    } catch (error) {
+      console.error('Error fetching matches:', error);
+      throw error;
+    }
+  }
 
   async handleLike(userId: string, likedUserId: string): Promise<void> {
     console.log(`User ${userId} liked user ${likedUserId}`);

@@ -55,6 +55,14 @@ spec:
                 port:
                   number: 4004
 
+          - path: /api/v1/match
+            pathType: Prefix
+            backend:
+              service:
+                name: match-service
+                port:
+                  number: 4005
+
           - path: /
             pathType: Prefix
             backend:

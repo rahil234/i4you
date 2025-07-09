@@ -10,13 +10,14 @@ export class MatchController {
   constructor(@inject(TYPES.MatchService) private matchService: MatchService) {}
 
   getMatches = handleAsync(async (req, res) => {
-    const { id: userId } = req.user;
+    const userId = req.user.id;
 
     if (!userId) {
       throw createError.Unauthorized('User ID is required');
     }
 
-    const matches = await this.matchService.handleLike('s', 's');
+    const matches = await this.matchService.getMatches(userId);
+
     res.status(200).json(matches);
   });
 }
