@@ -21,6 +21,8 @@ export class UserService implements IUserService {
     @inject(TYPES.CacheService) private cacheService: ICacheService
   ) {}
 
+  async getUserById(id: string, role: 'admin'): Promise<AdminDTO>;
+  async getUserById(id: string, role?: 'member'): Promise<UserDTO>;
   async getUserById(id: string, role: UserJwtPayload['role'] = 'member') {
     const cacheKey = `${role === 'admin' ? 'admin' : 'member'}:${id}`;
     const cached = await this.cacheService.get<any>(cacheKey);
@@ -37,7 +39,9 @@ export class UserService implements IUserService {
 
     console.log(`Get user ${id} with role ${role}`, data);
 
-    return role === 'admin' ? new AdminDTO(data) : new UserDTO(data);
+    return role === 'admin'
+      ? (new AdminDTO(data) as AdminDTO)
+      : (new UserDTO(data) as UserDTO);
   }
 
   async getUsers() {

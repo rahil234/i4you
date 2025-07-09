@@ -1,70 +1,27 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { UserLayout } from "@/components/user-layout"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Search, MessageCircle } from "lucide-react"
-import Link from "next/link"
-
-// Sample data for matched users
-const matchedUsers = [
-  {
-    id: "user1",
-    name: "Jessica",
-    age: 28,
-    location: "New York",
-    matchedOn: "2 days ago",
-    avatar: "/placeholder.svg?height=60&width=60",
-    initials: "JP",
-  },
-  {
-    id: "user2",
-    name: "Michael",
-    age: 32,
-    location: "Boston",
-    matchedOn: "1 week ago",
-    avatar: "/placeholder.svg?height=60&width=60",
-    initials: "MC",
-  },
-  {
-    id: "user3",
-    name: "Sophia",
-    age: 26,
-    location: "Chicago",
-    matchedOn: "3 days ago",
-    avatar: "/placeholder.svg?height=60&width=60",
-    initials: "SR",
-  },
-  {
-    id: "user4",
-    name: "David",
-    age: 31,
-    location: "Los Angeles",
-    matchedOn: "1 day ago",
-    avatar: "/placeholder.svg?height=60&width=60",
-    initials: "DW",
-  },
-  {
-    id: "user5",
-    name: "Emma",
-    age: 27,
-    location: "Seattle",
-    matchedOn: "5 days ago",
-    avatar: "/placeholder.svg?height=60&width=60",
-    initials: "ET",
-  },
-]
+import { useEffect, useState } from 'react';
+import { UserLayout } from '@/components/user-layout';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Search, MessageCircle } from 'lucide-react';
+import Link from 'next/link';
+import useMatchesStore from '@/store/matchesStore';
 
 export default function MatchesPage() {
-  const [searchQuery, setSearchQuery] = useState("")
+  const [searchQuery, setSearchQuery] = useState('');
+  const { matches, fetchMatches } = useMatchesStore();
 
-  const filteredMatches = matchedUsers.filter(
-    (user) =>
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.location.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
+  useEffect(() => {
+    fetchMatches();
+  }, [fetchMatches]);
+
+  const filteredMatches = matches.filter(
+    (match) =>
+      (match.user?.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (match.user?.location || '').toLowerCase().includes(searchQuery.toLowerCase()),
+  );
 
   return (
     <UserLayout>
@@ -85,25 +42,26 @@ export default function MatchesPage() {
 
         <div className="space-y-4">
           {filteredMatches.length > 0 ? (
-            filteredMatches.map((user) => (
-              <div key={user.id} className="flex items-center justify-between bg-white rounded-lg p-4 shadow-sm border">
+            filteredMatches.map((match) => (
+              <div key={match.user.id}
+                   className="flex items-center justify-between bg-white rounded-lg p-4 shadow-sm border">
                 <div className="flex items-center space-x-4">
                   <Avatar className="h-16 w-16">
-                    <AvatarImage src={user.avatar} alt={user.name} />
-                    <AvatarFallback>{user.initials}</AvatarFallback>
+                    <AvatarImage src={match.user.photos[0]} alt={match.user.name} />
+                    <AvatarFallback>{match.user.name}</AvatarFallback>
                   </Avatar>
 
                   <div>
                     <h3 className="font-medium">
-                      {user.name}, {user.age}
+                      {match.user.name}, {match.user.age}
                     </h3>
-                    <p className="text-sm text-muted-foreground">{user.location}</p>
-                    <p className="text-xs text-muted-foreground">Matched {user.matchedOn}</p>
+                    <p className="text-sm text-muted-foreground">{match.user.location}</p>
+                    <p className="text-xs text-muted-foreground">Matched {match.createdAt}</p>
                   </div>
                 </div>
 
                 <Button variant="outline" size="icon" className="h-10 w-10 rounded-full" asChild>
-                  <Link href={`/messages/${user.id}`}>
+                  <Link href={`/messages/${match.user.id}`}>
                     <MessageCircle className="h-5 w-5 text-teal-500" />
                     <span className="sr-only">Message</span>
                   </Link>
@@ -118,6 +76,6 @@ export default function MatchesPage() {
         </div>
       </div>
     </UserLayout>
-  )
+  );
 }
 

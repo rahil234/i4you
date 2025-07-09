@@ -8,6 +8,8 @@ import IMatchRepository from '@/repositories/interfaces/IMatchRepository';
 import { MatchRepository } from '@/repositories/match.repository';
 import ILikeRepository from '@/repositories/interfaces/ILikeRepository';
 import { LikeRepository } from '@/repositories/like.repository';
+import { UserGrpcService } from '@/services/user.grpc.service';
+import { GrpcClientProvider } from '@/providers/grpc.client.provider';
 
 const container = new Container();
 
@@ -19,5 +21,11 @@ container.bind<MatchController>(TYPES.MatchController).to(MatchController);
 container
   .bind<IKafkaService>(TYPES.KafkaService)
   .toConstantValue(new KafkaService());
+
+container.bind<UserGrpcService>(TYPES.UserGrpcService).to(UserGrpcService);
+container
+  .bind<GrpcClientProvider>(TYPES.GrpcClientProvider)
+  .to(GrpcClientProvider)
+  .inSingletonScope();
 
 export { container };

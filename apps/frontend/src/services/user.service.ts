@@ -9,7 +9,7 @@ class UserService {
         .then(res => res.data),
     );
 
-  getMyMatches = () => handleApi(() =>
+  getPotentialMatches = () => handleApi(() =>
     api
       .get('/user/matches')
       .then(res => res.data),

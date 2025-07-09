@@ -65,7 +65,7 @@ const matchController = container.get<MatchController>(TYPES.MatchController);
  *                         description: User age
  */
 router.get(
-  '/matches',
+  '/',
   authenticateAndAuthorizeMiddleware(['member']),
   matchController.getMatches
 );

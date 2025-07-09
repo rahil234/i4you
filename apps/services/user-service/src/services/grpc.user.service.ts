@@ -1,65 +1,86 @@
-import { inject, injectable } from 'inversify';
-import { handleUnaryCall } from '@grpc/grpc-js';
-import {
-  GetUserByIdRequest,
-  GetUserByIdResponse,
-} from '@i4you/proto-files/generated/user/v2/user';
+import { UserServiceServer } from '@i4you/proto-files/generated/user/v2/user';
 import { UserService } from '@/services/user.service';
-import { TYPES } from '@/types';
-import IUserGrpcService from '@/services/interfaces/IUserGrpcService';
 
-@injectable()
-export class UserGrpcService implements IUserGrpcService{
-  constructor(@inject(TYPES.UserService) private userService: UserService) {}
-
-  getUser: handleUnaryCall<GetUserByIdRequest, GetUserByIdResponse> = async (
-    call,
-    callback
-  ) => {
+export const userGrpcService = (
+  userService: UserService
+): UserServiceServer => ({
+  getUserById: async (call, callback) => {
     try {
-      console.log('Received request to get user with ID:', call.request.id);
-      const user = await this.userService.getUserById(
-        call.request.id,
-        'member'
-      );
-
+      const user = await userService.getUserById(call.request.id, 'member');
       if (!user) {
-        callback(
-          {
-            code: 13,
-            message: 'User not found',
-          } as any,
-          null
-        );
+        callback({ code: 13, message: 'User not found' } as any, null);
         return;
       }
 
-      const userResponse: GetUserByIdResponse = {
-        id: user.id.toString(),
+      const userData = {
+        id: user.id,
         name: user.name,
         email: user.email,
-        phone: 'NO PHONE',
-        address: 'No Address',
         createdAt: user.joined,
-        updatedAt: user.joined, //needs fix
+        updatedAt: user.joined,
+        age: user.age,
+        bio: user.bio,
+        photos: user.photos,
+        interests: user.interests,
+        preferences: user.preferences,
+        gender: user.gender,
+        status: user.status,
       };
 
-      callback(null, userResponse);
-    } catch (error: any) {
+      console.log('getUserByEmail response:', userData);
+
+      callback(null, {
+        user: userData,
+      });
+    } catch (err: any) {
       callback(
-        {
-          code: 13,
-          message: error,
-          stack: error.stack,
-        } as any,
+        { code: 13, message: err.message, stack: err.stack } as any,
         null
       );
     }
-  };
+  },
 
-  handlers() {
-    return {
-      getUser: this.getUser,
-    };
-  }
-}
+  getUserByEmail: async (call, callback) => {
+    try {
+      const user = await userService.getUserById(call.request.email, 'member');
+      if (!user) {
+        callback({ code: 13, message: 'User not found' } as any, null);
+        return;
+      }
+
+      const userData = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        address: user.address,
+        createdAt: user.joined,
+        updatedAt: user.joined,
+        age: user.age,
+        bio: user.bio,
+        location: user.location || {
+          type: 'Point',
+          coordinates: [0, 0],
+          displayName: 'Unknown Location',
+        },
+        photos: user.photos,
+        interests: user.interests,
+        preferences: user.preferences,
+        gender: user.gender,
+        status: user.status,
+        onboardingCompleted: user.onboarding || true,
+      };
+
+      console.log('getUserByEmail response:', userData);
+
+      callback(null, {
+        user: userData,
+      });
+    } catch (err: any) {
+      callback(
+        { code: 13, message: err.message, stack: err.stack } as any,
+        null
+      );
+    }
+  },
+});

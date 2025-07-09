@@ -40,10 +40,18 @@ export interface UserPreferences {
 // Match types
 export interface Match {
   id: string;
-  userId: string;
   matchedUserId: string;
   createdAt: string;
-  user: User;
+  user: Omit<
+    Partial<User>,
+    | 'password'
+    | 'email'
+    | 'onboardingCompleted'
+    | 'gender'
+    | 'status'
+    | 'createdAt'
+    | 'updatedAt'
+  >;
 }
 
 // API response types
