@@ -1,6 +1,6 @@
 {
   "name": "@i4you/proto-files",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "type": "commonjs",
   "exports": {
@@ -32,7 +32,11 @@
     "typescript": "^5.8.3"
   },
   "files": [
-    "dist"
+    "dist",
+    "src",
+    "buf.gen.yaml",
+    "buf.yaml",
+    "generated"
   ],
   "author": "Rahil234",
   "license": "ISC"
