@@ -6,4 +6,6 @@ export const TYPES = {
   CacheService: Symbol.for('CacheService'),
   GrpcUserService: Symbol.for('GrpcUserService'),
   KafkaService: Symbol.for('KafkaService'),
+  UserGrpcService: Symbol.for('UserGrpcService'),
+  GrpcClientProvider: Symbol.for('GrpcClientProvider'),
 };

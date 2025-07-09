@@ -18,7 +18,7 @@
     "@i4you/express-auth-middleware": "latest",
     "@i4you/express-logger": "latest",
     "@i4you/http-errors": "latest",
-    "@i4you/proto-files": "latest",
+    "@i4you/proto-files": "1.0.3",
     "@protobuf-ts/runtime": "^2.9.5",
     "@protobuf-ts/runtime-rpc": "^2.9.5",
     "@trpc/server": "^10.45.2",

@@ -1,7 +1,6 @@
 import express from 'express';
 
 import { env } from '@/config/index';
-import userRoutes from '@/routes/user.routes';
 import { connectDB } from '@/config/db.config';
 import setupSwaggerDocs, { swaggerSpec } from '@/config/swagger.config';
 import { errorHandlerMiddleware } from '@/middlwares/error-handler.middleware';
@@ -10,6 +9,7 @@ import { startKafkaListener } from './events/kafka/start-consumer';
 import { container } from './config/inversify.config';
 import { KafkaService } from '@/events/kafka/KafkaService';
 import { TYPES } from '@/types';
+import matchRoutes from '@/routes/match.routes';
 
 const app = express();
 
@@ -28,7 +28,7 @@ app.get('/health', (_req, res) => {
   res.send('User Service is up and running');
 });
 
-app.use('/', userRoutes);
+app.use('/', matchRoutes);
 
 setupSwaggerDocs(app);
 

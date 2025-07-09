@@ -3,17 +3,18 @@ import { Server, ServerCredentials } from '@grpc/grpc-js';
 import { UserServiceService } from '@i4you/proto-files/generated/user/v2/user';
 
 import { env } from '@/config/env.config';
-import { UserGrpcService } from '@/services/grpc.user.service';
+import { userGrpcService } from '@/services/grpc.user.service';
 import { container } from '@/config/inversify.config';
 import { TYPES } from '@/types';
+import { UserService } from '@/services/user.service';
 
-const userService = container.get(TYPES.GrpcUserService) as UserGrpcService;
+const userService = container.get(TYPES.UserService) as UserService;
 
 function startServer() {
   const { GRPC_PORT } = env;
 
   const server = new Server();
-  server.addService(UserServiceService, userService.handlers());
+  server.addService(UserServiceService, userGrpcService(userService));
   server.bindAsync(
     `0.0.0.0:${GRPC_PORT}`,
     ServerCredentials.createInsecure(),
