@@ -24,7 +24,7 @@ spec:
             - name: PORT
               value: "4001"
             - name: APP_URL
-              value: "https://i4you.ddns.net"
+              value: "https://i4you.local.net"
             - name: USER_GRPC_SERVER_URL
               value: "user-service:50051"
             - name: JWT_SECRET

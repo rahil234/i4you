@@ -21,13 +21,15 @@ export const userGrpcService = (
         age: user.age,
         bio: user.bio,
         photos: user.photos,
-        interests: user.interests,
+        interests: user.interests || [],
+        password: '',
+        onboardingCompleted: user.onboarding || true,
         preferences: user.preferences,
         gender: user.gender,
         status: user.status,
       };
 
-      console.log('getUserByEmail response:', userData);
+      // console.log('getUserByEmail response:', userData);
 
       callback(null, {
         user: userData,
@@ -52,23 +54,17 @@ export const userGrpcService = (
         id: user.id,
         name: user.name,
         email: user.email,
-        phone: user.phone,
-        address: user.address,
         createdAt: user.joined,
         updatedAt: user.joined,
         age: user.age,
         bio: user.bio,
-        location: user.location || {
-          type: 'Point',
-          coordinates: [0, 0],
-          displayName: 'Unknown Location',
-        },
         photos: user.photos,
-        interests: user.interests,
+        interests: user.interests || [],
+        password: '',
+        onboardingCompleted: user.onboarding || true,
         preferences: user.preferences,
         gender: user.gender,
         status: user.status,
-        onboardingCompleted: user.onboarding || true,
       };
 
       console.log('getUserByEmail response:', userData);

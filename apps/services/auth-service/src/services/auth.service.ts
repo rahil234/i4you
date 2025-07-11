@@ -159,7 +159,9 @@ export class AuthService {
 
     const resetToken = generateResetToken({ sub: user.id });
 
-    const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
+    const APP_URL = env.APP_URL;
+
+    const resetLink = `${APP_URL}/reset-password?token=${resetToken}`;
 
     await this.mailService.sendMail({
       to: user.email,
@@ -246,6 +248,10 @@ export class AuthService {
       throw createError.BadRequest('User not found. Please register first.');
     }
 
+    if (user.status === 'suspended') {
+      throw new SuspendedUserError();
+    }
+
     const accessToken = generateAccessToken({
       sub: user._id,
       role: 'member',
@@ -287,7 +293,9 @@ export class AuthService {
     throw new ValidationError('NOT IMPLEMENTED');
   }
 
-  async refreshToken(token: string): Promise<LoginResponseDTO> {
+  async refreshToken(
+    token: string
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     const { sub: userId, role } = verifyRefreshToken(token);
 
     if (!userId) {
@@ -322,10 +330,6 @@ export class AuthService {
       role,
     });
 
-    return new LoginResponseDTO(accessToken, refreshToken, {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-    });
+    return { accessToken, refreshToken };
   }
 }

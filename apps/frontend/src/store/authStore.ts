@@ -16,12 +16,11 @@ interface AuthStore extends AuthState {
   register: (name: string, email: string, password: string) => Promise<void>;
   updateUser: (user: Partial<User>) => Promise<void>;
   logout: () => Promise<void>;
-  clearState: () => Promise<void>;
   refreshToken: () => Promise<string>;
   setState: (state: Partial<AuthState>) => void;
 }
 
-const authStore: StateCreator<AuthStore> = (set, getState) => ({
+const authStore: StateCreator<AuthStore, [['zustand/devtools', never], ['zustand/persist', unknown]]> = (set, getState) => ({
   user: null,
   accessToken: null,
   isAuthenticated: true,
@@ -73,7 +72,7 @@ const authStore: StateCreator<AuthStore> = (set, getState) => ({
       user,
       isAuthenticated: true,
       isLoading: false,
-    });
+    }, undefined, 'authStore/googleAuthLogin/success');
   },
 
   facebookAuthLogin: async (token) => {
@@ -174,8 +173,13 @@ const authStore: StateCreator<AuthStore> = (set, getState) => ({
       set({ error: error, isLoading: false });
       return;
     }
-    await getState().clearState();
-    set({ isAuthenticated: false, isLoading: false, user: null });
+    set({
+      user: null,
+      isAuthenticated: false,
+      isLoading: false,
+      error: null,
+      signUpError: null,
+    }, undefined, 'authStore/logout/success');
     console.log('Logged out');
   },
 
@@ -203,21 +207,10 @@ const authStore: StateCreator<AuthStore> = (set, getState) => ({
   setState: ({ isLoading, isAuthenticated, user }) => {
     set({ isLoading, isAuthenticated, user });
   },
-
-  clearState: async () => {
-    set({
-      user: null,
-      isAuthenticated: false,
-      isLoading: false,
-      error: null,
-      signUpError: null,
-    });
-  },
 });
 
-const AuthStore = create<AuthStore>();
 
-export const useAuthStore = AuthStore(
+export const useAuthStore = create<AuthStore>()(
   devtools(
     persist(
       authStore,
