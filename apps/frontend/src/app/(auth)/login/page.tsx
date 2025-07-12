@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
-import { Flame, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Flame, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -31,6 +31,7 @@ export default function LoginPage() {
   const [errors, setErrors] = useState<Partial<Record<keyof LoginForm, string>>>({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const { login, isLoading, error } = useAuthStore();
 
@@ -96,8 +97,8 @@ export default function LoginPage() {
 
         <div className="space-y-4">
           <div className="flex flex-col gap-4">
-            <GoogleLoginButton type={'login'}/>
-            <FacebookLoginButton type={'login'}/>
+            <GoogleLoginButton type={'login'} />
+            <FacebookLoginButton type={'login'} />
           </div>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
@@ -132,20 +133,29 @@ export default function LoginPage() {
                 Forgot password?
               </Link>
             </div>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="••••••••"
-              value={formData.password}
-              onChange={handleInputChange}
-              className={`py-6 ${errors.password && isSubmitted ? 'border-destructive' : ''}`}
-            />
+            <div className="relative">
+              <Input
+                id="password"
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="••••••••"
+                value={formData.password}
+                onChange={handleInputChange}
+                className={`py-6 pr-12 ${errors.password && isSubmitted ? 'border-destructive' : ''}`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute inset-y-0 right-3 flex items-center text-muted-foreground hover:text-foreground"
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
+            </div>
             {errors.password && isSubmitted && (
               <p className="text-sm text-destructive">{errors.password}</p>
             )}
           </div>
-
           {error && <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>}
 
           <Button

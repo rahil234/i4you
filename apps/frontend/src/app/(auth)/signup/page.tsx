@@ -6,39 +6,51 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Flame, Loader2 } from 'lucide-react';
+import { Flame, Loader2, Eye, EyeOff } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { useAuthStore } from '@/store/authStore';
 import { z } from 'zod';
 import GoogleLoginButton from '@/components/auth/google-login-button';
 import FacebookLoginButton from '@/components/auth/facebook-login-button';
 
-const signupSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters long'),
-  email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters long'),
-});
+const signupSchema = z
+  .object({
+    name: z.string().min(2, 'Name must be at least 2 characters long'),
+    email: z.string().email('Please enter a valid email address'),
+    password: z.string().min(8, 'Password must be at least 8 characters long'),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  });
 
 type SignupForm = z.infer<typeof signupSchema>;
 
 export default function SignupPage() {
-  const [formData, setFormData] = useState<SignupForm>({ name: '', email: '', password: '' });
+  const [formData, setFormData] = useState<SignupForm>({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
   const [errors, setErrors] = useState<Partial<Record<keyof SignupForm, string>>>({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
 
   const { register, isLoading, success: storeSuccess, error, signUpError } = useAuthStore();
 
   const resetState = () => {
-    setFormData({ name: '', email: '', password: '' });
+    setFormData({ name: '', email: '', password: '', confirmPassword: '' });
     setErrors({});
     setSuccess(null);
     setIsSubmitted(false);
     setIsFormValid(false);
   };
 
-  // Validate form
   const validateForm = () => {
     const result = signupSchema.safeParse(formData);
 
@@ -56,7 +68,6 @@ export default function SignupPage() {
     }
   };
 
-  // Validate only after submission or input changes post-submission
   useEffect(() => {
     if (isSubmitted) {
       validateForm();
@@ -114,8 +125,8 @@ export default function SignupPage() {
 
         <div className="space-y-4">
           <div className="flex flex-col gap-4">
-            <GoogleLoginButton type={'signup'} />
-            <FacebookLoginButton type={'signup'} />
+            <GoogleLoginButton type="signup" />
+            <FacebookLoginButton type="signup" />
           </div>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
@@ -161,15 +172,25 @@ export default function SignupPage() {
 
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="••••••••"
-              value={formData.password}
-              onChange={handleInputChange}
-              className={`py-6 ${errors.password && isSubmitted ? 'border-destructive' : ''}`}
-            />
+            <div className="relative">
+              <Input
+                id="password"
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="••••••••"
+                value={formData.password}
+                onChange={handleInputChange}
+                className={`py-6 pr-12 ${errors.password && isSubmitted ? 'border-destructive' : ''}`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute inset-y-0 right-3 flex items-center text-muted-foreground hover:text-foreground"
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
+            </div>
             {errors.password && isSubmitted ? (
               <p className="text-sm text-destructive">{errors.password}</p>
             ) : (
@@ -177,11 +198,41 @@ export default function SignupPage() {
             )}
           </div>
 
+          <div className="space-y-2">
+            <Label htmlFor="confirmPassword">Confirm Password</Label>
+            <div className="relative">
+              <Input
+                id="confirmPassword"
+                name="confirmPassword"
+                type={showConfirmPassword ? 'text' : 'password'}
+                placeholder="••••••••"
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
+                className={`py-6 pr-12 ${errors.confirmPassword && isSubmitted ? 'border-destructive' : ''}`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                className="absolute inset-y-0 right-3 flex items-center text-muted-foreground hover:text-foreground"
+                tabIndex={-1}
+              >
+                {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
+            </div>
+            {errors.confirmPassword && isSubmitted && (
+              <p className="text-sm text-destructive">{errors.confirmPassword}</p>
+            )}
+          </div>
+
           {(signUpError || error) && (
-            <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{signUpError || error}</div>
+            <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+              {signUpError || error}
+            </div>
           )}
 
-          {success && <div className="rounded-md bg-success/10 p-3 text-sm text-success">{success}</div>}
+          {success && (
+            <div className="rounded-md bg-green-100 p-3 text-sm text-green-600">{success}</div>
+          )}
 
           <Button
             className="w-full py-6 i4you-gradient hover:opacity-90 transition-opacity"
