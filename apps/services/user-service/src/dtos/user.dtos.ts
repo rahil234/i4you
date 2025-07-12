@@ -5,6 +5,7 @@ class UserDTO implements Omit<User, 'location'> {
   name: string;
   email: string;
   age: number;
+  avatar?: string;
   gender: 'male' | 'female' | 'other';
   bio: string;
   photos: string[];
@@ -28,18 +29,19 @@ class UserDTO implements Omit<User, 'location'> {
     this.id = user._id;
     this.name = user.name;
     this.email = user.email;
-    this.role = 'member';
+    this.photos = user.photos;
+    this.avatar = user.avatar || user.photos[0] || '';
     this.status = user.status;
     this.age = user.age;
     this.gender = user.gender;
-    this.bio = user.bio;
-    this.photos = user.photos;
     this.interests = user.interests;
     this.preferences = user.preferences;
+    this.bio = user.bio;
     this.phone = user.phone;
     this.address = user.address;
     this.joined = user.createdAt;
     this.onboarding = user.onboardingCompleted ? undefined : true;
+    this.role = 'member';
 
     this.location = user.location?.displayName;
 
