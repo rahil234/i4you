@@ -46,66 +46,61 @@ export class ChatGateway implements OnGatewayInit {
     console.log('Client disconnected:', client.id);
   }
 
-  @SubscribeMessage('createRoom')
-  async handleCreateRoom(
-    @ConnectedSocket() client: AuthenticatedSocket,
-    @MessageBody() user2: string,
-  ) {
-    const user1 = client.user.id;
-
-    console.log('User1:', user1, 'User2:', user2);
-
-    let chat = await this.chatService.findChatByParticipants(user1, user2);
-
-    if (!chat) {
-      console.log('Creating new chat for participants:', user1, user2);
-      chat = await this.chatService.createChat({
-        participants: [user1, user2],
-        messages: [],
-      });
-    } else {
-      console.log('Chat already exists:', chat);
-    }
-
-    await client.join(chat._id);
-    client.emit('joinedRoom', `You have joined room: ${chat._id}`);
-    this.server.to(chat._id).emit('roomMessage', {
-      sender: 'System',
-      message: `${client.id} has joined the room.`,
-    });
-
-    console.log(`Client ${client.id} joined chat room: ${chat.id}`);
-  }
+  // @SubscribeMessage('createRoom')
+  // async handleCreateRoom(
+  //   @ConnectedSocket() client: AuthenticatedSocket,
+  //   @MessageBody('chatId') chatId: string,
+  //   @Headers('x-user-id') userId: string,
+  // ) {
+  //   console.log('User1:', userId, 'User2:', chatId);
+  //
+  //   let chat = await this.chatService.findChatByParticipants(userId, chatId);
+  //
+  //   if (!chat) {
+  //     console.log('Creating new chat for participants:', userId, chatId);
+  //     chat = await this.chatService.createChat({
+  //       participants: [userId, chatId],
+  //       messages: [],
+  //     });
+  //   } else {
+  //     console.log('Chat already exists:', chat);
+  //   }
+  //
+  //   await client.join(chat._id);
+  //   client.emit('joinedRoom', `You have joined room: ${chat._id}`);
+  //   this.server.to(chat._id).emit('roomMessage', {
+  //     sender: 'System',
+  //     message: `${client.id} has joined the room.`,
+  //   });
+  //
+  //   console.log(`Client ${client.id} joined chat room: ${chat.id}`);
+  // }
 
   @SubscribeMessage('joinRoom')
   async handleJoinRoom(
     @ConnectedSocket() client: Socket,
-    @MessageBody() user2: string,
+    @MessageBody() chatId: string,
   ) {
-    const user1 = client.handshake.headers['x-user-id'] as string;
+    const userId = client.handshake.headers['x-user-id'] as string;
 
-    console.log('User1:', user1, 'User2:', user2);
-
-    let chat = await this.chatService.findChatByParticipants(user1, user2);
+    let chat = await this.chatService.FindChatById(chatId);
 
     if (!chat) {
-      console.log('Creating new chat for participants:', user1, user2);
+      console.log('Creating new chat for user:', userId, 'and chatId:', chatId);
       chat = await this.chatService.createChat({
-        participants: [user1, user2],
+        participants: [userId, chatId],
         messages: [],
       });
-    } else {
-      console.log('Chat already exists:', chat);
     }
 
-    await client.join(chat._id);
-    client.emit('joinedRoom', `You have joined room: ${chat._id}`);
-    this.server.to(chat._id).emit('roomMessage', {
-      sender: 'System',
-      message: `${client.id} has joined the room.`,
-    });
+    await client.join(chat._id.toString());
 
-    console.log(`Client ${client.id} joined chat room: ${chat.id}`);
+    client.emit('joinedRoom', `You have joined room: ${chat._id.toString()}`);
+
+    client.to(chat._id.toString()).emit('roomMessage', {
+      sender: 'System',
+      message: `${userId} has joined the room.`,
+    });
   }
 
   @SubscribeMessage('leaveRoom')
@@ -118,28 +113,53 @@ export class ChatGateway implements OnGatewayInit {
     });
   }
 
-  // Send a message to a specific room
-  @SubscribeMessage('roomMessage')
-  handleRoomMessage(
-    @MessageBody() payload: { room: string; sender: string; message: string },
-  ): void {
-    this.server.to(payload.room).emit('roomMessage', {
-      sender: payload.sender,
-      message: payload.message,
-    });
-  }
-
   @SubscribeMessage('message')
-  handleMessage(
+  async handleMessage(
     @ConnectedSocket() client: Socket,
     @MessageBody()
     payload: {
-      sender: string;
-      message: string;
+      content: string;
       chatId: string;
+      newChat?: boolean;
     },
-  ): void {
+  ): Promise<void> {
+    if (!payload.chatId || !payload.content) {
+      console.error('Invalid message payload:', payload);
+      return;
+    }
+    const userId = client.handshake.headers['x-user-id'] as string;
+
+    if (payload.newChat) {
+      console.log('Creating new chat for message:', payload);
+      const chat = await this.chatService.createChat({
+        participants: [userId, payload.chatId],
+        messages: [],
+      });
+      client.emit('newChat', chat);
+    }
+
     console.log('Received message:', payload);
-    client.to(payload.chatId).emit('message', payload);
+    client.to(payload.chatId).emit('message', {
+      ...payload,
+      sender: userId,
+      timestamp: new Date().toISOString(),
+    });
+  }
+
+  @SubscribeMessage('typing')
+  handleTyping(
+    @MessageBody()
+    payload: {
+      chatId: string;
+      isTyping: boolean;
+    },
+    @ConnectedSocket() socket: Socket,
+  ): void {
+    const userId = socket.handshake.headers['x-user-id'] as string;
+
+    socket.to(payload.chatId).emit('typing', {
+      sender: userId,
+      isTyping: payload.isTyping,
+    });
   }
 }

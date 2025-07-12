@@ -3,127 +3,151 @@
 import { create } from 'zustand';
 import { getSocketClient } from '@/lib/websocket';
 import ChatService from '@/services/chat.service';
-import { Chat, Message } from '@/types';
-import useAuthStore from '@/store/authStore';
-import { User } from '@i4you/shared';
+import { Message } from '@/types';
 import { StateCreator } from 'zustand/index';
 import { devtools } from 'zustand/middleware';
+import chatService from '@/services/chat.service';
+import AuthStore from '@/store/authStore';
 
-export type ChatUser = Partial<User> & {
+export type ChatUser = {
   id: string;
-  initials?: string;
-  avatar: string;
-  lastActive?: string;
-  isOnline?: boolean;
-  lastMessage?: Message;
+  participant: {
+    id: string;
+    name: string;
+    initials?: string;
+    avatar: string;
+    lastActive?: string;
+    isOnline?: boolean;
+    lastMessage?: Message;
+  };
+}
+
+export interface ChatPreview {
+  id: string;
+  participant: {
+    id: string;
+    name: string;
+    avatar: string;
+    initials?: string;
+    isOnline?: boolean;
+    lastActive?: string;
+  };
+  messages?: Message[];
+  unreadCount: number;
 }
 
 interface ChatStore {
-  chats: Chat[];
+  chats: ChatPreview[];
   messages: Record<string, Message[]>;
-  currentUser: ChatUser;
+  currentChat: ChatUser | null;
   connectionStatus: 'connected' | 'disconnected' | 'error' | 'connecting';
   isTyping: Record<string, boolean>;
   isLoadingChats: boolean;
   chatsError: string | null;
-  setChats: (chats: Chat[]) => void;
-  setCurrentUser: (user: ChatUser) => void;
-  joinChat: (chatId: string) => void;
-  sendMessage: (chatId: string, content: string) => void;
+  setChats: (chats: ChatPreview[]) => void;
+  setCurrentChat: (user: ChatUser) => void;
+  initiateChatUser: (userId: string) => void;
+  joinChat: (chatId: string) => boolean;
+  leaveChat: (chatId: string) => boolean;
+  sendMessage: (chatId: string, content: string, newChat: boolean) => void;
   markAsRead: (chatId: string) => void;
   startTyping: (chatId: string) => void;
   stopTyping: (chatId: string) => void;
 }
 
-const chat1 = {
-  id: '1',
-  participants: [
-    {
-      id: '1',
-      name: 'John Doe',
-      avatar: 'https://example.com/avatar.jpg',
-      lastActive: '2023-10-01T12:00:00Z',
-      isOnline: true,
-    },
-    {
-      id: '2',
-      name: 'Jane Smith',
-      avatar: 'https://example.com/avatar2.jpg',
-      lastActive: '2023-10-01T12:00:00Z',
-      isOnline: false,
-    },
-  ],
-  lastMessage: {
-    id: 'm1',
-    chatId: '1',
-    content: 'Hello!',
-    sender: '1',
-    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-  },
-  unreadCount: 0,
-};
-
-const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set, get) => {
+const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set) => {
   let wsClient;
 
   wsClient = getSocketClient();
-
-  wsClient.onMessage((message) => {
-    if (message.type === 'message') {
-      const newMessage: Message = {
-        id: message.id,
-        chatId: message.chatId,
-        content: message.content,
-        sender: message.sender,
-        timestamp: message.timestamp,
-        status: 'delivered',
-      };
-
-      set((state) => {
-        const chatMessages = [...(state.messages[message.chatId] || []), newMessage];
-        const updatedMessages = { ...state.messages, [message.chatId]: chatMessages };
-
-        const updatedChats = state.chats?.map((chat) =>
-          chat.id === message.chatId
-            ? { ...chat, lastMessage: newMessage, unreadCount: chat.unreadCount + 1 }
-            : chat,
-        ) || null;
-
-        return { messages: updatedMessages, chats: updatedChats };
-      });
-    } else if (message.type === 'typing') {
-      set((state) => ({
-        isTyping: { ...state.isTyping, [message.chatId]: message.isTyping },
-      }));
-    } else if (message.type === 'status') {
-      // Handle user status changes if needed
-    }
-  });
-
-  wsClient.onStatusChange((status) => {
-    set({ connectionStatus: status });
-  });
 
   if (typeof window !== 'undefined') {
     wsClient.connect();
   }
 
-  console.log('chat store initialized');
+  wsClient.on('message', (message: any) => {
 
-  // Fetch chats asynchronously
+    console.log('Received message:', message);
+
+    const newMessage: Message = {
+      id: message.id,
+      chatId: message.chatId,
+      content: message.content,
+      sender: message.sender,
+      timestamp: message.timestamp,
+      status: 'delivered',
+    };
+
+    set((state) => {
+      const chatMessages = [...(state.messages[message.chatId] || []), newMessage];
+      const updatedMessages = { ...state.messages, [message.chatId]: chatMessages };
+
+      const updatedChats = state.chats?.map((chat) =>
+        chat.id === message.chatId
+          ? { ...chat, lastMessage: newMessage, unreadCount: chat.unreadCount + 1 }
+          : chat,
+      ) || null;
+
+      return { messages: updatedMessages, chats: updatedChats };
+    });
+  });
+
+  wsClient.on('typing', (payload: { sender: string; isTyping: boolean }) => {
+    set((state) => ({
+      isTyping: { ...state.isTyping, [payload.sender]: payload.isTyping },
+    }));
+  });
+
+  wsClient.on('newChat', (payload: ChatPreview) => {
+    set((state) => ({
+      chats: [payload, ...state.chats],
+    }));
+  });
+
+  wsClient.on('chatUpdated', (payload: ChatPreview) => {
+    set((state) => ({
+      chats: state.chats.map((chat) =>
+        chat.id === payload.id ? { ...chat, ...payload } : chat,
+      ),
+    }));
+  });
+
+  wsClient.on('chatDeleted', (payload: { chatId: string }) => {
+    set((state) => ({
+      chats: state.chats.filter((chat) => chat.id !== payload.chatId),
+    }));
+  });
+
+  wsClient.onStatusChange((status) => {
+    set({ connectionStatus: status });
+    if (status === 'connected') {
+      console.log('WebSocket connected from chat store');
+    }
+  });
+
   (async () => {
     const { data, error } = await ChatService.fetchChats();
     if (error) {
       set({ isLoadingChats: false, chatsError: error });
     } else {
-      set({ chats: data, isLoadingChats: false });
+      const messagesMap: Record<string, Message[]> = {};
+
+      const chats = data.map((chat: ChatPreview) => {
+        messagesMap[chat.id] = chat.messages || [];
+        return chat;
+      });
+
+      set({
+        chats,
+        messages: messagesMap,
+        isLoadingChats: false,
+      });
     }
   })();
 
   return {
-    chats: [chat1],
+    chats: [],
     messages: {},
-    currentUser: useAuthStore.getState().user as ChatUser,
+    currentChat: null,
     connectionStatus: 'connecting' as 'connecting' | 'connected' | 'disconnected' | 'error',
     isTyping: {},
     isLoadingChats: true,
@@ -131,32 +155,51 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set, 
 
     setChats: (chats) => set({ chats }),
 
-    setCurrentUser: (user) => set({ currentUser: user }),
+    setCurrentChat: (user) => set({ currentChat: user }),
 
-    joinChat: (chatId) => {
-      if (wsClient.send({ type: 'ping' })) {
-        wsClient.joinRoom(chatId);
-      } else {
-        const off = wsClient.onStatusChange((status) => {
-          if (status === 'connected') {
-            wsClient.joinRoom(chatId);
-            off();
-          }
-        });
+    initiateChatUser: async (chatId) => {
+      const { error, data } = await chatService.getInitialChatUser(chatId);
+
+      if (error) {
+        console.error('Error fetching chat user:', error);
+        return null;
       }
+
+      set({
+        currentChat: data as ChatUser,
+      }, undefined, 'chatStore/fetchChatUser/updateState');
     },
 
-    sendMessage: (chatId, content) => {
+    joinChat: (chatId) => {
+      if (wsClient.isConnected()) {
+        return wsClient.joinRoom(chatId);
+      }
+      return false;
+    },
 
-      if (!content.trim() || !get().currentUser) return;
+    leaveChat: (chatId: string) => {
+      if (wsClient.isConnected()) {
+        return wsClient.leaveRoom(chatId);
+      }
+      return false;
+    },
+
+    sendMessage: (chatId, content, newChat = false) => {
+
+      console.log('Sending message:', { chatId, content, newChat });
+
+      if (!content.trim() || !AuthStore.getState().user) return;
+
+      console.log('check passed for sending message:', { chatId, content, newChat });
 
       const newMessage: Message = {
         id: `m${Date.now()}`,
         chatId,
         content,
-        sender: get().currentUser.id,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        sender: AuthStore.getState().user?.id!,
+        timestamp: new Date(),
         status: 'sent',
+        newChat,
       };
 
       set((state) => {
@@ -166,17 +209,16 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set, 
           chat.id === chatId ? { ...chat, lastMessage: newMessage } : chat,
         ) || null;
         return { messages: updatedMessages, chats: updatedChats };
-      });
+      }, undefined, 'chatStore/sendMessage/updateState');
 
-      wsClient.send({
-        type: 'message',
+      const status = wsClient.send('message', {
         chatId,
         content,
-        sender: get().currentUser.id,
+        newChat,
       });
 
-      // Simulate delivery status
-      setTimeout(() => {
+      if (status) {
+        console.log('Message sent successfully:', newMessage);
         set((state) => ({
           messages: {
             ...state.messages,
@@ -185,41 +227,42 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set, 
             ),
           },
         }));
-      }, 1000);
+      } else {
+        console.error('Failed to send message:', newMessage);
+        return;
+      }
     },
 
     markAsRead: (chatId) => {
       set((state) => ({
         chats: state.chats?.map((chat) =>
-          chat.id === chatId ? { ...chat, unreadCount: 0 } : chat,
+          chat.participant.id === chatId ? { ...chat, unreadCount: 0 } : chat,
         ) || null,
         messages: {
           ...state.messages,
           [chatId]: state.messages[chatId]?.map((msg) =>
-            msg.sender !== state.currentUser?.id ? { ...msg, status: 'read' } : msg,
+            msg.sender !== state.currentChat?.participant.id ? { ...msg, status: 'read' } : msg,
           ) || [],
         },
       }));
 
-      wsClient.send({ type: 'read_receipt', chatId });
+      wsClient.send('read_receipt', { chatId });
     },
 
     startTyping: (chatId) => {
-      wsClient.send({ type: 'typing', chatId, isTyping: true });
+      wsClient.send('typing', { chatId, isTyping: true });
     },
 
     stopTyping: (chatId) => {
-      wsClient.send({ type: 'typing', chatId, isTyping: false });
+      wsClient.send('typing', { chatId, isTyping: false });
     },
   };
 };
 
-const ChatStore = create<ChatStore>();
-
-export const useChatStore = ChatStore(
+export const useChatStore = create<ChatStore>()(
   devtools(
     chatStore,
-    { name: 'auth-store', enabled: true },
+    { name: 'chat-store', enabled: true },
   ),
 );
 

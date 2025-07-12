@@ -51,7 +51,10 @@ export class MatchService {
 
           const userData = await this.userGrpcService.findUserById(matchId);
 
-          console.log(`Fetched user data for match ${matchId}:`, userData.id);
+          console.log(
+            `Fetched user data for match ${matchId}:`,
+            userData.user?.id
+          );
 
           return {
             id: match.id,
@@ -63,7 +66,7 @@ export class MatchService {
               age: userData.user?.age,
               bio: userData.user?.bio,
               location: userData.user?.location,
-              photos: userData.user?.photos || [],
+              avatar: userData.user?.photos[0],
               interests: userData.user?.interests || [],
             },
           };

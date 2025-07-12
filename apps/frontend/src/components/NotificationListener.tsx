@@ -3,12 +3,21 @@
 import { useEffect } from 'react';
 import { getNotificationSocket } from '@/lib/notification-websocket';
 import useMatchesStore from '@/store/matchesStore';
+import useAuthStore from '@/store/authStore';
 
-export default function NotificationListener({ userId }: { userId: string }) {
+export default function NotificationListener() {
   const { pushNewMatch } = useMatchesStore();
+  const { user } = useAuthStore();
 
   useEffect(() => {
     const socket = getNotificationSocket();
+
+    if (!user) {
+      console.warn('No user found, skipping notification listener setup');
+      socket.disconnect();
+      return;
+    }
+
     socket.connect();
 
     const offMatch = socket.on('match', (data) => {
@@ -28,9 +37,12 @@ export default function NotificationListener({ userId }: { userId: string }) {
       offMatch();
       offChat();
       offStatus();
-      socket.disconnect();
+      if (!user) {
+        socket.disconnect();
+      }
+      console.log('Notification listener cleaned up', user ? `for user ${user.id}` : 'without user context');
     };
-  }, [userId]);
+  }, [user]);
 
   return <></>;
 }

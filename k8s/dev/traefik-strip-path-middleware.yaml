@@ -10,3 +10,4 @@ spec:
       - /api/v1/auth
       - /api/v1/media
       - /api/v1/match
+      - /api/v1/chat

@@ -52,7 +52,12 @@ message User {
   Location location = 11;
 
   bool onboarding_completed = 12;
-  string status = 13;
+  UserStatus status = 13;
   string created_at = 14;
   string updated_at = 15;
+}
+
+enum UserStatus {
+  active = 0;
+  suspended = 1;
 }

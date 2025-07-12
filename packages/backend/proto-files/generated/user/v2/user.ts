@@ -21,6 +21,39 @@ import {
 
 export const protobufPackage = "user.v2";
 
+export enum UserStatus {
+  active = 0,
+  suspended = 1,
+  UNRECOGNIZED = -1,
+}
+
+export function userStatusFromJSON(object: any): UserStatus {
+  switch (object) {
+    case 0:
+    case "active":
+      return UserStatus.active;
+    case 1:
+    case "suspended":
+      return UserStatus.suspended;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return UserStatus.UNRECOGNIZED;
+  }
+}
+
+export function userStatusToJSON(object: UserStatus): string {
+  switch (object) {
+    case UserStatus.active:
+      return "active";
+    case UserStatus.suspended:
+      return "suspended";
+    case UserStatus.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
 export interface GetUserByIdRequest {
   id: string;
 }
@@ -50,7 +83,7 @@ export interface User {
   preferences?: User_Preferences | undefined;
   location?: User_Location | undefined;
   onboardingCompleted: boolean;
-  status: string;
+  status: UserStatus;
   createdAt: string;
   updatedAt: string;
 }
@@ -317,7 +350,7 @@ function createBaseUser(): User {
     preferences: undefined,
     location: undefined,
     onboardingCompleted: false,
-    status: "",
+    status: 0,
     createdAt: "",
     updatedAt: "",
   };
@@ -361,8 +394,8 @@ export const User: MessageFns<User> = {
     if (message.onboardingCompleted !== false) {
       writer.uint32(96).bool(message.onboardingCompleted);
     }
-    if (message.status !== "") {
-      writer.uint32(106).string(message.status);
+    if (message.status !== 0) {
+      writer.uint32(104).int32(message.status);
     }
     if (message.createdAt !== "") {
       writer.uint32(114).string(message.createdAt);
@@ -477,11 +510,11 @@ export const User: MessageFns<User> = {
           continue;
         }
         case 13: {
-          if (tag !== 106) {
+          if (tag !== 104) {
             break;
           }
 
-          message.status = reader.string();
+          message.status = reader.int32() as any;
           continue;
         }
         case 14: {
@@ -525,7 +558,7 @@ export const User: MessageFns<User> = {
       preferences: isSet(object.preferences) ? User_Preferences.fromJSON(object.preferences) : undefined,
       location: isSet(object.location) ? User_Location.fromJSON(object.location) : undefined,
       onboardingCompleted: isSet(object.onboardingCompleted) ? globalThis.Boolean(object.onboardingCompleted) : false,
-      status: isSet(object.status) ? globalThis.String(object.status) : "",
+      status: isSet(object.status) ? userStatusFromJSON(object.status) : 0,
       createdAt: isSet(object.createdAt) ? globalThis.String(object.createdAt) : "",
       updatedAt: isSet(object.updatedAt) ? globalThis.String(object.updatedAt) : "",
     };
@@ -569,8 +602,8 @@ export const User: MessageFns<User> = {
     if (message.onboardingCompleted !== false) {
       obj.onboardingCompleted = message.onboardingCompleted;
     }
-    if (message.status !== "") {
-      obj.status = message.status;
+    if (message.status !== 0) {
+      obj.status = userStatusToJSON(message.status);
     }
     if (message.createdAt !== "") {
       obj.createdAt = message.createdAt;
@@ -602,7 +635,7 @@ export const User: MessageFns<User> = {
       ? User_Location.fromPartial(object.location)
       : undefined;
     message.onboardingCompleted = object.onboardingCompleted ?? false;
-    message.status = object.status ?? "";
+    message.status = object.status ?? 0;
     message.createdAt = object.createdAt ?? "";
     message.updatedAt = object.updatedAt ?? "";
     return message;
