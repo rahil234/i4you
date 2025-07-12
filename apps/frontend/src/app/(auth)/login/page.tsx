@@ -33,7 +33,7 @@ export default function LoginPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  const { login, isLoading, error } = useAuthStore();
+  const { user, login, isLoading, error } = useAuthStore();
 
   const validateForm = () => {
     const result = loginSchema.safeParse(formData);
@@ -51,6 +51,11 @@ export default function LoginPage() {
       setIsFormValid(false);
     }
   };
+
+  useEffect(() => {
+    if (user && !isLoading && !error)
+      router.push('discover');
+  }, [user, isLoading, error]);
 
   useEffect(() => {
     if (isSubmitted) {
@@ -74,8 +79,6 @@ export default function LoginPage() {
     }
 
     await login(formData.email, formData.password);
-    if (!error)
-      router.push('/discover');
   };
 
   return (
