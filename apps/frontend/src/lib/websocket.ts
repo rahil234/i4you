@@ -2,12 +2,11 @@
 
 import { io, ManagerOptions, Socket, SocketOptions } from 'socket.io-client';
 
-type MessageHandler = (message: any) => void
+type Handler = (...args: any[]) => void;
 type StatusHandler = (status: 'connected' | 'disconnected' | 'error') => void
 
 class SocketIOClient {
   private socket: Socket | null = null;
-  private messageHandlers: MessageHandler[] = [];
   private statusHandlers: StatusHandler[] = [];
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 5;
@@ -54,10 +53,6 @@ class SocketIOClient {
         this.socket?.disconnect();
         this.attemptReconnect();
       });
-
-      this.socket.on('message', (data: any) => {
-        this.notifyMessageHandlers(data);
-      });
     } catch (error) {
       this.isConnecting = false;
       console.error('Error creating Socket.IO connection:', error);
@@ -78,26 +73,30 @@ class SocketIOClient {
     }
   }
 
-  send(message: any) {
+  isConnected() {
+    return this.socket?.connected;
+  }
+
+  send(event: string, payload: any) {
     if (this.socket?.connected) {
-      this.socket.emit('message', message);
+      this.socket.emit(event, payload);
       return true;
     }
     return false;
   }
 
   joinRoom(chatId: string) {
-    if (this.socket?.connected) {
-      this.socket.emit('joinRoom', chatId);
-      return true;
-    }
-    return false;
+    return this.send('joinRoom', chatId);
   }
 
-  onMessage(handler: MessageHandler) {
-    this.messageHandlers.push(handler);
+  leaveRoom(chatId: string) {
+    return this.send('leaveRoom', chatId);
+  }
+
+  on(event: string, handler: Handler) {
+    this.socket?.on(event, handler);
     return () => {
-      this.messageHandlers = this.messageHandlers.filter((h) => h !== handler);
+      this.socket?.off(event, handler);
     };
   }
 
@@ -106,10 +105,6 @@ class SocketIOClient {
     return () => {
       this.statusHandlers = this.statusHandlers.filter((h) => h !== handler);
     };
-  }
-
-  private notifyMessageHandlers(message: any) {
-    this.messageHandlers.forEach((handler) => handler(message));
   }
 
   private notifyStatusChange(status: 'connected' | 'disconnected' | 'error') {

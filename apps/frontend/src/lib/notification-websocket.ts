@@ -69,7 +69,6 @@ class NotificationSocketClient {
       clearTimeout(this.reconnectTimeout);
       this.reconnectTimeout = null;
     }
-
     if (this.socket) {
       this.socket.disconnect();
       this.socket = null;

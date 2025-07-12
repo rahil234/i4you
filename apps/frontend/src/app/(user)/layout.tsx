@@ -14,9 +14,9 @@ export default async function UserLayout({ children }: Readonly<{ children: Reac
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 to-teal-100">
-      <NotificationListener userId={user.id} />
       <AuthSessionHydrator user={user} />
       {children}
+      <NotificationListener />
     </div>
   );
 }

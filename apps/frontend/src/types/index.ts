@@ -1,4 +1,4 @@
-import { User as BaseUser } from '@i4you/shared';
+import { User as BaseUser, ChatUser, Chat } from '@i4you/shared';
 
 // User types
 export interface User extends Omit<BaseUser, 'location'> {
@@ -103,24 +103,9 @@ export interface Message {
   chatId: string;
   content: string;
   sender: string;
-  timestamp: string;
+  timestamp: Date;
   status?: 'sent' | 'delivered' | 'read';
-}
-
-export type ChatUser = Partial<User> & {
-  id: string
-  initials?: string;
-  avatar: string;
-  lastActive?: string;
-  isOnline?: boolean;
-  lastMessage?: Message;
-}
-
-export interface Chat {
-  id: string;
-  participants: ChatUser[];
-  lastMessage?: Message;
-  unreadCount: number;
+  newChat?: boolean;
 }
 
 export interface ChatContextType {

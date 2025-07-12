@@ -10,50 +10,102 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import useChatStore from '@/store/chatStore';
 import { useDebounce } from '@/hooks/use-debounce';
+import useAuthStore from '@/store/authStore';
+import { Message } from '@/types';
+import { formatTimestamp } from '@/utils/formatTimestamp';
 
 interface ChatProps {
-  chatId: string;
+  userId: string;
 }
 
-export function Chat({ chatId }: ChatProps) {
+export function Chat({ userId }: ChatProps) {
   const [newMessage, setNewMessage] = useState('');
+  const [chatMessages, setChatMessages] = useState<Message[]>();
   const [isComposing, setIsComposing] = useState(false);
+  const [isNewChat, setIsNewChat] = useState(true);
+  const [isJoined, setIsJoined] = useState(false);
   const debouncedIsComposing = useDebounce(isComposing, 500);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const { messages, joinChat, sendMessage, markAsRead, isTyping, startTyping, stopTyping } = useChatStore();
+  const {
+    messages,
+    joinChat,
+    leaveChat,
+    sendMessage,
+    markAsRead,
+    isTyping,
+    startTyping,
+    stopTyping,
+    currentChat,
+    chats,
+  } = useChatStore();
 
-  const chatMessages = messages[chatId] || [];
+  const [chat, setChat] = useState(currentChat);
 
-  // Mark messages as read when the chat is opened
+  const { user } = useAuthStore();
+
+  const [, forceUpdate] = useState(0);
+
   useEffect(() => {
-    joinChat(chatId);
-  }, [chatId]);
+    const interval = setInterval(() => {
+      forceUpdate((prev) => prev + 1);
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
-    markAsRead(chatId);
-  }, [chatId, markAsRead]);
+    if (chat) {
+      setChatMessages(messages[chat?.id]);
+      console.log('Chat messages updated:', messages[chat?.id]);
+    }
+  }, [userId, chat, messages]);
 
-  // Scroll to the bottom when messages change
+
+  useEffect(() => {
+    const matchedChat = chats.find((c) => c.participant.id === userId) || null;
+    if (matchedChat) {
+      setIsNewChat(false);
+      setChat(matchedChat);
+    }
+  }, [chats, userId]);
+
+
+  useEffect(() => {
+    if (chat && !isJoined) setIsJoined(joinChat(chat.id));
+  }, [userId, chat, joinChat, leaveChat]);
+
+  useEffect(() => {
+    markAsRead(userId);
+  }, [userId, markAsRead]);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages]);
 
-  // Handle typing indicators
-  useEffect(() => {
-    if (debouncedIsComposing) {
-      startTyping(chatId);
-    } else {
-      stopTyping(chatId);
-    }
-  }, [debouncedIsComposing, chatId, startTyping, stopTyping]);
 
+  useEffect(() => {
+    if (!chat) return;
+    if (debouncedIsComposing) {
+      startTyping(chat?.id);
+    } else {
+      stopTyping(chat?.id);
+    }
+  }, [debouncedIsComposing, userId, startTyping, stopTyping]);
+
+  if (!chat || !userId) {
+    return (
+      <div className="flex flex-col h-full items-center justify-center">
+        <p className="text-muted-foreground">Chat not found</p>
+      </div>
+    );
+  }
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!newMessage.trim()) return;
 
-    sendMessage('1', newMessage);
+    sendMessage(chat.id, newMessage, isNewChat);
     setNewMessage('');
     setIsComposing(false);
   };
@@ -63,17 +115,6 @@ export function Chat({ chatId }: ChatProps) {
     setIsComposing(e.target.value.length > 0);
   };
 
-  const { chats, currentUser } = useChatStore();
-  const chat = chats ? chats.find((c) => c.id === chatId) : null;
-  const otherUser = chat?.participants.find((p) => p.id !== currentUser?.id);
-
-  if (!chat || !otherUser) {
-    return (
-      <div className="flex flex-col h-full items-center justify-center">
-        <p className="text-muted-foreground">Chat not found</p>
-      </div>
-    );
-  }
 
   // Render status icon based on message status
   const renderStatusIcon = (status?: 'sent' | 'delivered' | 'read') => {
@@ -83,14 +124,16 @@ export function Chat({ chatId }: ChatProps) {
       case 'delivered':
         return <Check className="h-3 w-3 text-gray-400" />;
       case 'read':
-        return <CheckCheck className="h-3 w-3 text-blue-500" />;
+        return <CheckCheck className="h-3 w-3 text-cyan-500" />;
       default:
         return null;
     }
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full overflow-hidden">
+
+      {/* Header */}
       <div className="p-3 border-b flex items-center gap-3 bg-white">
         <Link href="/messages" className="md:hidden mr-1">
           <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -99,17 +142,17 @@ export function Chat({ chatId }: ChatProps) {
         </Link>
 
         <Avatar className="h-10 w-10">
-          <AvatarImage src={otherUser.avatar} alt={otherUser.name} />
-          <AvatarFallback>{otherUser.initials}</AvatarFallback>
+          <AvatarImage src={chat.participant.avatar} alt={chat.participant.name} />
+          <AvatarFallback>{chat.participant.initials}</AvatarFallback>
         </Avatar>
 
         <div className="flex-1">
-          <h3 className="font-medium text-sm">{otherUser.name}</h3>
+          <h3 className="font-medium text-sm">{chat.participant.name}</h3>
           <p className="text-xs text-muted-foreground">
-            {otherUser.isOnline ? (
+            {chat.participant.isOnline ? (
               <span className="text-green-500">Online now</span>
             ) : (
-              `Last active ${otherUser.lastActive}`
+              `Last active ${chat.participant.lastActive}`
             )}
           </p>
         </div>
@@ -117,30 +160,31 @@ export function Chat({ chatId }: ChatProps) {
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
-        {chatMessages.map((message, index) => (
+        {chatMessages?.length && chatMessages.map((message, index) => (
           <div
             key={index}
-            className={cn('flex', message.sender === currentUser?.id ? 'justify-end' : 'justify-start')}
+            className={cn('flex', message.sender === user?.id ? 'justify-end' : 'justify-start')}
           >
             <div
               className={cn(
                 'max-w-[70%] rounded-lg px-4 py-2 text-sm',
-                message.sender === currentUser?.id
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-white text-gray-800 border border-gray-200',
+                message.sender === user?.id
+                  ?
+                  'bg-blue-500 text-white' :
+                  'bg-white text-gray-800 border border-gray-200',
               )}
             >
               <p className="mb-1">{message.content}</p>
               <div className="flex justify-end items-center gap-1 text-xs opacity-70">
-                <span>{message.timestamp}</span>
-                {message.sender === currentUser?.id && renderStatusIcon(message.status)}
+                <span>{formatTimestamp(message.timestamp)}</span>
+                {message.sender === user?.id && renderStatusIcon(message.status)}
               </div>
             </div>
           </div>
         ))}
 
         {/* Typing indicator */}
-        {isTyping[chatId] && (
+        {isTyping[userId] && (
           <div className="flex justify-start">
             <div className="bg-white text-gray-800 border border-gray-200 rounded-lg px-4 py-2 text-sm">
               <div className="flex gap-1">
@@ -161,7 +205,7 @@ export function Chat({ chatId }: ChatProps) {
       </div>
 
       {/* Message input */}
-      <div className="p-3 border-t bg-white">
+      <div className="p-3 border-t shrink bg-white">
         <form onSubmit={handleSendMessage} className="flex gap-2">
           <input
             type="text"

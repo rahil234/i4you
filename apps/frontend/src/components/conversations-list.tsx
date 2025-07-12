@@ -6,8 +6,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import useChatStore from '@/store/chatStore';
-import { Chat } from '@/types';
+import useChatStore, { ChatPreview } from '@/store/chatStore';
+import useAuthStore from '@/store/authStore';
+import { formatTimestamp } from '@/utils/formatTimestamp';
 
 interface ConversationsListProps {
   selectedId?: string;
@@ -15,24 +16,25 @@ interface ConversationsListProps {
 
 export function ConversationsList({ selectedId }: ConversationsListProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredChats, setFilteredChats] = useState<Chat[]>([]);
-  const { chats, messages, isLoadingChats, currentUser } = useChatStore();
+  const [filteredChats, setFilteredChats] = useState<ChatPreview[]>([]);
 
-  // Format timestamp for display
-  const formatTimestamp = (timestamp: string) => {
-    // For demo purposes, we'll just return the timestamp as is
-    // In a real app, you would parse the timestamp and format it
-    return timestamp;
-  };
+
+  const { chats, messages, isLoadingChats, currentChat } = useChatStore();
+
+  const { user } = useAuthStore();
 
   useEffect(() => {
     if (chats) {
-      setFilteredChats(chats.filter((chat) => {
-        const otherUser = chat.participants.find((p) => p.id !== currentUser?.id);
-        return otherUser?.name!.toLowerCase().includes(searchQuery.toLowerCase());
-      }));
+      console.log('Chats loaded:', chats);
+      // setFilteredChats(chats.filter((chat) => {
+      //   console.log('Filtering chat:', chat.id, 'with participants:', chat.participants);
+      //   const otherUser = chat.participants.find((p) => p.id !== currentUser?.id);
+      //   return otherUser?.name!.toLowerCase().includes(searchQuery.toLowerCase());
+      // }));
+      setFilteredChats(chats);
+      console.log('Filtered chats:', filteredChats);
     }
-  }, [chats, searchQuery, currentUser]);
+  }, [chats, searchQuery, currentChat]);
 
 
   if (isLoadingChats) {
@@ -56,16 +58,14 @@ export function ConversationsList({ selectedId }: ConversationsListProps) {
       <div className="flex-1 overflow-y-auto">
         {filteredChats.length > 0 ? (
           filteredChats.map((chat) => {
-            const otherUser = chat.participants.find((p) => p.id !== currentUser?.id);
             const chatMessages = messages[chat.id] || [];
-            const lastMessage = chatMessages[chatMessages.length - 1];
 
-            if (!otherUser) return null;
+            const lastMessage = chatMessages[chatMessages.length - 1];
 
             return (
               <Link
                 key={chat.id}
-                href={`/messages/${chat.id}`}
+                href={`/messages/${chat.participant.id}`}
                 className={cn(
                   'flex items-center gap-3 p-4 hover:bg-slate-50 transition-colors border-b',
                   selectedId === chat.id && 'bg-slate-100',
@@ -73,11 +73,10 @@ export function ConversationsList({ selectedId }: ConversationsListProps) {
               >
                 <div className="relative">
                   <Avatar className="h-12 w-12">
-                    <AvatarImage src={otherUser.avatar} alt={otherUser.name} />
-                    <AvatarFallback>{otherUser.initials}</AvatarFallback>
+                    <AvatarImage src={chat.participant.avatar} alt={chat.participant.name} />
+                    <AvatarFallback>{chat.participant.initials}</AvatarFallback>
                   </Avatar>
-
-                  {otherUser.isOnline && (
+                  {chat.participant.isOnline && (
                     <span
                       className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-white"></span>
                   )}
@@ -85,8 +84,8 @@ export function ConversationsList({ selectedId }: ConversationsListProps) {
 
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-baseline">
-                    <h3 className="font-medium text-sm">{otherUser.name}</h3>
-                    {lastMessage && (
+                    <h3 className="font-medium text-sm">{chat.participant.name}</h3>
+                    {chatMessages.length && (
                       <span className="text-xs text-muted-foreground">{formatTimestamp(lastMessage.timestamp)}</span>
                     )}
                   </div>
@@ -99,7 +98,7 @@ export function ConversationsList({ selectedId }: ConversationsListProps) {
                           chat.unreadCount > 0 ? 'text-foreground font-medium' : 'text-muted-foreground',
                         )}
                       >
-                        {lastMessage.sender === currentUser?.id ? 'You: ' : ''}
+                        {lastMessage.sender === user?.id ? 'You: ' : ''}
                         {lastMessage.content}
                       </p>
                     ) : (

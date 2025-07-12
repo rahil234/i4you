@@ -3,11 +3,15 @@
 import { ConversationsList } from '@/components/conversations-list';
 import { UserLayout } from '@/components/user-layout';
 import useChatStore from '@/store/chatStore';
+import { useEffect, useState } from 'react';
 
 export default function MessagesPage() {
-  const connectionStatus = useChatStore((state) => state.connectionStatus);
+  const { connectionStatus } = useChatStore();
+  const [isConnecting, setIsConnecting] = useState<boolean>(connectionStatus !== 'connected');
 
-  const isConnecting = connectionStatus !== 'connected';
+  useEffect(() => {
+    setIsConnecting(connectionStatus !== 'connected');
+  }, [connectionStatus]);
 
   return (
     <UserLayout>
