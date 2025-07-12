@@ -85,7 +85,7 @@ export default function DiscoverPage() {
 
         <div className="relative w-full h-[calc(100vh-200px)] flex items-center justify-center">
           <AnimatePresence>
-            {potentialMatches.slice(currentIndex, currentIndex + 5).map((user, index) => (
+            {potentialMatches.map((user, index) => (
               <UserProfileCard
                 key={`${user.id}-${currentIndex + index}`}
                 user={user}

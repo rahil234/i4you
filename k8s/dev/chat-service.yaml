@@ -23,6 +23,8 @@ spec:
               value: "production"
             - name: PORT
               value: "4004"
+            - name: USER_GRPC_SERVER_URL
+              value: "user-service:50051"
             - name: MONGODB_URI
               value: "mongodb+srv://rahilsardar234:NOKCk3dcykTN0P32@i4you-cluster.kdpj0cj.mongodb.net/I4You-chatDB"
 ---

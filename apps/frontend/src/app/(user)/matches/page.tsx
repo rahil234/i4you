@@ -47,7 +47,7 @@ export default function MatchesPage() {
                    className="flex items-center justify-between bg-white rounded-lg p-4 shadow-sm border">
                 <div className="flex items-center space-x-4">
                   <Avatar className="h-16 w-16">
-                    <AvatarImage src={match.user.photos[0]} alt={match.user.name} />
+                    <AvatarImage src={match.user.avatar} alt={match.user.name} />
                     <AvatarFallback>{match.user.name}</AvatarFallback>
                   </Avatar>
 
@@ -78,4 +78,3 @@ export default function MatchesPage() {
     </UserLayout>
   );
 }
-

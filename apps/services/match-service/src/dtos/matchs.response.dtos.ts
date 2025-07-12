@@ -1,10 +1,16 @@
 import { User } from '@i4you/shared';
 
-class MatchesResponseDTO
+export class MatchesResponseDTO
   implements
     Omit<
       User,
-      'location' | 'joined' | 'email' | 'status' | 'role' | 'preferences'
+      | 'location'
+      | 'joined'
+      | 'email'
+      | 'status'
+      | 'role'
+      | 'preferences'
+      | 'photos'
     >
 {
   id;
@@ -12,7 +18,7 @@ class MatchesResponseDTO
   age;
   gender: 'male' | 'female' | 'other';
   bio;
-  photos;
+  avatar?: string;
   interests;
   location;
   distance: string;
@@ -23,15 +29,10 @@ class MatchesResponseDTO
     this.age = match.age;
     this.gender = match.gender;
     this.bio = match.bio;
-    this.photos = match.photos;
+    this.avatar = match.photos[0];
     this.interests = match.interests;
     this.location = match.location?.displayName || 'Unknown location';
 
-    // const distance = getDistanceInKm(match.location?.coordinates, userLocation);
-    //
-    // this.distance = `${distance.toFixed(2)} km`;
     this.distance = `${Math.ceil(match.distance / 1000)} Km`;
   }
 }
-
-export default MatchesResponseDTO;

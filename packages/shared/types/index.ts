@@ -120,3 +120,20 @@ export interface UserJwtPayload {
   role: 'admin' | 'member';
   email: string;
 }
+
+export type ChatUser = Partial<User> & {
+  id: string
+  initials?: string;
+  avatar: string;
+  lastActive?: string;
+  isOnline?: boolean;
+  lastMessage?: Message;
+}
+
+export interface Chat {
+  id: string;
+  participants: ChatUser[];
+  lastMessage?: Message;
+  unreadCount: number;
+}
+

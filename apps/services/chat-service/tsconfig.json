@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "node16",
     "declaration": true,
+    "moduleResolution": "node16",
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
