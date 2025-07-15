@@ -30,4 +30,20 @@ export class MessageRepository implements IMessageRepository {
       .skip(page * limit)
       .limit(limit);
   }
+
+  async markAsDelivered(chatId: string, userId?: string) {
+    return this.messageModel.updateMany(
+      { chatId, status: { $ne: 'delivered' }, sender: { $ne: userId } },
+      { status: 'delivered' },
+      { new: true },
+    );
+  }
+
+  async markAsRead(chatId: string, userId?: string) {
+    return this.messageModel.updateMany(
+      { chatId, status: { $ne: 'read' }, sender: { $ne: userId } },
+      { status: 'read' },
+      { new: true },
+    );
+  }
 }

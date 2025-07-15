@@ -12,6 +12,7 @@ import { useDebounce } from '@/hooks/use-debounce';
 import useAuthStore from '@/store/authStore';
 import { formatTimestamp } from '@/utils/formatTimestamp';
 import { useNow } from '@/context/NowContext';
+import { Message } from '@/types';
 
 interface ChatProps {
   chat: ChatUser;
@@ -22,6 +23,7 @@ interface ChatProps {
 export function Chat({ chat, userId, isNewChat }: ChatProps) {
   const [newMessage, setNewMessage] = useState('');
   const [isComposing, setIsComposing] = useState(false);
+  const [chatMessages, setChatMessages] = useState<Message[]>([]);
   const [isJoined, setIsJoined] = useState(false);
   const debouncedIsComposing = useDebounce(isComposing, 500);
 
@@ -57,7 +59,7 @@ export function Chat({ chat, userId, isNewChat }: ChatProps) {
   }, [userId, chat, joinChat, leaveChat]);
 
   useEffect(() => {
-    if (chat && !messages[chat.id].length && !isMessagesLoading) {
+    if (chat && !chatMessages.length && !isMessagesLoading) {
       fetchMessages(chat?.id, 0);
     }
   }, [chat?.id]);
@@ -72,12 +74,21 @@ export function Chat({ chat, userId, isNewChat }: ChatProps) {
 
   onMessage(message => {
     console.log('New message received from comp: ', message);
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    throw new Error('This is a test error from the chat component');
   });
 
   useEffect(() => {
-    markAsRead(userId);
-  }, [userId, markAsRead]);
+    const lastMessage = chatMessages.at(-1);
+    if (lastMessage && lastMessage.sender !== user?.id) {
+      markAsRead(chat.id);
+    }
+  }, [chatMessages, userId, chat.id, markAsRead]);
+
+  useEffect(() => {
+    if (!chat) return;
+    const chatMessages = messages[chat.id] || [];
+    setChatMessages([...chatMessages].reverse());
+  }, [messages, chat]);
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -87,7 +98,7 @@ export function Chat({ chat, userId, isNewChat }: ChatProps) {
   }, []);
 
   useEffect(() => {
-    const latestMessage = [...messages[chat.id]].at(-1);
+    const latestMessage = chatMessages.at(0);
 
     if (!isPrepending && latestMessage?.sender === user?.id) {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -134,6 +145,7 @@ export function Chat({ chat, userId, isNewChat }: ChatProps) {
       sendNewChatMessage(userId, newMessage);
     } else {
       sendMessage(chat.id, newMessage);
+
     }
 
     setNewMessage('');
@@ -200,7 +212,7 @@ export function Chat({ chat, userId, isNewChat }: ChatProps) {
             <div className="h-5 w-5 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
           </div>
         )}
-        {[...messages[chat.id]].reverse().map((message, index) => (
+        {chatMessages.map((message, index) => (
           <div
             key={index}
             className={cn('flex', message.sender === user?.id ? 'justify-end' : 'justify-start')}

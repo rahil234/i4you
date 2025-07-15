@@ -173,7 +173,7 @@ export class ChatGateway implements OnGatewayInit {
 
     const otherUserId = chat.participants.find((id) => id !== socket.user.id);
 
-    await this.chatService.createMessage({
+    const newMessage = await this.chatService.createMessage({
       chatId: payload.chatId,
       sender: socket.user.id,
       content: payload.content,
@@ -186,12 +186,7 @@ export class ChatGateway implements OnGatewayInit {
       this.kafkaService.emit('chat.events', {
         type: 'NEW_MESSAGE',
         recipientId: otherUserId,
-        data: {
-          chatId: payload.chatId,
-          senderId: socket.user.id,
-          timestamp,
-          content: payload.content,
-        },
+        data: new MessageResponseDto(newMessage),
       });
     } else {
       socket.to(payload.chatId).emit('message', {
@@ -220,12 +215,44 @@ export class ChatGateway implements OnGatewayInit {
       isTyping: boolean;
     },
     @ConnectedSocket() socket: AuthenticatedSocket,
-  ): void {
+  ) {
     const userId = socket.user.id;
 
     socket.to(payload.chatId).emit('typing', {
       sender: userId,
       isTyping: payload.isTyping,
     });
+  }
+
+  @SubscribeMessage('read_receipt')
+  async handleReadReceipt(
+    @MessageBody()
+    payload: { chatId: string },
+    @ConnectedSocket() socket: AuthenticatedSocket,
+  ) {
+    const userId = socket.user.id;
+
+    socket.to(payload.chatId).emit('read_receipt', {
+      sender: userId,
+      chatId: payload.chatId,
+    });
+
+    await this.chatService.markMessagesAsRead(payload.chatId, userId);
+  }
+
+  @SubscribeMessage('delivered_receipt')
+  async handleDeliveredReceipt(
+    @MessageBody()
+    payload: { chatId: string },
+    @ConnectedSocket() socket: AuthenticatedSocket,
+  ) {
+    const userId = socket.user.id;
+
+    socket.to(payload.chatId).emit('read_receipt', {
+      sender: userId,
+      chatId: payload.chatId,
+    });
+
+    await this.chatService.markMessagesAsRead(payload.chatId, userId);
   }
 }

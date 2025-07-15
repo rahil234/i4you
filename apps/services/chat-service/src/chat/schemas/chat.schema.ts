@@ -3,7 +3,7 @@ import { Document, Types } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Chat extends Document<Types.ObjectId> {
-  @Prop({ type: [String], required: true, unique: true })
+  @Prop({ type: [String], required: true })
   participants: string[];
 
   @Prop({

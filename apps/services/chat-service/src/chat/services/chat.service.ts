@@ -7,6 +7,13 @@ import { ChatResponseDto } from '../dto/get-chat.dto';
 import { UserResponseDto } from '../dto/get-user.dto';
 import { User } from '@i4you/shared';
 
+interface Message {
+  chatId: string;
+  sender: string;
+  content: string;
+  timestamp: number;
+}
+
 @Injectable()
 export class ChatService {
   constructor(
@@ -58,17 +65,7 @@ export class ChatService {
     return this.chatRepository.create([userA, userB]);
   }
 
-  async createMessage({
-    chatId,
-    sender,
-    content,
-    timestamp,
-  }: {
-    chatId: string;
-    sender: string;
-    content: string;
-    timestamp: number;
-  }) {
+  async createMessage({ chatId, sender, content, timestamp }: Message) {
     const message = await this.messageRepository.create(
       chatId,
       sender,
@@ -88,5 +85,13 @@ export class ChatService {
 
   async getMessages(chatId: string, page = 0, limit = 20) {
     return this.messageRepository.findByChatId(chatId, page, limit);
+  }
+
+  async markMessagesAsDelivered(chatId: string, userId?: string) {
+    return this.messageRepository.markAsDelivered(chatId, userId);
+  }
+
+  async markMessagesAsRead(chatId: string, userId?: string) {
+    return this.messageRepository.markAsRead(chatId, userId);
   }
 }

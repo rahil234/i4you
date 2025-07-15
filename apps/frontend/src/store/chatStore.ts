@@ -116,14 +116,23 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set, 
     }));
   });
 
+  wsClient.on('read_receipt', (payload: { sender: string; chatId: string }) => {
+    set((state) => ({
+      messages: {
+        ...state.messages,
+        [payload.chatId]: state.messages[payload.chatId]?.map((msg) => ({ ...msg, status: 'read' })),
+      },
+    }));
+  });
+
   wsClient.on('newChat', (payload: ChatPreview) => {
     set((state) => ({
       chats: [payload, ...state.chats],
     }));
 
-    set((state) => ({
-      messages: { ...state.messages, [payload.id]: payload.messages || [] },
-    }), undefined, 'chatStore/newChat/updateState');
+    // set((state) => ({
+    //   messages: { ...state.messages, [payload.id]: payload.messages || [] },
+    // }), undefined, 'chatStore/newChat/updateState');
   });
 
   wsClient.on('chatUpdated', (payload: ChatPreview) => {
@@ -259,7 +268,7 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set, 
           ...get().loadedPages,
           [chatId]: new Set([...(get().loadedPages[chatId] || []), responsePage]),
         },
-        messages: { ...get().messages, [chatId]: [...(get().messages[chatId]), ...messages] },
+        messages: { ...get().messages, [chatId]: [...(get().messages[chatId] || []), ...messages] },
         isMessagesLoading: false,
       }, undefined, 'chatStore/fetchMessages/success');
     },
@@ -269,7 +278,15 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set, 
         chats: [chat, ...state.chats],
       }), undefined, 'chatStore/newChat/updateChat/success');
 
-      get().newMessage(message);
+      showNotification({
+        title: `New message from ${chat.participant.name}`,
+        content: message.content,
+        type: 'info',
+        duration: 20000,
+        image: chat.participant.avatar,
+        color: '#591a4b',
+        href: `/messages/${chat.participant.id}`,
+      });
     },
 
     newMessage: (message) => {
@@ -383,18 +400,6 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set, 
     },
 
     markAsRead: (chatId) => {
-      set((state) => ({
-        chats: state.chats?.map((chat) =>
-          chat.participant.id === chatId ? { ...chat, unreadCount: 0 } : chat,
-        ) || null,
-        messages: {
-          ...state.messages,
-          [chatId]: state.messages[chatId]?.map((msg) =>
-            msg.sender !== state.currentChat?.participant.id ? { ...msg, status: 'read' } : msg,
-          ) || [],
-        },
-      }), undefined, 'chatStore/markAsRead/updateState');
-
       wsClient.send('read_receipt', { chatId });
     },
 
