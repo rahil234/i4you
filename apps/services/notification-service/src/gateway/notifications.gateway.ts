@@ -1,6 +1,11 @@
-import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import {
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+} from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { NotificationsService } from '../services/notifications.service';
+import { AuthenticatedSocket } from '../types/authenticated-socket';
 
 @WebSocketGateway({
   cors: {
@@ -14,6 +19,19 @@ export class NotificationsGateway {
 
   constructor(private readonly notificationsService: NotificationsService) {}
 
+  afterInit(server: Server) {
+    server.use((socket, next) => {
+      const userId = socket.handshake.headers['x-user-id'] as string;
+      const userRole = socket.handshake.headers['x-user-role'] as string;
+      if (!userId || !userRole) {
+        return next(new Error('Missing x-user-id || x-user-role header'));
+      }
+      (socket as AuthenticatedSocket).user = { id: userId, role: userRole };
+      next();
+    });
+  }
+
+  @SubscribeMessage('join')
   handleConnection(socket: Socket) {
     const userId = socket.handshake.headers['x-user-id'];
 

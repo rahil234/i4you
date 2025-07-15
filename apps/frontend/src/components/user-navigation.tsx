@@ -7,19 +7,21 @@ import { cn } from '@/lib/utils';
 import useMatchesStore from '@/store/matchesStore';
 import { Logo } from '@/components/logo';
 import useChatStore from '@/store/chatStore';
+import useAuthStore from '@/store/authStore';
+import { useMemo } from 'react';
 
 export function UserNavigation() {
   const pathname = usePathname();
   const { matches } = useMatchesStore();
-  // const {messages} = useChatStore()
+  const { chats, messages } = useChatStore();
+  const { user } = useAuthStore();
 
-  // Calculate total unread messages
-  // const totalUnread = Object.values(messages).reduce((total, chatMessages) => {
-  //     const unreadCount = chatMessages.filter((msg) => msg.sender !== "user1" && msg.status !== "read").length
-  //     return total + unreadCount
-  // }, 0)
-
-  const totalUnread = 5;
+  const totalUnread = useMemo(() => {
+    return Object.values(messages).reduce((total, chatMessages) => {
+      const unreadCount = chatMessages.filter((msg) => msg.sender !== user?.id && msg.status !== 'read').length;
+      return total + unreadCount;
+    }, 0);
+  }, [chats, messages, user?.id]);
 
   const navItems = [
     {
@@ -66,7 +68,7 @@ export function UserNavigation() {
 
               {item.badge && (
                 <span
-                  className="absolute top-0 right-0 h-5 min-w-5 rounded-full bg-primary text-white text-xs flex items-center justify-center px-1 transform translate-x-1/2 -translate-y-1/2">
+                  className="absolute top-2.5 right-3 h-5 min-w-5 rounded-full bg-primary text-white text-xs flex items-center justify-center px-1 transform translate-x-1/2 -translate-y-1/2">
                   {item.badge > 99 ? '99+' : item.badge}
                 </span>
               )}

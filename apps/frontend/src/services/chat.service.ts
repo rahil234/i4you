@@ -23,10 +23,10 @@ class ChatService {
         .then(res => res.data),
     );
 
-  fetchMessages = (chatId: string, limit: number = 10) =>
+  fetchMessages = (chatId: string, page: number = 0, limit: number = 15) =>
     handleApi(() =>
       api
-        .get(`chat/${chatId}/messages?limit=${limit}`)
+        .get(`chat/${chatId}/messages?page=${page}&limit=${limit}`)
         .then(res => res.data),
     );
 }

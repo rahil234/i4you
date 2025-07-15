@@ -2,7 +2,7 @@ import React from 'react';
 import AuthSessionHydrator from '@/components/auth/auth-session-hydrator';
 import { getUserData } from '@/lib/auth/get-user-data';
 import { redirect } from 'next/navigation';
-import NotificationListener from '@/components/NotificationListener';
+import NotificationListener from '@/components/user/NotificationListener';
 
 export default async function UserLayout({ children }: Readonly<{ children: React.ReactNode }>) {
 

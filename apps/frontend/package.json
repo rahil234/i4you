@@ -14,6 +14,7 @@
   "dependencies": {
     "@emotion/is-prop-valid": "latest",
     "@hookform/resolvers": "^3.9.1",
+    "@i4you/ui": "latest",
     "@radix-ui/react-accordion": "^1.2.2",
     "@radix-ui/react-alert-dialog": "^1.1.4",
     "@radix-ui/react-aspect-ratio": "^1.1.1",
@@ -43,7 +44,7 @@
     "@radix-ui/react-tooltip": "^1.1.6",
     "@react-google-maps/api": "^2.20.6",
     "@react-oauth/google": "^0.12.1",
-    "@i4you/ui": "latest",
+    "@tanstack/react-query": "^5.83.0",
     "autoprefixer": "^10.4.20",
     "axios": "latest",
     "class-variance-authority": "^0.7.1",
