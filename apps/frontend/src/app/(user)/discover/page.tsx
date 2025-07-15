@@ -8,18 +8,15 @@ import Logo from '/public/favicon.ico';
 import { UserLayout } from '@/components/user-layout';
 import useMatchesStore from '@/store/matchesStore';
 import { UserProfileCard } from '@/components/user-profile-card';
+import { Notifications } from '@/components/user/Notification';
 import useAuthStore from '@/store/authStore';
 
 export default function DiscoverPage() {
   const { user } = useAuthStore();
-  const { potentialMatches, fetchPotentialMatches, loading, newMatches, closeMatch } = useMatchesStore();
+  const { potentialMatches, loading, newMatches, closeMatch } = useMatchesStore();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [matchAnimation, setMatchAnimation] = useState(false);
   const [currentMatch, setCurrentMatch] = useState<any>(null);
-
-  useEffect(() => {
-    fetchPotentialMatches();
-  }, [fetchPotentialMatches]);
 
   useEffect(() => {
     if (newMatches.length > 0) {
@@ -40,31 +37,21 @@ export default function DiscoverPage() {
   };
 
   const handleSendMessage = () => {
-    // if (currentMatch) {
-    //   const matchData: Match = {
-    //     userAId: user.id,
-    //     userBId: currentMatch.id,
-    //     name: currentMatch.name,
-    //     photo: currentMatch.photo,
-    //     timestamp: new Date(),
-    //   };
-    //   useMatchesStore.getState().sendMatchNotification(matchData);
-    //   closeMatchAnimation();
-    // }
-    console.log('Sending message to match:', currentMatch, 'needs implementation');
+    if (currentMatch) {
+      window.location.href = `/messages/${currentMatch.userId}`;
+    }
   };
 
   useEffect(() => {
     if (currentIndex >= potentialMatches.length && potentialMatches.length > 0) {
-      fetchPotentialMatches();
       setCurrentIndex(0);
     }
-  }, [currentIndex, potentialMatches.length, fetchPotentialMatches]);
+  }, [currentIndex, potentialMatches.length]);
 
   if (loading) {
-    console.log('Loading potential matches:', potentialMatches);
     return (
       <UserLayout>
+        <Notifications />
         <div className="flex flex-col items-center justify-center h-[calc(100vh-64px)]">
           <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
           <p className="text-muted-foreground">Finding people near you...</p>
@@ -75,6 +62,7 @@ export default function DiscoverPage() {
 
   return (
     <UserLayout>
+      <Notifications />
       <div className="mb-10 flex justify-between items-center">
         <div className="flex items-center">
           <Image src={Logo} alt="Logo" width="50" height="50" />
@@ -114,7 +102,7 @@ export default function DiscoverPage() {
               <div className="flex justify-center gap-8">
                 <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white">
                   <img
-                    src={user?.photos[0]}
+                    src={user?.avatar}
                     alt="Your profile"
                     className="w-full h-full object-cover"
                   />

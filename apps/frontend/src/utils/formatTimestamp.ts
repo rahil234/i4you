@@ -1,7 +1,10 @@
-export const formatTimestamp = (timestamp: Date) => {
-  const date = new Date(timestamp);
-  const now = new Date();
-  const diff = now.getTime() - date.getTime();
+export const formatTimestamp = (timestamp: number, nowOverride?: number) => {
+  if (!timestamp) return 'unknown';
+
+  const date = new Date(Number(timestamp));
+
+  const now = nowOverride ?? Date.now();
+  const diff = now - Number(timestamp);
 
   const seconds = Math.floor(diff / 1000);
   const minutes = Math.floor(seconds / 60);
@@ -9,8 +12,8 @@ export const formatTimestamp = (timestamp: Date) => {
   const days = Math.floor(hours / 24);
 
   if (hours < 1) {
-    if (minutes > 0) return `${minutes} min ago`;
-    if (seconds > 0) return `${seconds} sec ago`;
+    if (minutes > 0) return `${minutes}m ago`;
+    if (seconds > 0) return `${seconds}s ago`;
     if (seconds <= 0 && seconds > -60) return 'now';
   } else if (hours < 24) {
     return date.toLocaleTimeString('en-IN', {

@@ -8,6 +8,8 @@ import { StateCreator } from 'zustand/index';
 import { devtools } from 'zustand/middleware';
 import chatService from '@/services/chat.service';
 import AuthStore from '@/store/authStore';
+import { useNotificationStore } from '@/store/notificationStore';
+import { router } from 'next/client';
 
 export type ChatUser = {
   id: string;
@@ -16,7 +18,7 @@ export type ChatUser = {
     name: string;
     initials?: string;
     avatar: string;
-    lastActive?: string;
+    lastActive?: number;
     isOnline?: boolean;
     lastMessage?: Message;
   };
@@ -30,7 +32,7 @@ export interface ChatPreview {
     avatar: string;
     initials?: string;
     isOnline?: boolean;
-    lastActive?: string;
+    lastActive?: number;
   };
   messages?: Message[];
   unreadCount: number;
@@ -39,23 +41,31 @@ export interface ChatPreview {
 interface ChatStore {
   chats: ChatPreview[];
   messages: Record<string, Message[]>;
+  loadedPages: { [chatId: string]: Set<number> };
+  hasNoNext: { [chatId: string]: boolean };
   currentChat: ChatUser | null;
   connectionStatus: 'connected' | 'disconnected' | 'error' | 'connecting';
   isTyping: Record<string, boolean>;
-  isLoadingChats: boolean;
+  isLoading: boolean;
+  isMessagesLoading: boolean;
   chatsError: string | null;
-  setChats: (chats: ChatPreview[]) => void;
   setCurrentChat: (user: ChatUser) => void;
   initiateChatUser: (userId: string) => void;
+  onMessage: (onMessageHandler: (message: Message) => void) => void;
+  fetchMessages: (chatId: string, page: number) => void;
   joinChat: (chatId: string) => boolean;
+  newChat: (chat: ChatPreview, messages: Message) => void;
+  newMessage: (chat: Message) => void;
   leaveChat: (chatId: string) => boolean;
-  sendMessage: (chatId: string, content: string, newChat: boolean) => void;
+  sendMessage: (chatId: string, content: string) => void;
+  sendNewChatMessage: (newUserId: string, content: string) => void;
+  loadMoreMessages: (chatId: string, page: number) => void;
   markAsRead: (chatId: string) => void;
   startTyping: (chatId: string) => void;
   stopTyping: (chatId: string) => void;
 }
 
-const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set) => {
+const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set, get) => {
   let wsClient;
 
   wsClient = getSocketClient();
@@ -64,30 +74,39 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set) 
     wsClient.connect();
   }
 
+  const { showNotification } = useNotificationStore.getState();
+
+  let messageCallback: ((msg: Message) => void) | null = null;
+
   wsClient.on('message', (message: any) => {
 
     console.log('Received message:', message);
 
-    const newMessage: Message = {
-      id: message.id,
-      chatId: message.chatId,
-      content: message.content,
+    // TODO needs to be replaced with a proper type
+    const newMessage: Omit<Message, 'chatId' | 'id'> & { _id: string } = {
       sender: message.sender,
+      content: message.content,
       timestamp: message.timestamp,
       status: 'delivered',
+      _id: message.id || `m${Date.now()}`,
     };
 
     set((state) => {
       const chatMessages = [...(state.messages[message.chatId] || []), newMessage];
-      const updatedMessages = { ...state.messages, [message.chatId]: chatMessages };
 
-      const updatedChats = state.chats?.map((chat) =>
-        chat.id === message.chatId
-          ? { ...chat, lastMessage: newMessage, unreadCount: chat.unreadCount + 1 }
-          : chat,
-      ) || null;
+      return { messages: { ...state.messages, [message.chatId]: chatMessages } };
+    }, undefined, 'chatStore/message/updateState');
 
-      return { messages: updatedMessages, chats: updatedChats };
+    if (messageCallback) {
+      messageCallback(message);
+    }
+
+    showNotification({
+      content: `New message from ${message.sender.name}`,
+      type: 'info',
+      image: message.sender.avatar,
+      color: '#cbc4d7',
+      onClick: () => router.push(`/chat/${message.chatId}`),
     });
   });
 
@@ -101,6 +120,10 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set) 
     set((state) => ({
       chats: [payload, ...state.chats],
     }));
+
+    set((state) => ({
+      messages: { ...state.messages, [payload.id]: payload.messages || [] },
+    }), undefined, 'chatStore/newChat/updateState');
   });
 
   wsClient.on('chatUpdated', (payload: ChatPreview) => {
@@ -108,7 +131,31 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set) 
       chats: state.chats.map((chat) =>
         chat.id === payload.id ? { ...chat, ...payload } : chat,
       ),
-    }));
+    }), undefined, 'chatStore/chatUpdated/updateState');
+  });
+
+  wsClient.on('messagesPage', ({ chatId, messages, page }) => {
+    set((state) => {
+      const loadedPages = state.loadedPages[chatId] || new Set();
+
+      if (loadedPages.has(page)) {
+        console.log(`Page ${page} already loaded for chat ${chatId}`);
+        return state;
+      }
+
+      const existingMessages = state.messages[chatId] || [];
+
+      return {
+        messages: {
+          ...state.messages,
+          [chatId]: [...messages.reverse(), ...existingMessages],
+        },
+        loadedPages: {
+          ...state.loadedPages,
+          [chatId]: new Set([...loadedPages, page]),
+        },
+      };
+    });
   });
 
   wsClient.on('chatDeleted', (payload: { chatId: string }) => {
@@ -125,9 +172,11 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set) 
   });
 
   (async () => {
+    set({ isLoading: true, chatsError: null }, undefined, 'chatStore/initial');
+
     const { data, error } = await ChatService.fetchChats();
     if (error) {
-      set({ isLoadingChats: false, chatsError: error });
+      set({ isLoading: false, chatsError: error });
     } else {
       const messagesMap: Record<string, Message[]> = {};
 
@@ -139,25 +188,27 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set) 
       set({
         chats,
         messages: messagesMap,
-        isLoadingChats: false,
-      });
+        isLoading: false,
+      }, undefined, 'chatStore/initial/updateState');
     }
   })();
 
   return {
     chats: [],
     messages: {},
+    loadedPages: {},
+    hasNoNext: {},
     currentChat: null,
     connectionStatus: 'connecting' as 'connecting' | 'connected' | 'disconnected' | 'error',
     isTyping: {},
-    isLoadingChats: true,
+    isLoading: true,
+    isMessagesLoading: false,
     chatsError: null,
-
-    setChats: (chats) => set({ chats }),
 
     setCurrentChat: (user) => set({ currentChat: user }),
 
     initiateChatUser: async (chatId) => {
+      set({ isLoading: true });
       const { error, data } = await chatService.getInitialChatUser(chatId);
 
       if (error) {
@@ -167,7 +218,84 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set) 
 
       set({
         currentChat: data as ChatUser,
+        isLoading: false,
       }, undefined, 'chatStore/fetchChatUser/updateState');
+    },
+
+    fetchMessages: async (chatId, page) => {
+
+      if (!chatId) {
+        console.warn('Chat ID is required to fetch messages');
+        return;
+      }
+
+      const loadedPages = get().loadedPages[chatId] || new Set();
+
+      if (get().hasNoNext[chatId] || loadedPages.has(page)) {
+        console.warn('No next page or already loaded for chat:', chatId, 'page:', page);
+        return;
+      }
+
+      set({ isMessagesLoading: true }, undefined, 'chatStore/fetchMessages/start');
+      const { error, data } = await chatService.fetchMessages(chatId, page);
+
+      if (error) {
+        console.error('Error fetching messages for chat ', chatId, ': ', error);
+        set({ isMessagesLoading: false, chatsError: error }, undefined, 'chatStore/fetchMessages/error');
+        return;
+      }
+
+      const { messages, page: responsePage, hasNextPage } = data;
+
+      if (get().loadedPages[chatId]?.has(responsePage)) {
+        console.log(`Page ${responsePage} already loaded for chat ${chatId}`);
+        set({ isMessagesLoading: false }, undefined, 'chatStore/fetchMessages/alreadyLoaded');
+        return;
+      }
+
+      set({
+        hasNoNext: { ...get().hasNoNext, [chatId]: !hasNextPage },
+        loadedPages: {
+          ...get().loadedPages,
+          [chatId]: new Set([...(get().loadedPages[chatId] || []), responsePage]),
+        },
+        messages: { ...get().messages, [chatId]: [...(get().messages[chatId]), ...messages] },
+        isMessagesLoading: false,
+      }, undefined, 'chatStore/fetchMessages/success');
+    },
+
+    newChat: (chat, message) => {
+      set((state) => ({
+        chats: [chat, ...state.chats],
+      }), undefined, 'chatStore/newChat/updateChat/success');
+
+      get().newMessage(message);
+    },
+
+    newMessage: (message) => {
+
+      const chatMessages = [message, ...(get().messages[message.chatId] || [])];
+
+      const chat = get().chats.find((c) => c.id === message.chatId);
+
+      if (!chat) {
+        console.warn(`Chat with ID ${message.chatId} not found for new message`);
+        return;
+      }
+
+      set((state) => ({
+        messages: { ...state.messages, [message.chatId]: chatMessages },
+      }), undefined, 'chatStore/newMessage/updateState');
+
+      showNotification({
+        title: `New message from ${chat.participant.name}`,
+        content: message.content,
+        type: 'info',
+        duration: 20000,
+        image: chat.participant.avatar,
+        color: '#591a4b',
+        href: `/messages/${chat.participant.id}`,
+      });
     },
 
     joinChat: (chatId) => {
@@ -177,33 +305,27 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set) 
       return false;
     },
 
-    leaveChat: (chatId: string) => {
+    leaveChat: (chatId) => {
       if (wsClient.isConnected()) {
         return wsClient.leaveRoom(chatId);
       }
       return false;
     },
 
-    sendMessage: (chatId, content, newChat = false) => {
-
-      console.log('Sending message:', { chatId, content, newChat });
-
+    sendMessage: (chatId, content) => {
       if (!content.trim() || !AuthStore.getState().user) return;
-
-      console.log('check passed for sending message:', { chatId, content, newChat });
 
       const newMessage: Message = {
         id: `m${Date.now()}`,
-        chatId,
+        chatId: chatId,
         content,
         sender: AuthStore.getState().user?.id!,
-        timestamp: new Date(),
-        status: 'sent',
-        newChat,
+        timestamp: Date.now(),
+        status: 'pending',
       };
 
       set((state) => {
-        const chatMessages = [...(state.messages[chatId] || []), newMessage];
+        const chatMessages = [newMessage, ...(state.messages[chatId] || [])];
         const updatedMessages = { ...state.messages, [chatId]: chatMessages };
         const updatedChats = state.chats?.map((chat) =>
           chat.id === chatId ? { ...chat, lastMessage: newMessage } : chat,
@@ -214,7 +336,7 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set) 
       const status = wsClient.send('message', {
         chatId,
         content,
-        newChat,
+        timestamp: newMessage.timestamp,
       });
 
       if (status) {
@@ -223,7 +345,7 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set) 
           messages: {
             ...state.messages,
             [chatId]: state.messages[chatId].map((msg) =>
-              msg.id === newMessage.id ? { ...msg, status: 'delivered' } : msg,
+              msg.id === newMessage.id ? { ...msg, status: 'sent' } : msg,
             ),
           },
         }));
@@ -231,6 +353,33 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set) 
         console.error('Failed to send message:', newMessage);
         return;
       }
+    },
+
+    sendNewChatMessage: (newUserId, content) => {
+      if (!content.trim() || !AuthStore.getState().user) return;
+
+
+      const status = wsClient.send('createRoom', {
+        newUserId,
+        message: {
+          content,
+          timestamp: Date.now().toString(),
+        },
+      });
+
+      if (status) {
+        console.log('new Chat Created successfully for user:', newUserId);
+      } else {
+        console.error('Failed to  create Chat for user:', newUserId);
+      }
+    },
+
+    onMessage: (handler: (msg: Message) => void) => {
+      messageCallback = handler;
+    },
+
+    loadMoreMessages: (chatId, page) => {
+      wsClient.send('getMessages', { chatId, page });
     },
 
     markAsRead: (chatId) => {
@@ -244,7 +393,7 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set) 
             msg.sender !== state.currentChat?.participant.id ? { ...msg, status: 'read' } : msg,
           ) || [],
         },
-      }));
+      }), undefined, 'chatStore/markAsRead/updateState');
 
       wsClient.send('read_receipt', { chatId });
     },

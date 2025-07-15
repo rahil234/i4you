@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { UserLayout } from '@/components/user-layout';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -8,14 +8,11 @@ import { Input } from '@/components/ui/input';
 import { Search, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import useMatchesStore from '@/store/matchesStore';
+import { Notifications } from '@/components/user/Notification';
 
 export default function MatchesPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const { matches, fetchMatches } = useMatchesStore();
-
-  useEffect(() => {
-    fetchMatches();
-  }, [fetchMatches]);
+  const { matches } = useMatchesStore();
 
   const filteredMatches = matches.filter(
     (match) =>
@@ -25,6 +22,7 @@ export default function MatchesPage() {
 
   return (
     <UserLayout>
+      <Notifications />
       <div className="max-w-lg mx-auto pb-20 pt-6 px-4">
         <div className="mb-6">
           <h1 className="text-2xl font-bold mb-4">Your Matches</h1>
@@ -56,7 +54,9 @@ export default function MatchesPage() {
                       {match.user.name}, {match.user.age}
                     </h3>
                     <p className="text-sm text-muted-foreground">{match.user.location}</p>
-                    <p className="text-xs text-muted-foreground">Matched {match.createdAt}</p>
+                    <p className="text-xs text-muted-foreground">
+                      Matched on {new Date(match.createdAt).toLocaleString('en-US', {})}
+                    </p>
                   </div>
                 </div>
 
