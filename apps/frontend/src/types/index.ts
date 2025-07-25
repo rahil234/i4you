@@ -8,6 +8,7 @@ export interface User extends Omit<BaseUser, 'location'> {
   bio: string;
   location: string;
   photos: string[];
+  verified: boolean;
   distance?: string;
   interests?: string[];
   avatar?: string;
@@ -103,9 +104,8 @@ export interface Message {
   chatId: string;
   content: string;
   sender: string;
-  timestamp: Date;
-  status?: 'sent' | 'delivered' | 'read';
-  newChat?: boolean;
+  timestamp: number;
+  status?: 'sent' | 'delivered' | 'read' | 'pending';
 }
 
 export interface ChatContextType {

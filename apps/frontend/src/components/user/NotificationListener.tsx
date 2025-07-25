@@ -4,9 +4,11 @@ import { useEffect } from 'react';
 import { getNotificationSocket } from '@/lib/notification-websocket';
 import useMatchesStore from '@/store/matchesStore';
 import useAuthStore from '@/store/authStore';
+import useChatStore from '@/store/chatStore';
 
 export default function NotificationListener() {
   const { pushNewMatch } = useMatchesStore();
+  const { newChat, newMessage } = useChatStore();
   const { user } = useAuthStore();
 
   useEffect(() => {
@@ -27,6 +29,13 @@ export default function NotificationListener() {
 
     const offChat = socket.on('chat', (data) => {
       console.log('💬 New chat:', data);
+      const { chat, message } = data;
+      newChat(chat, message);
+    });
+
+    const offMessage = socket.on('message', (data) => {
+      console.log('📩 New message:', data);
+      newMessage(data);
     });
 
     const offStatus = socket.onStatusChange((status) => {
@@ -35,6 +44,7 @@ export default function NotificationListener() {
 
     return () => {
       offMatch();
+      offMessage();
       offChat();
       offStatus();
       if (!user) {

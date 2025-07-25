@@ -1,18 +1,7 @@
-import { User } from '@i4you/shared';
+import { Message, User } from '@i4you/shared';
+import { Chat } from '../schemas/chat.schema';
 
-export interface UserPreview {
-  participant: {
-    id: string;
-    name: string;
-    avatar: string;
-    initials?: string;
-    isOnline?: boolean;
-    lastActive?: string;
-  };
-  unreadCount: number;
-}
-
-export class UserResponseDto implements UserPreview {
+export interface ChatPreview {
   id: string;
   participant: {
     id: string;
@@ -22,16 +11,25 @@ export class UserResponseDto implements UserPreview {
     isOnline?: boolean;
     lastActive?: string;
   };
-  lastMessage?: {
+  messages: Message[];
+  unreadCount: number;
+}
+
+export class ChatResponseDto implements ChatPreview {
+  id: string;
+  participant: {
     id: string;
-    content: string;
-    sender: string;
-    timestamp: string;
-    status?: 'sent' | 'delivered' | 'read';
+    name: string;
+    avatar: string;
+    initials?: string;
+    isOnline?: boolean;
+    lastActive?: string;
   };
+  messages: Message[];
   unreadCount: number;
 
-  constructor(user: User) {
+  constructor(chat: Chat, user: User, messages: Message[] = []) {
+    this.id = String(chat.id);
     this.participant = {
       id: user.id,
       name: user.name,
@@ -40,10 +38,10 @@ export class UserResponseDto implements UserPreview {
         .split(' ')
         .map((n) => n.charAt(0).toUpperCase())
         .join(''),
-      isOnline: false, // TODO implement online status
-      lastActive: Date.now().toString(), // TODO implement last active time
+      isOnline: true,
+      lastActive: 'Not Implemented',
     };
-    this.lastMessage = undefined;
-    this.unreadCount = 0;
+    this.messages = messages;
+    this.unreadCount = 2;
   }
 }

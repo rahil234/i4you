@@ -1,18 +1,17 @@
 import { Controller } from '@nestjs/common';
-import {
-  Ctx,
-  EventPattern,
-  KafkaContext,
-  Payload,
-} from '@nestjs/microservices';
+import { EventPattern, Payload } from '@nestjs/microservices';
 import { NotificationsGateway } from '../gateway/notifications.gateway';
 
 interface MatchEventPayload {
-  userId: string;
-  matchedUserId: string;
-  name: string;
-  photo: string;
-  timestamp: Date;
+  type: 'NEW_CHAT' | 'NEW_MESSAGE';
+  recipientId: string;
+  data: {
+    userId: string;
+    matchedUserId: string;
+    name: string;
+    photo: string;
+    timestamp: Date;
+  };
 }
 
 @Controller()
@@ -20,20 +19,39 @@ export class NotificationListener {
   constructor(private readonly gateway: NotificationsGateway) {}
 
   @EventPattern('notification.events')
-  handleMatchEvent(
-    @Payload() payload: MatchEventPayload,
-    @Ctx() context: KafkaContext,
-  ) {
-    const topic = context.getTopic();
-    const key = (context.getMessage().key || 'null').toString();
-    const partition = context.getPartition();
+  async handleMatchEvent(@Payload() payload: MatchEventPayload) {
+    await this.gateway.emitToUser(payload.recipientId, 'match', payload.data);
+  }
 
-    console.log(
-      `📩 Received Event on topic: ${topic} | partition: ${partition} | key: ${key}`,
-    );
+  @EventPattern('chat.events')
+  async handleChatEvent(@Payload() payload: MatchEventPayload) {
+    console.log('Received chat event:', payload);
 
-    console.log('Payload:', payload);
+    if (!payload.recipientId) {
+      console.error('No recipientId provided in payload:', payload);
+      return;
+    }
 
-    this.gateway.emitToUser(payload.userId, 'match', payload);
+    switch (payload.type) {
+      case 'NEW_CHAT':
+        console.log('Handling new chat event:', payload);
+        await this.gateway.emitToUser(
+          payload.recipientId,
+          'chat',
+          payload.data,
+        );
+        break;
+      case 'NEW_MESSAGE':
+        console.log('Handling new message event:', payload);
+        await this.gateway.emitToUser(
+          payload.recipientId,
+          'message',
+          payload.data,
+        );
+        break;
+      default:
+        console.error('Unknown event type:', payload.type);
+        return;
+    }
   }
 }

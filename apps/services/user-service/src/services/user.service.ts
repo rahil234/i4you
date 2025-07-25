@@ -12,6 +12,17 @@ import ICacheService from '@/services/interfaces/ICacheService';
 import IUserService from '@/services/interfaces/IUserService';
 import IKafkaService from '@/events/kafka/interfaces/IKafkaService';
 
+interface MatchEventPayload {
+  recipientId: string;
+  data: {
+    userId: string;
+    matchedUserId: string;
+    name: string;
+    photo: string;
+    timestamp: Date;
+  };
+}
+
 @injectable()
 export class UserService implements IUserService {
   constructor(
@@ -132,19 +143,25 @@ export class UserService implements IUserService {
     console.log(`User ${user1.name} matched with user ${user2.id}`);
 
     await this.kafkaService.emit('notification.events', 'user_matched', {
-      userId: user1.id,
-      matchedUserId: user2.id,
-      name: user2.name,
-      photo: user2.photos[0],
-      timestamp: new Date().toISOString(),
-    });
+      recipientId: user1.id,
+      data: {
+        userId: user2.id,
+        matchedUserId: user2.id,
+        name: user2.name,
+        photo: user2.photos[0],
+        timestamp: new Date(),
+      },
+    } as MatchEventPayload);
 
     await this.kafkaService.emit('notification.events', 'user_matched', {
-      userId: user2.id,
-      matchedUserId: user1.id,
-      name: user1.name,
-      photo: user1.photos[0],
-      timestamp: new Date().toISOString(),
+      recipientId: user2.id,
+      data: {
+        userId: user1.id,
+        matchedUserId: user1.id,
+        name: user1.name,
+        photo: user1.photos[0],
+        timestamp: new Date().toISOString(),
+      },
     });
 
     return;

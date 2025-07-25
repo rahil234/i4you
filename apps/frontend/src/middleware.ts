@@ -55,6 +55,5 @@ export async function middleware(request: NextRequest) {
   }
 
   // All good → continue
-  console.log('Access token is valid, proceeding with request:', pathname);
   return NextResponse.next();
 }

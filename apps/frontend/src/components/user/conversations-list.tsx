@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import useChatStore, { ChatPreview } from '@/store/chatStore';
 import useAuthStore from '@/store/authStore';
 import { formatTimestamp } from '@/utils/formatTimestamp';
+import { useNow } from '@/context/NowContext';
 
 interface ConversationsListProps {
   selectedId?: string;
@@ -18,26 +19,24 @@ export function ConversationsList({ selectedId }: ConversationsListProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredChats, setFilteredChats] = useState<ChatPreview[]>([]);
 
-
-  const { chats, messages, isLoadingChats, currentChat } = useChatStore();
+  const { chats, messages, isLoading, currentChat } = useChatStore();
 
   const { user } = useAuthStore();
 
+  const now = useNow();
+
   useEffect(() => {
     if (chats) {
-      console.log('Chats loaded:', chats);
-      // setFilteredChats(chats.filter((chat) => {
-      //   console.log('Filtering chat:', chat.id, 'with participants:', chat.participants);
-      //   const otherUser = chat.participants.find((p) => p.id !== currentUser?.id);
-      //   return otherUser?.name!.toLowerCase().includes(searchQuery.toLowerCase());
-      // }));
+      setFilteredChats(chats.filter((chat) => {
+        return chat?.participant.name!.toLowerCase().includes(searchQuery.toLowerCase());
+      }));
       setFilteredChats(chats);
       console.log('Filtered chats:', filteredChats);
     }
   }, [chats, searchQuery, currentChat]);
 
 
-  if (isLoadingChats) {
+  if (isLoading) {
     return <div className="p-4 text-center text-muted-foreground">Loading conversations...</div>;
   }
 
@@ -85,8 +84,9 @@ export function ConversationsList({ selectedId }: ConversationsListProps) {
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-baseline">
                     <h3 className="font-medium text-sm">{chat.participant.name}</h3>
-                    {chatMessages.length && (
-                      <span className="text-xs text-muted-foreground">{formatTimestamp(lastMessage.timestamp)}</span>
+                    {chatMessages.length > 0 && (
+                      <span
+                        className="text-xs text-muted-foreground">{formatTimestamp(lastMessage.timestamp, now)}</span>
                     )}
                   </div>
 
@@ -123,4 +123,3 @@ export function ConversationsList({ selectedId }: ConversationsListProps) {
     </div>
   );
 }
-
