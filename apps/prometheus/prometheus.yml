@@ -1,9 +1,0 @@
-global:
-  scrape_interval: 1s
-
-scrape_configs:
-  - job_name: 'node-app'
-    static_configs:
-      - targets: [ 'gateway-server:9464' ]
-
-remote_write:

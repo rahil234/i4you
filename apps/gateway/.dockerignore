@@ -1,6 +1,0 @@
-node_modules
-.gitignore
-.dockerignore
-.turbo
-Dockerfile.dev
-Dockerfile
