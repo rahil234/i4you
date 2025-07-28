@@ -1,0 +1,48 @@
+api:
+  dashboard: true
+
+#providers:
+#  kubernetesCRD:
+#    enabled: true
+#    namespaces:
+#      - app
+#      - default
+#      - traefik
+#  kubernetesIngress:
+#    enabled: true
+#    namespaces:
+#        - app
+#        - default
+#        - traefik
+
+#rbac:
+#  enabled: true
+#  namespaced: false
+
+ingressRoute:
+  dashboard:
+    enabled: true
+    matchRule: Host(`traefik.localhost`)
+    entryPoints: ["web"]
+    middlewares:
+      - name: traefik-dashboard-auth
+
+extraObjects:
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: traefik-dashboard-auth-secret
+      namespace: traefik
+    type: kubernetes.io/basic-auth
+    stringData:
+      username: admin
+      password: changeme
+
+  - apiVersion: traefik.io/v1alpha1
+    kind: Middleware
+    metadata:
+      name: traefik-dashboard-auth
+      namespace: traefik
+    spec:
+      basicAuth:
+        secret: traefik-dashboard-auth-secret

@@ -22,6 +22,7 @@ import { PasswordResetTemplate } from '@/utils/mail-templates';
 import { NotFoundError } from '@/errors/NotFoundError';
 import { env } from '@/config';
 import { createError } from '@i4you/http-errors';
+import ICacheService from '@/services/interfaces/ICacheService';
 
 const APP_URL = env.APP_URL;
 
@@ -30,8 +31,21 @@ export class AuthService {
   constructor(
     @inject(TYPES.UserRepository) private userRepository: IUserRepository,
     @inject(TYPES.AdminRepository) private adminRepository: IAdminRepository,
+    @inject(TYPES.CacheService) private cacheService: ICacheService,
     @inject(TYPES.MailService) private mailService: MailService
   ) {}
+
+  private async blacklistAccessToken(token: string) {
+    await this.cacheService.set(`blacklist:${token}`, 'true', 60 * 20);
+  }
+
+  private async addRefreshToken(userId: string, token: string) {
+    await this.cacheService.set(`refresh:${userId}`, token, 60 * 60 * 24 * 7);
+  }
+
+  private async removeRefreshToken(userId: string) {
+    await this.cacheService.del(`refresh:${userId}`);
+  }
 
   async login(loginDTO: LoginRequestDTO): Promise<LoginResponseDTO> {
     const user = await this.userRepository.findByEmail(loginDTO.email);
@@ -58,6 +72,8 @@ export class AuthService {
       sub: user._id,
       role: 'member',
     });
+
+    await this.addRefreshToken(user._id, refreshToken);
 
     return new LoginResponseDTO(accessToken, refreshToken, {
       id: user._id,
@@ -263,6 +279,8 @@ export class AuthService {
       role: 'member',
     });
 
+    await this.addRefreshToken(user._id, refreshToken);
+
     return new LoginResponseDTO(accessToken, refreshToken, {
       id: user._id,
       name: user.name,
@@ -302,20 +320,18 @@ export class AuthService {
       throw new Error('Invalid token');
     }
 
-    let user;
-    if (role === 'admin') {
-      user = await this.adminRepository.findById(userId);
-    } else {
-      user = await this.userRepository.findById(userId);
+    const storedToken = await this.cacheService.get(`refresh:${userId}`);
+    if (!storedToken || storedToken !== token) {
+      throw createError.Unauthorized('Invalid refresh token');
     }
 
-    if (!user) {
-      throw new Error('User not found');
-    }
+    const user =
+      role === 'admin'
+        ? await this.adminRepository.findById(userId)
+        : await this.userRepository.findById(userId);
 
-    if (user.status === 'suspended') {
-      throw new SuspendedUserError();
-    }
+    if (!user) throw new Error('User not found');
+    if (user.status === 'suspended') throw new SuspendedUserError();
 
     const accessToken = generateAccessToken({
       sub: user._id,
@@ -323,13 +339,23 @@ export class AuthService {
       email: user.email,
     });
 
-    console.log('new Access Token: ', accessToken);
+    const newRefreshToken = generateRefreshToken({ sub: user._id, role });
 
-    const refreshToken = generateRefreshToken({
-      sub: user._id,
-      role,
-    });
+    await this.cacheService.set(
+      `refresh:${user._id}`,
+      newRefreshToken,
+      60 * 60 * 24 * 7
+    );
 
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken: newRefreshToken };
+  }
+
+  async logout(userId: string, token: string): Promise<void> {
+    if (!token || !userId) {
+      throw new ValidationError('Token is required');
+    }
+
+    await this.blacklistAccessToken(token);
+    await this.removeRefreshToken(userId);
   }
 }

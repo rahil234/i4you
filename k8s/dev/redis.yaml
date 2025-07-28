@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: redis-local
+  name: redis
 ---
 apiVersion: v1
 kind: Secret
 metadata:
   name: redis-password
-  namespace: redis-local
+  namespace: redis
 type: Opaque
 data:
   redis-password: cGFzc3dvcmQ=
@@ -16,7 +16,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: redis
-  namespace: redis-local
+  namespace: redis
   labels:
     app: redis
 spec:
@@ -66,12 +66,11 @@ apiVersion: v1
 kind: Service
 metadata:
   name: redis
-  namespace: redis-local
+  namespace: redis
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: redis
   ports:
     - port: 6379
       targetPort: 6379
-      nodePort: 30079

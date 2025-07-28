@@ -1,5 +1,4 @@
 services:
-
   validate-service:
     image: validate-service-image
     container_name: validate-service
@@ -95,6 +94,28 @@ services:
     environment:
       - PORT=3004
       - MONGO_URI=mongodb://host.docker.internal:27017/I4you-chatDB
+    volumes:
+      - ./apps/services/chat-service:/app
+      - /app/node_modules
+    depends_on:
+      - user-service
+    networks:
+      - app-network
+
+  frontend:
+    image: frontend-image
+    container_name: frontend
+    pull_policy: never
+    build:
+      context: apps/frontend
+      dockerfile: Dockerfile
+    environment:
+      - PORT=3004
+      - MONGO_URI=mongodb://host.docker.internal:27017/I4you-chatDB
+      - NODE_ENV=development
+      - NEXT_PRIVATE_API_URL=https://i4you.local.net
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
+      - NEXT_PRIVATE_JWT_SECRET=your_jwt_secret
     volumes:
       - ./apps/services/chat-service:/app
       - /app/node_modules

@@ -58,4 +58,15 @@ export class UserRepository
       },
     ]);
   }
+
+  async findMany(filter: any, options: { skip: number; limit: number }) {
+    return UserModel.find(filter)
+      .skip(options.skip)
+      .limit(options.limit)
+      .lean();
+  }
+
+  async count(filter: any) {
+    return UserModel.countDocuments(filter);
+  }
 }

@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: host-access
+  namespace: default
+spec:
+  hostPID: true
+  hostNetwork: true
+  containers:
+    - name: host-container
+      image: node:22-alpine
+      command: ["/bin/sh"]
+      args: ["-c", "sleep infinity"]
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - name: host-root
+          mountPath: /host
+  volumes:
+    - name: host-root
+      hostPath:
+        path: /
+        type: Directory
+  restartPolicy: Never

@@ -1,9 +1,10 @@
 'use client';
 
-import { ConversationsList } from '@/components/conversations-list';
+import { ConversationsList } from '@/components/user/conversations-list';
 import { UserLayout } from '@/components/user-layout';
 import useChatStore from '@/store/chatStore';
 import { useEffect, useState } from 'react';
+import { Notifications } from '@/components/user/Notification';
 
 export default function MessagesPage() {
   const { connectionStatus } = useChatStore();

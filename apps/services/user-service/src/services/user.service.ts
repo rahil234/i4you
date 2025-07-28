@@ -12,6 +12,17 @@ import ICacheService from '@/services/interfaces/ICacheService';
 import IUserService from '@/services/interfaces/IUserService';
 import IKafkaService from '@/events/kafka/interfaces/IKafkaService';
 
+interface MatchEventPayload {
+  recipientId: string;
+  data: {
+    userId: string;
+    matchedUserId: string;
+    name: string;
+    photo: string;
+    timestamp: Date;
+  };
+}
+
 @injectable()
 export class UserService implements IUserService {
   constructor(
@@ -20,6 +31,14 @@ export class UserService implements IUserService {
     @inject(TYPES.KafkaService) private kafkaService: IKafkaService,
     @inject(TYPES.CacheService) private cacheService: ICacheService
   ) {}
+
+  private async suspendUser(userId: string) {
+    await this.cacheService.set(`suspend:${userId}`, 'true', 60 * 60 * 24 * 7);
+  }
+
+  private async reInitiateUser(userId: string) {
+    await this.cacheService.del(`suspend:${userId}`);
+  }
 
   async getUserById(id: string, role: 'admin'): Promise<AdminDTO>;
   async getUserById(id: string, role?: 'member'): Promise<UserDTO>;
@@ -44,9 +63,51 @@ export class UserService implements IUserService {
       : (new UserDTO(data) as UserDTO);
   }
 
-  async getUsers() {
-    const users = await this.userRepository.findAll();
-    return users.map((user) => new UserDTO(user));
+  async getUsers({
+    page,
+    limit,
+    search,
+    status,
+    gender,
+  }: {
+    page: number;
+    limit: number;
+    search: string;
+    status: string;
+    gender: string;
+  }) {
+    const offset = (page - 1) * limit;
+
+    const whereClause: any = {};
+
+    if (search) {
+      whereClause.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    if (status && status !== 'all') {
+      whereClause.status = status;
+    }
+
+    if (gender && gender !== 'all') {
+      whereClause.gender = gender;
+    }
+
+    const users = await this.userRepository.findMany(whereClause, {
+      skip: offset,
+      limit,
+    });
+
+    const total = await this.userRepository.count(whereClause);
+
+    return {
+      data: users.map((user) => new UserDTO(user)),
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async updateUser(id: string, data: any) {
@@ -88,6 +149,12 @@ export class UserService implements IUserService {
 
     if (!status) {
       throw new BadRequestError('Status is required');
+    }
+
+    if (status === 'suspended') {
+      await this.suspendUser(userId);
+    } else if (status === 'active') {
+      await this.reInitiateUser(userId);
     }
 
     await this.cacheService.del(`member:${userId}`);
@@ -132,19 +199,25 @@ export class UserService implements IUserService {
     console.log(`User ${user1.name} matched with user ${user2.id}`);
 
     await this.kafkaService.emit('notification.events', 'user_matched', {
-      userId: user1.id,
-      matchedUserId: user2.id,
-      name: user2.name,
-      photo: user2.photos[0],
-      timestamp: new Date().toISOString(),
-    });
+      recipientId: user1.id,
+      data: {
+        userId: user2.id,
+        matchedUserId: user2.id,
+        name: user2.name,
+        photo: user2.photos[0],
+        timestamp: new Date(),
+      },
+    } as MatchEventPayload);
 
     await this.kafkaService.emit('notification.events', 'user_matched', {
-      userId: user2.id,
-      matchedUserId: user1.id,
-      name: user1.name,
-      photo: user1.photos[0],
-      timestamp: new Date().toISOString(),
+      recipientId: user2.id,
+      data: {
+        userId: user1.id,
+        matchedUserId: user1.id,
+        name: user1.name,
+        photo: user1.photos[0],
+        timestamp: new Date().toISOString(),
+      },
     });
 
     return;

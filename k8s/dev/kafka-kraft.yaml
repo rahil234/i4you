@@ -18,6 +18,7 @@ spec:
         size: 100Gi
         deleteClaim: false
         kraftMetadata: shared
+
 ---
 apiVersion: kafka.strimzi.io/v1beta2
 kind: Kafka
@@ -40,13 +41,6 @@ spec:
         port: 9094
         type: nodeport
         tls: false
-        configuration:
-          externalTrafficPolicy: Local
-          brokers:
-            - broker: 0
-              advertisedHost: 198.19.249.2
-              advertisedPort: 31092
-              nodePort: 31092
       - name: tls
         port: 9093
         type: internal

@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: user-service
+  namespace: app
 spec:
   replicas: 1
   selector:
@@ -11,6 +12,7 @@ spec:
     metadata:
       labels:
         app: user-service
+        version: v1
     spec:
       containers:
         - name: user-service
@@ -42,7 +44,7 @@ spec:
             - name: MONGODB_URI
               value: "mongodb+srv://rahilsardar234:NOKCk3dcykTN0P32@i4you-cluster.kdpj0cj.mongodb.net/I4You-userDB"
             - name: REDIS_HOST
-              value: "redis.redis-local.svc.cluster.local"
+              value: "redis.redis.svc.cluster.local"
             - name: REDIS_PORT
               value: "6379"
             - name: REDIS_PASSWORD
@@ -52,6 +54,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: user-service
+  namespace: app
 spec:
   type: ClusterIP
   selector:

@@ -8,10 +8,10 @@ import Redis from 'ioredis';
       provide: 'REDIS_CLIENT',
       useFactory: () => {
         return new Redis({
-          host: 'redis.redis-local.svc.cluster.local',
-          port: 6379,
+          host: process.env.REDIS_HOST,
+          port: Number(process.env.REDIS_PORT),
           username: 'default',
-          password: 'password',
+          password: process.env.REDIS_PASSWORD,
         });
       },
     },

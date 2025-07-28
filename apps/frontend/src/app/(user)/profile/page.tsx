@@ -20,10 +20,10 @@ import {
   Shield,
   Award,
   Eye,
+  BadgeCheck,
 } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { useRouter } from 'next/navigation';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function ProfilePage() {
@@ -85,48 +85,46 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Main profile card with cover photo */}
+        {/* Main profile card*/}
         <Card className="mb-6 overflow-hidden">
-          <div className="h-32 bg-gradient-to-r from-pink-400 to-purple-500 relative">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute top-2 right-2 bg-white/20 hover:bg-white/40 backdrop-blur-sm"
-              onClick={handleEditProfile}
-            >
-              <Edit className="h-4 w-4 text-white" />
-            </Button>
-          </div>
+          <div className="h-32 bg-gradient-to-r from-pink-400 to-purple-500 relative" />
 
           <CardContent className="pt-0 relative">
             <div className="flex flex-col items-center -mt-12 mb-6">
-              <Avatar className="h-24 w-24 border-4 border-background">
-                <AvatarImage src={user.photos && user.photos[0]} alt={user?.name} />
-                <AvatarFallback className="bg-gradient-to-br from-pink-500 to-orange-400 text-white text-xl">
-                  {user.name &&
-                    user.name
-                      .split(' ')
-                      .map((n) => n[0])
-                      .join('')
-                      .toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+              <div className="relative">
+                <Avatar className="h-24 w-24 border-4 border-background">
+                  <AvatarImage src={user.photos && user.photos[0]} alt={user?.name} />
+                  <AvatarFallback className="bg-gradient-to-br from-pink-500 to-orange-400 text-white text-xl">
+                    {user.name &&
+                      user.name
+                        .split(' ')
+                        .map((n) => n[0])
+                        .join('')
+                        .toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+
+                {user.verified && (
+                  <BadgeCheck
+                    className="absolute top-1 right-1 rounded-full text-[10px] p-1 bg-blue-50 text-blue-600 border-blue-200 flex items-center"
+                  >
+                    <Shield className="h-4 w-4 mr-0.5" />
+                  </BadgeCheck>
+                )}
+              </div>
 
               <div className="mt-4 text-center">
-                <h2 className="text-2xl font-bold flex items-center justify-center gap-2">
-                  {user.name}, {user.age}
-                  {/*{user.verified && ()*/}
-                  {/*}*/}
-                  <Badge variant="outline" className="bg-blue-50 text-blue-600 border-blue-200">
-                    <Shield className="h-3 w-3 mr-1" /> Verified
-                  </Badge>
-                </h2>
+                <div className="flex flex-col items-center max-w-xs mx-auto text-center">
+                  <h2 className="text-2xl font-bold break-words">
+                    {user.name}, {user.age}
+                  </h2>
+                </div>
 
                 <p className="text-muted-foreground flex items-center justify-center mt-1">
                   <MapPin className="h-3.5 w-3.5 mr-1" /> {user.location}
                 </p>
 
-                <div className="flex space-x-2 mt-4">
+                <div className="flex justify-center space-x-2 mt-4">
                   <Button
                     variant="default"
                     size="sm"

@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { AuthController } from '@/controllers/auth.controller';
 import { container } from '@/config/inversify.config';
 import { TYPES } from '@/types';
+import { authenticateAndAuthorizeMiddleware } from '@/middlwares/authenticate-and-authorize.middleware';
 
 const router = Router();
 
@@ -241,19 +242,6 @@ router.patch('/change-password', authController.changePassword);
 
 /**
  * @swagger
- * /api/v1/auth/logout:
- *   post:
- *     summary: Logout user
- *     tags:
- *       - Auth
- *     responses:
- *       200:
- *         description: Logout successful
- */
-router.post('/logout', authController.logout);
-
-/**
- * @swagger
  * /api/v1/auth/register/google:
  *   post:
  *     summary: Register with Google
@@ -333,5 +321,22 @@ router.post('/login/facebook', authController.facebookLogin);
  *         description: Facebook Login successful
  */
 router.post('/register/facebook', authController.facebookRegister);
+
+/**
+ * @swagger
+ * /api/v1/auth/logout:
+ *   post:
+ *     summary: Logout user
+ *     tags:
+ *       - Auth
+ *     responses:
+ *       200:
+ *         description: Logout successful
+ */
+router.post(
+  '/logout',
+  authenticateAndAuthorizeMiddleware(),
+  authController.logout
+);
 
 export default router;

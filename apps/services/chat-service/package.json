@@ -20,6 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@bufbuild/protobuf": "latest",
     "@grpc/grpc-js": "^1.13.4",
     "@i4you/proto-files": "^1.0.4",
     "@nestjs/common": "^11.0.1",
@@ -30,11 +31,13 @@
     "@nestjs/platform-socket.io": "^11.0.11",
     "@nestjs/platform-ws": "^11.0.11",
     "@nestjs/websockets": "^11.0.11",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
+    "kafkajs": "^2.2.4",
     "mongoose": "^8.14.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "socket.io": "^4.8.1",
-    "@bufbuild/protobuf": "latest"
+    "socket.io": "^4.8.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

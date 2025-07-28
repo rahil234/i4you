@@ -1,0 +1,13 @@
+local.file_match "logs" {
+  path_targets = ["/var/log/pods/**/*.log"]
+}
+
+loki.write "default" {
+  endpoint {
+    url = "http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/push"
+  }
+  labels = {
+    job = "example-app"
+  }
+  forward_to = [local.file_match.logs.receiver]
+}

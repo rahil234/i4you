@@ -2,11 +2,17 @@
   <dictionary name="project">
     <words>
       <w>buildkit</w>
+      <w>datasources</w>
       <w>dest</w>
       <w>insync</w>
+      <w>integreatly</w>
+      <w>istiod</w>
       <w>jbod</w>
+      <w>kiali</w>
       <w>konghq</w>
+      <w>matchstore</w>
       <w>nodeport</w>
+      <w>orbstack</w>
       <w>skaffold</w>
       <w>strimzi</w>
       <w>traefik</w>

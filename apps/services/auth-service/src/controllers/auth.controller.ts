@@ -192,10 +192,6 @@ export class AuthController {
     const { accessToken, refreshToken: newRefreshToken } =
       await this.authService.refreshToken(refreshToken);
 
-    console.log('ghjghjk\n\niuhighi');
-
-    console.log('Refreshing token for user:', 'New access token:', accessToken);
-
     if (!accessToken) {
       res.status(401).json({ message: 'Unauthorized' });
       return;
@@ -205,12 +201,13 @@ export class AuthController {
 
     setRefreshCookie(res, newRefreshToken);
 
-    console.log('New refresh token set:', newRefreshToken);
-
     res.json({ token: accessToken });
   });
 
-  logout = handleAsync((_req, res) => {
+  logout = handleAsync(async (req, res) => {
+    const token = req.cookies['refreshToken'];
+    console.log('Logout token:', { token, user: req.user });
+    await this.authService.logout(req.user.id, token);
     clearAuthCookie(res);
     res.status(200).json({ message: 'Logged out' });
   });

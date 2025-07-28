@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: test-alert
+  labels:
+    release: prometheus
+  namespace: monitoring
+spec:
+  groups:
+    - name: test.rules
+      rules:
+        - alert: AlwaysFiring
+          expr: vector(1)
+          for: 1m
+          labels:
+            severity: warning
+          annotations:
+            summary: "This is a test alert"

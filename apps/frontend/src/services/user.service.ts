@@ -1,5 +1,6 @@
 import api from '@/lib/api';
 import { handleApi } from '@/utils/apiHandler';
+import { FilterType } from '@/components/users-table';
 
 class UserService {
   getUser = () =>
@@ -22,10 +23,10 @@ class UserService {
         .then(res => res.data),
     );
 
-  getUsers = ({ page, limit }: { page: number; limit: number }) =>
+  getUsers = ({ page, limit, filters }: { page: number; limit: number, filters: FilterType }) =>
     handleApi(() =>
       api
-        .get('/user')
+        .get(`/user?${page ? `page=${page}` : ''}${limit ? `&limit=${limit}` : ''}&search=${filters.search || ''}&status=${filters.status || ''}&gender=${filters.gender || ''}`)
         .then(res => res.data),
     );
 

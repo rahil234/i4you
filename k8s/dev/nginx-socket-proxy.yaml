@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: socket-proxy-nginx
+  namespace: app
 spec:
   replicas: 1
   selector:
@@ -11,6 +12,7 @@ spec:
     metadata:
       labels:
         app: socket-proxy-nginx
+        version: v1
     spec:
       containers:
         - name: socket-proxy-nginx
@@ -23,6 +25,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: socket-proxy-nginx
+  namespace: app
 spec:
   type: ClusterIP
   selector:
