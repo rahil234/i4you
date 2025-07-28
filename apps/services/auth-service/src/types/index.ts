@@ -8,4 +8,5 @@ export const TYPES = {
   AuthController: Symbol.for('AuthController'),
   AdminAuthController: Symbol.for('AdminAuthController'),
   MailService: Symbol.for('MailService'),
+  CacheService: Symbol.for('CacheService'),
 };

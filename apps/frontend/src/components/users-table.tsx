@@ -1,93 +1,57 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+} from '@/components/ui/table';
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { MoreHorizontal, Check, Ban, Eye } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { MoreHorizontal, Eye, Ban, Check } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 import UserService from '@/services/user.service';
-import type { User as BaseUser } from '@repo/shared';
+import type { User as BaseUser } from '@i4you/shared';
+import { useEffect } from 'react';
 
-type User = Omit<BaseUser, 'location'> & {
-  location: string;
-}
+type User = Omit<BaseUser, 'location'> & { location: string };
+export type FilterType = { search: string; status: string; gender: string };
 
-type filterType = { search: string; status: string; gender: string };
+export function UsersTable({ filters, page, setTotalPages }: { filters: FilterType; page: number; setTotalPages: (total: number) => void }) {
+  const limit = 10;
 
-export function UsersTable({ filters }: { filters: filterType }) {
-  const [users, setUsers] = useState<User[]>([]);
-  const [page, setPage] = useState(1);
-  const [limit] = useState(10);
+  const {
+    data,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ['users', filters, page],
+    queryFn: () => UserService.getUsers({ filters, page, limit }).then((res) => res.data),
+  });
 
-  useEffect(() => {
-    console.log('Filters changed:', filters.search);
-  }, [filters]);
-
-  const filteredUsers = useMemo(() => {
-    return users.filter(user => {
-      return (
-        (filters.status === 'all' || user.status === filters.status) &&
-        (filters.gender === 'all' || user.gender === filters.gender) &&
-        (
-          user.name.toLowerCase().includes(filters.search.toLowerCase()) ||
-          user.email.toLowerCase().includes(filters.search.toLowerCase())
-        )
-      );
-    });
-  }, [users, filters]);
-
-  const paginatedUsers = useMemo(() => {
-    const start = (page - 1) * limit;
-    return filteredUsers.slice(start, start + limit);
-  }, [filteredUsers, page, limit]);
+  const users = data?.data ?? [];
+  const totalPages = data?.totalPages ?? 1;
 
   useEffect(() => {
-    UserService.getUsers({ page: 1, limit: 10 }).then(({ data, error }) => {
-      if (error) {
-        console.error('Error fetching users', error);
-        return;
-      }
-
-      if (error) return;
-
-      setUsers(data);
-    });
-  }, []);
+    if (data?.totalPages) setTotalPages(data.totalPages);
+  }, [data]);
 
   const handleSuspendUser = async (userId: string) => {
-    const confirm = window.confirm('Are you sure you want to suspend this user?');
-
-    if (!confirm) return;
-
+    if (!window.confirm('Suspend this user?')) return;
     const { error } = await UserService.updateUserStatus(userId, 'suspended');
-
-    if (error) return;
-
-    setUsers(prev => prev.map((user) => user.id === userId ? { ...user, status: 'suspended' } : user));
-
-    console.log('Suspended user', userId);
+    if (!error) refetch();
   };
 
   const handleReinstateUser = async (userId: string) => {
-    const confirm = window.confirm('Are you sure you want to reinstate this user?');
-
-    if (!confirm) return;
-
+    if (!window.confirm('Reinstate this user?')) return;
     const { error } = await UserService.updateUserStatus(userId, 'active');
-
-    if (error) return;
-
-    setUsers(prev => prev.map((user) => user.id === userId ? { ...user, status: 'active' } : user));
-
-    console.log('Reinstated user', userId);
+    if (!error) refetch();
   };
+
+  if (isLoading) return <p className="p-4">Loading users...</p>;
+  if (error) return <p className="p-4 text-red-500">Error loading users</p>;
 
   return (
     <div className="rounded-md border">
@@ -103,13 +67,13 @@ export function UsersTable({ filters }: { filters: filterType }) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredUsers && filteredUsers.map((user) => (
+          {users.map((user: User) => (
             <TableRow key={user.id}>
               <TableCell>
                 <div className="flex items-center gap-3">
                   <Avatar>
                     <AvatarImage src={user.photos[0]} alt={user.name} />
-                    <AvatarFallback>{user.name[0].toUpperCase() || 'UN'}</AvatarFallback>
+                    <AvatarFallback>{user.name[0]?.toUpperCase() || 'UN'}</AvatarFallback>
                   </Avatar>
                   <div>
                     <p className="font-medium">{user.name}</p>
@@ -118,25 +82,18 @@ export function UsersTable({ filters }: { filters: filterType }) {
                 </div>
               </TableCell>
               <TableCell>
-                <Badge
-                  variant={
-                    user.status === 'active' ? 'default' : user.status === 'suspended' ? 'destructive' : 'secondary'
-                  }
-                >
+                <Badge variant={user.status === 'active' ? 'default' : 'destructive'}>
                   {user.status}
                 </Badge>
               </TableCell>
               <TableCell>{user.location}</TableCell>
-              <TableCell>
-                {user.age} / {user.gender}
-              </TableCell>
+              <TableCell>{user.age} / {user.gender}</TableCell>
               <TableCell>{new Date(user.joined).toLocaleDateString()}</TableCell>
               <TableCell className="text-right">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon">
                       <MoreHorizontal className="h-4 w-4" />
-                      <span className="sr-only">Open menu</span>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
@@ -144,10 +101,6 @@ export function UsersTable({ filters }: { filters: filterType }) {
                       <Eye className="mr-2 h-4 w-4" />
                       View Profile
                     </DropdownMenuItem>
-                    {/*<DropdownMenuItem>*/}
-                    {/*  <Edit className="mr-2 h-4 w-4" />*/}
-                    {/*  Edit User*/}
-                    {/*</DropdownMenuItem>*/}
                     {user.status === 'suspended' ? (
                       <DropdownMenuItem onClick={() => handleReinstateUser(user.id)}>
                         <Check className="mr-2 h-4 w-4" />
@@ -159,10 +112,6 @@ export function UsersTable({ filters }: { filters: filterType }) {
                         Suspend User
                       </DropdownMenuItem>
                     )}
-                    {/*<DropdownMenuItem className="text-destructive">*/}
-                    {/*  <Trash className="mr-2 h-4 w-4" />*/}
-                    {/*  Delete User*/}
-                    {/*</DropdownMenuItem>*/}
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>

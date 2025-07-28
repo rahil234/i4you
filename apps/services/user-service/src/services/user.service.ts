@@ -32,6 +32,14 @@ export class UserService implements IUserService {
     @inject(TYPES.CacheService) private cacheService: ICacheService
   ) {}
 
+  private async suspendUser(userId: string) {
+    await this.cacheService.set(`suspend:${userId}`, 'true', 60 * 60 * 24 * 7);
+  }
+
+  private async reInitiateUser(userId: string) {
+    await this.cacheService.del(`suspend:${userId}`);
+  }
+
   async getUserById(id: string, role: 'admin'): Promise<AdminDTO>;
   async getUserById(id: string, role?: 'member'): Promise<UserDTO>;
   async getUserById(id: string, role: UserJwtPayload['role'] = 'member') {
@@ -55,9 +63,51 @@ export class UserService implements IUserService {
       : (new UserDTO(data) as UserDTO);
   }
 
-  async getUsers() {
-    const users = await this.userRepository.findAll();
-    return users.map((user) => new UserDTO(user));
+  async getUsers({
+    page,
+    limit,
+    search,
+    status,
+    gender,
+  }: {
+    page: number;
+    limit: number;
+    search: string;
+    status: string;
+    gender: string;
+  }) {
+    const offset = (page - 1) * limit;
+
+    const whereClause: any = {};
+
+    if (search) {
+      whereClause.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    if (status && status !== 'all') {
+      whereClause.status = status;
+    }
+
+    if (gender && gender !== 'all') {
+      whereClause.gender = gender;
+    }
+
+    const users = await this.userRepository.findMany(whereClause, {
+      skip: offset,
+      limit,
+    });
+
+    const total = await this.userRepository.count(whereClause);
+
+    return {
+      data: users.map((user) => new UserDTO(user)),
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async updateUser(id: string, data: any) {
@@ -99,6 +149,12 @@ export class UserService implements IUserService {
 
     if (!status) {
       throw new BadRequestError('Status is required');
+    }
+
+    if (status === 'suspended') {
+      await this.suspendUser(userId);
+    } else if (status === 'active') {
+      await this.reInitiateUser(userId);
     }
 
     await this.cacheService.del(`member:${userId}`);

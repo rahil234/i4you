@@ -1,10 +1,9 @@
 import type React from 'react';
-import { ThemeProvider } from '@/contexts/theme-context';
+import { ThemeProvider } from '@/context/theme-context';
 import { ThemeToggle } from '@/components/theme-toggle';
 import AuthSessionHydrator from '@/components/auth/auth-session-hydrator';
 import { getUserData } from '@/lib/auth/get-user-data';
 import { redirect } from 'next/navigation';
-import { LoadScript } from '@react-google-maps/api';
 
 async function OnboardingRootLayout(
   { children }: Readonly<{ children: React.ReactNode }>) {

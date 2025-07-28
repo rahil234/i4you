@@ -16,10 +16,10 @@ export async function GET(req: Request) {
     credentials: 'include',
   });
 
-  // if (!refreshRes.ok) {
-  //   console.error('Failed to refresh token', refreshRes.status, refreshRes.statusText);
-  //   return NextResponse.redirect(new URL('/clear-token', API_URL));
-  // }
+  if (!refreshRes.ok) {
+    console.error('Failed to refresh token', refreshRes.status, refreshRes.statusText);
+    return NextResponse.redirect(new URL('/clear-token', API_URL));
+  }
 
   console.log('Refresh token response', refreshRes);
 

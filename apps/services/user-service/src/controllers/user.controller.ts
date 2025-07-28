@@ -53,8 +53,23 @@ export class UserController {
   });
 
   getUsers = handleAsync(async (req, res) => {
-    const users = await this.userService.getUsers();
-    res.status(200).json(users);
+    const {
+      page = 1,
+      limit = 10,
+      search = '',
+      status = '',
+      gender = '',
+    } = req.query;
+
+    const result = await this.userService.getUsers({
+      page: Number(page),
+      limit: Number(limit),
+      search: String(search),
+      status: String(status),
+      gender: String(gender),
+    });
+
+    res.status(200).json(result);
   });
 
   getMatches = handleAsync(async (req, res) => {

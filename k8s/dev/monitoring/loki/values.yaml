@@ -1,0 +1,117 @@
+minio:
+  enabled: false
+  address: minio.monitoring.svc.cluster.local:9000
+
+grafana:
+  enabled: false
+  sidecar:
+    datasources:
+      enabled: true
+      label: grafana_datasource
+
+  datasource:
+    enabled: true
+    jsonData:
+      httpHeaderName1: "X-Scope-OrgID"
+      httpMethod: POST
+      maxLines: 1000
+      timeInterval: "30s"
+      tlsSkipVerify: true
+      lokiUrl: "http://loki.monitoring.svc.cluster.local:3100"
+    secureJsonData:
+      httpHeaderValue1: "fake"
+    name: Loki
+    type: loki
+    access: proxy
+    isDefault: true
+
+loki:
+  auth_enabled: false
+  commonConfig:
+    replication_factor: 1
+  storage:
+    type: s3
+    bucketNames:
+      chunks: loki-chunks
+      ruler: loki-ruler
+      admin: loki-admin
+    s3:
+      endpoint: minio.monitoring.svc.cluster.local:9000
+      region: us-east-1
+      accessKeyId: admin
+      secretAccessKey: minioadmin
+      s3ForcePathStyle: true
+      insecure: true
+  schemaConfig:
+    configs:
+      - from: "2024-04-01"
+        store: tsdb
+        object_store: s3
+        schema: v13
+        index:
+          prefix: loki_index_
+          period: 24h
+  pattern_ingester:
+    enabled: true
+  limits_config:
+    allow_structured_metadata: true
+    volume_enabled: true
+  ruler:
+    enable_api: true
+
+monitoring:
+  dashboards:
+    enabled: true
+    annotations: {}
+    labels:
+      grafana_dashboard: "1"
+
+gateway:
+  enabled: false
+
+chunksCache:
+  enabled: false
+
+resultsCache:
+  enabled: false
+
+test:
+  enabled: false
+
+memberlist:
+  service:
+    publishNotReadyAddresses: true
+
+ruler:
+  enabled: false
+
+deploymentMode: SingleBinary
+
+singleBinary:
+  replicas: 1
+
+backend:
+  replicas: 0
+read:
+  replicas: 0
+write:
+  replicas: 0
+
+ingester:
+  replicas: 0
+querier:
+  replicas: 0
+queryFrontend:
+  replicas: 0
+queryScheduler:
+  replicas: 0
+distributor:
+  replicas: 0
+compactor:
+  replicas: 0
+indexGateway:
+  replicas: 0
+bloomCompactor:
+  replicas: 0
+bloomGateway:
+  replicas: 0

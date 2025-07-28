@@ -1,0 +1,127 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: sidecar-role
+rules:
+  - apiGroups: [ "" ]
+    resources: [ "configmaps" ]
+    verbs: [ "get", "watch", "list" ]
+
+---
+# We bind the new permissions to the grafana-sa
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: sidecar-rolebinding
+roleRef:
+  kind: ClusterRole
+  name: sidecar-role
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: grafana-sa
+    namespace: monitoring
+
+---
+# Provisioning config
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: provisioning-config
+  namespace: monitoring
+data:
+  provisioning.yaml: |-
+    # nonk8s
+    apiVersion: 1
+    providers:
+      - name: 'configmap-dashboard-provider'
+        orgId: 1
+        folder: ''
+        folderUid: ''
+        type: file
+        disableDeletion: false
+        updateIntervalSeconds: 10
+        allowUiUpdates: false
+        options:
+          path: /var/lib/grafana/dashboards
+          foldersFromFilesStructure: true
+      - name: 'configmap-datasource-provider'
+        orgId: 1
+        type: file
+        updateIntervalSeconds: 10
+        options:
+          path: /etc/grafana/provisioning/datasources
+
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: Grafana
+metadata:
+  name: grafana
+  namespace: monitoring
+  labels:
+    dashboards: "grafana"
+spec:
+  deployment:
+    spec:
+      template:
+        spec:
+          serviceAccountName: grafana-sa
+          volumes:
+            - name: dashboards
+              emptyDir: { }
+            - name: provisioning-config
+              configMap:
+                name: provisioning-config
+            - name: datasources
+              emptyDir: { }
+          containers:
+            - name: grafana
+              volumeMounts:
+                - mountPath: /etc/grafana/provisioning/dashboards
+                  name: provisioning-config
+                - mountPath: /var/lib/grafana/dashboards
+                  name: dashboards
+                - mountPath: /etc/grafana/provisioning/datasources
+                  name: datasources
+            #             This container watches the namespace for configmaps with the `dashboards` label
+            #             and creates files for all their keys under `FOLDER`
+            - name: dashboard-sidecar
+              image: kiwigrid/k8s-sidecar:1.30.7
+              env:
+                - name: LABEL
+                  value: "grafana_dashboard"
+                - name: LABEL_VALUE
+                  value: "1"
+                - name: FOLDER
+                  value: /var/lib/grafana/dashboards
+                - name: NAMESPACE
+                  value: ALL
+                - name: RESOURCE
+                  value: configmap
+              volumeMounts:
+                - mountPath: /var/lib/grafana/dashboards
+                  name: dashboards
+            - name: datasources-sidecar
+              image: kiwigrid/k8s-sidecar:1.30.7
+              env:
+                - name: LABEL
+                  value: "grafana_datasource"
+                - name: LABEL_VALUE
+                  value: "1"
+                - name: FOLDER
+                  value: /etc/grafana/provisioning/datasources
+                - name: NAMESPACE
+                  value: ALL
+                - name: RESOURCE
+                  value: configmap
+              volumeMounts:
+                - mountPath: /etc/grafana/provisioning/datasources
+                  name: datasources
+  config:
+    log:
+      mode: "console"
+    auth:
+      disable_login_form: "false"
+    security:
+      admin_user: admin
+      admin_password: password

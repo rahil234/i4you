@@ -1,0 +1,14 @@
+grafana:
+  enabled: false
+  forceDeployDatasources: true
+  forceDeployDashboards: true
+  defaultDashboardsEnabled: true
+  dashboards:
+    default: {}
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+    datasources:
+      enabled: true
+      label: grafana_datasource

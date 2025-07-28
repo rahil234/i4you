@@ -1,0 +1,25 @@
+adminUser: admin
+adminPassword: password
+
+sidecar:
+    dashboards:
+        enabled: true
+        label: grafana_dashboard
+    datasources:
+        enabled: true
+        label: grafana_datasource
+
+service:
+    enabled: true
+    type: ClusterIP
+    port: 80
+    targetPort: 3000
+
+datasources:
+    datasources.yaml:
+        apiVersion: 1
+        datasources:
+            - name: Loki
+              type: loki
+              access: proxy
+              url: http://loki:3100

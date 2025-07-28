@@ -17,6 +17,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { LocationInput } from '@/components/location/location-input';
 import { User } from '@i4you/shared';
+import { profileSchema } from '@/schemas/profile-schema';
+
 
 const interestCategories = [
   {
@@ -76,6 +78,7 @@ export default function UpdateProfilePage() {
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('basic');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (user && !isLoading) {
@@ -140,7 +143,7 @@ export default function UpdateProfilePage() {
       const { data: uploaded, error: uploadImageError } = await mediaService.uploadImage(
         file,
         url,
-        fields
+        fields,
       );
       if (uploadImageError) throw new Error('Error uploading image');
 
@@ -187,6 +190,37 @@ export default function UpdateProfilePage() {
     setError('');
   };
 
+  // const handleSubmit = async (e: FormEvent) => {
+  //   e.preventDefault();
+  //   setError('');
+  //   setIsSubmitting(true);
+  //
+  //   if (!user) {
+  //     setError('User data not available. Please try again.');
+  //     setIsSubmitting(false);
+  //     return;
+  //   }
+  //
+  //   try {
+  //     const updatedUser = {
+  //       ...user,
+  //       name: formData.name,
+  //       age: Number.parseInt(formData.age) || user.age || 18,
+  //       location: formData.location,
+  //       bio: formData.bio,
+  //       gender: formData.gender as 'male' | 'female' | 'other',
+  //       interests: selectedInterests,
+  //       photos: formData.photos.filter((p) => !p.startsWith('loading-')),
+  //     };
+  //
+  //     await updateUser(updatedUser);
+  //     router.push('/profile');
+  //   } catch (err) {
+  //     setError('Failed to update profile. Please try again.');
+  //     setIsSubmitting(false);
+  //   }
+  // };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
@@ -198,19 +232,46 @@ export default function UpdateProfilePage() {
       return;
     }
 
+    const safeData = {
+      name: formData.name,
+      age: formData.age,
+      gender: formData.gender,
+      bio: formData.bio,
+      location: formData.location,
+      photos: formData.photos.filter((p) => !p.startsWith('loading-')),
+      interests: selectedInterests,
+    };
+
+    const result = profileSchema.safeParse(safeData);
+
+    if (!result.success) {
+      setError(result.error.errors[0].message); // Show first error
+      const errorMap: Record<string, string> = {};
+      for (const err of result.error.errors) {
+        if (err.path[0]) errorMap[err.path[0]] = err.message;
+      }
+      setFieldErrors(errorMap);
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const updatedUser = {
         ...user,
-        name: formData.name,
-        age: Number.parseInt(formData.age) || user.age || 18,
-        location: formData.location,
-        bio: formData.bio,
-        gender: formData.gender as 'male' | 'female' | 'other',
-        interests: selectedInterests,
-        photos: formData.photos.filter((p) => !p.startsWith('loading-')),
+        ...result.data,
+        age: parseInt(result.data.age),
       };
 
-      await updateUser(updatedUser);
+      await updateUser({
+        ...user,
+        ...result.data,
+        age: parseInt(result.data.age),
+        location: {
+          type: 'Point',
+          coordinates: result.data.location.coordinates as [number, number],
+          displayName: result.data.location.displayName,
+        },
+      });
       router.push('/profile');
     } catch (err) {
       setError('Failed to update profile. Please try again.');
@@ -268,6 +329,7 @@ export default function UpdateProfilePage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-5">
+                  {/* Name */}
                   <div className="space-y-2">
                     <Label htmlFor="name" className="text-sm font-medium">
                       Name
@@ -280,8 +342,10 @@ export default function UpdateProfilePage() {
                       required
                       className="h-11 rounded-lg transition-all focus-visible:ring-2 focus-visible:ring-primary"
                     />
+                    {fieldErrors.name && <p className="text-sm text-red-500">{fieldErrors.name}</p>}
                   </div>
 
+                  {/* Age */}
                   <div className="space-y-2">
                     <Label htmlFor="age" className="text-sm font-medium">
                       Age
@@ -296,8 +360,10 @@ export default function UpdateProfilePage() {
                       required
                       className="h-11 rounded-lg transition-all focus-visible:ring-2 focus-visible:ring-primary"
                     />
+                    {fieldErrors.age && <p className="text-sm text-red-500">{fieldErrors.age}</p>}
                   </div>
 
+                  {/* Gender */}
                   <div className="space-y-2">
                     <Label className="text-sm font-medium">Gender</Label>
                     <RadioGroup
@@ -318,16 +384,20 @@ export default function UpdateProfilePage() {
                         <Label htmlFor="other">Other</Label>
                       </div>
                     </RadioGroup>
+                    {fieldErrors.gender && <p className="text-sm text-red-500">{fieldErrors.gender}</p>}
                   </div>
 
+                  {/* Location */}
                   <div className="space-y-2">
                     <LocationInput
                       name="location"
                       value={formData.location.displayName}
                       onChange={(val) => handleLocationChange(val)}
                     />
+                    {fieldErrors.location && <p className="text-sm text-red-500">{fieldErrors.location}</p>}
                   </div>
 
+                  {/* Bio */}
                   <div className="space-y-2">
                     <Label htmlFor="bio" className="text-sm font-medium flex items-center">
                       <Info className="h-3.5 w-3.5 mr-1 text-muted-foreground" />
@@ -343,6 +413,7 @@ export default function UpdateProfilePage() {
                       placeholder="Tell others about yourself..."
                     />
                     <p className="text-xs text-muted-foreground text-right">{formData.bio.length}/500 characters</p>
+                    {fieldErrors.bio && <p className="text-sm text-red-500">{fieldErrors.bio}</p>}
                   </div>
                 </CardContent>
               </Card>

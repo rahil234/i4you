@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: notification-service
+  namespace: app
 spec:
   replicas: 1
   selector:
@@ -11,6 +12,7 @@ spec:
     metadata:
       labels:
         app: notification-service
+        version: v1
     spec:
       containers:
         - name: notification-service
@@ -27,11 +29,18 @@ spec:
               value: "1"
             - name: MONGODB_URI
               value: "mongodb+srv://rahilsardar234:NOKCk3dcykTN0P32@i4you-cluster.kdpj0cj.mongodb.net/I4You-notificationDB"
+            - name: REDIS_HOST
+              value: "redis.redis.svc.cluster.local"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_PASSWORD
+              value: "password"
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: notification-service
+  namespace: app
 spec:
   type: ClusterIP
   selector:

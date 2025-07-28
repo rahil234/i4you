@@ -3,98 +3,135 @@ apiVersion: skaffold/v4beta13
 kind: Config
 metadata:
   name: i4you
-build:
-  artifacts:
-    - image: validate-service-image
-      context: apps/services/validate-service
-      sync:
-        manual:
-          - src: src/**/*
-            dest: .
-      docker:
-        dockerfile: Dockerfile.dev
-    - image: user-service-image
-      context: apps/services/user-service
-      sync:
-        manual:
-          - src: src/**/*
-            dest: .
-      docker:
-        dockerfile: Dockerfile.dev
-    - image: auth-service-image
-      context: apps/services/auth-service
-      sync:
-        manual:
-          - src: src/**/*
-            dest: .
-      docker:
-        dockerfile: Dockerfile.dev
-    - image: media-service-image
-      context: apps/services/media-service
-      sync:
-        manual:
-          - src: src/**/*
-            dest: .
-      docker:
-        dockerfile: Dockerfile.dev
-    - image: match-service-image
-      context: apps/services/match-service
-      sync:
-        manual:
-          - src: src/**/*
-            dest: .
-      docker:
-        dockerfile: Dockerfile.dev
-    - image: chat-service-image
-      context: apps/services/chat-service
-      sync:
-        manual:
-          - src: src/**/*
-            dest: .
-      docker:
-        dockerfile: Dockerfile.dev
-    - image: notification-service-image
-      context: apps/services/notification-service
-      sync:
-        manual:
-          - src: src/**/*
-            dest: .
-      docker:
-        dockerfile: Dockerfile.dev
-    - image: frontend-image
-      context: apps/frontend
-      sync:
-        manual:
-          - src: src/**/*
-            dest: .
-      docker:
-        dockerfile: Dockerfile.dev
-    - image: socket-nginx-image
-      context: apps/nginx
-      docker:
-        dockerfile: Dockerfile.dev
-  local:
-    push: false
-    useBuildkit: true
-    concurrency: 0
-manifests:
-  rawYaml:
-    - k8s/dev/kafka-topics.yaml
-    - k8s/dev/validate-service.yaml
-    - k8s/dev/user-service.yaml
-    - k8s/dev/auth-service.yaml
-    - k8s/dev/media-service.yaml
-    - k8s/dev/match-service.yaml
-    - k8s/dev/chat-service.yaml
-    - k8s/dev/notification-service.yaml
-    - k8s/dev/frontend.yaml
-    - k8s/dev/nginx-socket-proxy.yaml
-    - k8s/dev/traefik-ingress.yaml
-    - k8s/dev/traefik-strip-path-middleware.yaml
-    - k8s/dev/traefik-validate-middleware.yaml
-    - k8s/dev/redis.yaml
-
 profiles:
+  - name: initial
+    manifests:
+      rawYaml:
+        #        - https://raw.githubusercontent.com/traefik/traefik/v3.4/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
+        #        - https://github.com/strimzi/strimzi-kafka-operator/releases/download/0.47.0/strimzi-crds-0.47.0.yaml
+        #        - https://github.com/grafana/grafana-operator/releases/download/v5.18.0/crds.yaml
+        - k8s/dev/traefik/namespace.yaml
+        - k8s/dev/kafka-namespace.yaml
+        - k8s/dev/monitoring/namespace.yaml
+        - https://raw.githubusercontent.com/grafana/grafana-operator/master/deploy/helm/grafana-operator/crds/grafana.integreatly.org_grafanas.yaml
+        - k8s/dev/kafka-kraft.yaml
+        - k8s/dev/redis.yaml
+      helm:
+        releases:
+          - name: strimzi-kafka-operator
+            remoteChart: strimzi/strimzi-kafka-operator
+            namespace: kafka
+            createNamespace: true
+            version: 0.46.1
+            setValues:
+              watchAnyNamespace: false
+              watchNamespaces[0]: kafka
+          - name: grafana-operator
+            remoteChart: grafana/grafana-operator
+            namespace: monitoring
+            createNamespace: true
+          #            valuesFiles:
+          #              - k8s/dev/monitoring/grafana/operator-values.yaml
+          - name: traefik
+            remoteChart: traefik/traefik
+            namespace: traefik
+            createNamespace: true
+            valuesFiles:
+              - k8s/dev/traefik/values.yaml
+
+  - name: dev
+    build:
+      artifacts:
+        - image: validate-service-image
+          context: apps/services/validate-service
+          sync:
+            manual:
+              - src: src/**/*
+                dest: .
+          docker:
+            dockerfile: Dockerfile.dev
+        - image: user-service-image
+          context: apps/services/user-service
+          sync:
+            manual:
+              - src: src/**/*
+                dest: .
+          docker:
+            dockerfile: Dockerfile.dev
+        - image: auth-service-image
+          context: apps/services/auth-service
+          sync:
+            manual:
+              - src: src/**/*
+                dest: .
+          docker:
+            dockerfile: Dockerfile.dev
+        - image: media-service-image
+          context: apps/services/media-service
+          sync:
+            manual:
+              - src: src/**/*
+                dest: .
+          docker:
+            dockerfile: Dockerfile.dev
+        - image: match-service-image
+          context: apps/services/match-service
+          sync:
+            manual:
+              - src: src/**/*
+                dest: .
+          docker:
+            dockerfile: Dockerfile.dev
+        - image: chat-service-image
+          context: apps/services/chat-service
+          sync:
+            manual:
+              - src: src/**/*
+                dest: .
+          docker:
+            dockerfile: Dockerfile.dev
+        - image: notification-service-image
+          context: apps/services/notification-service
+          sync:
+            manual:
+              - src: src/**/*
+                dest: .
+          docker:
+            dockerfile: Dockerfile.dev
+        - image: frontend-image
+          context: apps/frontend
+          sync:
+            manual:
+              - src: src/**/*
+                dest: .
+          docker:
+            dockerfile: Dockerfile
+        - image: socket-nginx-image
+          context: apps/nginx
+          docker:
+            dockerfile: Dockerfile.dev
+      local:
+        push: false
+        useBuildkit: true
+        concurrency: 0
+    manifests:
+      rawYaml:
+        - k8s/dev/app-namespace.yaml
+        - k8s/dev/kafka-topics.yaml
+        - k8s/dev/i4you-cert-secret.yaml
+        - k8s/dev/validate-service.yaml
+        - k8s/dev/user-service.yaml
+        - k8s/dev/auth-service.yaml
+        - k8s/dev/media-service.yaml
+        - k8s/dev/match-service.yaml
+        - k8s/dev/chat-service.yaml
+        - k8s/dev/notification-service.yaml
+        - k8s/dev/frontend.yaml
+        - k8s/dev/nginx-socket-proxy.yaml
+        - k8s/dev/traefik/traefik-validate-middleware.yaml
+        - k8s/dev/traefik/traefik-strip-path-middleware.yaml
+        - k8s/dev/traefik/traefik-ingress.yaml
+
   - name: production
     build:
       artifacts:
@@ -102,30 +139,30 @@ profiles:
           context: apps/services/validate-service
           docker:
             dockerfile: Dockerfile
-#        - image: user-service-image
-#          context: apps/services/user-service
-#          docker:
-#            dockerfile: Dockerfile
-#        - image: auth-service-image
-#          context: apps/services/auth-service
-#          docker:
-#            dockerfile: Dockerfile
-#        - image: media-service-image
-#          context: apps/services/media-service
-#          docker:
-#            dockerfile: Dockerfile
-#        - image: chat-service-image
-#          context: apps/services/chat-service
-#          docker:
-#            dockerfile: Dockerfile
-#        - image: frontend-image
-#          context: apps/frontend
-#          docker:
-#            dockerfile: Dockerfile
-#        - image: socket-nginx-image
-#          context: apps/nginx
-#          docker:
-#            dockerfile: Dockerfile
+      #        - image: user-service-image
+      #          context: apps/services/user-service
+      #          docker:
+      #            dockerfile: Dockerfile
+      #        - image: auth-service-image
+      #          context: apps/services/auth-service
+      #          docker:
+      #            dockerfile: Dockerfile
+      #        - image: media-service-image
+      #          context: apps/services/media-service
+      #          docker:
+      #            dockerfile: Dockerfile
+      #        - image: chat-service-image
+      #          context: apps/services/chat-service
+      #          docker:
+      #            dockerfile: Dockerfile
+      #        - image: frontend-image
+      #          context: apps/frontend
+      #          docker:
+      #            dockerfile: Dockerfile
+      #        - image: socket-nginx-image
+      #          context: apps/nginx
+      #          docker:
+      #            dockerfile: Dockerfile
       local:
         push: true
         useBuildkit: true
@@ -133,3 +170,69 @@ profiles:
     manifests:
       rawYaml:
         - k8s/prod/validate-service.yaml
+
+  - name: monitoring
+    manifests:
+      rawYaml:
+        #        - https://github.com/prometheus-operator/prometheus-operator/releases/download/v0.84.0/stripped-down-crds.yaml
+        - k8s/dev/monitoring/prometheus-ingress.yaml
+        - k8s/dev/monitoring/grafana-ingress.yaml
+        - k8s/dev/monitoring/grafana/grafana.yaml
+        - k8s/dev/monitoring/grafana/loki-datasource.yaml
+      helm:
+        releases:
+          #          - name: grafana-old
+          #            remoteChart: grafana/grafana
+          #            namespace: monitoring
+          #            createNamespace: true
+          #            valuesFiles:
+          #              - k8s/dev/monitoring/grafana/values.yaml
+          #          - name: promtail
+          #            remoteChart: grafana/promtail
+          #            namespace: monitoring
+          #            createNamespace: true
+          #            valuesFiles:
+          #              - k8s/dev/monitoring/promtail/values.yaml
+          - name: loki
+            remoteChart: grafana/loki
+            namespace: monitoring
+            createNamespace: true
+            valuesFiles:
+              - k8s/dev/monitoring/loki/values.yaml
+          - name: minio
+            remoteChart: bitnami/minio
+            namespace: monitoring
+            createNamespace: true
+            valuesFiles:
+              - k8s/dev/monitoring/minio/values.yaml
+          - name: alloy
+            remoteChart: grafana/alloy
+            namespace: monitoring
+            createNamespace: true
+            valuesFiles:
+              - k8s/dev/monitoring/alloy/values.yaml
+          - name: prometheus
+            remoteChart: prometheus-community/kube-prometheus-stack
+            namespace: monitoring
+            createNamespace: true
+            valuesFiles:
+              - k8s/dev/monitoring/prometheus/values.yaml
+
+  - name: istio
+    manifests:
+      rawYaml:
+        - https://raw.githubusercontent.com/istio/istio/release-1.21/samples/addons/prometheus.yaml
+      helm:
+        releases:
+          - name: istiod
+            remoteChart: istiod
+            repo: https://istio-release.storage.googleapis.com/charts
+            namespace: istio-system
+            createNamespace: true
+          - name: kiali-server
+            remoteChart: kiali/kiali-server
+            namespace: istio-system
+            createNamespace: true
+            setValues:
+              auth:
+                strategy: "anonymous"
