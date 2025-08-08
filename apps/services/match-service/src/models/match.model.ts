@@ -1,8 +1,8 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document, ObjectId } from 'mongoose';
 
-export interface MatchDocument extends Document {
-  userA: mongoose.Types.ObjectId;
-  userB: mongoose.Types.ObjectId;
+export interface MatchDocument extends Document<ObjectId> {
+  userA: ObjectId;
+  userB: ObjectId;
   createdAt: Date;
   status: 'matched' | 'blocked';
 }

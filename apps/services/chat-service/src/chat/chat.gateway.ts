@@ -12,13 +12,13 @@ import { Server, Socket } from 'socket.io';
 
 import { User } from '@i4you/shared';
 
-import { ChatService } from './services/chat.service';
-import { AuthenticatedSocket } from '../types/authenticated-socket';
-import { MessageRequestDto } from './dto/message.request.dto';
-import { ChatResponseDto } from './dto/get-chat.dto';
-import { UserGrpcService } from '../user/user.grpc.service';
-import { MessageResponseDto } from './dto/message.response.dto';
-import { Message } from './schemas/message.schema';
+import { ChatService } from './services/chat.service.js';
+import { AuthenticatedSocket } from '../types/authenticated-socket.js';
+import { MessageRequestDto } from './dto/message.request.dto.js';
+import { ChatResponseDto } from './dto/get-chat.dto.js';
+import { UserGrpcService } from '../user/user.grpc.service.js';
+import { MessageResponseDto } from './dto/message.response.dto.js';
+import { Message } from './schemas/message.schema.js';
 
 @WebSocketGateway({
   cors: {
@@ -92,11 +92,13 @@ export class ChatGateway implements OnGatewayInit {
       console.log('Chat already exists:', chat);
     }
 
-    const otherUser = (await this.userGrpcService.getUserById(newUserId))
-      .user as unknown as User;
+    const otherUser = (await this.userGrpcService.getUserById(
+      newUserId,
+    )) as unknown as User;
 
-    const user = (await this.userGrpcService.getUserById(socket.user.id))
-      .user as unknown as User;
+    const user = (await this.userGrpcService.getUserById(
+      socket.user.id,
+    )) as unknown as User;
 
     if (!user || !otherUser) {
       console.error('User or Other user not found:', [

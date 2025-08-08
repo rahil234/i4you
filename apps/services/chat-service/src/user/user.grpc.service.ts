@@ -2,9 +2,9 @@ import {
   GetUserByEmailResponse,
   GetUserByIdResponse,
   UserServiceClient,
-} from '@i4you/proto-files/generated/user/v2/user';
+} from '@i4you/proto-files/user/v2';
 import { Inject, Injectable } from '@nestjs/common';
-import { GrpcClientProvider } from './grpc.client.provider';
+import { GrpcClientProvider } from './grpc.client.provider.js';
 
 @Injectable()
 export class UserGrpcService {

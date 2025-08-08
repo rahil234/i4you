@@ -1,29 +1,31 @@
 {
   "name": "@i4you/proto-files",
-  "version": "1.0.4",
+  "version": "1.0.5-beta.8",
   "description": "",
-  "type": "commonjs",
+  "type": "module",
   "exports": {
-    "./client/*": {
-      "types": "./dist/src/client/*.d.ts",
-      "default": "./dist/src/client/*.js"
+    "./user/v2": {
+      "types": "./dist/user/v2/user.d.ts",
+      "default": "./dist/user/v2/user.js"
     },
-    "./server/*": {
-      "types": "./dist/src/server/*.d.ts",
-      "default": "./dist/src/server/*.js"
+    "./discovery/v1": {
+      "types": "./dist/discovery/v1/discovery.d.ts",
+      "default": "./dist/discovery/v1/discovery.js"
     },
-    "./generated/*": {
-      "types": "./dist/generated/*.d.ts",
-      "default": "./dist/generated/*.js"
+    "./discovery/v2": {
+      "types": "./dist/discovery/v2/discovery.d.ts",
+      "default": "./dist/discovery/v2/discovery.js"
     }
   },
   "scripts": {
     "prebuild": "buf generate",
-    "build": "tsc && tsc-alias"
+    "build": "tsc && tsc-alias",
+    "test": "vitest run"
   },
   "dependencies": {
     "@bufbuild/protobuf": "^2.2.5",
-    "@grpc/grpc-js": "^1.13.3"
+    "@grpc/grpc-js": "^1.13.3",
+    "vitest": "^3.2.4"
   },
   "devDependencies": {
     "@bufbuild/buf": "^1.52.1",
@@ -32,11 +34,7 @@
     "typescript": "^5.8.3"
   },
   "files": [
-    "dist",
-    "src",
-    "buf.gen.yaml",
-    "buf.yaml",
-    "generated"
+    "dist"
   ],
   "author": "Rahil234",
   "license": "ISC"

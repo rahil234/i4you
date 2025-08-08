@@ -21,14 +21,13 @@ const matchStore: StateCreator<MatchesStore, [['zustand/devtools', never]]> = (s
   (async () => {
     set({ loading: true, error: null }, undefined, 'matchStore/initial');
 
-    const { data: potentialMatches, error: potentialMatchError } = await UserService.getPotentialMatches();
+    const { data: potentialMatches, error: potentialMatchError } = await MatchService.getPotentialMatches();
 
     if (potentialMatchError) {
       set({ error: 'Failed to fetch potential matches', loading: false });
       console.log('Error fetching potential matches:', potentialMatchError);
       return;
     }
-
 
     const { data: matches, error } = await MatchService.getMatches();
 

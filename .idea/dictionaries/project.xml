@@ -2,8 +2,10 @@
   <dictionary name="project">
     <words>
       <w>buildkit</w>
+      <w>crds</w>
       <w>datasources</w>
       <w>dest</w>
+      <w>entrypoints</w>
       <w>insync</w>
       <w>integreatly</w>
       <w>istiod</w>
@@ -13,6 +15,8 @@
       <w>matchstore</w>
       <w>nodeport</w>
       <w>orbstack</w>
+      <w>rahilk</w>
+      <w>rawbody</w>
       <w>skaffold</w>
       <w>strimzi</w>
       <w>traefik</w>

@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "Node16",
     "moduleResolution": "node16",
+    "module": "Node16",
     "baseUrl": "./",
     "outDir": "dist",
     "declaration": true,

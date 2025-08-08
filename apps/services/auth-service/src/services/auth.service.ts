@@ -18,11 +18,15 @@ import IAdminRepository from '@/repositories/interfaces/IAdminRepository';
 import { SuspendedUserError } from '@/errors/SuspendedUserError';
 import { ValidationError } from '@/errors/ValidationError';
 import { MailService } from '@/services/mail.service';
-import { PasswordResetTemplate } from '@/utils/mail-templates';
+import {
+  PasswordResetTemplate,
+  verificationEmailTemplate,
+} from '@/utils/mail-templates';
 import { NotFoundError } from '@/errors/NotFoundError';
 import { env } from '@/config';
 import { createError } from '@i4you/http-errors';
 import ICacheService from '@/services/interfaces/ICacheService';
+import { UserGrpcService } from '@/services/user.grpc.service';
 
 const APP_URL = env.APP_URL;
 
@@ -31,6 +35,7 @@ export class AuthService {
   constructor(
     @inject(TYPES.UserRepository) private userRepository: IUserRepository,
     @inject(TYPES.AdminRepository) private adminRepository: IAdminRepository,
+    @inject(TYPES.UserGrpcService) private userGrpcService: UserGrpcService,
     @inject(TYPES.CacheService) private cacheService: ICacheService,
     @inject(TYPES.MailService) private mailService: MailService
   ) {}
@@ -114,6 +119,8 @@ export class AuthService {
     });
     const refreshToken = generateRefreshToken({ sub: user._id, role: 'admin' });
 
+    await this.addRefreshToken(user._id, refreshToken);
+
     return new LoginResponseDTO(accessToken, refreshToken, {
       id: user._id,
       name: user.name,
@@ -122,49 +129,50 @@ export class AuthService {
   }
 
   async register(registerDTO: RegisterRequestDTO): Promise<void> {
-    console.log(
-      `Registering user \nname: ${registerDTO.name}, email: ${registerDTO.email}, password: ${registerDTO.password}`
-    );
+    const { name, email, password } = registerDTO;
 
-    const hashedPassword = await hashPassword(registerDTO.password);
-
-    const existingUser = await this.userRepository.findByEmail(
-      registerDTO.email
-    );
-
-    if (existingUser) {
-      throw new UserExistsError();
+    if (!name || !email || !password) {
+      throw new ValidationError('All fields are required');
     }
 
-    const user = await this.userRepository.create({
-      name: registerDTO.name,
-      email: registerDTO.email,
-      password: hashedPassword,
-      isVerified: false,
-    });
+    const hashedPassword = await hashPassword(password);
 
-    const verificationToken = generateEmailVerificationToken({
-      sub: user._id,
-      email: user.email,
-    });
+    try {
+      const user = await this.userGrpcService.createUser({
+        name,
+        email,
+        password: hashedPassword,
+      });
 
-    const verificationLink = `${APP_URL}/verify?token=${verificationToken}`;
+      console.log('User created:', user);
 
-    await this.mailService.sendMail({
-      to: user.email,
-      subject: 'Verify your i4you account',
-      html: `
-        <h3>Hello ${user.name},</h3>
-        <p>Thank you for registering on i4you!</p>
-        <p>Click the link below to verify your email address:</p>
-        <a href="${verificationLink}" 
-        style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;"
-        >
-        Verify Email
-        </a>
-        <p>This link will expire in 1 hour.</p>
-      `,
-    });
+      const token = generateEmailVerificationToken({
+        sub: user.id,
+        email: user.email,
+      });
+
+      const verificationLink = `${APP_URL}/verify?token=${token}`;
+
+      await this.mailService.sendMail({
+        to: user.email,
+        subject: 'Verify your i4you account',
+        html: verificationEmailTemplate(user.name, verificationLink),
+      });
+    } catch (err: any) {
+      if (
+        err instanceof UserExistsError ||
+        err.message.includes('already exists')
+      ) {
+        throw new UserExistsError(
+          'User already exists with this email. Please login.'
+        );
+      }
+      if (err instanceof ValidationError) {
+        throw err;
+      }
+      console.error('Registration failed:', err);
+      throw new Error('Registration failed. Please try again later.');
+    }
   }
 
   async forgetPassword(email: string) {
@@ -317,32 +325,35 @@ export class AuthService {
     const { sub: userId, role } = verifyRefreshToken(token);
 
     if (!userId) {
+      console.log('Invalid token:', token);
       throw new Error('Invalid token');
     }
 
     const storedToken = await this.cacheService.get(`refresh:${userId}`);
+
     if (!storedToken || storedToken !== token) {
+      console.log('Stored token not found or does not match:', storedToken);
       throw createError.Unauthorized('Invalid refresh token');
     }
 
     const user =
       role === 'admin'
         ? await this.adminRepository.findById(userId)
-        : await this.userRepository.findById(userId);
+        : await this.userGrpcService.findUserById(userId);
 
     if (!user) throw new Error('User not found');
     if (user.status === 'suspended') throw new SuspendedUserError();
 
     const accessToken = generateAccessToken({
-      sub: user._id,
+      sub: user.id,
       role,
       email: user.email,
     });
 
-    const newRefreshToken = generateRefreshToken({ sub: user._id, role });
+    const newRefreshToken = generateRefreshToken({ sub: user.id, role });
 
     await this.cacheService.set(
-      `refresh:${user._id}`,
+      `refresh:${user.id}`,
       newRefreshToken,
       60 * 60 * 24 * 7
     );

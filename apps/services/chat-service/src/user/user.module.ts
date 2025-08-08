@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { UserGrpcService } from './user.grpc.service';
-import { GrpcClientProvider } from './grpc.client.provider';
+import { UserGrpcService } from './user.grpc.service.js';
+import { GrpcClientProvider } from './grpc.client.provider.js';
 
 @Module({
   providers: [UserGrpcService, GrpcClientProvider],

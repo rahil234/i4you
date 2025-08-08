@@ -13,6 +13,22 @@
             </ClusterConfigInternal>
           </value>
         </entry>
+        <entry key="855f8781-0c88-4ecf-9177-63f235b7993e">
+          <value>
+            <ClusterConfigInternal>
+              <option name="authConfigInternal">
+                <AuthConfigInternal>
+                  <option name="authType" value="Basic Auth" />
+                </AuthConfigInternal>
+              </option>
+              <option name="id" value="855f8781-0c88-4ecf-9177-63f235b7993e" />
+              <option name="label" value="@k8s" />
+              <option name="trustCertificate" value="true" />
+              <option name="url" value="http://localhost:9200" />
+              <option name="version" value="1" />
+            </ClusterConfigInternal>
+          </value>
+        </entry>
         <entry key="dd4da803-9e0d-40ba-b4de-e2bde097a1be">
           <value>
             <ClusterConfigInternal>

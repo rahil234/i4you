@@ -1,0 +1,55 @@
+%% Mermaid diagram: high-level architecture overview for i4you
+flowchart LR
+  subgraph Client
+    U[User]
+    FE[Next.js Frontend]
+  end
+
+  subgraph Ingress
+    TR[Traefik Ingress]
+  end
+
+  subgraph Services[Backend Services]
+    VS[validate-service]
+    US[user-service]
+    AS[auth-service]
+    MS[media-service]
+    MATCH[match-service]
+    CS[chat-service]
+    NS[notification-service]
+    MOD[moderation-service]
+    DS[discovery-service]
+    PS[payment-service]
+    ESW[es-worker-service]
+  end
+
+  subgraph Data[Data Stores]
+    MONGO[(MongoDB)]
+    REDIS[(Redis)]
+    KAFKA[(Kafka/Strimzi)]
+    ES[(Elasticsearch)]
+  end
+
+  U --> FE
+  FE -->|HTTPS| TR
+  TR --> VS
+  TR --> AS
+  TR --> US
+  TR --> CS
+  TR --> MS
+  TR --> MATCH
+  TR --> DS
+
+  US <--> MONGO
+  AS --> US
+  MS --> MONGO
+  CS <--> MONGO
+  MATCH --> MONGO
+
+  VS --> KAFKA
+  MATCH <--> KAFKA
+  CS <--> KAFKA
+  ESW --> ES
+  ESW <--> KAFKA
+
+  Services --> REDIS

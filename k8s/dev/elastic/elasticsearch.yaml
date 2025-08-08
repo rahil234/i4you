@@ -1,0 +1,28 @@
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: elastic
+  namespace: elastic-system
+spec:
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true
+  version: 9.0.4
+  nodeSets:
+    - name: default
+      count: 1
+      config:
+        node.store.allow_mmap: false
+        cluster.routing.allocation.disk.threshold_enabled: false
+      volumeClaimTemplates:
+        - metadata:
+            name: elasticsearch-data
+          spec:
+            volumeName: elasticsearch-pv-0
+            accessModes: [ "ReadWriteOnce" ]
+            resources:
+              requests:
+                storage: 5Gi
+            storageClassName: elasticsearch-local-path
+  volumeClaimDeletePolicy: DeleteOnScaledownOnly

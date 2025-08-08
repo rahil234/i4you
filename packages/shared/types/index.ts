@@ -4,12 +4,12 @@ export interface User {
   name: string;
   email: string;
   age: number;
+  password?: string;
   status: 'active' | 'suspended';
   bio: string;
   gender: 'male' | 'female' | 'other';
   photos: string[];
   role: 'admin' | 'member';
-  onboarding?: boolean;
   interests?: string[];
   stats?: {
     matches: number;
@@ -22,8 +22,17 @@ export interface User {
     coordinates: [number, number];
     displayName: string;
   };
-  joined: string;
-  updatedAt?: string;
+  onboardingCompleted: boolean;
+  updatedAt?: Date;
+  createdAt?: Date;
+}
+
+// User preferences
+export interface UserPreferences {
+  ageRange: [number, number];
+  distance: number;
+  showMe: 'male' | 'female' | 'all';
+  lookingFor: 'casual' | 'relationship' | 'friendship' | 'all';
 }
 
 // User types for the admin panel
@@ -34,7 +43,8 @@ export interface AdminUser {
   role: 'admin' | 'member';
   status: 'active' | 'suspended';
   joined: string;
-  updatedAt?: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 
@@ -48,14 +58,6 @@ export interface AuthState {
   signUpError: string | null;
 }
 
-// User preferences
-export interface UserPreferences {
-  ageRange: [number, number];
-  distance: number;
-  gender: 'male' | 'female' | 'all';
-  showMe: 'male' | 'female' | 'all';
-  lookingFor: 'casual' | 'relationship' | 'friendship' | 'all';
-}
 
 // Match types
 export interface Match {

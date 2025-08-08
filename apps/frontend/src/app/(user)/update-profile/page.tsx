@@ -11,13 +11,14 @@ import { Label } from '@/components/ui/label';
 import { useAuthStore } from '@/store/authStore';
 import { useRouter } from 'next/navigation';
 import { useState, type FormEvent, useEffect } from 'react';
-import { Save, ArrowLeft, X, Camera, User as UserIcon, Info, Heart } from 'lucide-react';
+import { Save, ArrowLeft, X, Camera, User as UserIcon, Info, Heart, Settings2 } from 'lucide-react';
 import mediaService from '@/services/media.service';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { LocationInput } from '@/components/location/location-input';
 import { User } from '@i4you/shared';
 import { profileSchema } from '@/schemas/profile-schema';
+import { Slider } from '@/components/ui/slider';
 
 
 const interestCategories = [
@@ -72,6 +73,12 @@ export default function UpdateProfilePage() {
     bio: '',
     gender: '',
     photos: [] as string[],
+    preferences: {
+      showMe: '',
+      lookingFor: '',
+      ageRange: [18, 99],
+      distance: 50,
+    },
   });
 
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
@@ -93,6 +100,12 @@ export default function UpdateProfilePage() {
         bio: user.bio || '',
         gender: user.gender || '',
         photos: user.photos || [],
+        preferences: {
+          showMe: user.preferences?.showMe || '',
+          lookingFor: user.preferences?.lookingFor || '',
+          ageRange: user.preferences?.ageRange || [18, 99],
+          distance: user.preferences?.distance || 50,
+        },
       });
 
       setSelectedInterests(user.interests || []);
@@ -179,7 +192,13 @@ export default function UpdateProfilePage() {
     fileInput.click();
   };
 
-  const handleRemovePhoto = (index: number) => {
+  const handleRemovePhoto = async (index: number) => {
+    const photoToDelete = formData.photos[index];
+    const { error } = await mediaService.deleteImage(photoToDelete);
+    if (error) {
+      setError('Failed to delete photo. Please try again.');
+      return;
+    }
     setFormData((prev) => {
       const newPhotos = prev.photos.filter((_, i) => i !== index);
       return {
@@ -189,37 +208,6 @@ export default function UpdateProfilePage() {
     });
     setError('');
   };
-
-  // const handleSubmit = async (e: FormEvent) => {
-  //   e.preventDefault();
-  //   setError('');
-  //   setIsSubmitting(true);
-  //
-  //   if (!user) {
-  //     setError('User data not available. Please try again.');
-  //     setIsSubmitting(false);
-  //     return;
-  //   }
-  //
-  //   try {
-  //     const updatedUser = {
-  //       ...user,
-  //       name: formData.name,
-  //       age: Number.parseInt(formData.age) || user.age || 18,
-  //       location: formData.location,
-  //       bio: formData.bio,
-  //       gender: formData.gender as 'male' | 'female' | 'other',
-  //       interests: selectedInterests,
-  //       photos: formData.photos.filter((p) => !p.startsWith('loading-')),
-  //     };
-  //
-  //     await updateUser(updatedUser);
-  //     router.push('/profile');
-  //   } catch (err) {
-  //     setError('Failed to update profile. Please try again.');
-  //     setIsSubmitting(false);
-  //   }
-  // };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -240,12 +228,14 @@ export default function UpdateProfilePage() {
       location: formData.location,
       photos: formData.photos.filter((p) => !p.startsWith('loading-')),
       interests: selectedInterests,
+      preferences: formData.preferences,
     };
 
     const result = profileSchema.safeParse(safeData);
 
     if (!result.success) {
-      setError(result.error.errors[0].message); // Show first error
+      setError(result.error.errors[0].message);
+      console.log('Validation errors:', result.error.errors);
       const errorMap: Record<string, string> = {};
       for (const err of result.error.errors) {
         if (err.path[0]) errorMap[err.path[0]] = err.message;
@@ -256,12 +246,6 @@ export default function UpdateProfilePage() {
     }
 
     try {
-      const updatedUser = {
-        ...user,
-        ...result.data,
-        age: parseInt(result.data.age),
-      };
-
       await updateUser({
         ...user,
         ...result.data,
@@ -304,10 +288,14 @@ export default function UpdateProfilePage() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="basic" className="flex items-center gap-1">
               <UserIcon className="h-3.5 w-3.5" />
               <span>Basic</span>
+            </TabsTrigger>
+            <TabsTrigger value="preferences" className="flex items-center gap-1">
+              <Settings2 className="h-3.5 w-3.5" />
+              <span>Preferences</span>
             </TabsTrigger>
             <TabsTrigger value="interests" className="flex items-center gap-1">
               <Heart className="h-3.5 w-3.5" />
@@ -339,7 +327,6 @@ export default function UpdateProfilePage() {
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
-                      required
                       className="h-11 rounded-lg transition-all focus-visible:ring-2 focus-visible:ring-primary"
                     />
                     {fieldErrors.name && <p className="text-sm text-red-500">{fieldErrors.name}</p>}
@@ -357,7 +344,6 @@ export default function UpdateProfilePage() {
                       value={formData.age}
                       onChange={handleInputChange}
                       min="18"
-                      required
                       className="h-11 rounded-lg transition-all focus-visible:ring-2 focus-visible:ring-primary"
                     />
                     {fieldErrors.age && <p className="text-sm text-red-500">{fieldErrors.age}</p>}
@@ -414,6 +400,141 @@ export default function UpdateProfilePage() {
                     />
                     <p className="text-xs text-muted-foreground text-right">{formData.bio.length}/500 characters</p>
                     {fieldErrors.bio && <p className="text-sm text-red-500">{fieldErrors.bio}</p>}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="preferences">
+              <Card className="shadow-sm border border-gray-100">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg flex items-center">
+                    <Settings2 className="h-4 w-4 mr-2 text-primary" />
+                    Preferences
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-5">
+                  <div className="space-y-6">
+                    {/* Show Me */}
+                    <div className="space-y-2">
+                      <Label htmlFor="showMe">Show Me</Label>
+                      <RadioGroup
+                        id="showMe"
+                        name="showMe"
+                        value={formData.preferences.showMe}
+                        onValueChange={(value) => setFormData((prev) => ({
+                          ...prev,
+                          preferences: { ...prev.preferences, showMe: value },
+                        }))}
+                        className="flex space-x-4"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="male" id="male" />
+                          <Label htmlFor="male">Male</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="female" id="female" />
+                          <Label htmlFor="female">Female</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="all" id="all" />
+                          <Label htmlFor="all">Everyone</Label>
+                        </div>
+                      </RadioGroup>
+                      {fieldErrors['preferences.showMe'] && (
+                        <p className="text-sm text-red-500">{fieldErrors['preferences.showMe']}</p>
+                      )}
+                    </div>
+
+                    {/* Looking For */}
+                    <div className="space-y-2">
+                      <Label htmlFor="lookingFor">Looking For</Label>
+                      <RadioGroup
+                        id="lookingFor"
+                        name="lookingFor"
+                        value={formData.preferences.lookingFor}
+                        onValueChange={(value) => setFormData((prev) => ({
+                          ...prev,
+                          preferences: { ...prev.preferences, lookingFor: value },
+                        }))}
+                        className="flex space-x-4"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="all" id="all" />
+                          <Label htmlFor="all">All</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="casual" id="casual" />
+                          <Label htmlFor="casual">Casual</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="relationship" id="relationship" />
+                          <Label htmlFor="relationship">Relationship</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="friendship" id="friendship" />
+                          <Label htmlFor="friendship">Friendship</Label>
+                        </div>
+                      </RadioGroup>
+                      {fieldErrors['preferences.lookingFor'] && (
+                        <p className="text-sm text-red-500">{fieldErrors['preferences.lookingFor']}</p>
+                      )}
+                    </div>
+
+                    {/* Age Range */}
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <Label>Age range</Label>
+                        <span className="text-sm text-muted-foreground">
+                          {formData.preferences.ageRange[0]} - {formData.preferences.ageRange[1]}
+                        </span>
+                      </div>
+                      <Slider
+                        defaultValue={formData.preferences.ageRange}
+                        min={18}
+                        max={60}
+                        step={1}
+                        onValueChange={(value) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            preferences: {
+                              ...prev.preferences,
+                              ageRange: value as [number, number],
+                            },
+                          }))
+                        }
+                      />
+                      {fieldErrors['preferences.ageRange'] && (
+                        <p className="text-sm text-red-500">{fieldErrors['preferences.ageRange']}</p>
+                      )}
+                    </div>
+
+                    {/* Distance */}
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <Label>Maximum distance</Label>
+                        <span
+                          className="text-sm text-muted-foreground">{formData.preferences.distance} killometers</span>
+                      </div>
+                      <Slider
+                        defaultValue={[formData.preferences.distance]}
+                        min={10}
+                        max={4000}
+                        step={10}
+                        onValueChange={(value) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            preferences: {
+                              ...prev.preferences,
+                              distance: value[0],
+                            },
+                          }))
+                        }
+                      />
+                      {fieldErrors['preferences.distance'] && (
+                        <p className="text-sm text-red-500">{fieldErrors['preferences.distance']}</p>
+                      )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -525,10 +646,6 @@ export default function UpdateProfilePage() {
               </Card>
             </TabsContent>
 
-
-            {error &&
-              <div className="bg-red-50 border border-red-200 text-red-600 rounded-lg p-3 text-sm">{error}</div>}
-
             <div className="flex gap-4 pt-2">
               <Button
                 type="submit"
@@ -560,6 +677,7 @@ export default function UpdateProfilePage() {
             </div>
           </form>
         </Tabs>
+        {error && <p className="text-sm text-red-500 mt-4">{error}</p>}
       </div>
     </UserLayout>
   );

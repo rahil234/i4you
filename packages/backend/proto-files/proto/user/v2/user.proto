@@ -1,0 +1,132 @@
+syntax = "proto3";
+
+package user.v2;
+
+service UserService {
+  rpc GetUserById(GetUserByIdRequest) returns (GetUserByIdResponse);
+  rpc GetUserByEmail(GetUserByEmailRequest) returns (GetUserByEmailResponse);
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
+}
+
+message Preferences {
+  repeated int32 age_range = 1;
+  int32 distance = 2;
+  string show_me = 3;
+  string looking_for = 4;
+}
+
+message Location {
+  string type = 1;
+  repeated double coordinates = 2;
+  string display_name = 3;
+}
+
+message GetUserByIdRequest {
+  string id = 1;
+}
+
+message GetUserByEmailRequest {
+  string email = 1;
+}
+
+message GetUserByIdResponse {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  optional string password = 4;
+  int32 age = 5;
+  string gender = 6;
+  string bio = 7;
+  repeated string photos = 8;
+  repeated string interests = 9;
+
+  Preferences preferences = 10;
+
+  message Location {
+    string type = 1;
+    repeated double coordinates = 2;
+    string display_name = 3;
+  }
+
+  Location location = 11;
+
+  optional bool onboarding_completed = 12;
+  string status = 13;
+  string created_at = 14;
+  string updated_at = 15;
+}
+
+message GetUserByEmailResponse {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  string password = 4;
+  int32 age = 5;
+  string gender = 6;
+  string bio = 7;
+  repeated string photos = 8;
+  repeated string interests = 9;
+
+  Preferences preferences = 10;
+
+  Location location = 11;
+
+  bool onboarding_completed = 12;
+  string status = 13;
+  string created_at = 14;
+  string updated_at = 15;
+}
+
+message CreateUserRequest {
+  string name = 2;
+  string email = 3;
+  string password = 4;
+}
+
+message CreateUserResponse {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  bool onboarding_completed = 4;
+  string status = 5;
+  string created_at = 6;
+  string updated_at = 7;
+}
+
+message UpdateUserRequest {
+  optional string name = 2;
+  optional string email = 3;
+  optional string password = 4;
+  optional int32 age = 5;
+  optional string gender = 6;
+  optional string bio = 7;
+  repeated string photos = 8;
+  repeated string interests = 9;
+
+  optional Preferences preferences = 10;
+
+  optional Location location = 11;
+
+  optional bool onboarding_completed = 12;
+  optional string status = 13;
+  optional string created_at = 14;
+  optional string updated_at = 15;
+}
+
+message UpdateUserResponse {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  string password = 4;
+  int32 age = 5;
+  string gender = 6;
+  string bio = 7;
+  repeated string photos = 8;
+  repeated string interests = 9;
+
+  bool onboarding_completed = 12;
+  string status = 13;
+  string created_at = 14;
+  string updated_at = 15;
+}

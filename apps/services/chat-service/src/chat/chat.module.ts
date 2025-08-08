@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Chat, ChatSchema } from './schemas/chat.schema';
-import { ChatGateway } from './chat.gateway';
-import { ChatService } from './services/chat.service';
-import { ChatController } from './chat.controller';
-import { UserModule } from '../user/user.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { Message, MessageSchema } from './schemas/message.schema';
-import { ChatRepository } from './repositories/chat.repository';
-import { MessageRepository } from './repositories/message.repository';
+import { Chat, ChatSchema } from './schemas/chat.schema.js';
+import { ChatGateway } from './chat.gateway.js';
+import { ChatService } from './services/chat.service.js';
+import { ChatController } from './chat.controller.js';
+import { UserModule } from '../user/user.module.js';
+import { Message, MessageSchema } from './schemas/message.schema.js';
+import { ChatRepository } from './repositories/chat.repository.js';
+import { MessageRepository } from './repositories/message.repository.js';
 
 @Module({
   imports: [

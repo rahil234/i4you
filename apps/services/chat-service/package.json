@@ -1,6 +1,7 @@
 {
   "name": "chat-service",
   "version": "0.0.1",
+  "type": "module",
   "description": "",
   "author": "",
   "private": true,
@@ -22,7 +23,7 @@
   "dependencies": {
     "@bufbuild/protobuf": "latest",
     "@grpc/grpc-js": "^1.13.4",
-    "@i4you/proto-files": "^1.0.4",
+    "@i4you/proto-files": "^1.0.5-beta.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
     "@nestjs/microservices": "^11.1.3",

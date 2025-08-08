@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moderation-service
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moderation-service
+  template:
+    metadata:
+      labels:
+        app: moderation-service
+        version: v1
+    spec:
+      containers:
+        - name: moderation-service
+          image: moderation-service-image
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 4012
+          env:
+            - name: NODE_ENV
+              value: "development"
+            - name: PORT
+              value: "4012"
+            - name: GRPC_PORT
+              value: "50052"
+            - name: MONGODB_URI
+              value: "mongodb+srv://rahilsardar234:NOKCk3dcykTN0P32@i4you-cluster.kdpj0cj.mongodb.net/I4You-userDB"
+            - name: CLOUDINARY_API_KEY
+              value: "415286569897134"
+            - name: CLOUDINARY_API_SECRET
+              value: "cNEdzuyNazOMmXPLLMf_9kCNsDo"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: moderation-service
+  namespace: app
+spec:
+  type: ClusterIP
+  selector:
+    app: moderation-service
+  ports:
+    - name: http
+      port: 4012
+      targetPort: 4012
+    - name: grpc
+      port: 50052
+      targetPort: 50052

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ElasticsearchRequestHistory">
+    <option name="requestHistory">
+      <map>
+        <entry key="855f8781-0c88-4ecf-9177-63f235b7993e">
+          <value>
+            <list>
+              <HistoryRequest>
+                <option name="body" value="{&#10;  &quot;password&quot;: &quot;password&quot;,&#10;  &quot;roles&quot;: [&quot;superuser&quot;],&#10;  &quot;full_name&quot;: &quot;Rahil Sardar&quot;,&#10;  &quot;email&quot;: &quot;rahil@example.com&quot;&#10;}" />
+                <option name="method" value="POST" />
+                <option name="path" value="/_security/user/rahil" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;  &quot;password&quot;: &quot;password&quot;,&#10;  &quot;roles&quot;: [&quot;superuser&quot;],&#10;  &quot;full_name&quot;: &quot;Rahil Sardar&quot;,&#10;  &quot;email&quot;: &quot;rahil@example.com&quot;&#10;}" />
+                <option name="method" value="DELETE" />
+                <option name="path" value="/_security/user/rahil" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;  &quot;password&quot;: &quot;password&quot;,&#10;  &quot;roles&quot;: [&#10;    &quot;kibana_admin&quot;,&#10;    &quot;monitor_connector&quot;,&#10;    &quot;manage_connector&quot;,&#10;    &quot;manage&quot;,&#10;    &quot;all&quot;,&#10;    &quot;manage_service_account&quot;&#10;  ],&#10;  &quot;full_name&quot;: &quot;Rahil Sardar&quot;,&#10;  &quot;email&quot;: &quot;rahil@example.com&quot;&#10;}" />
+                <option name="method" value="POST" />
+                <option name="path" value="/_security/user/rahil" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;  &quot;password&quot;: &quot;password&quot;,&#10;  &quot;roles&quot;: [&#10;    &quot;kibana_admin&quot;,&#10;    &quot;monitor_connector&quot;,&#10;    &quot;manage_connector&quot;,&#10;    &quot;manage&quot;,&#10;    &quot;all&quot;,&#10;    &quot;manage_service_account&quot;&#10;  ],&#10;  &quot;full_name&quot;: &quot;Rahil Sardar&quot;,&#10;  &quot;email&quot;: &quot;rahil@example.com&quot;&#10;}" />
+                <option name="method" value="DELETE" />
+                <option name="path" value="/_security/user/rahil" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;  &quot;password&quot;: &quot;password&quot;,&#10;  &quot;roles&quot;: [&#10;    &quot;kibana_admin&quot;,&#10;    &quot;monitor_connector&quot;,&#10;    &quot;manage_connector&quot;,&#10;    &quot;manage&quot;,&#10;    &quot;all&quot;,&#10;    &quot;manage_service_account&quot;&#10;  ],&#10;  &quot;full_name&quot;: &quot;Rahil Sardar&quot;,&#10;  &quot;email&quot;: &quot;rahil@example.com&quot;&#10;}" />
+                <option name="method" value="POST" />
+                <option name="path" value="/_security/user/rahil" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;  &quot;password&quot;: &quot;password&quot;,&#10;  &quot;roles&quot;: [&#10;    &quot;kibana_admin&quot;,&#10;    &quot;monitor_connector&quot;,&#10;    &quot;manage_connector&quot;,&#10;    &quot;manage&quot;,&#10;    &quot;all&quot;&#10;  ],&#10;  &quot;full_name&quot;: &quot;Rahil Sardar&quot;,&#10;  &quot;email&quot;: &quot;rahil@example.com&quot;&#10;}" />
+                <option name="method" value="POST" />
+                <option name="path" value="/_security/user/rahil" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;  &quot;password&quot;: &quot;password&quot;,&#10;  &quot;roles&quot;: [&#10;    &quot;kibana_admin&quot;,&#10;    &quot;monitor_connector&quot;,&#10;    &quot;manage_connector&quot;,&#10;    &quot;manage&quot;,&#10;    &quot;all&quot;&#10;  ],&#10;  &quot;full_name&quot;: &quot;Rahil Sardar&quot;,&#10;  &quot;email&quot;: &quot;rahil@example.com&quot;&#10;}" />
+                <option name="method" value="DELETE" />
+                <option name="path" value="/_security/user/rahil" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;    &quot;password&quot; : &quot;password&quot;,&#10;    &quot;roles&quot; : [ &quot;kibana_admin,monitor_connector,manage_connector,manage,all&quot; ],&#10;    &quot;full_name&quot; : &quot;Rahil Sardar&quot;,&#10;    &quot;email&quot; : &quot;rahil@example.com&quot;&#10;}" />
+                <option name="method" value="POST" />
+                <option name="path" value="/_security/user/rahil" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;    &quot;password&quot; : &quot;password&quot;,&#10;    &quot;roles&quot; : [ &quot;kibana_admin,monitor_connector,manage_connector,manage,all&quot; ],&#10;    &quot;full_name&quot; : &quot;Rahil Sardar&quot;,&#10;    &quot;email&quot; : &quot;rahil@example.com&quot;&#10;}" />
+                <option name="method" value="DELETE" />
+                <option name="path" value="/_security/user/rahil" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;    &quot;password&quot; : &quot;password&quot;,&#10;    &quot;roles&quot; : [ &quot;kibana_admin&quot; ],&#10;    &quot;full_name&quot; : &quot;Rahil Sardar&quot;,&#10;    &quot;email&quot; : &quot;rahil@example.com&quot;&#10;}" />
+                <option name="method" value="POST" />
+                <option name="path" value="/_security/user/rahil" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;    &quot;password&quot; : &quot;password56&quot;,&#10;    &quot;roles&quot; : [ &quot;kibana_admin&quot; ],&#10;    &quot;full_name&quot; : &quot;Rahil Sardar&quot;,&#10;    &quot;email&quot; : &quot;rahil@example.com&quot;&#10;}" />
+                <option name="method" value="DELETE" />
+                <option name="path" value="/_security/user/rahil" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;    &quot;password&quot; : &quot;password56&quot;,&#10;    &quot;roles&quot; : [ &quot;kibana_admin&quot; ],&#10;    &quot;full_name&quot; : &quot;Rahil Sardar&quot;,&#10;    &quot;email&quot; : &quot;rahil@example.com&quot;&#10;}" />
+                <option name="method" value="POST" />
+                <option name="path" value="/_security/user/rahil" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;    &quot;password&quot; : &quot;password&quot;,&#10;    &quot;roles&quot; : [ &quot;kibana_admin&quot; ],&#10;    &quot;full_name&quot; : &quot;Rahil Sardar&quot;,&#10;    &quot;email&quot; : &quot;rahil@example.com&quot;&#10;}" />
+                <option name="method" value="DELETE" />
+                <option name="path" value="/_security/user/rahil" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;    &quot;password&quot; : &quot;password&quot;,&#10;    &quot;roles&quot; : [ &quot;kibana_admin&quot; ],&#10;    &quot;full_name&quot; : &quot;Rahil Sardar&quot;,&#10;    &quot;email&quot; : &quot;rahil@example.com&quot;&#10;}" />
+                <option name="method" value="POST" />
+                <option name="path" value="/_security/user/rahil" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;    &quot;password&quot; : &quot;password45&quot;,&#10;    &quot;roles&quot; : [ &quot;kibana_admin&quot; ],&#10;    &quot;full_name&quot; : &quot;Rahil Sardar&quot;,&#10;    &quot;email&quot; : &quot;rahil@example.com&quot;&#10;}" />
+                <option name="method" value="POST" />
+                <option name="path" value="/_security/user/rahil" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;    &quot;roles&quot; : [ &quot;kibana_admin&quot; ],&#10;    &quot;full_name&quot; : &quot;Rahil Sardar&quot;,&#10;    &quot;email&quot; : &quot;rahil@example.com&quot;&#10;}" />
+                <option name="method" value="POST" />
+                <option name="path" value="/_security/user/rahil" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;    &quot;password&quot; : &quot;password&quot;,&#10;    &quot;roles&quot; : [ &quot;kibana_admin&quot; ],&#10;    &quot;full_name&quot; : &quot;Rahil Sardar&quot;,&#10;    &quot;email&quot; : &quot;rahil@example.com&quot;&#10;}" />
+                <option name="method" value="POST" />
+                <option name="path" value="/_security/user/rahil" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;    &quot;password&quot; : &quot;myStrongPassword123&quot;,&#10;    &quot;roles&quot; : [ &quot;kibana_admin&quot; ],&#10;    &quot;full_name&quot; : &quot;Rahil Sardar&quot;,&#10;    &quot;email&quot; : &quot;rahil@example.com&quot;&#10;}" />
+                <option name="method" value="POST" />
+                <option name="path" value="/_security/user/rahil" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;  &quot;number_of_replicas&quot;: 0&#10;}" />
+                <option name="method" value="PUT" />
+                <option name="path" value="$PROJECT_DIR$/../../../_settings" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="path" value="/_cluster/health/users?pretty" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="path" value="_cluster/allocation/explain" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;  &quot;from&quot; : 0,&#10;  &quot;size&quot; : 50,&#10;  &quot;query&quot; : {&#10;    &quot;match_all&quot; : {}&#10;  }&#10;}" />
+                <option name="path" value="$PROJECT_DIR$/../../../_search" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;  &quot;id&quot;: &quot;u1&quot;,&#10;  &quot;name&quot;: &quot;Ria&quot;,&#10;  &quot;gender&quot;: &quot;female&quot;,&#10;  &quot;age&quot;: 24&#10;}" />
+                <option name="method" value="POST" />
+                <option name="path" value="$PROJECT_DIR$/../../../_doc" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;  id: 'u1',&#10;  name: 'Ria',&#10;  gender: 'female',&#10;  age: 24,&#10;}" />
+                <option name="method" value="POST" />
+                <option name="path" value="$PROJECT_DIR$/../../../_doc" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;  &quot;name&quot;: &quot;John Doe&quot;,&#10;  &quot;email&quot;: &quot;1@gmail.com&quot;,&#10;  &quot;age&quot;: 30&#10;}" />
+                <option name="method" value="POST" />
+                <option name="path" value="$PROJECT_DIR$/../../../_doc" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;  &quot;from&quot; : 0,&#10;  &quot;size&quot; : 50,&#10;  &quot;query&quot; : {&#10;    &quot;match_all&quot; : {}&#10;  }&#10;}" />
+                <option name="path" value="$PROJECT_DIR$/../../../_search" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;  &quot;name&quot;: &quot;John Doe&quot;,&#10;  &quot;email&quot;: &quot;1@gmail.com&quot;,&#10;  &quot;age&quot;: 30&#10;}" />
+                <option name="method" value="POST" />
+                <option name="path" value="$PROJECT_DIR$/../../../_doc" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;  &quot;name&quot;: &quot;John Doe&quot;,&#10;  &quot;email&quot;: &quot;1@gmail.com&quot;,&#10;  &quot;age&quot;: 30&#10;}" />
+                <option name="method" value="POST" />
+                <option name="path" value="$PROJECT_DIR$/../../../user123" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;  &quot;k8s&quot;: {&#10;    &quot;es&quot;: {&#10;      &quot;enabled&quot;: true,&#10;      &quot;version&quot;: &quot;7.10.2&quot;,&#10;      &quot;cluster_name&quot;: &quot;es-cluster&quot;,&#10;      &quot;node_name&quot;: &quot;es-node-1&quot;,&#10;      &quot;pod_name&quot;: &quot;es-pod-1&quot;,&#10;      &quot;namespace&quot;: &quot;default&quot;,&#10;      &quot;service_account&quot;: &quot;es-service-account&quot;&#10;    }&#10;  }&#10;}" />
+                <option name="method" value="POST" />
+                <option name="path" value="$PROJECT_DIR$/../../../user123/k8s/es" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;  &quot;k8s&quot;: {&#10;    &quot;es&quot;: {&#10;      &quot;enabled&quot;: true,&#10;      &quot;version&quot;: &quot;7.10.2&quot;,&#10;      &quot;cluster_name&quot;: &quot;es-cluster&quot;,&#10;      &quot;node_name&quot;: &quot;es-node-1&quot;,&#10;      &quot;pod_name&quot;: &quot;es-pod-1&quot;,&#10;      &quot;namespace&quot;: &quot;default&quot;,&#10;      &quot;service_account&quot;: &quot;es-service-account&quot;&#10;    }&#10;  }&#10;}" />
+                <option name="method" value="POST" />
+                <option name="path" value="$PROJECT_DIR$/../../../{{user_id}}/k8s/es" />
+              </HistoryRequest>
+              <HistoryRequest>
+                <option name="body" value="{&#10;  &quot;from&quot; : 0,&#10;  &quot;size&quot; : 50,&#10;  &quot;query&quot; : {&#10;    &quot;match_all&quot; : {}&#10;  }&#10;}" />
+                <option name="path" value="/test/_search" />
+              </HistoryRequest>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

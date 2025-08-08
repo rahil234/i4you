@@ -1,10 +1,11 @@
 import { injectable, inject } from 'inversify';
 import { TYPES } from '@/types';
-import ILikeRepository from '@/repositories/interfaces/ILikeRepository';
-import IMatchRepository from '@/repositories/interfaces/IMatchRepository';
-import IKafkaService from '@/events/kafka/interfaces/IKafkaService';
+import { DiscoveryGrpcService } from '@/services/discovery.grpc.service';
 import { UserGrpcService } from '@/services/user.grpc.service';
-import { User } from '@i4you/proto-files/generated/user/v2/user';
+import IKafkaService from '@/events/kafka/interfaces/IKafkaService';
+import IMatchRepository from '@/repositories/interfaces/IMatchRepository';
+import ILikeRepository from '@/repositories/interfaces/ILikeRepository';
+import { User } from '@i4you/shared';
 
 export interface Match {
   id: string;
@@ -28,20 +29,14 @@ export class MatchService {
     @inject(TYPES.KafkaService) private kafkaService: IKafkaService,
     @inject(TYPES.MatchRepository) private matchRepository: IMatchRepository,
     @inject(TYPES.LikeRepository) private likeRepository: ILikeRepository,
-    @inject(TYPES.UserGrpcService) private userGrpcService: UserGrpcService
+    @inject(TYPES.UserGrpcService) private userGrpcService: UserGrpcService,
+    @inject(TYPES.DiscoveryGrpcService)
+    private discoverGrpcService: DiscoveryGrpcService
   ) {}
 
   async getMatches(userId: string): Promise<Match[]> {
-    console.log(`Fetching matches for user ${userId}`);
-
     try {
       const matches = await this.matchRepository.getMatches(userId);
-      console.log(`Found ${matches.length} matches for user ${userId}`);
-
-      console.log(
-        `Fetching user details for ${matches.length} matches...`,
-        matches
-      );
 
       const populatedMatches = await Promise.all(
         matches.map(async (match) => {
@@ -51,35 +46,49 @@ export class MatchService {
 
           const userData = await this.userGrpcService.findUserById(matchId);
 
-          console.log(
-            `Fetched user data for match ${matchId}:`,
-            userData.user?.id
-          );
-
           return {
             id: match.id,
             matchedUserId: matchId,
             createdAt: match.createdAt.toISOString(),
             user: {
-              id: userData.user?.id,
-              name: userData.user?.name,
-              age: userData.user?.age,
-              bio: userData.user?.bio,
-              location: userData.user?.location,
-              avatar: userData.user?.photos[0],
-              interests: userData.user?.interests || [],
+              id: userData.id,
+              name: userData.name,
+              age: userData.age,
+              bio: userData.bio,
+              location: userData.location?.displayName,
+              avatar: userData.photos[0],
+              interests: userData.interests || [],
             },
           };
         })
       );
 
-      console.log('populatedMatches:', populatedMatches);
-
+      // TODO: Add pagination and sorting
+      // @ts-expect-error some properties are optional
       return populatedMatches;
     } catch (error) {
       console.error('Error fetching matches:', error);
       throw error;
     }
+  }
+
+  async getPotentialMatches(userId: string) {
+    const user = await this.userGrpcService.findUserById(userId);
+
+    const likedUserIds = (await this.likeRepository.getLikesSent(userId)).map(
+      (d) => d.toUserId.toString()
+    );
+
+    const excludeUserIds = [userId, ...likedUserIds];
+
+    console.log('likedUserIds:', excludeUserIds);
+
+    const { matches } = await this.discoverGrpcService.getMatches({
+      preferences: user.preferences!,
+      location: user.location!,
+      excludeUserIds,
+    });
+    return matches;
   }
 
   async handleLike(userId: string, likedUserId: string): Promise<void> {

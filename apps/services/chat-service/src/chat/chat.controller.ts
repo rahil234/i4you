@@ -1,6 +1,6 @@
 import { Controller, Get, Headers, Param, Query } from '@nestjs/common';
-import { ChatService } from './services/chat.service';
-import { MessageResponseDto } from './dto/message.response.dto';
+import { ChatService } from './services/chat.service.js';
+import { MessageResponseDto } from './dto/message.response.dto.js';
 
 @Controller()
 export class ChatController {

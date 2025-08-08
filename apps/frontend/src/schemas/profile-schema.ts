@@ -18,4 +18,17 @@ export const profileSchema = z.object({
   interests: z
     .array(z.string()).min(5, 'At least 5 interests are required')
     .max(12, 'Maximum 12 interests allowed'),
+  preferences: z.object({
+    showMe: z.enum(['male', 'female', 'all'], {
+      required_error: 'Show Me is required',
+    }),
+    lookingFor: z.enum(['casual', 'relationship', 'friendship', 'all'], {
+      required_error: 'Looking For is required',
+    }),
+    ageRange: z.tuple([
+      z.number().min(18, 'Min age must be at least 18'),
+      z.number().min(18, 'Max age must be at least 18'),
+    ]),
+    distance: z.number().min(1, 'Distance must be at least 1km'),
+  }),
 });

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-kibana-user
+  namespace: elastic-system
+  labels:
+    common.k8s.elastic.co/type: elasticsearch-user
+    elasticsearch.k8s.elastic.co/cluster-name: elastic
+    elasticsearch.k8s.elastic.co/roles: superuser
+stringData:
+  user: rahil
+  password: password

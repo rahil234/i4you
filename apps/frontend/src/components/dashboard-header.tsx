@@ -9,7 +9,6 @@ export function DashboardHeader() {
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-4 lg:hidden">
         <MobileNav />
-        <h1 className="text-xl font-semibold">LoveConnect</h1>
       </div>
 
       <div className="hidden md:flex md:w-1/3 lg:w-1/4">

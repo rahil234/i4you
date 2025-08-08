@@ -2,6 +2,12 @@ import api from '@/lib/api';
 import { handleApi } from '@/utils/apiHandler';
 
 class MatchService {
+  getPotentialMatches = () => handleApi(() =>
+    api
+      .get('/match/potential-matches')
+      .then(res => res.data),
+  );
+
   getMatches = () => handleApi(() =>
     api
       .get('/match')

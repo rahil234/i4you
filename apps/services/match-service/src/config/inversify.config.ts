@@ -9,7 +9,9 @@ import { MatchRepository } from '@/repositories/match.repository';
 import ILikeRepository from '@/repositories/interfaces/ILikeRepository';
 import { LikeRepository } from '@/repositories/like.repository';
 import { UserGrpcService } from '@/services/user.grpc.service';
-import { GrpcClientProvider } from '@/providers/grpc.client.provider';
+import { UserGrpcProvider } from '@/providers/user.grpc.provider';
+import { DiscoveryGrpcService } from '@/services/discovery.grpc.service';
+import { DiscoveryGrpcProvider } from '@/providers/discovery.grpc.provider';
 
 const container = new Container();
 
@@ -23,9 +25,19 @@ container
   .toConstantValue(new KafkaService());
 
 container.bind<UserGrpcService>(TYPES.UserGrpcService).to(UserGrpcService);
+
 container
-  .bind<GrpcClientProvider>(TYPES.GrpcClientProvider)
-  .to(GrpcClientProvider)
+  .bind<DiscoveryGrpcService>(TYPES.DiscoveryGrpcService)
+  .to(DiscoveryGrpcService);
+
+container
+  .bind<UserGrpcProvider>(TYPES.UserGrpcProvider)
+  .to(UserGrpcProvider)
+  .inSingletonScope();
+
+container
+  .bind<DiscoveryGrpcProvider>(TYPES.DiscoveryGrpcProvider)
+  .to(DiscoveryGrpcProvider)
   .inSingletonScope();
 
 export { container };
