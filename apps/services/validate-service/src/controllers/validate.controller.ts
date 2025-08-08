@@ -23,6 +23,8 @@ const ignorePaths = new Set([
   '/api/v1/auth/health',
   '/api/v1/user/health',
   '/api/v1/media/health',
+  '/api/v1/match/health',
+  '/api/v1/media/get-images',
 ]);
 
 @injectable()

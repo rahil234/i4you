@@ -10,12 +10,16 @@ import { CacheService } from '@/services/cache.service';
 import ICacheService from '@/services/interfaces/ICacheService';
 import { KafkaService } from '@/events/kafka/KafkaService';
 import IKafkaService from '@/events/kafka/interfaces/IKafkaService';
+import { UserServiceServer } from '@i4you/proto-files/user/v2';
+import { userGrpcService } from '@/services/grpc.user.service';
+import { MediaService } from '@/services/media.service';
 
 const container = new Container();
 
 container.bind<IUserRepository>(TYPES.UserRepository).to(UserRepository);
 container.bind<IAdminRepository>(TYPES.AdminRepository).to(AdminRepository);
 container.bind<UserService>(TYPES.UserService).to(UserService);
+container.bind<MediaService>(TYPES.MediaService).to(MediaService);
 container.bind<ICacheService>(TYPES.CacheService).to(CacheService);
 container.bind<UserController>(TYPES.UserController).to(UserController);
 

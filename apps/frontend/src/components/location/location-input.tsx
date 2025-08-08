@@ -29,8 +29,8 @@ export function LocationInput({ value, name, onChange }: LocationInputProps) {
       if (place.formatted_address) {
         onChange({
           coordinates: [
-            place.geometry?.location.lat()!,
             place.geometry?.location.lng()!,
+            place.geometry?.location.lat()!,
           ],
           displayName: place.formatted_address,
         });
@@ -68,7 +68,7 @@ export function LocationInput({ value, name, onChange }: LocationInputProps) {
           const country = data?.address?.country || '';
 
           onChange({
-            coordinates: [latitude, longitude],
+            coordinates: [longitude, latitude],
             displayName: `${city}, ${state}, ${country}`,
           });
         } catch (err) {

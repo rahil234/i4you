@@ -18,7 +18,10 @@ spec:
           mountPath: /host
   volumes:
     - name: host-root
-      hostPath:
-        path: /
-        type: Directory
-  restartPolicy: Never
+      persistentVolumeClaim:
+        claimName: elasticsearch-data-elastic-es-default-0
+#    - name: host-root
+#      hostPath:
+#        path: /
+#        type: Directory
+#  restartPolicy: Never

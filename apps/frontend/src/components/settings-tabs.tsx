@@ -1,15 +1,21 @@
-"use client"
+'use client';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { Switch } from "@/components/ui/switch"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Laptop, Moon, Sun } from 'lucide-react';
+import type React from 'react';
+import { useTheme } from '@/context/theme-context';
 
 export function SettingsTabs() {
+  const { theme, setTheme } = useTheme();
+
   return (
     <Tabs defaultValue="general">
       <TabsList className="grid w-full grid-cols-4">
@@ -55,6 +61,32 @@ export function SettingsTabs() {
                   </SelectContent>
                 </Select>
               </div>
+            </div>
+            <div className="space-y-2">
+              <Label className="mb-1">Theme</Label>
+              <RadioGroup value={theme} onValueChange={setTheme} className="flex gap-4">
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem id="light" value="light" />
+                  <Label htmlFor="light" className="flex items-center gap-1">
+                    <Sun className="h-4 w-4" />
+                    Light
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem id="dark" value="dark" />
+                  <Label htmlFor="dark" className="flex items-center gap-1">
+                    <Moon className="h-4 w-4" />
+                    Dark
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem id="system" value="system" />
+                  <Label htmlFor="system" className="flex items-center gap-1">
+                    <Laptop className="h-4 w-4" />
+                    System
+                  </Label>
+                </div>
+              </RadioGroup>
             </div>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -207,6 +239,5 @@ export function SettingsTabs() {
         </Card>
       </TabsContent>
     </Tabs>
-  )
+  );
 }
-

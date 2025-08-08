@@ -10,7 +10,6 @@ export default function OnboardingComplete() {
   const router = useRouter();
   const { submitOnboarding } = useOnboardingStore();
 
-  // Submit onboarding data when this page loads
   useEffect(() => {
     const submit = async () => {
       await submitOnboarding();

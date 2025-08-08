@@ -4,24 +4,60 @@ kind: Config
 metadata:
   name: i4you
 profiles:
-  - name: initial
+  - name: crds
+    deploy:
+      kubectl:
+        hooks:
+          before:
+            - host:
+                command:
+                  - kubectl
+                  - apply
+                  - --server-side
+                  - --force-conflicts
+                  - -f
+                  - https://github.com/grafana/grafana-operator/releases/download/v5.18.0/crds.yaml
     manifests:
       rawYaml:
-        #        - https://raw.githubusercontent.com/traefik/traefik/v3.4/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
-        #        - https://github.com/strimzi/strimzi-kafka-operator/releases/download/0.47.0/strimzi-crds-0.47.0.yaml
-        #        - https://github.com/grafana/grafana-operator/releases/download/v5.18.0/crds.yaml
-        - k8s/dev/traefik/namespace.yaml
-        - k8s/dev/kafka-namespace.yaml
-        - k8s/dev/monitoring/namespace.yaml
+        - https://download.elastic.co/downloads/eck/3.1.0/crds.yaml
+        - https://raw.githubusercontent.com/traefik/traefik/v3.4/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
+        - https://github.com/strimzi/strimzi-kafka-operator/releases/download/0.47.0/strimzi-crds-0.47.0.yaml
         - https://raw.githubusercontent.com/grafana/grafana-operator/master/deploy/helm/grafana-operator/crds/grafana.integreatly.org_grafanas.yaml
-        - k8s/dev/kafka-kraft.yaml
+        - https://github.com/prometheus-operator/prometheus-operator/releases/download/v0.84.0/stripped-down-crds.yaml
+        - https://raw.githubusercontent.com/grafana/grafana-operator/master/deploy/helm/grafana-operator/crds/grafana.integreatly.org_grafanas.yaml
+
+  - name: setup
+    manifests:
+      rawYaml:
+        - k8s/dev/elastic/namespace.yaml
+        - k8s/dev/traefik/namespace.yaml
+        - k8s/dev/kafka/kafka-namespace.yaml
+        - k8s/dev/hashicorp/vault/namespace.yaml
+        - https://download.elastic.co/downloads/eck/3.1.0/operator.yaml
+        - https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.8.0/components.yaml
+        - k8s/dev/monitoring/namespace.yaml
+        - k8s/dev/kafka/kafka-kraft.yaml
+        - k8s/dev/elastic/storage-class.yaml
+        - k8s/dev/elastic/elasticsearch.yaml
+        - k8s/dev/kibana/kibana.yaml
+        - k8s/dev/kibana/ingress.yaml
+        - k8s/dev/kibana/kibana-user.yaml
         - k8s/dev/redis.yaml
       helm:
         releases:
+          - name: vault
+            remoteChart: hashicorp/vault
+            namespace: vault
+            createNamespace: true
+            wait: true
+            version: 0.30.1
+            valuesFiles:
+              - k8s/dev/hashicorp/vault/values.yaml
           - name: strimzi-kafka-operator
             remoteChart: strimzi/strimzi-kafka-operator
             namespace: kafka
             createNamespace: true
+            wait: true
             version: 0.46.1
             setValues:
               watchAnyNamespace: false
@@ -30,12 +66,12 @@ profiles:
             remoteChart: grafana/grafana-operator
             namespace: monitoring
             createNamespace: true
-          #            valuesFiles:
-          #              - k8s/dev/monitoring/grafana/operator-values.yaml
+            wait: true
           - name: traefik
             remoteChart: traefik/traefik
             namespace: traefik
             createNamespace: true
+            wait: true
             valuesFiles:
               - k8s/dev/traefik/values.yaml
 
@@ -98,6 +134,38 @@ profiles:
                 dest: .
           docker:
             dockerfile: Dockerfile.dev
+        - image: moderation-service-image
+          context: apps/services/moderation-service
+          sync:
+            manual:
+              - src: src/**/*
+                dest: .
+          docker:
+            dockerfile: Dockerfile.dev
+        - image: discovery-service-image
+          context: apps/services/discovery-service
+          sync:
+            manual:
+              - src: src/**/*
+                dest: .
+          docker:
+            dockerfile: Dockerfile.dev
+        - image: payment-service-image
+          context: apps/services/payment-service
+          sync:
+            manual:
+              - src: src/**/*
+                dest: .
+          docker:
+            dockerfile: Dockerfile.dev
+        - image: es-worker-service-image
+          context: apps/services/es-worker-service
+          sync:
+            manual:
+              - src: src/**/*
+                dest: .
+          docker:
+            dockerfile: Dockerfile.dev
         - image: frontend-image
           context: apps/frontend
           sync:
@@ -105,7 +173,7 @@ profiles:
               - src: src/**/*
                 dest: .
           docker:
-            dockerfile: Dockerfile
+            dockerfile: Dockerfile.dev
         - image: socket-nginx-image
           context: apps/nginx
           docker:
@@ -117,7 +185,7 @@ profiles:
     manifests:
       rawYaml:
         - k8s/dev/app-namespace.yaml
-        - k8s/dev/kafka-topics.yaml
+        - k8s/dev/kafka/kafka-topics.yaml
         - k8s/dev/i4you-cert-secret.yaml
         - k8s/dev/validate-service.yaml
         - k8s/dev/user-service.yaml
@@ -125,7 +193,11 @@ profiles:
         - k8s/dev/media-service.yaml
         - k8s/dev/match-service.yaml
         - k8s/dev/chat-service.yaml
+        - k8s/dev/discovery-service.yaml
+        - k8s/dev/es-worker-service.yaml
+        - k8s/dev/moderation-service.yaml
         - k8s/dev/notification-service.yaml
+        - k8s/dev/payment-service.yaml
         - k8s/dev/frontend.yaml
         - k8s/dev/nginx-socket-proxy.yaml
         - k8s/dev/traefik/traefik-validate-middleware.yaml
@@ -174,7 +246,6 @@ profiles:
   - name: monitoring
     manifests:
       rawYaml:
-        #        - https://github.com/prometheus-operator/prometheus-operator/releases/download/v0.84.0/stripped-down-crds.yaml
         - k8s/dev/monitoring/prometheus-ingress.yaml
         - k8s/dev/monitoring/grafana-ingress.yaml
         - k8s/dev/monitoring/grafana/grafana.yaml
@@ -222,6 +293,7 @@ profiles:
     manifests:
       rawYaml:
         - https://raw.githubusercontent.com/istio/istio/release-1.21/samples/addons/prometheus.yaml
+        - k8s/dev/istio/namespace.yaml
       helm:
         releases:
           - name: istiod

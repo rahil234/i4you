@@ -1,22 +1,23 @@
 import { injectable } from 'inversify';
-import { createUserClient } from '@i4you/proto-files/client/userClient';
+import { UserServiceClient } from '@i4you/proto-files/user/v2';
+
 import { env } from '@/config';
+import { credentials } from '@grpc/grpc-js';
 
 const { USER_GRPC_SERVER_URL } = env;
 
 @injectable()
-export class GrpcClientProvider {
-  public readonly userClient = createUserClient(USER_GRPC_SERVER_URL);
-
+export class GrpcClientProvider extends UserServiceClient {
   constructor() {
+    super(USER_GRPC_SERVER_URL, credentials.createInsecure());
     this.connectWithRetry();
   }
 
   private connectWithRetry(retries = 5, delayMs = 3000) {
     const attempt = (remainingRetries: number) => {
-      const deadline = new Date(Date.now() + 1000); // 10 seconds max per try
+      const deadline = new Date(Date.now() + 1000);
 
-      this.userClient.waitForReady(deadline, (err: any) => {
+      this.waitForReady(deadline, (err) => {
         if (err) {
           console.error(
             `gRPC connection to ${USER_GRPC_SERVER_URL} failed. Retries left: ${remainingRetries}. Error:`,

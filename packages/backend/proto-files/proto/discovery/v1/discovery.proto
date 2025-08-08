@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package discovery.v1;
+
+service DiscoverService {
+  rpc GetPotentialMatches(GetPotentialMatchesRequest) returns (GetPotentialMatchesResponse);
+}
+
+message GetPotentialMatchesRequest {
+  string show_me = 2;
+  int32 min_age = 3;
+  int32 max_age = 4;
+  int32 max_distance = 5;
+  double location_lat = 6;
+  double location_lng = 7;
+  string looking_for = 8;
+}
+
+message GetPotentialMatchesResponse {
+  repeated string matches = 1;
+}

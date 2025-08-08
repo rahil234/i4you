@@ -1,11 +1,15 @@
-import { createUserClient } from '@i4you/proto-files/client/userClient';
 import { Injectable } from '@nestjs/common';
+import { credentials } from '@grpc/grpc-js';
+import { UserServiceClient } from '@i4you/proto-files/user/v2';
 
 const USER_GRPC_SERVER_URL = process.env.USER_GRPC_SERVER_URL!;
 
 @Injectable()
 export class GrpcClientProvider {
-  public readonly userClient = createUserClient(USER_GRPC_SERVER_URL);
+  public readonly userClient = new UserServiceClient(
+    USER_GRPC_SERVER_URL,
+    credentials.createInsecure(),
+  );
 
   constructor() {
     this.connectWithRetry();

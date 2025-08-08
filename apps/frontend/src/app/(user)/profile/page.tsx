@@ -321,7 +321,11 @@ export default function ProfilePage() {
               </div>
               <Award className="h-8 w-8" />
             </div>
-            <Button variant="secondary" className="w-full bg-white text-primary hover:bg-white/90">
+            <Button
+              variant="secondary"
+              className="w-full bg-white text-primary hover:bg-white/90"
+              onClick={() => router.push('/subscription')}
+            >
               Upgrade to Premium
             </Button>
           </CardContent>

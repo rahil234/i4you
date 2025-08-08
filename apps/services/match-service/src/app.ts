@@ -41,15 +41,6 @@ const startServer = async () => {
   });
   await kafkaService.connect().then(() => {
     console.log('Kafka Producer connected successfully');
-    //   setInterval(() => {
-    //     kafkaService.emit('match.events', 'match_found', {
-    //       user1: '12345',
-    //       user2: '67890',
-    //       matchId: 'match12345',
-    //       timestamp: new Date().toISOString(),
-    //     });
-    //     console.log('Emitted match event to Kafka');
-    //   }, 5000);
   });
   app.listen(env.PORT, () => {
     console.log('Match Server running on port ', env.PORT);

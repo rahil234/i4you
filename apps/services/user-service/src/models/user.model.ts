@@ -1,27 +1,9 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document, ObjectId } from 'mongoose';
+import { User } from '@i4you/shared';
 
-export interface UserDocument extends Document {
-  name: string;
-  email: string;
-  password: string;
-  age: number;
-  gender: 'male' | 'female' | 'other';
-  bio: string;
-  photos: string[];
-  interests: string[];
-  preferences: {
-    ageRange: [number, number];
-    distance: number;
-    showMe: 'male' | 'female' | 'all';
-    lookingFor: 'casual' | 'relationship' | 'friendship' | 'all';
-  };
-  location: {
-    type: 'Point';
-    coordinates: [number, number];
-    displayName: string;
-  };
-  onboardingCompleted: boolean;
-  status: 'active' | 'suspended';
+export interface UserDocument
+  extends Omit<User, 'id' | 'createdAt' | 'updatedAt'>,
+    Document<ObjectId> {
   createdAt: Date;
   updatedAt: Date;
 }
@@ -45,23 +27,20 @@ const userSchema = new Schema<UserDocument>(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    age: { type: Number, required: true },
-    gender: { type: String, required: true, enum: ['male', 'female', 'other'] },
-    bio: { type: String, required: true },
-    photos: { type: [String], required: true },
-    interests: { type: [String], required: true },
+    age: { type: Number },
+    gender: { type: String, enum: ['male', 'female', 'other'] },
+    bio: { type: String },
+    interests: { type: [String] },
     preferences: {
-      ageRange: { type: [Number], required: true },
-      distance: { type: Number, required: true },
+      ageRange: { type: [Number] },
+      distance: { type: Number },
       gender: {
         type: String,
-        required: true,
         enum: ['male', 'female', 'other'],
       },
-      showMe: { type: String, required: true, enum: ['male', 'female', 'all'] },
+      showMe: { type: String, enum: ['male', 'female', 'all'] },
       lookingFor: {
         type: String,
-        required: true,
         enum: ['casual', 'relationship', 'friendship', 'all'],
       },
     },

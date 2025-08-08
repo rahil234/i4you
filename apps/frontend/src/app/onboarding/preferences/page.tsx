@@ -77,7 +77,7 @@ export default function OnboardingPreferences() {
             <Slider
               defaultValue={preferences.ageRange}
               min={18}
-              max={100}
+              max={60}
               step={1}
               onValueChange={(value) => updatePreferences({ ageRange: value as [number, number] })}
             />
@@ -90,9 +90,9 @@ export default function OnboardingPreferences() {
             </div>
             <Slider
               defaultValue={[preferences.distance]}
-              min={1}
-              max={100}
-              step={1}
+              min={10}
+              max={4000}
+              step={10}
               onValueChange={(value) => updatePreferences({ distance: value[0] })}
             />
           </div>

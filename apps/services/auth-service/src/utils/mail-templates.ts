@@ -1,6 +1,9 @@
-export const verificationEmailTemplate = (name: string, code: string) => `
+export const verificationEmailTemplate = (
+  name: string,
+  verificationLink: string
+) => `
   <h2>Hello ${name},</h2>
-  <p>Your verification code is: <strong>${code}</strong></p>
+  <p>click <a href="${verificationLink}">here</a> to verify your email.</p>
 `;
 
 export const PasswordResetTemplate = (name: string, link: string) => `

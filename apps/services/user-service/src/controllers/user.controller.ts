@@ -5,6 +5,9 @@ import { UserService } from '@/services/user.service';
 import { handleAsync } from '@/utils/handle-async';
 import { AuthError } from '@/errors/AuthError';
 import OnboardingRequestDTO from '@/dtos/onboarding.request.dtos';
+import UserDTO from '@/dtos/user.dtos';
+import AdminDTO from '@/dtos/admin.dtos';
+import { UserDocument } from '@/models/user.model';
 
 @injectable()
 export class UserController {
@@ -20,7 +23,14 @@ export class UserController {
       return;
     }
 
-    res.status(200).json(user);
+    const photos = await this.userService.getUserPhotos(String(user._id));
+
+    const data =
+      role === 'admin'
+        ? new AdminDTO(user)
+        : new UserDTO(user as UserDocument, photos);
+
+    res.status(200).json(data);
   });
 
   updateUser = handleAsync(async (req, res) => {
@@ -34,7 +44,9 @@ export class UserController {
 
     const newUser = await this.userService.updateUser(id, data);
 
-    res.status(200).json(newUser);
+    const photos = await this.userService.getUserPhotos(String(newUser._id));
+
+    res.status(200).json(new UserDTO(newUser, photos));
   });
 
   updateUserStatus = handleAsync(async (req, res) => {
@@ -49,7 +61,7 @@ export class UserController {
 
     await this.userService.updateUserStatus(userId, status);
 
-    res.status(200).json();
+    res.status(200).json({ message: 'User status updated successfully' });
   });
 
   getUsers = handleAsync(async (req, res) => {
@@ -70,17 +82,6 @@ export class UserController {
     });
 
     res.status(200).json(result);
-  });
-
-  getMatches = handleAsync(async (req, res) => {
-    const { id: userId } = req.user;
-
-    if (!userId) {
-      throw new AuthError('Unauthorized');
-    }
-
-    const matches = await this.userService.getMatches(userId);
-    res.status(200).json(matches);
   });
 
   likeUser = handleAsync(async (req, res) => {

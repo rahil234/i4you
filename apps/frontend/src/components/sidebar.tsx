@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { BarChart3, CreditCard, Flag, Heart, Home, Shield, Users, User, ChevronUp } from 'lucide-react';
+import { BarChart3, CreditCard, Flag, Heart, Home, Shield, Users, User, ChevronUp, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import useAuthStore from '@/store/authStore';
 import { Popover } from '@radix-ui/react-popover';
@@ -45,11 +45,11 @@ const sidebarLinks = [
     href: '/admin/subscriptions',
     icon: CreditCard,
   },
-  // {
-  //   name: "Settings",
-  //   href: "/admin/settings",
-  //   icon: Settings,
-  // },
+  {
+    name: 'Settings',
+    href: '/admin/settings',
+    icon: Settings,
+  },
 ];
 
 export function Sidebar() {

@@ -24,6 +24,13 @@ class MediaService {
         });
       return res.data;
     });
+
+  deleteImage = (url: string) =>
+    handleApi(() =>
+      api
+        .delete(`/media/image/${encodeURIComponent(url)}`)
+        .then(res => res.data),
+    );
 }
 
 export default new MediaService();

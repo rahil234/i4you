@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ChatModule } from './chat/chat.module';
+import { ChatModule } from './chat/chat.module.js';
 
 const MONGODB_URI = process.env.MONGODB_URI;
 

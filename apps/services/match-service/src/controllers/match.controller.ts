@@ -4,20 +4,19 @@ import { TYPES } from '@/types';
 import { MatchService } from '@/services/match.service';
 import { handleAsync } from '@/utils/handle-async';
 import { createError } from '@i4you/http-errors';
+import MatchesResponseDTO from '@/dtos/matches.response.dtos';
 
 @injectable()
 export class MatchController {
   constructor(@inject(TYPES.MatchService) private matchService: MatchService) {}
 
   getMatches = handleAsync(async (req, res) => {
-    const userId = req.user.id;
-
-    if (!userId) {
-      throw createError.Unauthorized('User ID is required');
-    }
-
-    const matches = await this.matchService.getMatches(userId);
-
+    const matches = await this.matchService.getMatches(req.user.id);
     res.status(200).json(matches);
+  });
+
+  getPotentialMatches = handleAsync(async (req, res) => {
+    const matches = await this.matchService.getPotentialMatches(req.user.id);
+    res.status(200).json(matches.map((m) => new MatchesResponseDTO(m)));
   });
 }

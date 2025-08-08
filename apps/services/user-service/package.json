@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node dist/app.js",
     "dev": "tsx watch src/app.ts",
-    "build": "tsc && tsc-alias && tsc-esm-fix",
+    "build": "tsc --project ./tsconfig.json && tsc-alias && tsc-esm-fix",
     "debug": "node --inspect=0.0.0.0:9221 --import tsx src/app.ts",
     "build:noemit": "tsc --project ./tsconfig.json --noEmit",
     "lint": "eslint --ext .ts src",
@@ -18,7 +18,7 @@
     "@i4you/express-auth-middleware": "latest",
     "@i4you/express-logger": "latest",
     "@i4you/http-errors": "latest",
-    "@i4you/proto-files": "1.0.3",
+    "@i4you/proto-files": "^1.0.5-beta.4",
     "@protobuf-ts/runtime": "^2.9.5",
     "@protobuf-ts/runtime-rpc": "^2.9.5",
     "@trpc/server": "^10.45.2",
@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",
-    "@i4you/shared": "latest",
+    "@i4you/shared": "^1.0.3-beta.0",
     "@protobuf-ts/plugin": "^2.9.4",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",

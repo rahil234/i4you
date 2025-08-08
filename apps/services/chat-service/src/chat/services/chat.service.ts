@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { ChatRepository } from '../repositories/chat.repository';
-import { MessageRepository } from '../repositories/message.repository';
-import { UserGrpcService } from '../../user/user.grpc.service';
-
-import { ChatResponseDto } from '../dto/get-chat.dto';
-import { UserResponseDto } from '../dto/get-user.dto';
 import { User } from '@i4you/shared';
+
+import { ChatRepository } from '../repositories/chat.repository.js';
+import { MessageRepository } from '../repositories/message.repository.js';
+import { UserGrpcService } from '../../user/user.grpc.service.js';
+
+import { ChatResponseDto } from '../dto/get-chat.dto.js';
+import { UserResponseDto } from '../dto/get-user.dto.js';
 
 interface Message {
   chatId: string;
@@ -36,7 +37,7 @@ export class ChatService {
         if (!otherUserId) return;
 
         const response = await this.userGrpcService.getUserById(otherUserId);
-        const user = response.user as unknown as User;
+        const user = response as unknown as User;
 
         if (!user) {
           console.warn(`User with ID ${otherUserId} not found`);
@@ -51,8 +52,9 @@ export class ChatService {
   }
 
   async getInitialChatUser(userId: string) {
-    const user = (await this.userGrpcService.getUserById(userId))
-      .user as unknown as User;
+    const user = (await this.userGrpcService.getUserById(
+      userId,
+    )) as unknown as User;
 
     return new UserResponseDto(user);
   }

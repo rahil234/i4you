@@ -48,8 +48,6 @@ export class AuthController {
     setAccessCookie(res, accessToken);
     setRefreshCookie(res, refreshToken);
 
-    console.log('User:', user, 'Token:', accessToken);
-
     res.json({ accessToken, user });
   });
 

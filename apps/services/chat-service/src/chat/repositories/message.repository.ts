@@ -1,7 +1,7 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Message } from '../schemas/message.schema';
-import { IMessageRepository } from './interfaces/message.repository.interface';
+import { Message } from '../schemas/message.schema.js';
+import { IMessageRepository } from './interfaces/message.repository.interface.js';
 
 export class MessageRepository implements IMessageRepository {
   constructor(
@@ -35,7 +35,6 @@ export class MessageRepository implements IMessageRepository {
     return this.messageModel.updateMany(
       { chatId, status: { $ne: 'delivered' }, sender: { $ne: userId } },
       { status: 'delivered' },
-      { new: true },
     );
   }
 
@@ -43,7 +42,6 @@ export class MessageRepository implements IMessageRepository {
     return this.messageModel.updateMany(
       { chatId, status: { $ne: 'read' }, sender: { $ne: userId } },
       { status: 'read' },
-      { new: true },
     );
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@i4you/shared",
-  "version": "1.0.2",
+  "version": "1.0.3-beta.2",
   "exports": {
     "types": "./types/index.ts"
   },

@@ -1,11 +1,12 @@
 export const TYPES = {
   MatchRepository: Symbol.for('MatchRepository'),
   LikeRepository: Symbol.for('LikeRepository'),
-  MatchController: Symbol.for('MatchController'),
   MatchService: Symbol.for('MatchService'),
   CacheService: Symbol.for('CacheService'),
-  GrpcUserService: Symbol.for('GrpcUserService'),
-  KafkaService: Symbol.for('KafkaService'),
+  MatchController: Symbol.for('MatchController'),
+  DiscoveryGrpcService: Symbol.for('DiscoveryGrpcService'),
   UserGrpcService: Symbol.for('UserGrpcService'),
-  GrpcClientProvider: Symbol.for('GrpcClientProvider'),
+  KafkaService: Symbol.for('KafkaService'),
+  UserGrpcProvider: Symbol.for('UserGrpcProvider'),
+  DiscoveryGrpcProvider: Symbol.for('DiscoveryGrpcProvider'),
 };
