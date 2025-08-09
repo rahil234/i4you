@@ -76,6 +76,7 @@ export class DiscoveryService {
     const hits = result.hits.hits.map((hit: any) => {
       return {
         ...hit._source,
+        photos: [],
         distance: hit.fields.distance ? hit.fields.distance[0] / 1000 / 1000 : 0,
       };
     });

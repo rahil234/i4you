@@ -88,6 +88,7 @@ export class MatchService {
       location: user.location!,
       excludeUserIds,
     });
+
     return matches;
   }
 

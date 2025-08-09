@@ -26,9 +26,15 @@ spec:
             - name: PORT
               value: "4010"
             - name: STRIPE_SECRET_KEY
-              value: ""
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: STRIPE_SECRET_KEY
             - name: STRIPE_WEBHOOK_SECRET
-              value: ""
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: STRIPE_WEBHOOK_SECRET
 
 ---
 apiVersion: v1

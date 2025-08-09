@@ -38,7 +38,7 @@ spec:
             - name: ES_URL
               value: "http://elastic-es-http.elastic-system.svc.cluster.local:9200"
             - name: ES_API_KEY
-              value: "R3pLb2M1Z0J1XzN6c3huR1BzMzk6czV2SGRVTUtVWUF4WVJJZjN2YmxQQQ=="
+              value: "OWFPT2pwZ0JzRmNxVXhoam0wQ0E6bzNvZ1QtcnFoTFAyVjF2VWZoTWdnUQ=="
 
 ---
 apiVersion: v1

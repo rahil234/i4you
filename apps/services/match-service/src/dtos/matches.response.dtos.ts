@@ -23,13 +23,13 @@ class MatchesResponseDTO
   location: string;
   distance: string;
 
-  constructor(match: any) {
+  constructor(match: any, photos: string[]) {
     this.id = match.id;
     this.name = match.name;
     this.age = match.age;
     this.gender = match.gender;
     this.bio = match.bio;
-    this.photos = match.photos;
+    this.photos = photos;
     this.interests = match.interests;
     this.location = match.location?.displayName || 'Unknown location';
     this.distance = `${Math.ceil(match.distance)} Km`;

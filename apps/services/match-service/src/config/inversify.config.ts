@@ -12,12 +12,14 @@ import { UserGrpcService } from '@/services/user.grpc.service';
 import { UserGrpcProvider } from '@/providers/user.grpc.provider';
 import { DiscoveryGrpcService } from '@/services/discovery.grpc.service';
 import { DiscoveryGrpcProvider } from '@/providers/discovery.grpc.provider';
+import { MediaService } from '@/services/media.service';
 
 const container = new Container();
 
 container.bind<IMatchRepository>(TYPES.MatchRepository).to(MatchRepository);
 container.bind<ILikeRepository>(TYPES.LikeRepository).to(LikeRepository);
 container.bind<MatchService>(TYPES.MatchService).to(MatchService);
+container.bind<MediaService>(TYPES.MediaService).to(MediaService);
 container.bind<MatchController>(TYPES.MatchController).to(MatchController);
 
 container

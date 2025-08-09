@@ -283,7 +283,6 @@ export class UserService implements IUserService {
       interests: newUser.interests,
       preferences: newUser.preferences,
       location: newUser.location,
-      photos: newUser.photos,
       gender: newUser.gender,
       age: newUser.age,
       status: newUser.status,

@@ -16,6 +16,14 @@ profiles:
                   - --server-side
                   - --force-conflicts
                   - -f
+                  - https://raw.githubusercontent.com/external-secrets/external-secrets/main/deploy/crds/bundle.yaml
+            - host:
+                command:
+                  - kubectl
+                  - apply
+                  - --server-side
+                  - --force-conflicts
+                  - -f
                   - https://github.com/grafana/grafana-operator/releases/download/v5.18.0/crds.yaml
     manifests:
       rawYaml:
@@ -33,9 +41,10 @@ profiles:
         - k8s/dev/traefik/namespace.yaml
         - k8s/dev/kafka/kafka-namespace.yaml
         - k8s/dev/hashicorp/vault/namespace.yaml
+        - k8s/dev/hashicorp/vault/vault-ingress.yaml
+        - k8s/dev/hashicorp/vault/storage-class.yaml
         - https://download.elastic.co/downloads/eck/3.1.0/operator.yaml
         - https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.8.0/components.yaml
-        - k8s/dev/monitoring/namespace.yaml
         - k8s/dev/kafka/kafka-kraft.yaml
         - k8s/dev/elastic/storage-class.yaml
         - k8s/dev/elastic/elasticsearch.yaml
@@ -49,29 +58,26 @@ profiles:
             remoteChart: hashicorp/vault
             namespace: vault
             createNamespace: true
-            wait: true
             version: 0.30.1
             valuesFiles:
               - k8s/dev/hashicorp/vault/values.yaml
+          - name: external-secrets
+            remoteChart: external-secrets-operator/external-secrets
+            version: 0.19.1
+            setValues:
+              installCRDs: false
           - name: strimzi-kafka-operator
             remoteChart: strimzi/strimzi-kafka-operator
             namespace: kafka
             createNamespace: true
-            wait: true
             version: 0.46.1
             setValues:
               watchAnyNamespace: false
               watchNamespaces[0]: kafka
-          - name: grafana-operator
-            remoteChart: grafana/grafana-operator
-            namespace: monitoring
-            createNamespace: true
-            wait: true
           - name: traefik
             remoteChart: traefik/traefik
             namespace: traefik
             createNamespace: true
-            wait: true
             valuesFiles:
               - k8s/dev/traefik/values.yaml
 
@@ -185,6 +191,9 @@ profiles:
     manifests:
       rawYaml:
         - k8s/dev/app-namespace.yaml
+        - k8s/dev/hashicorp/vault/vault-root-secret.yaml
+        - k8s/dev/hashicorp/vault/job.yaml
+        - k8s/dev/secrets/vault-cluster-store.yaml
         - k8s/dev/kafka/kafka-topics.yaml
         - k8s/dev/i4you-cert-secret.yaml
         - k8s/dev/validate-service.yaml
@@ -246,12 +255,17 @@ profiles:
   - name: monitoring
     manifests:
       rawYaml:
+        - k8s/dev/monitoring/namespace.yaml
         - k8s/dev/monitoring/prometheus-ingress.yaml
         - k8s/dev/monitoring/grafana-ingress.yaml
         - k8s/dev/monitoring/grafana/grafana.yaml
         - k8s/dev/monitoring/grafana/loki-datasource.yaml
       helm:
         releases:
+          - name: grafana-operator
+            remoteChart: grafana/grafana-operator
+            namespace: monitoring
+            createNamespace: true
           #          - name: grafana-old
           #            remoteChart: grafana/grafana
           #            namespace: monitoring
