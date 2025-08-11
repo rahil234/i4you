@@ -6,27 +6,7 @@ import elastic from '@/config/elastic';
 export class DiscoveryService {
 
   async getPotentialMatches(data: GetPotentialMatchesRequest): Promise<GetPotentialMatchesResponse> {
-
     console.log('Received getPotentialMatches request:', data);
-
-    // const result = await elastic.search({
-    //   index: 'users',
-    //   query: {
-    //     bool: {
-    //       must: [
-    //         { match: { gender: preferences.gender } },
-    //         {
-    //           range: {
-    //             age: {
-    //               gte: preferences.ageRange[0],
-    //               lte: preferences.ageRange[1],
-    //             },
-    //           },
-    //         },
-    //       ],
-    //     },
-    //   },
-    // });
 
     const result = await elastic.search({
       index: 'users',
@@ -47,8 +27,11 @@ export class DiscoveryService {
           ],
           filter: {
             geo_distance: {
-              distance: `${data.maxDistance * 1000}km`,
-              'location.coordinates': [data.locationLng, data.locationLat],
+              distance: `${data.maxDistance}km`,
+              'location.coordinates': {
+                lon: data.locationLng,
+                lat: data.locationLat,
+              },
             },
           },
           must_not: [
@@ -63,9 +46,10 @@ export class DiscoveryService {
       script_fields: {
         distance: {
           script: {
+            lang: 'painless',
             params: {
-              lat: data.locationLat,
               lon: data.locationLng,
+              lat: data.locationLat,
             },
             source: 'doc[\'location.coordinates\'].arcDistance(params.lat, params.lon)',
           },
@@ -77,7 +61,7 @@ export class DiscoveryService {
       return {
         ...hit._source,
         photos: [],
-        distance: hit.fields.distance ? hit.fields.distance[0] / 1000 / 1000 : 0,
+        distance: hit.fields.distance ? (hit.fields.distance[0] * 0.001) : undefined,
       };
     });
 

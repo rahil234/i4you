@@ -83,6 +83,8 @@ export class MatchService {
 
     console.log('likedUserIds:', excludeUserIds);
 
+    console.log('Fetching potential matches for user:', user.location);
+
     const { matches } = await this.discoverGrpcService.getMatches({
       preferences: user.preferences!,
       location: user.location!,

@@ -30,8 +30,8 @@ export class DiscoveryGrpcService {
           lookingFor: preferences.lookingFor,
           minAge: preferences.ageRange[0],
           maxAge: preferences.ageRange[1],
-          locationLat: location.coordinates[0],
-          locationLng: location.coordinates[1],
+          locationLng: location.coordinates[0],
+          locationLat: location.coordinates[1],
           excludeUserIds,
         },
         (err, response) => {

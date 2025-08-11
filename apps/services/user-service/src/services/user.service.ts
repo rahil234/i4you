@@ -68,8 +68,6 @@ export class UserService implements IUserService {
         ? await this.adminRepository.findById(id)
         : await this.userRepository.findById(id);
 
-    console.log(await this.mediaService.getUserImages('image123'));
-
     await this.cacheService.set(cacheKey, data);
 
     console.log(data);
@@ -161,10 +159,16 @@ export class UserService implements IUserService {
 
     await this.cacheService.del(`member:${id}`);
 
+    console.log('Updating user:', id, data);
+
     const location = data.location
       ? {
           type: 'Point',
-          coordinates: data.location?.coordinates || [0, 0],
+          coordinates:
+            data.location?.coordinates[0] !== 0 &&
+            data.location?.coordinates[1] !== 0
+              ? data.location?.coordinates
+              : user.location.coordinates,
           displayName: data.location?.displayName || user.location?.displayName,
         }
       : undefined;
