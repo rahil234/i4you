@@ -28,7 +28,10 @@ spec:
             - name: GRPC_PORT
               value: "50052"
             - name: MONGODB_URI
-              value: "mongodb+srv://rahilsardar234:NOKCk3dcykTN0P32@i4you-cluster.kdpj0cj.mongodb.net/I4You-userDB"
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: MONGODB_URI
             - name: CLOUDINARY_API_KEY
               value: "415286569897134"
             - name: CLOUDINARY_API_SECRET

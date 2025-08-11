@@ -1,18 +1,20 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { AnimatePresence } from 'motion/react';
-import { Loader2 } from 'lucide-react';
+import { Heart, Loader2, Star, X } from 'lucide-react';
 import Logo from '/public/favicon.ico';
 import { UserLayout } from '@/components/user-layout';
 import useMatchesStore from '@/store/matchesStore';
 import { UserProfileCard } from '@/components/user-profile-card';
 import { Notifications } from '@/components/user/Notification';
 import useAuthStore from '@/store/authStore';
+import { Button } from '@/components/ui/button';
 
 export default function DiscoverPage() {
   const { user } = useAuthStore();
+  const cardRef = useRef<any>(null);
   const { potentialMatches, loading, newMatches, closeMatch } = useMatchesStore();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [matchAnimation, setMatchAnimation] = useState(false);
@@ -60,6 +62,10 @@ export default function DiscoverPage() {
     );
   }
 
+  const handleLike = async () => (cardRef.current?.like());
+  const handleDislike = async () => (cardRef.current?.dislike());
+  const handleSuperLike = async () => (cardRef.current?.superLike());
+
   return (
     <UserLayout>
       <Notifications />
@@ -71,24 +77,102 @@ export default function DiscoverPage() {
       </div>
       <div className="flex flex-col items-center max-w-md mx-auto pt-4 px-4">
 
-        <div className="relative w-full h-[calc(100vh-200px)] flex items-center justify-center">
-          <AnimatePresence>
-            {potentialMatches.map((user, index) => (
-              <UserProfileCard
-                key={`${user.id}-${currentIndex + index}`}
-                user={user}
-                onMatch={index === 0 ? handleMatch : undefined}
-              />
-            ))}
-          </AnimatePresence>
+        {potentialMatches.length === 0 || currentIndex >= potentialMatches.length ? (
+          <div className="text-center p-8 bg-white rounded-lg shadow-md">
+            <h3 className="text-xl font-semibold mb-2">No more profiles</h3>
+            <p className="text-gray-500">Check back later for more matches</p>
+          </div>
+        ) : (<>
+          <div className="relative w-full h-[calc(92vh-250px)] flex items-center justify-center">
+            <AnimatePresence>
+              {potentialMatches.map((user, index) => (
+                <UserProfileCard
+                  ref={cardRef}
+                  key={`${user.id}-${currentIndex + index}`}
+                  user={user}
+                  onMatch={index === 0 ? handleMatch : undefined}
+                />
+              ))}
+            </AnimatePresence>
+          </div>
 
-          {potentialMatches.length === 0 || currentIndex >= potentialMatches.length ? (
-            <div className="text-center p-8 bg-white rounded-lg shadow-md">
-              <h3 className="text-xl font-semibold mb-2">No more profiles</h3>
-              <p className="text-gray-500">Check back later for more matches</p>
-            </div>
-          ) : null}
-        </div>
+          {/* Action buttons - Enhanced i4you style */}
+          <div className="flex justify-center items-center gap-6 mt-4 px-4">
+            {/* Dislike Button */}
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-16 w-16 rounded-full border-0 bg-white hover:bg-white shadow-xl hover:shadow-2xl transform hover:scale-110 transition-all duration-200 relative overflow-hidden group"
+              onClick={handleDislike}
+            >
+              <div
+                className="absolute inset-0 bg-gradient-to-br from-red-400 to-red-600 opacity-10 group-hover:opacity-20 transition-opacity" />
+              <div className="relative">
+                <svg
+                  className="h-9 w-9 text-red-500 group-hover:text-red-600 transition-colors"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                >
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </div>
+              <span className="sr-only">Pass</span>
+            </Button>
+
+            {/* Super Like Button */}
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-14 w-14 rounded-full border-0 bg-white hover:bg-white shadow-xl hover:shadow-2xl transform hover:scale-110 transition-all duration-200 relative overflow-hidden group"
+              onClick={handleSuperLike}
+            >
+              <div
+                className="absolute inset-0 bg-gradient-to-br from-blue-400 to-purple-600 opacity-10 group-hover:opacity-20 transition-opacity" />
+              <div className="relative">
+                <svg
+                  className="h-7 w-7 text-blue-500 group-hover:text-blue-600 transition-colors"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+              </div>
+              <span className="sr-only">Super Like</span>
+            </Button>
+
+            {/* Like Button */}
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-16 w-16 rounded-full border-0 bg-white hover:bg-white shadow-xl hover:shadow-2xl transform hover:scale-110 transition-all duration-200 relative overflow-hidden group"
+              onClick={handleLike}
+            >
+              <div
+                className="absolute inset-0 bg-gradient-to-br from-green-400 to-emerald-600 opacity-10 group-hover:opacity-20 transition-opacity" />
+              <div className="relative">
+                <svg
+                  className="h-9 w-9 text-green-500 group-hover:text-green-600 transition-colors"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                </svg>
+              </div>
+              <span className="sr-only">Like</span>
+            </Button>
+          </div>
+
+          {/* Action labels */}
+          <div className="flex justify-center items-center gap-6 mt-3 px-4">
+            <span className="text-xs text-gray-500 font-medium w-16 text-center">Pass</span>
+            <span className="text-xs text-gray-500 font-medium w-14 text-center">Super</span>
+            <span className="text-xs text-gray-500 font-medium w-16 text-center">Like</span>
+          </div>
+        </>)}
 
         {/* Match animation */}
         {matchAnimation && currentMatch && (

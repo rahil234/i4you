@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: vault-auth-job
+  name: vault-setup-job
   namespace: vault
 spec:
   template:
@@ -17,31 +17,36 @@ spec:
             - |
               set -e
               
-              # Wait until Vault is ready
-              until vault status >/dev/null 2>&1; do
-                echo "Waiting for Vault..."
-                sleep 5
+              vault status || true
+              
+              # Unseal Vault (repeat until unsealed)
+              echo "Unsealing Vault..."
+              for key in $(cat /vault/unseal/unseal-keys.txt); do
+                vault operator unseal "$key"
               done
-              
-              # Login as root token (should be stored in a k8s secret)
+
+              echo "Checking if Vault is unsealed..."
+              vault status
+
+              # Login with root token
               vault login $(cat /vault/userconfig/root-token/root-token.txt)
-              
+
               # Enable Kubernetes auth if not already enabled
               vault auth enable kubernetes || true
-              
+
               # Configure Kubernetes auth method
               vault write auth/kubernetes/config \
                 token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
                 kubernetes_host="https://${KUBERNETES_PORT_443_TCP_ADDR}:443" \
                 kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-              
+
               # Create a policy for external-secrets
               vault policy write external-secrets - <<EOF
               path "i4you/data/*" {
                 capabilities = ["read"]
               }
               EOF
-              
+
               # Create a role that binds service account to policy
               vault write auth/kubernetes/role/external-secrets-role \
                 bound_service_account_names=external-secrets-sa \
@@ -55,7 +60,13 @@ spec:
             - name: vault-root-token
               mountPath: /vault/userconfig/root-token
               readOnly: true
+            - name: vault-unseal-keys
+              mountPath: /vault/unseal
+              readOnly: true
       volumes:
         - name: vault-root-token
           secret:
             secretName: vault-root-token
+        - name: vault-unseal-keys
+          secret:
+            secretName: vault-unseal-keys

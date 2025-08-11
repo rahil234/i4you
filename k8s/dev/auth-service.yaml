@@ -34,7 +34,10 @@ spec:
             - name: JWT_EXPIRES_IN
               value: 15m
             - name: MONGODB_URI
-              value: "mongodb+srv://rahilsardar234:NOKCk3dcykTN0P32@i4you-cluster.kdpj0cj.mongodb.net/I4You-userDB"
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: MONGODB_URI
             - name: REDIS_HOST
               value: "redis.redis.svc.cluster.local"
             - name: REDIS_PORT

@@ -1,5 +1,5 @@
 import type { Match, User } from '@/types';
-import { create, StateCreator } from 'zustand/index';
+import { create, StateCreator } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import UserService from '@/services/user.service';
 import MatchService from '@/services/match.service';
@@ -11,6 +11,7 @@ interface MatchesStore {
   loading: boolean;
   error: string | null;
   likeUser: (userId: string) => Promise<Match | null>;
+  superLikeUser: (userId: string) => Promise<Match | null>;
   dislikeUser: (userId: string) => Promise<void>;
   unmatchUser: (matchId: string) => Promise<void>;
   pushNewMatch: (newMatch: Match) => void;
@@ -55,6 +56,24 @@ const matchStore: StateCreator<MatchesStore, [['zustand/devtools', never]]> = (s
 
       if (error) {
         console.log('Error liking user:', error);
+        set({ error: 'Failed to like user' });
+        return null;
+      }
+
+      set((state) => ({
+        potentialMatches: state.potentialMatches.filter((user) => user.id !== userId),
+      }), undefined, 'matchStore/likeUser');
+
+      return null;
+    },
+
+    superLikeUser: async (userId) => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      const { error } = await UserService.likeUser(userId);
+
+      if (error) {
+        console.log('Error Super liking user:', error);
         set({ error: 'Failed to like user' });
         return null;
       }

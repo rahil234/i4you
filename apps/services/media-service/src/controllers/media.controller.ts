@@ -9,9 +9,9 @@ interface SearchResponseImage {
   public_id: string;
   asset_folder: string;
   filename: string;
-  display_name: '65416ba7-2daf-4091-a88e-3c478e037180';
+  display_name: string;
   format: 'jpg' | 'png';
-  version: 1754457516;
+  version: number;
   resource_type: 'image';
   type: 'authenticated';
   created_at: Date;
@@ -60,8 +60,6 @@ export class MediaController {
 
     const timestamp = Math.floor(Date.now() / 1000);
 
-    console.log('getting upload url for image for userId: \n', req.user.id);
-
     const publicId = `uploads/${req.user.id}/${uuidv4()}`;
 
     const paramsToSign = {
@@ -97,8 +95,6 @@ export class MediaController {
       .sort_by('created_at', 'asc')
       .execute()) as SearchResponse;
 
-    console.log('found images:', response);
-
     const images = response.resources.map((image) =>
       image.moderation_status === 'rejected'
         ? blockedImageUrl
@@ -117,8 +113,6 @@ export class MediaController {
 
     const publicId =
       'uploads' + imageUrl.split('/uploads').pop()?.split('.')[0];
-
-    console.log(`Deleting image with publicId: ${publicId}`);
 
     const data = await cloudinary.uploader.destroy(publicId, {
       invalidate: true,

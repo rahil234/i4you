@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stripe-cli-listener
+  namespace: app
+  labels:
+    app: stripe-cli
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stripe-cli
+  template:
+    metadata:
+      labels:
+        app: stripe-cli
+    spec:
+      containers:
+        - name: stripe-cli
+          image: stripe/stripe-cli:latest
+          command:
+            - "stripe"
+            - "listen"
+            - "--forward-to"
+            - "http://payment-service:4010/webhook"
+          env:
+            - name: STRIPE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: STRIPE_SECRET_KEY
+            - name: STRIPE_DEVICE_NAME
+              value: "k8s-webhook-tunnel"
+          tty: true
+          stdin: true

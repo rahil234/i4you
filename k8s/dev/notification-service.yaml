@@ -28,7 +28,10 @@ spec:
             - name: KAFKAJS_NO_PARTITIONER_WARNING
               value: "1"
             - name: MONGODB_URI
-              value: "mongodb+srv://rahilsardar234:NOKCk3dcykTN0P32@i4you-cluster.kdpj0cj.mongodb.net/I4You-notificationDB"
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: MONGODB_URI
             - name: REDIS_HOST
               value: "redis.redis.svc.cluster.local"
             - name: REDIS_PORT

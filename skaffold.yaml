@@ -41,10 +41,14 @@ profiles:
         - k8s/dev/traefik/namespace.yaml
         - k8s/dev/kafka/kafka-namespace.yaml
         - k8s/dev/hashicorp/vault/namespace.yaml
+        - k8s/dev/hashicorp/vault/vault-root-secret.yaml
+        - k8s/dev/hashicorp/vault/vault-unseal-keys.yaml
+        - k8s/dev/hashicorp/vault/job.yaml
         - k8s/dev/hashicorp/vault/vault-ingress.yaml
         - k8s/dev/hashicorp/vault/storage-class.yaml
         - https://download.elastic.co/downloads/eck/3.1.0/operator.yaml
         - https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.8.0/components.yaml
+        - k8s/dev/kafka/kafka-storage.yaml
         - k8s/dev/kafka/kafka-kraft.yaml
         - k8s/dev/elastic/storage-class.yaml
         - k8s/dev/elastic/elasticsearch.yaml
@@ -191,8 +195,6 @@ profiles:
     manifests:
       rawYaml:
         - k8s/dev/app-namespace.yaml
-        - k8s/dev/hashicorp/vault/vault-root-secret.yaml
-        - k8s/dev/hashicorp/vault/job.yaml
         - k8s/dev/secrets/vault-cluster-store.yaml
         - k8s/dev/kafka/kafka-topics.yaml
         - k8s/dev/i4you-cert-secret.yaml
@@ -207,6 +209,7 @@ profiles:
         - k8s/dev/moderation-service.yaml
         - k8s/dev/notification-service.yaml
         - k8s/dev/payment-service.yaml
+        - k8s/dev/stripe-webhook-handler.yaml
         - k8s/dev/frontend.yaml
         - k8s/dev/nginx-socket-proxy.yaml
         - k8s/dev/traefik/traefik-validate-middleware.yaml
