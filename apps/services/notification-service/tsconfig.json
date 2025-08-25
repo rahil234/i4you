@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
     "module": "commonjs",
+    "lib": [
+      "es2023",
+      "dom"
+    ],
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,

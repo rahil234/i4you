@@ -1,27 +1,11 @@
 import { injectable, inject } from 'inversify';
-import { TYPES } from '@/types';
+import { Match, TYPES } from '@/types';
 import { DiscoveryGrpcService } from '@/services/discovery.grpc.service';
 import { UserGrpcService } from '@/services/user.grpc.service';
 import IKafkaService from '@/events/kafka/interfaces/IKafkaService';
 import IMatchRepository from '@/repositories/interfaces/IMatchRepository';
 import ILikeRepository from '@/repositories/interfaces/ILikeRepository';
 import { User } from '@i4you/shared';
-
-export interface Match {
-  id: string;
-  matchedUserId: string;
-  createdAt: string;
-  user: Omit<
-    Partial<User>,
-    | 'password'
-    | 'email'
-    | 'onboardingCompleted'
-    | 'gender'
-    | 'status'
-    | 'createdAt'
-    | 'updatedAt'
-  >;
-}
 
 @injectable()
 export class MatchService {
@@ -113,6 +97,13 @@ export class MatchService {
           console.log(
             `✅ Match already exists between ${userId} and ${likedUserId}`
           );
+          const isLiked = await this.likeRepository.checkIfUserLiked(
+            userId,
+            likedUserId
+          );
+          if (!isLiked) {
+            await this.likeRepository.saveLike(userId, likedUserId);
+          }
           return;
         }
 

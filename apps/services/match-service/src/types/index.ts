@@ -1,3 +1,5 @@
+import { User } from '@i4you/shared';
+
 export const TYPES = {
   MatchRepository: Symbol.for('MatchRepository'),
   LikeRepository: Symbol.for('LikeRepository'),
@@ -11,3 +13,19 @@ export const TYPES = {
   UserGrpcProvider: Symbol.for('UserGrpcProvider'),
   DiscoveryGrpcProvider: Symbol.for('DiscoveryGrpcProvider'),
 };
+
+export interface Match {
+  id: string;
+  matchedUserId: string;
+  createdAt: string;
+  user: Omit<
+    Partial<User>,
+    | 'password'
+    | 'email'
+    | 'onboardingCompleted'
+    | 'gender'
+    | 'status'
+    | 'createdAt'
+    | 'updatedAt'
+  >;
+}

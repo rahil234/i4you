@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
 import { AnimatePresence } from 'motion/react';
-import { Heart, Loader2, Star, X } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import Logo from '/public/favicon.ico';
 import { UserLayout } from '@/components/user-layout';
 import useMatchesStore from '@/store/matchesStore';
@@ -11,6 +11,7 @@ import { UserProfileCard } from '@/components/user-profile-card';
 import { Notifications } from '@/components/user/Notification';
 import useAuthStore from '@/store/authStore';
 import { Button } from '@/components/ui/button';
+// import { initOneSignal } from '@/lib/onesignal';
 
 export default function DiscoverPage() {
   const { user } = useAuthStore();
@@ -19,6 +20,10 @@ export default function DiscoverPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [matchAnimation, setMatchAnimation] = useState(false);
   const [currentMatch, setCurrentMatch] = useState<any>(null);
+
+  // initOneSignal().catch((error) => {
+  //   console.error('Error initializing OneSignal:', error);
+  // });
 
   useEffect(() => {
     if (newMatches.length > 0) {
@@ -78,9 +83,12 @@ export default function DiscoverPage() {
       <div className="flex flex-col items-center max-w-md mx-auto pt-4 px-4">
 
         {potentialMatches.length === 0 || currentIndex >= potentialMatches.length ? (
-          <div className="text-center p-8 bg-white rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold mb-2">No more profiles</h3>
-            <p className="text-gray-500">Check back later for more matches</p>
+          <div
+            className="flex  flex-col items-center justify-center text-center h-[calc(92vh-250px)]">
+            <div className="bg-white rounded-lg shadow-md p-8">
+              <h3 className="text-xl font-semibold mb-2">No more profiles</h3>
+              <p className="text-gray-500">Check back later for more matches</p>
+            </div>
           </div>
         ) : (<>
           <div className="relative w-full h-[calc(92vh-250px)] flex items-center justify-center">

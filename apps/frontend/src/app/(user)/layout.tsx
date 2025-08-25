@@ -3,6 +3,7 @@ import AuthSessionHydrator from '@/components/auth/auth-session-hydrator';
 import { getUserData } from '@/lib/auth/get-user-data';
 import { redirect } from 'next/navigation';
 import NotificationListener from '@/components/user/NotificationListener';
+import GlobalVideoCallOverlay from '@/components/user/GlobalVideoCallOverlay';
 
 export default async function UserLayout({ children }: Readonly<{ children: React.ReactNode }>) {
 
@@ -17,6 +18,8 @@ export default async function UserLayout({ children }: Readonly<{ children: Reac
       <AuthSessionHydrator user={user} />
       {children}
       <NotificationListener />
+      {/* Global video call listener/overlay for user area */}
+      <GlobalVideoCallOverlay />
     </div>
   );
 }

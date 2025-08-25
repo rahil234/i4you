@@ -1,6 +1,6 @@
 import { injectable, inject } from 'inversify';
 import IUserRepository from '@/repositories/interfaces/IUserRepository';
-import { TYPES } from '@/types';
+import { GetUsersRequestDTO, MatchEventPayload, TYPES } from '@/types';
 import UserDTO from '@/dtos/user.dtos';
 import { BadRequestError } from '@/errors/BadRequestError';
 import IAdminRepository from '@/repositories/interfaces/IAdminRepository';
@@ -14,25 +14,6 @@ import IUserService from '@/services/interfaces/IUserService';
 import IKafkaService from '@/events/kafka/interfaces/IKafkaService';
 import { createError } from '@i4you/http-errors';
 import IMediaService from '@/services/interfaces/IMediaService';
-
-interface MatchEventPayload {
-  recipientId: string;
-  data: {
-    userId: string;
-    matchedUserId: string;
-    name: string;
-    photo: string;
-    timestamp: Date;
-  };
-}
-
-interface GetUsersRequestDTO {
-  page: number;
-  limit: number;
-  search: string;
-  status: string;
-  gender: string;
-}
 
 @injectable()
 export class UserService implements IUserService {
@@ -55,7 +36,6 @@ export class UserService implements IUserService {
   async getUserById(id: string, role?: 'member'): Promise<UserDocument>;
   async getUserById(id: string, role: 'admin'): Promise<AdminDocument>;
   async getUserById(id: string, role: UserJwtPayload['role'] = 'member') {
-    console.log(`Get user by id: ${id} with role: ${role}`);
     const cacheKey = `${role === 'admin' ? 'admin' : 'member'}:${id}`;
     const cached = await this.cacheService.get(cacheKey);
 
@@ -69,8 +49,6 @@ export class UserService implements IUserService {
         : await this.userRepository.findById(id);
 
     await this.cacheService.set(cacheKey, data);
-
-    console.log(data);
 
     return data;
   }
@@ -249,7 +227,7 @@ export class UserService implements IUserService {
         userId: user2.id,
         matchedUserId: user2.id,
         name: user2.name,
-        photo: user2.photos[0],
+        photo: (await this.mediaService.getUserImages(user2.id))[0],
         timestamp: new Date(),
       },
     } as MatchEventPayload);
@@ -260,7 +238,7 @@ export class UserService implements IUserService {
         userId: user1.id,
         matchedUserId: user1.id,
         name: user1.name,
-        photo: user1.photos[0],
+        photo: (await this.mediaService.getUserImages(user1.id))[0],
         timestamp: new Date().toISOString(),
       },
     });

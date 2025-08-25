@@ -25,8 +25,12 @@ spec:
               value: "production"
             - name: PORT
               value: "4003"
-            - name: JWT_SECRET
-              value: "your_jwt_secret"
+            - name: REDIS_HOST
+              value: "redis.redis.svc.cluster.local"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_PASSWORD
+              value: "password"
             - name: AWS_REGION
               value: "ap-south-1"
             - name: AWS_ACCESS_KEY_ID

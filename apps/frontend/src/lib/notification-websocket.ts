@@ -125,7 +125,6 @@ let notificationSocket: NotificationSocketClient | null = null;
 
 export function getNotificationSocket() {
   if (!notificationSocket) {
-    console.log('🆕 Creating NotificationSocketClient');
     notificationSocket = new NotificationSocketClient('https://i4you.local.net', {
       path: '/socket.io/notifications',
       transports: ['websocket'],

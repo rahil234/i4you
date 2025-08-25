@@ -4,7 +4,7 @@ import type React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, Send, Check, CheckCheck, Clock, AlertCircleIcon } from 'lucide-react';
+import { ChevronLeft, Send, Check, CheckCheck, Clock, AlertCircleIcon, Video, Phone } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import useChatStore, { ChatUser } from '@/store/chatStore';
@@ -13,6 +13,8 @@ import useAuthStore from '@/store/authStore';
 import { formatTimestamp } from '@/utils/formatTimestamp';
 import { useNow } from '@/context/NowContext';
 import { Message } from '@/types';
+import VideoCall from '@/components/user/VideoCall';
+import useVideoCallStore from '@/store/videoStore';
 
 interface ChatProps {
   chat: ChatUser;
@@ -25,6 +27,7 @@ export function Chat({ chat, userId, isNewChat }: ChatProps) {
   const [isComposing, setIsComposing] = useState(false);
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
   const [isJoined, setIsJoined] = useState(false);
+
   const debouncedIsComposing = useDebounce(isComposing, 500);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -51,6 +54,8 @@ export function Chat({ chat, userId, isNewChat }: ChatProps) {
     isMessagesLoading,
     onMessage,
   } = useChatStore();
+
+  const { placeCall } = useVideoCallStore();
 
   useEffect(() => {
     if (chat?.id && !isJoined) {
@@ -124,17 +129,16 @@ export function Chat({ chat, userId, isNewChat }: ChatProps) {
   }, [debouncedIsComposing, userId, startTyping, stopTyping]);
 
   const handleScroll = () => {
-      const el = messageContainerRef.current;
-      if (!el) return;
+    const el = messageContainerRef.current;
+    if (!el) return;
 
-      if (el.scrollTop < 10 && el.scrollHeight > prevScrollHeight.current) {
-        prevScrollHeight.current = el.scrollHeight;
-        setIsPrepending(true);
-        fetchMessages(chat.id, page);
-        setPage((prev) => prev + 1);
-      }
+    if (el.scrollTop < 10 && el.scrollHeight > prevScrollHeight.current) {
+      prevScrollHeight.current = el.scrollHeight;
+      setIsPrepending(true);
+      fetchMessages(chat.id, page);
+      setPage((prev) => prev + 1);
     }
-  ;
+  };
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -172,6 +176,10 @@ export function Chat({ chat, userId, isNewChat }: ChatProps) {
     }
   };
 
+  const handleStartCall = async () => {
+    await placeCall(chat.participant);
+  };
+
   return (
     <div className="flex flex-col h-full overflow-hidden">
 
@@ -198,6 +206,17 @@ export function Chat({ chat, userId, isNewChat }: ChatProps) {
                 `Last active ${formatTimestamp(chat.participant.lastActive, now)}` : <></>
             )}
           </p>
+        </div>
+
+
+        {/* Call buttons */}
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" onClick={handleStartCall}>
+            <Video className="h-5 w-5 text-blue-600" />
+          </Button>
+          <Button variant="ghost" size="icon" disabled>
+            <Phone className="h-5 w-5 text-green-600" />
+          </Button>
         </div>
       </div>
 

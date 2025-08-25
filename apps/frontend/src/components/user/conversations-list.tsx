@@ -31,7 +31,6 @@ export function ConversationsList({ selectedId }: ConversationsListProps) {
         return chat?.participant.name!.toLowerCase().includes(searchQuery.toLowerCase());
       }));
       setFilteredChats(chats);
-      console.log('Filtered chats:', filteredChats);
     }
   }, [chats, searchQuery, currentChat]);
 

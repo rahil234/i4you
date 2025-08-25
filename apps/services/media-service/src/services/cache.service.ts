@@ -1,6 +1,8 @@
-import { redisClient } from '@/config/redis.config';
 import ICacheService from './interfaces/ICacheService';
+import { redisClient } from '@/config/redis.config';
+import { inject, injectable } from 'inversify';
 
+@injectable()
 export class CacheService implements ICacheService {
   async get<T>(key: string): Promise<T | null> {
     const data = await redisClient.get(key);

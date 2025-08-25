@@ -37,6 +37,7 @@
     "mongoose": "^8.12.1",
     "morgan": "~1.9.1",
     "nodemailer": "^6.10.1",
+    "redis": "^5.8.0",
     "reflect-metadata": "^0.2.2",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",

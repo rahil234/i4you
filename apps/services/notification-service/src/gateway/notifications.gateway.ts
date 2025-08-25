@@ -36,14 +36,8 @@ export class NotificationsGateway {
     const userId = socket.handshake.headers['x-user-id'];
 
     if (typeof userId === 'string') {
-      console.log(`Registering user ${userId} with socket ${socket.id}`);
       this.notificationsService
         .saveSocketMapping(userId, socket.id)
-        .then(async () => {
-          console.log(`User ${userId} registered with socket ${socket.id}`);
-          const id = await this.notificationsService.getSocketId(userId);
-          console.log('id :', id);
-        })
         .catch((err) => console.error(`Error saving mapping: ${err}`));
     } else {
       console.warn(`No x-user-id header found for socket ${socket.id}`);

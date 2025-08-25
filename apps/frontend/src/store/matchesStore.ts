@@ -1,3 +1,5 @@
+'use client';
+
 import type { Match, User } from '@/types';
 import { create, StateCreator } from 'zustand';
 import { devtools } from 'zustand/middleware';
@@ -10,15 +12,18 @@ interface MatchesStore {
   potentialMatches: User[];
   loading: boolean;
   error: string | null;
+  initial: () => Promise<void>;
   likeUser: (userId: string) => Promise<Match | null>;
   superLikeUser: (userId: string) => Promise<Match | null>;
   dislikeUser: (userId: string) => Promise<void>;
   unmatchUser: (matchId: string) => Promise<void>;
   pushNewMatch: (newMatch: Match) => void;
   closeMatch: () => void;
+  clear: () => Promise<void>;
 }
 
 const matchStore: StateCreator<MatchesStore, [['zustand/devtools', never]]> = (set, get) => {
+
   (async () => {
     set({ loading: true, error: null }, undefined, 'matchStore/initial');
 
@@ -48,6 +53,30 @@ const matchStore: StateCreator<MatchesStore, [['zustand/devtools', never]]> = (s
     potentialMatches: [],
     loading: true,
     error: null,
+
+    initial: async () => {
+      console.log('Initializing match store...');
+      set({ loading: true, error: null }, undefined, 'matchStore/initial');
+
+      const { data: potentialMatches, error: potentialMatchError } = await MatchService.getPotentialMatches();
+
+      if (potentialMatchError) {
+        set({ error: 'Failed to fetch potential matches', loading: false });
+        console.log('Error fetching potential matches:', potentialMatchError);
+        return;
+      }
+
+      const { data: matches, error } = await MatchService.getMatches();
+
+      if (error) {
+        console.log('Error fetching potential matches:', error);
+        set({ error: 'Failed to fetch potential matches', loading: false });
+        return;
+      }
+
+
+      set({ potentialMatches, matches, loading: false }, undefined, 'matchStore/initial/success');
+    },
 
     likeUser: async (userId) => {
       await new Promise((resolve) => setTimeout(resolve, 500));
@@ -119,6 +148,16 @@ const matchStore: StateCreator<MatchesStore, [['zustand/devtools', never]]> = (s
       set(() => ({
         newMatches: get().newMatches.slice(1),
       }), undefined, 'matchStore/closeMatch');
+    },
+
+    clear: async () => {
+      set({
+        matches: [],
+        newMatches: [],
+        potentialMatches: [],
+        loading: false,
+        error: null,
+      }, undefined, 'matchStore/clear');
     },
   };
 };

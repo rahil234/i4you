@@ -92,7 +92,7 @@ export class UserController {
       return;
     }
 
-    const match = await this.userService.likeUser(userId, req.user.id);
+    const match = await this.userService.likeUser(req.user.id, userId);
 
     if (match) {
       res.status(200).json(match);

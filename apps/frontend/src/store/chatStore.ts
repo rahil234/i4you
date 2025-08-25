@@ -80,8 +80,6 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set, 
 
   wsClient.on('message', (message: any) => {
 
-    console.log('Received message:', message);
-
     // TODO needs to be replaced with a proper type
     const newMessage: Omit<Message, 'chatId' | 'id'> & { _id: string } = {
       sender: message.sender,
@@ -175,9 +173,6 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set, 
 
   wsClient.onStatusChange((status) => {
     set({ connectionStatus: status });
-    if (status === 'connected') {
-      console.log('WebSocket connected from chat store');
-    }
   });
 
   (async () => {
@@ -257,7 +252,6 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set, 
       const { messages, page: responsePage, hasNextPage } = data;
 
       if (get().loadedPages[chatId]?.has(responsePage)) {
-        console.log(`Page ${responsePage} already loaded for chat ${chatId}`);
         set({ isMessagesLoading: false }, undefined, 'chatStore/fetchMessages/alreadyLoaded');
         return;
       }

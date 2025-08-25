@@ -2,7 +2,6 @@
 
 import { User } from '@i4you/shared';
 
-
 export async function getUser(accessToken: string): Promise<User> {
   try {
 
@@ -18,8 +17,6 @@ export async function getUser(accessToken: string): Promise<User> {
       },
       cache: 'no-store',
     });
-
-    console.log(`Fetching user data from ${API_URL}/api/v1/user/me, response`, res);
 
     if (!res.ok) {
       throw new Error(`Failed to fetch user data: ${res.status} ${res.statusText}`);

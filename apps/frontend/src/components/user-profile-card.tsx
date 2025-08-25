@@ -49,7 +49,6 @@ export const UserProfileCard = forwardRef(({ user, onMatch }: UserProfileProps, 
 
   const handleDragEnd = async (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     const threshold = 100;
-    console.log('Drag end info:', info);
 
     if (info.offset.x > threshold) {
       // Swiped right - like

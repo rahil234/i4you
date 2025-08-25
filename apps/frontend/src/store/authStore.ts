@@ -1,10 +1,14 @@
+'use client';
+
 import type { AuthState } from '@/types';
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import AuthService from '@/services/auth.service';
 import UserService from '@/services/user.service';
-import { StateCreator } from 'zustand/index';
+import { StateCreator } from 'zustand';
 import { User } from '@i4you/shared';
+import useMatchesStore from '@/store/matchesStore';
+import { createJSONStorage } from 'zustand/middleware';
 
 interface AuthStore extends AuthState {
   login: (email: string, password: string) => Promise<void>;
@@ -45,6 +49,7 @@ const authStore: StateCreator<AuthStore, [['zustand/devtools', never], ['zustand
       isAuthenticated: true,
       isLoading: false,
     });
+    await useMatchesStore.getState().initial();
   },
 
   adminLogin: async (email, password) => {
@@ -55,6 +60,7 @@ const authStore: StateCreator<AuthStore, [['zustand/devtools', never], ['zustand
       return;
     }
     set({ error: null, isLoading: false, user: data.user, isAuthenticated: true });
+    await useMatchesStore.getState().clear();
   },
 
   googleAuthLogin: async (token) => {
@@ -73,6 +79,7 @@ const authStore: StateCreator<AuthStore, [['zustand/devtools', never], ['zustand
       isAuthenticated: true,
       isLoading: false,
     }, undefined, 'authStore/googleAuthLogin/success');
+    await useMatchesStore.getState().initial();
   },
 
   facebookAuthLogin: async (token) => {
@@ -92,25 +99,24 @@ const authStore: StateCreator<AuthStore, [['zustand/devtools', never], ['zustand
       isAuthenticated: true,
       isLoading: false,
     });
+    await useMatchesStore.getState().initial();
   },
 
   googleAuthRegister: async (token) => {
     set({ isLoading: true, error: null });
-    const { data, error } = await AuthService.googleAuth(token, 'register');
+    const { error } = await AuthService.googleAuth(token, 'register');
 
     if (error) {
       set({ error: error, isLoading: false });
       return;
     }
 
-    const { user } = data;
-
     set({
-      user,
       success: 'Registered successfully. Please login to continue',
-      isAuthenticated: true,
+      isAuthenticated: false,
       isLoading: false,
     });
+    await useMatchesStore.getState().clear();
   },
 
   facebookAuthRegister: async (token) => {
@@ -130,6 +136,7 @@ const authStore: StateCreator<AuthStore, [['zustand/devtools', never], ['zustand
       isAuthenticated: true,
       isLoading: false,
     });
+    await useMatchesStore.getState().clear();
   },
 
   register: async (name, email, password) => {
@@ -150,6 +157,7 @@ const authStore: StateCreator<AuthStore, [['zustand/devtools', never], ['zustand
       isAuthenticated: true,
       isLoading: false,
     });
+    await useMatchesStore.getState().clear();
   },
 
   updateUser: async (updatedUser: any) => {
@@ -165,6 +173,7 @@ const authStore: StateCreator<AuthStore, [['zustand/devtools', never], ['zustand
     console.log('Updated user data:', data);
 
     set({ user: data, isLoading: false });
+    await useMatchesStore.getState().initial();
   },
 
   logout: async () => {
@@ -180,6 +189,7 @@ const authStore: StateCreator<AuthStore, [['zustand/devtools', never], ['zustand
       error: null,
       signUpError: null,
     }, undefined, 'authStore/logout/success');
+    await useMatchesStore.getState().clear();
     console.log('Logged out');
   },
 
@@ -208,7 +218,6 @@ const authStore: StateCreator<AuthStore, [['zustand/devtools', never], ['zustand
     set({ isLoading, isAuthenticated, user });
   },
 });
-
 
 export const useAuthStore = create<AuthStore>()(
   devtools(

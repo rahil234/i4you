@@ -35,6 +35,16 @@ profiles:
         - https://raw.githubusercontent.com/grafana/grafana-operator/master/deploy/helm/grafana-operator/crds/grafana.integreatly.org_grafanas.yaml
 
   - name: setup
+    deploy:
+      kubectl:
+        hooks:
+          after:
+            - host:
+                command:
+                  - kubectl
+                  - apply
+                  - -f
+                  - k8s/dev/hashicorp/vault/job.yaml
     manifests:
       rawYaml:
         - k8s/dev/elastic/namespace.yaml
@@ -43,9 +53,10 @@ profiles:
         - k8s/dev/hashicorp/vault/namespace.yaml
         - k8s/dev/hashicorp/vault/vault-root-secret.yaml
         - k8s/dev/hashicorp/vault/vault-unseal-keys.yaml
-        - k8s/dev/hashicorp/vault/job.yaml
         - k8s/dev/hashicorp/vault/vault-ingress.yaml
         - k8s/dev/hashicorp/vault/storage-class.yaml
+        - k8s/dev/hashicorp/vault/vault-cluster-store.yaml
+        - k8s/dev/hashicorp/vault/job.yaml
         - https://download.elastic.co/downloads/eck/3.1.0/operator.yaml
         - https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.8.0/components.yaml
         - k8s/dev/kafka/kafka-storage.yaml
@@ -136,6 +147,14 @@ profiles:
                 dest: .
           docker:
             dockerfile: Dockerfile.dev
+        - image: signaling-service-image
+          context: apps/services/signaling-service
+          sync:
+            manual:
+              - src: src/**/*
+                dest: .
+          docker:
+            dockerfile: Dockerfile.dev
         - image: notification-service-image
           context: apps/services/notification-service
           sync:
@@ -195,7 +214,7 @@ profiles:
     manifests:
       rawYaml:
         - k8s/dev/app-namespace.yaml
-        - k8s/dev/secrets/vault-cluster-store.yaml
+        - k8s/dev/secrets/vault-secrets.yaml
         - k8s/dev/kafka/kafka-topics.yaml
         - k8s/dev/i4you-cert-secret.yaml
         - k8s/dev/validate-service.yaml
@@ -204,6 +223,7 @@ profiles:
         - k8s/dev/media-service.yaml
         - k8s/dev/match-service.yaml
         - k8s/dev/chat-service.yaml
+        - k8s/dev/signaling-service.yaml
         - k8s/dev/discovery-service.yaml
         - k8s/dev/es-worker-service.yaml
         - k8s/dev/moderation-service.yaml
@@ -253,7 +273,7 @@ profiles:
         concurrency: 0
     manifests:
       rawYaml:
-        - k8s/prod/validate-service.yaml
+        - k8s/prod/validate-service.yamls
 
   - name: monitoring
     manifests:
