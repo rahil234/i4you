@@ -3,11 +3,13 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from '@/types';
 import { UserService } from '@/services/user.service';
 import { handleAsync } from '@/utils/handle-async';
-import { AuthError } from '@/errors/AuthError';
 import OnboardingRequestDTO from '@/dtos/onboarding.request.dtos';
 import UserDTO from '@/dtos/user.dtos';
 import AdminDTO from '@/dtos/admin.dtos';
 import { UserDocument } from '@/models/user.model';
+import { USER_RESPONSE_MESSAGES } from '@/constants/response-messages.constant';
+import { USER_ROLES } from '@/constants/roles.constant';
+import { HTTP_STATUS } from '@/constants/http-status.constant';
 
 @injectable()
 export class UserController {
@@ -19,18 +21,20 @@ export class UserController {
     const user = await this.userService.getUserById(userId, role);
 
     if (!user) {
-      res.status(404).json({ message: 'User not found' });
+      res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .json({ message: USER_RESPONSE_MESSAGES.NOT_FOUND });
       return;
     }
 
     const photos = await this.userService.getUserPhotos(String(user._id));
 
     const data =
-      role === 'admin'
+      role === USER_ROLES.ADMIN
         ? new AdminDTO(user)
         : new UserDTO(user as UserDocument, photos);
 
-    res.status(200).json(data);
+    res.status(HTTP_STATUS.OK).json(data);
   });
 
   updateUser = handleAsync(async (req, res) => {
