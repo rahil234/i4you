@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import type React from 'react';
 import { LoginButton } from 'react-facebook';
 import { FaFacebookF } from 'react-icons/fa6';
-import useAuthStore from '@/store/authStore';
+import useAuthStore from '@/store/auth-store';
 
 const FBButton = () => {
   return (

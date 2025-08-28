@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useNotificationStore } from '@/store/notificationStore';
+import { useNotificationStore } from '@/store/notification-store';
 import { cn } from '@/lib/utils';
 
 export const Notifications = () => {

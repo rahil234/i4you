@@ -6,7 +6,7 @@ import { FcGoogle } from 'react-icons/fc';
 
 import { Button } from '@/components/ui/button';
 import { useGoogleLogin } from '@react-oauth/google';
-import useAuthStore from '@/store/authStore';
+import useAuthStore from '@/store/auth-store';
 
 export default function GoogleLoginButton({ type }: { type: 'login' | 'signup' }) {
   const router = useRouter();

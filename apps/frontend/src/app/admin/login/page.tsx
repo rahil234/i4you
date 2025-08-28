@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Heart } from 'lucide-react';
-import useAuthStore from '@/store/authStore';
+import useAuthStore from '@/store/auth-store';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');

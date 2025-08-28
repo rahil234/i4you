@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Heart, MessageCircle, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import useMatchesStore from '@/store/matchesStore';
+import useMatchesStore from '@/store/matches-store';
 import { Logo } from '@/components/logo';
-import useChatStore from '@/store/chatStore';
-import useAuthStore from '@/store/authStore';
+import useChatStore from '@/store/chat-store';
+import useAuthStore from '@/store/auth-store';
 import { useMemo } from 'react';
 
 export function UserNavigation() {

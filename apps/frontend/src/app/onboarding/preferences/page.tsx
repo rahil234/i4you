@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Slider } from "@/components/ui/slider"
 import { OnboardingLayout } from "@/components/onboarding-layout"
-import { useOnboardingStore } from "@/store/onboardingStore"
+import { useOnboardingStore } from "@/store/onboarding-store"
 
 export default function OnboardingPreferences() {
   const { data, updatePreferences } = useOnboardingStore()

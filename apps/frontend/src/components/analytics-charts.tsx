@@ -1,7 +1,7 @@
-"use client"
+'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   LineChart,
   Line,
@@ -16,40 +16,40 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-} from "recharts"
+} from 'recharts';
 
 const userActivityData = [
-  { name: "Jan", value: 4000 },
-  { name: "Feb", value: 3000 },
-  { name: "Mar", value: 2000 },
-  { name: "Apr", value: 2780 },
-  { name: "May", value: 1890 },
-  { name: "Jun", value: 2390 },
-  { name: "Jul", value: 3490 },
-  { name: "Aug", value: 4000 },
-  { name: "Sep", value: 3200 },
-  { name: "Oct", value: 2800 },
-  { name: "Nov", value: 3300 },
-  { name: "Dec", value: 3500 },
-]
+  { name: 'Jan', value: 4000 },
+  { name: 'Feb', value: 3000 },
+  { name: 'Mar', value: 2000 },
+  { name: 'Apr', value: 2780 },
+  { name: 'May', value: 1890 },
+  { name: 'Jun', value: 2390 },
+  { name: 'Jul', value: 3490 },
+  { name: 'Aug', value: 4000 },
+  { name: 'Sep', value: 3200 },
+  { name: 'Oct', value: 2800 },
+  { name: 'Nov', value: 3300 },
+  { name: 'Dec', value: 3500 },
+];
 
 const ageDistributionData = [
-  { name: "18-24", value: 35 },
-  { name: "25-34", value: 40 },
-  { name: "35-44", value: 15 },
-  { name: "45-54", value: 7 },
-  { name: "55+", value: 3 },
-]
+  { name: '18-24', value: 35 },
+  { name: '25-34', value: 40 },
+  { name: '35-44', value: 15 },
+  { name: '45-54', value: 7 },
+  { name: '55+', value: 3 },
+];
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"]
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
 const genderDistributionData = [
-  { name: "Male", value: 55 },
-  { name: "Female", value: 42 },
-  { name: "Other", value: 3 },
-]
+  { name: 'Male', value: 55 },
+  { name: 'Female', value: 42 },
+  { name: 'Other', value: 3 },
+];
 
-const GENDER_COLORS = ["#0088FE", "#FF8042", "#00C49F"]
+const GENDER_COLORS = ['#0088FE', '#FF8042', '#00C49F'];
 
 export function AnalyticsCharts() {
   return (
@@ -135,6 +135,6 @@ export function AnalyticsCharts() {
         </Card>
       </TabsContent>
     </Tabs>
-  )
+  );
 }
 

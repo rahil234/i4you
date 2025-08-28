@@ -1,14 +1,10 @@
 import React from 'react';
-import { NowProvider } from '@/context/NowContext';
-import { ReactQueryProvider } from '@/lib/react-query/provider';
+import { UserLayout } from '@/components/user-layout';
 
-const Layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
-
+export default function ChatLayout({ children }: { children: React.ReactNode }) {
   return (
-    <NowProvider>
-      <ReactQueryProvider>{children}</ReactQueryProvider>
-    </NowProvider>
+    <UserLayout>
+      {children}
+    </UserLayout>
   );
-};
-
-export default Layout;
+}

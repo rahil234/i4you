@@ -4,11 +4,11 @@ import { create } from 'zustand';
 import { getSocketClient } from '@/lib/websocket';
 import ChatService from '@/services/chat.service';
 import { Message } from '@/types';
-import { StateCreator } from 'zustand/index';
+import { StateCreator } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import chatService from '@/services/chat.service';
-import AuthStore from '@/store/authStore';
-import { useNotificationStore } from '@/store/notificationStore';
+import AuthStore from '@/store/auth-store';
+import { useNotificationStore } from '@/store/notification-store';
 import { router } from 'next/client';
 
 export type ChatUser = {

@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore } from '@/store/auth-store';
 import { useRouter } from 'next/navigation';
 import { useState, type FormEvent, useEffect } from 'react';
 import { Save, ArrowLeft, X, Camera, User as UserIcon, Info, Heart, Settings2 } from 'lucide-react';
