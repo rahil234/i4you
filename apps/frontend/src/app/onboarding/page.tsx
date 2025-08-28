@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Flame } from 'lucide-react';
-import useOnboardingStore from '@/store/onboardingStore';
+import useOnboardingStore from '@/store/onboarding-store';
 import { useEffect } from 'react';
 
 export default function OnboardingStart() {

@@ -15,10 +15,14 @@ import UserService from '@/services/user.service';
 import type { User as BaseUser } from '@i4you/shared';
 import { useEffect } from 'react';
 
-type User = Omit<BaseUser, 'location'> & { location: string };
+type User = Omit<BaseUser, 'location'> & { location: string, joined: string };
 export type FilterType = { search: string; status: string; gender: string };
 
-export function UsersTable({ filters, page, setTotalPages }: { filters: FilterType; page: number; setTotalPages: (total: number) => void }) {
+export function UsersTable({ filters, page, setTotalPages }: {
+  filters: FilterType;
+  page: number;
+  setTotalPages: (total: number) => void
+}) {
   const limit = 10;
 
   const {

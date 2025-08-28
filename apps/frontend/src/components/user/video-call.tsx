@@ -2,8 +2,8 @@
 
 import React, { useEffect, useRef } from 'react';
 import { PhoneOff, Mic, MicOff, Video as VideoIcon, VideoOff as VideoOffIcon } from 'lucide-react';
-import { CallIncoming } from '@/components/user/CallIncoming';
-import { useVideoCallStore } from '@/store/videoStore';
+import { CallIncoming } from '@/components/user/call-incoming';
+import { useVideoCallStore } from '@/store/video-store';
 import { useRouter } from 'next/navigation';
 
 export default function VideoCall() {

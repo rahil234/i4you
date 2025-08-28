@@ -2,7 +2,7 @@
 
 import { create, StateCreator } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import authStore from '@/store/authStore';
+import authStore from '@/store/auth-store';
 import { getVideoSocket } from '@/lib/signaling';
 
 export type VCEndReason = 'timeout' | 'remoteEnd' | 'localEnd';

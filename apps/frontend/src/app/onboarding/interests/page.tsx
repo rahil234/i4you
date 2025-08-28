@@ -1,6 +1,6 @@
 "use client"
 
-import { useOnboardingStore } from "@/store/onboardingStore"
+import { useOnboardingStore } from "@/store/onboarding-store"
 import { OnboardingLayout } from "@/components/onboarding-layout"
 
 const interestCategories = [

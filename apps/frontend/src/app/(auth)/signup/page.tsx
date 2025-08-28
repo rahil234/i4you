@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Flame, Loader2, Eye, EyeOff } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore } from '@/store/auth-store';
 import { z } from 'zod';
 import GoogleLoginButton from '@/components/auth/google-login-button';
 import FacebookLoginButton from '@/components/auth/facebook-login-button';

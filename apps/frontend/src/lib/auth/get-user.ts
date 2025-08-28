@@ -2,7 +2,7 @@
 
 import { User } from '@i4you/shared';
 
-export async function getUser(accessToken: string): Promise<User> {
+export async function getUser(accessToken: string): Promise<Omit<User, 'location'> & { location: string, onboarding: boolean }> {
   try {
 
     const API_URL = process.env.NEXT_PRIVATE_API_URL;

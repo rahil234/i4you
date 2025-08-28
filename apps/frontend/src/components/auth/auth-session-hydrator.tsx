@@ -1,11 +1,13 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore } from '@/store/auth-store';
 import { User } from '@i4you/shared';
 import { useRouter } from 'next/navigation';
 
-export default function AuthSessionHydrator({ user }: { user: Omit<User, 'location'> }) {
+export default function AuthSessionHydrator({ user }: {
+  user: Omit<User, 'location'> & { location: string, onboarding: boolean }
+}) {
   const { setState } = useAuthStore();
 
   const router = useRouter();
@@ -16,7 +18,7 @@ export default function AuthSessionHydrator({ user }: { user: Omit<User, 'locati
 
   useEffect(() => {
     if (user) {
-      setState({ user: user as typeof user & { location: string }, isAuthenticated: true, isLoading: false });
+      setState({ user, isAuthenticated: true, isLoading: false });
       if (user.onboarding) {
         router.push('/onboarding');
       }

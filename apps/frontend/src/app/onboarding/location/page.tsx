@@ -5,7 +5,7 @@ import { MapPin } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { OnboardingLayout } from '@/components/onboarding-layout';
-import { useOnboardingStore } from '@/store/onboardingStore';
+import { useOnboardingStore } from '@/store/onboarding-store';
 import { Input } from '@/components/ui/input';
 import { usePlacesAutocomplete } from '@/hooks/use-places-autocomplete';
 

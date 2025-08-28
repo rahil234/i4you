@@ -3,7 +3,7 @@ import { getUser } from '@/lib/auth/get-user';
 import { redirect } from 'next/navigation';
 import { User } from '@i4you/shared';
 
-export async function getUserData(): Promise<User> {
+export async function getUserData() {
   try {
     const cookieStore = await cookies();
 

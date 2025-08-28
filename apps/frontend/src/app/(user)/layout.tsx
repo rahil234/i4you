@@ -2,8 +2,8 @@ import React from 'react';
 import AuthSessionHydrator from '@/components/auth/auth-session-hydrator';
 import { getUserData } from '@/lib/auth/get-user-data';
 import { redirect } from 'next/navigation';
-import NotificationListener from '@/components/user/NotificationListener';
-import GlobalVideoCallOverlay from '@/components/user/GlobalVideoCallOverlay';
+import NotificationListener from '@/components/user/notification-listener';
+import GlobalVideoCallOverlay from '@/components/user/global-video-call-overlay';
 
 export default async function UserLayout({ children }: Readonly<{ children: React.ReactNode }>) {
 
@@ -14,7 +14,7 @@ export default async function UserLayout({ children }: Readonly<{ children: Reac
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 to-teal-100">
+    <div>
       <AuthSessionHydrator user={user} />
       {children}
       <NotificationListener />

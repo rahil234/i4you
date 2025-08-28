@@ -7,7 +7,7 @@ import AuthService from '@/services/auth.service';
 import UserService from '@/services/user.service';
 import { StateCreator } from 'zustand';
 import { User } from '@i4you/shared';
-import useMatchesStore from '@/store/matchesStore';
+import useMatchesStore from '@/store/matches-store';
 import { createJSONStorage } from 'zustand/middleware';
 
 interface AuthStore extends AuthState {
