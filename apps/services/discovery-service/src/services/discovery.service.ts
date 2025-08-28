@@ -6,16 +6,15 @@ import elastic from '@/config/elastic';
 export class DiscoveryService {
 
   async getPotentialMatches(data: GetPotentialMatchesRequest): Promise<GetPotentialMatchesResponse> {
-    console.log('Received getPotentialMatches request:', data);
-
     const result = await elastic.search({
       index: 'users',
       _source: ['id', 'name', 'email', 'gender', 'interests', 'age', 'photos', 'location'],
       _source_excludes: ['location._id'],
       query: {
         bool: {
-          must: [
-            ...(data.showMe ? [{ match: { gender: data.showMe } }] : []),
+          filter: [
+            ...(data.showMe && data.showMe !== 'all' ? [{ term: { gender: data.showMe } }] : []),
+            ...(data.lookingFor && data.lookingFor !== 'all' ? [{ term: { 'preferences.lookingFor': data.lookingFor } }] : []),
             {
               range: {
                 age: {
@@ -24,16 +23,16 @@ export class DiscoveryService {
                 },
               },
             },
-          ],
-          filter: {
-            geo_distance: {
-              distance: `${data.maxDistance}km`,
-              'location.coordinates': {
-                lon: data.locationLng,
-                lat: data.locationLat,
+            {
+              geo_distance: {
+                distance: `${data.maxDistance}km`,
+                'location.coordinates': {
+                  lon: data.locationLng,
+                  lat: data.locationLat,
+                },
               },
             },
-          },
+          ],
           must_not: [
             {
               terms: {
@@ -57,15 +56,13 @@ export class DiscoveryService {
       },
     });
 
-    const hits = result.hits.hits.map((hit: any) => {
-      return {
+    const hits = result.hits.hits.map((hit: any) => (
+      {
         ...hit._source,
         photos: [],
         distance: hit.fields.distance ? (hit.fields.distance[0] * 0.001) : undefined,
-      };
-    });
-
-    console.log('Filtered Hits:', hits);
+      }
+    ));
 
     return {
       matches: hits,
