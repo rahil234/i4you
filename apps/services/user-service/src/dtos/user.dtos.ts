@@ -27,8 +27,8 @@ class UserDTO implements Omit<User, 'location' | 'onboardingCompleted'> {
     this.id = user._id.toString();
     this.name = user.name;
     this.email = user.email;
-    this.avatar = photos ? photos[0] : user.photos[2];
-    this.photos = photos ?? user.photos;
+    this.avatar = photos ? photos[0] : '/default-avatar.png';
+    this.photos = photos ?? user.photos ?? [];
     this.status = user.status;
     this.age = user.age;
     this.gender = user.gender;

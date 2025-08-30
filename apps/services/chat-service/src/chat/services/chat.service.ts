@@ -36,15 +36,28 @@ export class ChatService {
 
         if (!otherUserId) return;
 
-        const response = await this.userGrpcService.getUserById(otherUserId);
-        const user = response as unknown as User;
+        const user = (await this.userGrpcService.getUserById(
+          otherUserId,
+        )) as unknown as User;
+
+        const lastMessage = await this.messageRepository.findLastMessage(
+          chat.id,
+        );
+
+        const unreadCount = await this.messageRepository.countUnreadMessages(
+          chat.id,
+          userId,
+        );
+
+        console.log('Unread count:', unreadCount);
 
         if (!user) {
           console.warn(`User with ID ${otherUserId} not found`);
           throw new Error('Cannot find user from grpc service');
         }
 
-        return new ChatResponseDto(chat, user);
+        // @ts-expect-error -- lastMessage can be null
+        return new ChatResponseDto(chat, user, lastMessage, unreadCount);
       }),
     );
 

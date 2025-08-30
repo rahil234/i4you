@@ -1,86 +1,130 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import { useChatStore } from '@/store/chat-store';
+import { useState, useMemo } from 'react';
+import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import clsx from 'clsx';
+import { cn } from '@/lib/utils';
+import { useChatStore } from '@/store/chat-store';
+import { useAuthStore } from '@/store/auth-store';
+import { formatTimestamp } from '@/utils/formatTimestamp';
 
-export default function ConversationsList() {
-  const { chats, currentChat, setCurrentChat, messages } = useChatStore();
-  const [searchTerm, setSearchTerm] = useState('');
+interface ConversationsListProps {
+  selectedId?: string;
+}
 
-  // Filter chats by participant name
+export default function ConversationsList({ selectedId }: ConversationsListProps) {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const { user } = useAuthStore();
+  const { chats, messages, isLoading, isTyping } = useChatStore();
+
   const filteredChats = useMemo(() => {
-    if (!searchTerm.trim()) return chats;
+    if (!searchQuery.trim()) return chats;
     return chats.filter((chat) =>
-      chat.participant.name.toLowerCase().includes(searchTerm.toLowerCase()),
+      chat?.participant.name!.toLowerCase().includes(searchQuery.toLowerCase()),
     );
-  }, [searchTerm, chats]);
+  }, [searchQuery, chats]);
+
+  if (isLoading) {
+    return <div className="p-4 text-center text-muted-foreground">Loading conversations...</div>;
+  }
 
   return (
     <div className="w-full h-full flex flex-col">
       {/* Header with Search */}
       <div className="px-4 py-3 bg-background sticky top-0 border-b flex flex-col gap-2">
-        <h2 className="text-xl font-bold">Messages</h2>
+        <h2 className="text-xl font-bold text-foreground">Messages</h2>
         <input
+          aria-label="Search conversations"
           type="text"
           placeholder="Search..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-3 py-2 text-sm border rounded-full focus:outline-none focus:ring-2 focus:ring-rose-400"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full px-3 py-2 text-sm border rounded-full bg-secondary text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
         />
       </div>
 
-      {/* Chats */}
-      <div className="overflow-y-auto">
-        {filteredChats.length === 0 ? (
-          <p className="text-gray-500 text-center mt-6">No conversations found</p>
-        ) : (
+      {/* Chats List */}
+      <div className="overflow-y-auto" role="list">
+        {filteredChats.length > 0 ? (
           filteredChats.map((chat) => {
-            const isActive = currentChat?.id === chat.id;
+            const chatMessages = messages[chat.id] || [];
+            const lastMessage = chat.lastMessage || (chatMessages.length > 0 ? chatMessages[chatMessages.length - 1] : null);
+            const isActive = selectedId === chat.participant.id;
+
             return (
-              <button
+              <Link
                 key={chat.id}
-                onClick={() =>
-                  setCurrentChat({ id: chat.id, participant: chat.participant })
-                }
-                className={clsx(
+                href={`/messages/${chat.participant.id}`}
+                role="listitem"
+                className={cn(
                   'w-full flex items-center gap-3 px-4 py-3 text-left transition rounded-xl',
                   isActive
-                    ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow'
-                    : 'hover:bg-rose-50',
+                    ? 'bg-primary text-primary-foreground shadow'
+                    : 'hover:bg-secondary',
                 )}
               >
+                {/* Avatar */}
                 <Avatar className="rounded-full">
-                  <AvatarImage
-                    src={chat.participant.avatar}
-                    alt={chat.participant.name}
-                  />
+                  <AvatarImage src={chat.participant.avatar} alt={chat.participant.name} />
                   <AvatarFallback>{chat.participant.initials}</AvatarFallback>
                 </Avatar>
 
+                {/* Chat Info */}
                 <div className="flex flex-col flex-1 overflow-hidden">
-                  <span className="font-medium truncate">
-                    {chat.participant.name}
-                  </span>
+                  <div className="flex justify-between items-center">
+                    <span
+                      className={cn(
+                        'truncate',
+                        chat.unreadCount > 0 && !isActive
+                          ? 'font-bold text-foreground'
+                          : 'font-medium',
+                      )}
+                    >
+                      {chat.participant.name}
+                    </span>
+                    {lastMessage && (
+                      <span
+                        className={cn(
+                          'text-xs',
+                          isActive ? 'text-primary-foreground/80' : 'text-muted-foreground',
+                        )}
+                      >
+                        {formatTimestamp(lastMessage.timestamp)}
+                      </span>
+                    )}
+                  </div>
+
                   <span
-                    className={clsx(
+                    className={cn(
                       'text-xs truncate',
-                      isActive ? 'text-pink-100' : 'text-gray-500',
+                      isActive ? 'text-primary-foreground/90' : 'text-muted-foreground',
                     )}
                   >
-                    {messages[chat.id][0]?.content || ''}
+                    {isTyping[chat.participant.id]
+                      ? 'Typing...' : lastMessage
+                        ? `${lastMessage.sender === user?.id ? 'You: ' : ''}${lastMessage.content}`
+                        : 'No messages yet'}
                   </span>
                 </div>
 
                 {chat.unreadCount > 0 && (
-                  <span className="ml-2 bg-rose-500 text-white text-xs px-2 py-0.5 rounded-full">
+                  <span
+                    className={cn(
+                      'ml-2 text-xs px-2 py-0.5 rounded-full',
+                      isActive
+                        ? 'bg-primary-foreground text-primary'
+                        : 'bg-primary text-primary-foreground',
+                    )}
+                  >
                     {chat.unreadCount}
                   </span>
                 )}
-              </button>
+              </Link>
             );
           })
+        ) : (
+          <p className="text-muted-foreground text-center mt-6">No conversations found</p>
         )}
       </div>
     </div>

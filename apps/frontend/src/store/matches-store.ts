@@ -5,10 +5,12 @@ import { create, StateCreator } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import UserService from '@/services/user.service';
 import MatchService from '@/services/match.service';
+import matchService from '@/services/match.service';
 
 interface MatchesStore {
   matches: Match[];
   newMatches: Match[];
+  newMatchesCount: number;
   potentialMatches: User[];
   loading: boolean;
   error: string | null;
@@ -18,6 +20,9 @@ interface MatchesStore {
   dislikeUser: (userId: string) => Promise<void>;
   unmatchUser: (matchId: string) => Promise<void>;
   pushNewMatch: (newMatch: Match) => void;
+  blockMatch: (matchId: string) => Promise<void>;
+  reFetchMatches: () => Promise<void>;
+  resetCount: () => void;
   closeMatch: () => void;
   clear: () => Promise<void>;
 }
@@ -44,12 +49,17 @@ const matchStore: StateCreator<MatchesStore, [['zustand/devtools', never]]> = (s
     }
 
 
-    set({ potentialMatches, matches, loading: false }, undefined, 'matchStore/initial/success');
+    set({
+      potentialMatches, matches,
+      newMatchesCount: matches.length,
+      loading: false,
+    }, undefined, 'matchStore/initial/success');
   })();
 
   return {
     matches: [],
     newMatches: [],
+    newMatchesCount: 0,
     potentialMatches: [],
     loading: true,
     error: null,
@@ -74,8 +84,12 @@ const matchStore: StateCreator<MatchesStore, [['zustand/devtools', never]]> = (s
         return;
       }
 
-
-      set({ potentialMatches, matches, loading: false }, undefined, 'matchStore/initial/success');
+      set({
+        potentialMatches,
+        matches,
+        newMatchesCount: matches.length,
+        loading: false,
+      }, undefined, 'matchStore/initial/success');
     },
 
     likeUser: async (userId) => {
@@ -114,6 +128,16 @@ const matchStore: StateCreator<MatchesStore, [['zustand/devtools', never]]> = (s
       return null;
     },
 
+    reFetchMatches: async () => {
+      const { data: matches, error } = await MatchService.getMatches();
+      if (error) {
+        console.log('Error re-fetching matches:', error);
+        set({ error: 'Failed to re-fetch matches' });
+        return;
+      }
+      set({ matches }, undefined, 'matchStore/reFetchMatches');
+    },
+
     dislikeUser: async (userId) => {
       try {
         await new Promise((resolve) => setTimeout(resolve, 500));
@@ -144,6 +168,25 @@ const matchStore: StateCreator<MatchesStore, [['zustand/devtools', never]]> = (s
       }), undefined, 'matchStore/pushNewMatch');
     },
 
+    blockMatch: async (matchId) => {
+      const { error } = await matchService.blockMatch(matchId);
+      if (error) {
+        console.log('Error blocking user:', error);
+        set({ error: 'Failed to block user' });
+        return;
+      }
+      console.log(`Blocked user: ${matchId}`);
+      set((state) => ({
+        matches: state.matches.filter((match) => match.id !== matchId),
+      }), undefined, 'matchStore/blockMatch/success');
+    },
+
+    resetCount: () => {
+      set(() => ({
+        newMatchesCount: 0,
+      }), undefined, 'matchStore/resetCount');
+    },
+
     closeMatch: () => {
       set(() => ({
         newMatches: get().newMatches.slice(1),
@@ -170,5 +213,3 @@ export const useMatchesStore = create<MatchesStore>()(
       enabled: true,
     },
   ));
-
-export default useMatchesStore;

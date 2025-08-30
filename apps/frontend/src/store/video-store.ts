@@ -2,7 +2,7 @@
 
 import { create, StateCreator } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import authStore from '@/store/auth-store';
+import { useAuthStore } from '@/store/auth-store';
 import { getVideoSocket } from '@/lib/signaling';
 
 export type VCEndReason = 'timeout' | 'remoteEnd' | 'localEnd';
@@ -82,7 +82,7 @@ const videoStore: StateCreator<VideoCallState, [['zustand/devtools', never]]> = 
     isDialing: false,
 
     init: () => {
-      const user = authStore.getState().user;
+      const user = useAuthStore.getState().user;
       if (!user?.id) return;
 
       const socket = getVideoSocket();
@@ -242,7 +242,7 @@ const videoStore: StateCreator<VideoCallState, [['zustand/devtools', never]]> = 
     },
 
     placeCall: async (participant) => {
-      const user = authStore.getState().user;
+      const user = useAuthStore.getState().user;
       if (!user?.id) return;
       const socket = getVideoSocket();
       if (!vcPcRef.current) get().init();
@@ -280,7 +280,7 @@ const videoStore: StateCreator<VideoCallState, [['zustand/devtools', never]]> = 
     },
 
     acceptCall: async () => {
-      const user = authStore.getState().user;
+      const user = useAuthStore.getState().user;
       const socket = getVideoSocket();
       const incoming = get().incoming;
       if (!incoming) return;

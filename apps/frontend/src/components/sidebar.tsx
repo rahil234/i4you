@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { BarChart3, CreditCard, Flag, Heart, Home, Shield, Users, User, ChevronUp, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import useAuthStore from '@/store/auth-store';
+import { useAuthStore } from '@/store/auth-store';
 import { Popover } from '@radix-ui/react-popover';
 import { PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';

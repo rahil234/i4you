@@ -41,16 +41,11 @@ export class UserController {
     const { id } = req.user;
     const { data } = req.body;
 
-    if (!id) {
-      res.status(401).json({ message: 'Unauthorized' });
-      return;
-    }
-
     const newUser = await this.userService.updateUser(id, data);
 
     const photos = await this.userService.getUserPhotos(String(newUser._id));
 
-    res.status(200).json(new UserDTO(newUser, photos));
+    res.status(HTTP_STATUS.OK).json(new UserDTO(newUser, photos));
   });
 
   updateUserStatus = handleAsync(async (req, res) => {
@@ -58,14 +53,11 @@ export class UserController {
 
     const { status } = req.body;
 
-    if (!userId) {
-      res.status(401).json({ message: 'Unauthorized' });
-      return;
-    }
-
     await this.userService.updateUserStatus(userId, status);
 
-    res.status(200).json({ message: 'User status updated successfully' });
+    res
+      .status(HTTP_STATUS.OK)
+      .json({ message: USER_RESPONSE_MESSAGES.STATUS_UPDATED });
   });
 
   getUsers = handleAsync(async (req, res) => {
@@ -85,23 +77,20 @@ export class UserController {
       gender: String(gender),
     });
 
-    res.status(200).json(result);
+    res.status(HTTP_STATUS.OK).json(result);
   });
 
   likeUser = handleAsync(async (req, res) => {
     const { userId } = req.params;
 
-    if (!userId) {
-      res.status(401).json({ message: 'Unauthorized' });
-      return;
-    }
-
     const match = await this.userService.likeUser(req.user.id, userId);
 
     if (match) {
-      res.status(200).json(match);
+      res.status(HTTP_STATUS.OK).json(match);
     } else {
-      res.status(404).json({ message: 'No match found' });
+      res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .json({ message: USER_RESPONSE_MESSAGES.NOT_FOUND });
     }
   });
 
@@ -112,6 +101,8 @@ export class UserController {
 
     await this.userService.onBoarding(userId, new OnboardingRequestDTO(data));
 
-    res.status(200).json({ message: 'user onboarded successfully' });
+    res
+      .status(HTTP_STATUS.OK)
+      .json({ message: USER_RESPONSE_MESSAGES.UPDATED });
   });
 }

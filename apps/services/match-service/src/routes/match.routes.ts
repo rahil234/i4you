@@ -132,4 +132,60 @@ router.get(
   matchController.getPotentialMatches
 );
 
+/**
+ * @swagger
+ * /api/v1/match/block/{matchId}:
+ *   post:
+ *     summary: Block a match
+ *     tags:
+ *       - User
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: matchId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the match to block
+ *     responses:
+ *       200:
+ *         description: Match blocked successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Match blocked successfully
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Invalid match ID
+ */
+router.delete(
+  '/:matchId',
+  authenticateAndAuthorizeMiddleware(['member']),
+  matchController.blockMatch
+);
+
+router.get(
+  '/blocked',
+  authenticateAndAuthorizeMiddleware(['member']),
+  matchController.getBlockedMatches
+);
+
+router.patch(
+  '/:matchId/unblock',
+  authenticateAndAuthorizeMiddleware(['member']),
+  matchController.unblockMatch
+);
+
 export default router;
