@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: interaction-service
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: interaction-service
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: interaction-service
+        version: v1
+    spec:
+      containers:
+        - name: interaction-service
+          image: interaction-service-image:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 4002
+          env:
+            - name: NODE_ENV
+              value: "development"
+            - name: PORT
+              value: "4002"
+            - name: USER_SERVER_URL
+              value: "http://interaction-service:3000"
+            - name: GRPC_PORT
+              value: "50051"
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: MONGODB_URI
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: interaction-service
+  namespace: app
+spec:
+  type: ClusterIP
+  selector:
+    app: interaction-service
+  ports:
+    - name: http
+      port: 4002
+      targetPort: 4002
+    - name: grpc
+      port: 50051
+      targetPort: 50051

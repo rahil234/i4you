@@ -6,10 +6,10 @@ import { AnimatePresence } from 'motion/react';
 import { Loader2 } from 'lucide-react';
 import Logo from '/public/favicon.ico';
 import { UserLayout } from '@/components/user-layout';
-import useMatchesStore from '@/store/matches-store';
+import { useMatchesStore } from '@/store/matches-store';
 import { UserProfileCard } from '@/components/user-profile-card';
 import { Notifications } from '@/components/user/notification';
-import useAuthStore from '@/store/auth-store';
+import { useAuthStore } from '@/store/auth-store';
 import { Button } from '@/components/ui/button';
 
 export default function DiscoverPage() {
@@ -80,8 +80,8 @@ export default function DiscoverPage() {
           {potentialMatches.length === 0 || currentIndex >= potentialMatches.length ? (
             <div
               className="flex  flex-col items-center justify-center text-center h-[calc(92vh-250px)]">
-              <div className="bg-white rounded-lg shadow-md p-8">
-                <h3 className="text-xl font-semibold mb-2">No more profiles</h3>
+              <div className="bg-accent rounded-lg shadow-md p-8">
+                <h3 className="text-foreground text-xl font-semibold mb-2">No more profiles</h3>
                 <p className="text-gray-500">Check back later for more matches</p>
               </div>
             </div>

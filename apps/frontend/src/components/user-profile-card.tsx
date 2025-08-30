@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, type PanInfo, useAnimation, useMotionValue, useTransform } from 'motion/react';
-import useMatchesStore from '@/store/matches-store';
+import { useMatchesStore } from '@/store/matches-store';
 import { User } from '@/types';
 
 interface UserProfileProps {

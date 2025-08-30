@@ -31,6 +31,20 @@ export class MessageRepository implements IMessageRepository {
       .limit(limit);
   }
 
+  async findLastMessage(chatId: string) {
+    return this.messageModel.findOne({ chatId }).sort({ createdAt: -1 }).exec();
+  }
+
+  async countUnreadMessages(chatId: string, userId?: string) {
+    return this.messageModel
+      .countDocuments({
+        chatId,
+        status: { $ne: 'read' },
+        sender: { $ne: userId },
+      })
+      .exec();
+  }
+
   async markAsDelivered(chatId: string, userId?: string) {
     return this.messageModel.updateMany(
       { chatId, status: { $ne: 'delivered' }, sender: { $ne: userId } },

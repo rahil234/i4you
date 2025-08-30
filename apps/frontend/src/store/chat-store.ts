@@ -7,7 +7,7 @@ import { Message } from '@/types';
 import { StateCreator } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import chatService from '@/services/chat.service';
-import AuthStore from '@/store/auth-store';
+import { useAuthStore } from '@/store/auth-store';
 import { useNotificationStore } from '@/store/notification-store';
 import { router } from 'next/client';
 
@@ -22,6 +22,7 @@ export type ChatUser = {
     isOnline?: boolean;
     lastMessage?: Message;
   };
+  unreadCount?: number;
 }
 
 export interface ChatPreview {
@@ -34,6 +35,7 @@ export interface ChatPreview {
     isOnline?: boolean;
     lastActive?: number;
   };
+  lastMessage?: Message;
   messages?: Message[];
   unreadCount: number;
 }
@@ -49,7 +51,7 @@ interface ChatStore {
   isLoading: boolean;
   isMessagesLoading: boolean;
   chatsError: string | null;
-  setCurrentChat: (user: ChatUser) => void;
+  setCurrentChat: (chat: ChatUser) => void;
   initiateChatUser: (userId: string) => void;
   onMessage: (onMessageHandler: (message: Message) => void) => void;
   fetchMessages: (chatId: string, page: number) => void;
@@ -109,6 +111,7 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set, 
   });
 
   wsClient.on('typing', (payload: { sender: string; isTyping: boolean }) => {
+    console.log('Typing event received:', payload);
     set((state) => ({
       isTyping: { ...state.isTyping, [payload.sender]: payload.isTyping },
     }));
@@ -209,7 +212,7 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set, 
     isMessagesLoading: false,
     chatsError: null,
 
-    setCurrentChat: (user) => set({ currentChat: user }),
+    setCurrentChat: (chat) => set({ currentChat: chat }),
 
     initiateChatUser: async (chatId) => {
       set({ isLoading: true });
@@ -324,13 +327,13 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set, 
     },
 
     sendMessage: (chatId, content) => {
-      if (!content.trim() || !AuthStore.getState().user) return;
+      if (!content.trim() || !useAuthStore.getState().user) return;
 
       const newMessage: Message = {
         id: `m${Date.now()}`,
         chatId: chatId,
         content,
-        sender: AuthStore.getState().user?.id!,
+        sender: useAuthStore.getState().user?.id!,
         timestamp: Date.now(),
         status: 'pending',
       };
@@ -367,7 +370,7 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set, 
     },
 
     sendNewChatMessage: (newUserId, content) => {
-      if (!content.trim() || !AuthStore.getState().user) return;
+      if (!content.trim() || !useAuthStore.getState().user) return;
 
 
       const status = wsClient.send('createRoom', {
@@ -395,6 +398,11 @@ const chatStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (set, 
 
     markAsRead: (chatId) => {
       wsClient.send('read_receipt', { chatId });
+      set({
+        chats: get().chats.map((chat) =>
+          chat.id === chatId ? { ...chat, unreadCount: 0 } : chat,
+        ),
+      }, undefined, 'chatStore/markAsRead/updateState');
     },
 
     startTyping: (chatId) => {
@@ -413,5 +421,3 @@ export const useChatStore = create<ChatStore>()(
     { name: 'chat-store', enabled: true },
   ),
 );
-
-export default useChatStore;

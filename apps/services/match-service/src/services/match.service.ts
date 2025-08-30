@@ -6,6 +6,7 @@ import IKafkaService from '@/events/kafka/interfaces/IKafkaService';
 import IMatchRepository from '@/repositories/interfaces/IMatchRepository';
 import ILikeRepository from '@/repositories/interfaces/ILikeRepository';
 import { User } from '@i4you/shared';
+import { MatchDocument } from '@/models/match.model';
 
 @injectable()
 export class MatchService {
@@ -136,5 +137,56 @@ export class MatchService {
       // ❌ DO NOT throw again — or it will retry forever
       // Optionally send to DLQ or alert
     }
+  }
+
+  async getBlockedMatches(userId: string): Promise<Match[]> {
+    try {
+      const blockedMathes =
+        await this.matchRepository.getBlockedMatches(userId);
+
+      const populatedMatches = await Promise.all(
+        blockedMathes.map(async (match) => {
+          const matchId = String(
+            String(match.userA) === userId ? match.userB : match.userA
+          );
+
+          const userData = await this.userGrpcService.findUserById(matchId);
+
+          return {
+            id: match.id,
+            matchedUserId: matchId,
+            createdAt: match.createdAt.toISOString(),
+            user: {
+              id: userData.id,
+              name: userData.name,
+              age: userData.age,
+              bio: userData.bio,
+              location: userData.location?.displayName,
+              avatar: userData.photos[0],
+              interests: userData.interests || [],
+            },
+          };
+        })
+      );
+
+      // TODO: Add pagination and sorting
+      // @ts-expect-error some properties are optional
+      return populatedMatches;
+    } catch (error) {
+      console.error('Error fetching matches:', error);
+      throw error;
+    }
+  }
+
+  async blockMatch(userId: string, matchId: string): Promise<void> {
+    console.log(`Blocking match between user ${userId} and match ${matchId}`);
+    await this.matchRepository.blockMatch(userId, matchId);
+    console.log(`Match between user ${userId} and match ${matchId} blocked`);
+  }
+
+  async unblockMatch(userId: string, matchId: string): Promise<void> {
+    console.log(`Unblocking match between user ${userId} and match ${matchId}`);
+    await this.matchRepository.unblockMatch(userId, matchId);
+    console.log(`Match between user ${userId} and match ${matchId} unblocked`);
   }
 }

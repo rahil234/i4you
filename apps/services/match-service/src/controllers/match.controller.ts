@@ -34,4 +34,31 @@ export class MatchController {
 
     res.status(200).json(matchesWithPhotos);
   });
+
+  getBlockedMatches = handleAsync(async (req, res) => {
+    const blockedMatches = await this.matchService.getBlockedMatches(
+      req.user.id
+    );
+
+    res.status(200).json(blockedMatches);
+  });
+
+  blockMatch = handleAsync(async (req, res) => {
+    console.log('Blocking match with ID:', req.params.matchId);
+    const matchId = req.params.matchId;
+    if (!matchId) {
+      createError.BadRequest('matchId parameter is required');
+    }
+    await this.matchService.blockMatch(req.user.id, matchId);
+    res.status(200).json({ message: 'Match blocked successfully' });
+  });
+
+  unblockMatch = handleAsync(async (req, res) => {
+    const matchId = req.params.matchId;
+    if (!matchId) {
+      createError.BadRequest('matchId parameter is required');
+    }
+    await this.matchService.unblockMatch(req.user.id, matchId);
+    res.status(200).json({ message: 'Match unblocked successfully' });
+  });
 }

@@ -13,4 +13,6 @@ export interface IMessageRepository {
     page?: number,
     limit?: number,
   ): Promise<Message[]>;
+
+  findLastMessage(chatId: string): Promise<Message | null>;
 }

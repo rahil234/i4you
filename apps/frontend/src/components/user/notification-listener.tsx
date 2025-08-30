@@ -2,9 +2,9 @@
 
 import { useEffect } from 'react';
 import { getNotificationSocket } from '@/lib/notification-websocket';
-import useMatchesStore from '@/store/matches-store';
-import useAuthStore from '@/store/auth-store';
-import useChatStore from '@/store/chat-store';
+import { useMatchesStore } from '@/store/matches-store';
+import { useAuthStore } from '@/store/auth-store';
+import { useChatStore } from '@/store/chat-store';
 
 export default function NotificationListener() {
   const { pushNewMatch } = useMatchesStore();

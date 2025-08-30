@@ -9,7 +9,7 @@ import { Eye, EyeOff, Flame, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import useAuthStore from '@/store/auth-store';
+import { useAuthStore } from '@/store/auth-store';
 import { ThemeToggle } from '@/components/theme-toggle';
 import FacebookLoginButton from '@/components/auth/facebook-login-button';
 import GoogleLoginButton from '@/components/auth/google-login-button';

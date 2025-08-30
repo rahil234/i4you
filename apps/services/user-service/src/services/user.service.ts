@@ -8,12 +8,12 @@ import { User, UserJwtPayload } from '@i4you/shared';
 import OnboardingRequestDTO from '@/dtos/onboarding.request.dtos';
 import { AdminDocument } from '@/models/admin.model';
 import { UserDocument } from '@/models/user.model';
-import AdminDTO from '@/dtos/admin.dtos';
 import ICacheService from '@/services/interfaces/ICacheService';
 import IUserService from '@/services/interfaces/IUserService';
 import IKafkaService from '@/events/kafka/interfaces/IKafkaService';
 import { createError } from '@i4you/http-errors';
 import IMediaService from '@/services/interfaces/IMediaService';
+import { USER_ROLES } from '@/constants/roles.constant';
 
 @injectable()
 export class UserService implements IUserService {
@@ -35,8 +35,11 @@ export class UserService implements IUserService {
 
   async getUserById(id: string, role?: 'member'): Promise<UserDocument>;
   async getUserById(id: string, role: 'admin'): Promise<AdminDocument>;
-  async getUserById(id: string, role: UserJwtPayload['role'] = 'member') {
-    const cacheKey = `${role === 'admin' ? 'admin' : 'member'}:${id}`;
+  async getUserById(
+    id: string,
+    role: UserJwtPayload['role'] = USER_ROLES.MEMBER
+  ) {
+    const cacheKey = `${role === USER_ROLES.ADMIN ? 'admin' : 'member'}:${id}`;
     const cached = await this.cacheService.get(cacheKey);
 
     if (cached) {
@@ -53,20 +56,14 @@ export class UserService implements IUserService {
     return data;
   }
 
-  async getUserByEmail(email: string, role?: 'member'): Promise<UserDTO>;
-  async getUserByEmail(email: string, role: UserJwtPayload['role'] = 'member') {
-    const data =
-      role === 'admin'
-        ? await this.adminRepository.findByEmail(email)
-        : await this.userRepository.findByEmail(email);
+  async getUserByEmail(email: string): Promise<UserDTO> {
+    const user = await this.userRepository.findByEmail(email);
 
-    if (!data) {
-      return null;
+    if (!user) {
+      throw new BadRequestError('User not found');
     }
 
-    return role === 'admin'
-      ? (new AdminDTO(data) as AdminDTO)
-      : new UserDTO(data as UserDocument);
+    return new UserDTO(user);
   }
 
   async getUsers({ page, limit, search, status, gender }: GetUsersRequestDTO) {
@@ -96,8 +93,17 @@ export class UserService implements IUserService {
 
     const total = await this.userRepository.count(whereClause);
 
+    const data = await Promise.all(
+      users.map(async (user) => {
+        const photos = await this.mediaService.getUserImages(
+          user._id.toString()
+        );
+        return new UserDTO(user, photos);
+      })
+    );
+
     return {
-      data: users.map((user) => new UserDTO(user)),
+      data,
       total,
       page,
       totalPages: Math.ceil(total / limit),
