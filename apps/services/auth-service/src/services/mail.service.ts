@@ -1,11 +1,6 @@
 import { injectable } from 'inversify';
 import { mailTransporter } from '@/config/mail.config';
-
-export interface SendMailOptions {
-  to: string;
-  subject: string;
-  html: string;
-}
+import { SendMailOptions } from '@/services/interfaces/IMailService';
 
 @injectable()
 export class MailService {

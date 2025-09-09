@@ -217,24 +217,24 @@ profiles:
         - k8s/dev/secrets/vault-secrets.yaml
         - k8s/dev/kafka/kafka-topics.yaml
         - k8s/dev/i4you-cert-secret.yaml
-        - k8s/dev/validate-service.yaml
-        - k8s/dev/user-service.yaml
-        - k8s/dev/auth-service.yaml
-        - k8s/dev/media-service.yaml
-        - k8s/dev/match-service.yaml
-        - k8s/dev/chat-service.yaml
-        - k8s/dev/signaling-service.yaml
-        - k8s/dev/discovery-service.yaml
-        - k8s/dev/es-worker-service.yaml
-        - k8s/dev/moderation-service.yaml
-        - k8s/dev/notification-service.yaml
-        - k8s/dev/payment-service.yaml
-        - k8s/dev/stripe-webhook-handler.yaml
-        - k8s/dev/frontend.yaml
         - k8s/dev/nginx-socket-proxy.yaml
         - k8s/dev/traefik/traefik-validate-middleware.yaml
         - k8s/dev/traefik/traefik-strip-path-middleware.yaml
         - k8s/dev/traefik/traefik-ingress.yaml
+        - k8s/dev/services/validate-service.yaml
+        - k8s/dev/services/user-service.yaml
+        - k8s/dev/services/auth-service.yaml
+        - k8s/dev/services/media-service.yaml
+        - k8s/dev/services/match-service.yaml
+        - k8s/dev/services/chat-service.yaml
+        - k8s/dev/services/signaling-service.yaml
+        - k8s/dev/services/discovery-service.yaml
+        - k8s/dev/services/es-worker-service.yaml
+        - k8s/dev/services/moderation-service.yaml
+        - k8s/dev/services/notification-service.yaml
+        - k8s/dev/services/frontend.yaml
+        - k8s/dev/services/payment-service.yaml
+        - k8s/dev/stripe-webhook-handler.yaml
 
   - name: production
     build:

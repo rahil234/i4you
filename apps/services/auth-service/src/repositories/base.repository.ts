@@ -1,5 +1,5 @@
-import { Model, Document, RootFilterQuery } from 'mongoose';
-import IBaseRepository from './interfaces/IBaseRepositoryInterface';
+import { Model, Document, FilterQuery } from 'mongoose';
+import { IBaseRepository } from './interfaces/IBaseRepositoryInterface';
 
 export class BaseRepository<T extends Document> implements IBaseRepository<T> {
   protected model: Model<T>;
@@ -21,8 +21,11 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
     return this.model.find().exec();
   }
 
-  async find(filter: RootFilterQuery<T>) {
-    return this.model.find(filter).exec();
+  async find(filter: Partial<T>): Promise<T[]> {
+    return await this.model
+      .find(filter as FilterQuery<T>)
+      .lean<T[]>()
+      .exec();
   }
 
   async update(id: string, data: Partial<T>): Promise<T | null> {

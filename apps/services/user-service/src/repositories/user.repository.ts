@@ -1,72 +1,57 @@
-import { UserModel, UserDocument } from '@/models/user.model';
-import IUserRepository from '@/repositories/interfaces/IUserRepository';
-import { BaseRepository } from '@/repositories/base.repository';
 import { injectable } from 'inversify';
+import { UserModel, UserDocument } from '@/models/user.model';
+import { IUserRepository } from '@/repositories/interfaces/IUserRepository';
+import { MongoBaseRepository } from '@/repositories/base.repository';
+import { User } from '@/entities/user.entity';
+import { RootFilterQuery } from 'mongoose';
+
+function toDomain(doc: UserDocument): User {
+  return new User(
+    doc._id.toString(),
+    doc.name,
+    doc.email,
+    doc.password,
+    doc.age,
+    doc.gender,
+    doc.bio,
+    doc.interests,
+    doc.preferences,
+    doc.location,
+    doc.onboardingCompleted,
+    doc.status,
+    doc.createdAt,
+    doc.updatedAt
+  );
+}
 
 @injectable()
-export class UserRepository
-  extends BaseRepository<UserDocument>
+export class MongoUserRepository
+  extends MongoBaseRepository<User, UserDocument>
   implements IUserRepository
 {
   constructor() {
-    super(UserModel);
+    super(UserModel, toDomain);
   }
 
-  async findByEmail(email: string): Promise<UserDocument | null> {
-    return this.model.findOne({ email }).exec();
+  async findByEmail(email: string): Promise<User | null> {
+    const doc = await this.model
+      .findOne({ email } as RootFilterQuery<UserDocument>)
+      .lean();
+    return doc ? this.toDomain(doc) : null;
   }
 
-  // async getMatches(userId: string): Promise<UserDocument[]> {
-  //   const user = await UserModel.findById(userId);
-  //   const coords = user?.location?.coordinates;
-  //   const maxDistanceKm = user?.preferences?.distance;
-  //   const ageRange = user?.preferences?.ageRange;
-  //   const showMe = user?.preferences?.showMe;
-  //
-  //   if (!coords || !maxDistanceKm || !ageRange || !showMe) {
-  //     throw new Error('User location or preferences not found');
-  //   }
-  //
-  //   const maxDistanceMeters = maxDistanceKm * 1000;
-  //
-  //   const genderFilter =
-  //     showMe === 'all' ? { $in: ['male', 'female', 'other'] } : showMe;
-  //
-  //   return UserModel.aggregate([
-  //     {
-  //       $geoNear: {
-  //         near: {
-  //           type: 'Point',
-  //           coordinates: coords,
-  //         },
-  //         distanceField: 'distance',
-  //         spherical: true,
-  //         query: {
-  //           _id: { $ne: user._id },
-  //           onboardingCompleted: true,
-  //         },
-  //       },
-  //     },
-  //     {
-  //       $match: {
-  //         distance: { $lte: maxDistanceMeters },
-  //         age: { $gte: ageRange[0], $lte: ageRange[1] },
-  //         gender: genderFilter,
-  //         // 'preferences.showMe':
-  //         //   user.gender === 'other' ? 'all' : { $in: [user.gender, 'all'] },
-  //       },
-  //     },
-  //   ]);
-  // }
-
-  async findMany(filter: any, options: { skip: number; limit: number }) {
-    return UserModel.find(filter)
+  async findMany(
+    filter: Partial<UserDocument>,
+    options: { skip: number; limit: number }
+  ): Promise<User[]> {
+    const docs = await UserModel.find(filter as RootFilterQuery<UserDocument>)
       .skip(options.skip)
       .limit(options.limit)
       .lean();
+    return docs.map(this.toDomain);
   }
 
-  async count(filter: any) {
-    return UserModel.countDocuments(filter);
+  async count(filter: Partial<UserDocument>): Promise<number> {
+    return UserModel.countDocuments(filter as RootFilterQuery<UserDocument>);
   }
 }

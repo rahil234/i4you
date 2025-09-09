@@ -9,9 +9,8 @@ import { requestLogger } from '@/middlwares/request-logger.middleware';
 import { connectRedis } from '@/config/redis.config';
 import { KafkaService } from '@/events/kafka/KafkaService';
 import { container } from '@/config/inversify.config';
-import { UserService } from '@/services/user.service';
 import { TYPES } from '@/types';
-import { startKafkaListener } from '@/events/kafka/start-consumer';
+import { initKafkaConsumer } from '@/events/kafka/consumer';
 
 const kafkaService = container.get<KafkaService>(TYPES.KafkaService);
 
@@ -39,7 +38,7 @@ app.use(errorHandlerMiddleware);
 const startServer = async () => {
   await connectDB();
   await connectRedis();
-  startKafkaListener().catch((err) => {
+  initKafkaConsumer().catch((err) => {
     console.error('Failed to start Kafka listener:', err);
   });
   await kafkaService

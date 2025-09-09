@@ -17,7 +17,6 @@ import { UserExistsError } from '@/errors/UserExistsError';
 import IAdminRepository from '@/repositories/interfaces/IAdminRepository';
 import { SuspendedUserError } from '@/errors/SuspendedUserError';
 import { ValidationError } from '@/errors/ValidationError';
-import { MailService } from '@/services/mail.service';
 import {
   PasswordResetTemplate,
   verificationEmailTemplate,
@@ -27,33 +26,35 @@ import { env } from '@/config';
 import { createError } from '@i4you/http-errors';
 import ICacheService from '@/services/interfaces/ICacheService';
 import { UserGrpcService } from '@/services/user.grpc.service';
+import { IAuthService } from '@/services/interfaces/IAuthService';
+import { IMailService } from '@/services/interfaces/IMailService';
 
 const APP_URL = env.APP_URL;
 
 @injectable()
-export class AuthService {
+export class AuthService implements IAuthService {
   constructor(
-    @inject(TYPES.UserRepository) private userRepository: IUserRepository,
-    @inject(TYPES.AdminRepository) private adminRepository: IAdminRepository,
-    @inject(TYPES.UserGrpcService) private userGrpcService: UserGrpcService,
-    @inject(TYPES.CacheService) private cacheService: ICacheService,
-    @inject(TYPES.MailService) private mailService: MailService
+    @inject(TYPES.UserRepository) private _userRepository: IUserRepository,
+    @inject(TYPES.AdminRepository) private _adminRepository: IAdminRepository,
+    @inject(TYPES.MailService) private _mailService: IMailService,
+    @inject(TYPES.CacheService) private _cacheService: ICacheService,
+    @inject(TYPES.UserGrpcService) private _userGrpcService: UserGrpcService
   ) {}
 
-  private async blacklistAccessToken(token: string) {
-    await this.cacheService.set(`blacklist:${token}`, 'true', 60 * 20);
+  private async _blacklistAccessToken(token: string) {
+    await this._cacheService.set(`blacklist:${token}`, 'true', 60 * 20);
   }
 
-  private async addRefreshToken(userId: string, token: string) {
-    await this.cacheService.set(`refresh:${userId}`, token, 60 * 60 * 24 * 7);
+  private async _addRefreshToken(userId: string, token: string) {
+    await this._cacheService.set(`refresh:${userId}`, token, 60 * 60 * 24 * 7);
   }
 
-  private async removeRefreshToken(userId: string) {
-    await this.cacheService.del(`refresh:${userId}`);
+  private async _removeRefreshToken(userId: string) {
+    await this._cacheService.del(`refresh:${userId}`);
   }
 
   async login(loginDTO: LoginRequestDTO): Promise<LoginResponseDTO> {
-    const user = await this.userRepository.findByEmail(loginDTO.email);
+    const user = await this._userRepository.findByEmail(loginDTO.email);
     if (!user || !(await comparePassword(loginDTO.password, user.password))) {
       throw new ValidationError(
         'Invalid credentials. please check your email or password'
@@ -78,7 +79,7 @@ export class AuthService {
       role: 'member',
     });
 
-    await this.addRefreshToken(user._id, refreshToken);
+    await this._addRefreshToken(user._id, refreshToken);
 
     return new LoginResponseDTO(accessToken, refreshToken, {
       id: user._id,
@@ -92,7 +93,7 @@ export class AuthService {
     currentPassword: string,
     newPassword: string
   ) {
-    const user = (await this.userRepository.find({ _id: id }))[0];
+    const user = (await this._userRepository.find({ _id: id }))[0];
 
     if (!user) {
       throw new ValidationError('User not found');
@@ -103,11 +104,11 @@ export class AuthService {
     }
 
     const hashedPassword = await hashPassword(newPassword);
-    await this.userRepository.update(id, { password: hashedPassword });
+    await this._userRepository.update(id, { password: hashedPassword });
   }
 
   async adminLogin(loginDTO: LoginRequestDTO): Promise<LoginResponseDTO> {
-    const user = await this.adminRepository.findByEmail(loginDTO.email);
+    const user = await this._adminRepository.findByEmail(loginDTO.email);
     if (!user || !(await comparePassword(loginDTO.password, user.password))) {
       throw new ValidationError('Invalid credentials');
     }
@@ -119,7 +120,7 @@ export class AuthService {
     });
     const refreshToken = generateRefreshToken({ sub: user._id, role: 'admin' });
 
-    await this.addRefreshToken(user._id, refreshToken);
+    await this._addRefreshToken(user._id, refreshToken);
 
     return new LoginResponseDTO(accessToken, refreshToken, {
       id: user._id,
@@ -138,13 +139,11 @@ export class AuthService {
     const hashedPassword = await hashPassword(password);
 
     try {
-      const user = await this.userGrpcService.createUser({
+      const user = await this._userGrpcService.createUser({
         name,
         email,
         password: hashedPassword,
       });
-
-      console.log('User created:', user);
 
       const token = generateEmailVerificationToken({
         sub: user.id,
@@ -153,16 +152,13 @@ export class AuthService {
 
       const verificationLink = `${APP_URL}/verify?token=${token}`;
 
-      await this.mailService.sendMail({
+      await this._mailService.sendMail({
         to: user.email,
         subject: 'Verify your i4you account',
         html: verificationEmailTemplate(user.name, verificationLink),
       });
-    } catch (err: any) {
-      if (
-        err instanceof UserExistsError ||
-        err.message.includes('already exists')
-      ) {
+    } catch (err) {
+      if (err instanceof UserExistsError) {
         throw new UserExistsError(
           'User already exists with this email. Please login.'
         );
@@ -176,7 +172,7 @@ export class AuthService {
   }
 
   async forgetPassword(email: string) {
-    const user = await this.userRepository.findByEmail(email);
+    const user = await this._userRepository.findByEmail(email);
     if (!user) {
       throw new ValidationError('User not found');
     }
@@ -187,7 +183,7 @@ export class AuthService {
 
     const resetLink = `${APP_URL}/reset-password?token=${resetToken}`;
 
-    await this.mailService.sendMail({
+    await this._mailService.sendMail({
       to: user.email,
       subject: 'Reset Your Password',
       html: PasswordResetTemplate(user.name, resetLink),
@@ -201,7 +197,7 @@ export class AuthService {
       throw new NotFoundError('User not found');
     }
 
-    const user = await this.userRepository.findById(userId);
+    const user = await this._userRepository.findById(userId);
 
     if (!user) {
       throw new ValidationError('User not found');
@@ -209,7 +205,7 @@ export class AuthService {
 
     const hashedPassword = await hashPassword(password);
 
-    await this.userRepository.update(userId, { password: hashedPassword });
+    await this._userRepository.update(userId, { password: hashedPassword });
   }
 
   async verifyAccount(password: string, token: string) {
@@ -219,7 +215,7 @@ export class AuthService {
       throw new NotFoundError('User not found');
     }
 
-    const user = await this.userRepository.findById(userId);
+    const user = await this._userRepository.findById(userId);
 
     if (!user || !(await comparePassword(password, user.password))) {
       throw new ValidationError('Invalid credentials');
@@ -229,7 +225,7 @@ export class AuthService {
       throw new ValidationError('User not found');
     }
 
-    await this.userRepository.update(userId, { isVerified: true });
+    await this._userRepository.update(userId, { isVerified: true });
   }
 
   async googleRegister(token: string): Promise<void> {
@@ -238,7 +234,7 @@ export class AuthService {
       throw createError.BadRequest('Invalid credentials');
     }
 
-    const user = await this.userRepository.findByEmail(googleUser.email);
+    const user = await this._userRepository.findByEmail(googleUser.email);
 
     if (user) {
       throw createError.Conflict(
@@ -248,7 +244,7 @@ export class AuthService {
 
     const hashedPassword = await hashPassword(googleUser.email);
 
-    const newUser = await this.userRepository.create({
+    const newUser = await this._userRepository.create({
       name: googleUser.given_name,
       email: googleUser.email,
       password: hashedPassword,
@@ -266,7 +262,7 @@ export class AuthService {
       throw new Error('Invalid credentials');
     }
 
-    const user = await this.userRepository.findByEmail(googleUser.email);
+    const user = await this._userRepository.findByEmail(googleUser.email);
 
     if (!user) {
       throw createError.BadRequest('User not found. Please register first.');
@@ -287,7 +283,7 @@ export class AuthService {
       role: 'member',
     });
 
-    await this.addRefreshToken(user._id, refreshToken);
+    await this._addRefreshToken(user._id, refreshToken);
 
     return new LoginResponseDTO(accessToken, refreshToken, {
       id: user._id,
@@ -329,7 +325,7 @@ export class AuthService {
       throw new Error('Invalid token');
     }
 
-    const storedToken = await this.cacheService.get(`refresh:${userId}`);
+    const storedToken = await this._cacheService.get(`refresh:${userId}`);
 
     if (!storedToken || storedToken !== token) {
       console.log('Stored token not found or does not match:', storedToken);
@@ -338,8 +334,8 @@ export class AuthService {
 
     const user =
       role === 'admin'
-        ? await this.adminRepository.findById(userId)
-        : await this.userGrpcService.findUserById(userId);
+        ? await this._adminRepository.findById(userId)
+        : await this._userGrpcService.findUserById(userId);
 
     if (!user) throw new Error('User not found');
     if (user.status === 'suspended') throw new SuspendedUserError();
@@ -352,7 +348,7 @@ export class AuthService {
 
     const newRefreshToken = generateRefreshToken({ sub: user.id, role });
 
-    await this.cacheService.set(
+    await this._cacheService.set(
       `refresh:${user.id}`,
       newRefreshToken,
       60 * 60 * 24 * 7
@@ -366,7 +362,7 @@ export class AuthService {
       throw new ValidationError('Token is required');
     }
 
-    await this.blacklistAccessToken(token);
-    await this.removeRefreshToken(userId);
+    await this._blacklistAccessToken(token);
+    await this._removeRefreshToken(userId);
   }
 }

@@ -1,17 +1,8 @@
-import { Document, RootFilterQuery } from 'mongoose';
-
-interface IBaseRepository<T extends Document> {
+export interface IBaseRepository<T> {
   create(data: Partial<T>): Promise<T>;
-
   findById(id: string): Promise<T | null>;
-
   findAll(): Promise<T[]>;
-
-  find(filter: RootFilterQuery<T>): Promise<T[]>;
-
+  find(filter: Partial<T>): Promise<T[]>;
   update(id: string, data: Partial<T>): Promise<T | null>;
-
   delete(id: string): Promise<boolean>;
 }
-
-export default IBaseRepository;

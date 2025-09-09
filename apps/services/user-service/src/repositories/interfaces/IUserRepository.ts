@@ -1,16 +1,13 @@
 import IBaseRepository from '@/repositories/interfaces/IBaseRepositoryInterface';
-import { UserDocument } from '@/models/user.model';
-import { User } from '@i4you/shared';
+import { User } from '@/entities/user.entity';
 
-interface UserRepository extends IBaseRepository<UserDocument> {
-  findByEmail(email: string): Promise<UserDocument | null>;
+export interface IUserRepository extends IBaseRepository<User> {
+  findByEmail(email: string): Promise<User | null>;
 
   findMany(
-    filter: any,
+    filter: Partial<User>,
     options: { skip: number; limit: number }
-  ): Promise<UserDocument[]>;
+  ): Promise<User[]>;
 
-  count(filter: any): Promise<number>;
+  count(filter: Partial<User>): Promise<number>;
 }
-
-export default UserRepository;
