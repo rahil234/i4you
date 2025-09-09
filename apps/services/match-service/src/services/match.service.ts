@@ -5,8 +5,6 @@ import { UserGrpcService } from '@/services/user.grpc.service';
 import IKafkaService from '@/events/kafka/interfaces/IKafkaService';
 import IMatchRepository from '@/repositories/interfaces/IMatchRepository';
 import ILikeRepository from '@/repositories/interfaces/ILikeRepository';
-import { User } from '@i4you/shared';
-import { MatchDocument } from '@/models/match.model';
 
 @injectable()
 export class MatchService {

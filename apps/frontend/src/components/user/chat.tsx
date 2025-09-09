@@ -32,7 +32,6 @@ export function Chat({ chat, userId, isNewChat }: ChatProps) {
     joinChat,
     sendMessage,
     sendNewChatMessage,
-    markAsRead,
     isTyping,
     startTyping,
     stopTyping,

@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, Send, Check, CheckCheck, Clock, AlertCircleIcon, Phone, Video } from 'lucide-react';
+import { ChevronLeft, Send, Check, CheckCheck, Clock, AlertCircleIcon, Video } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { useDebounce } from '@/hooks/use-debounce';
