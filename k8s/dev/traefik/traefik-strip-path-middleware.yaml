@@ -15,3 +15,4 @@ spec:
       - /api/v1/payment
       - /api/v1/moderation
       - /api/v1/interaction
+      - /api/v1/interaction
