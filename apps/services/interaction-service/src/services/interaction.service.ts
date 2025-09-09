@@ -1,21 +1,27 @@
 import { IInteractionRepository } from '@/repositories/interfaces/IInteractionRepository';
 import { CreateInteractionDTO } from '@/dtos/interaction.dto';
-import { Interaction } from '@/entities/interaction.entity';
 import { createError } from '@i4you/http-errors';
 import { IInteractionService } from '@/services/interfaces/IInteractionService';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '@/types';
+import { INTERACTION } from '@/constants/interactions.constant';
+import { INTERACTION_RESPONSE_MESSAGES } from '@/constants/response-messages.constant';
+import { IKafkaService } from '@/events/kafka/interfaces/IKafkaService';
+import { EVENT_KEYS, EVENT_TOPICS } from '@/constants/events.constant';
 
 @injectable()
 export class InteractionService implements IInteractionService {
   constructor(
     @inject(TYPES.InteractionRepository)
-    private readonly _interactionRepository: IInteractionRepository
+    private _interactionRepository: IInteractionRepository,
+    @inject(TYPES.KafkaService) private _kafkaService: IKafkaService
   ) {}
 
-  async createInteraction(data: CreateInteractionDTO): Promise<Interaction> {
+  async createInteraction(data: CreateInteractionDTO): Promise<void> {
     if (data.fromUserId === data.toUserId) {
-      createError.BadRequest('Cannot interact with yourself');
+      createError.BadRequest(
+        INTERACTION_RESPONSE_MESSAGES.SELF_INTERACTION_NOT_ALLOWED
+      );
     }
 
     const existing = await this._interactionRepository.findByUsers(
@@ -23,9 +29,34 @@ export class InteractionService implements IInteractionService {
       data.toUserId
     );
     if (existing) {
-      createError.BadRequest('Interaction already exists');
+      createError.BadRequest(INTERACTION_RESPONSE_MESSAGES.ALREADY_EXISTS);
     }
 
-    return await this._interactionRepository.create(data);
+    const reciprocal = await this._interactionRepository.create(data);
+
+    if (data.type === INTERACTION.LIKE || data.type === INTERACTION.SUPERLIKE) {
+      if (
+        reciprocal &&
+        (reciprocal.type === INTERACTION.LIKE ||
+          reciprocal.type === INTERACTION.SUPERLIKE)
+      ) {
+        console.log(
+          INTERACTION_RESPONSE_MESSAGES.MATCH_CREATED,
+          data.fromUserId,
+          'and',
+          data.toUserId
+        );
+
+        await this._kafkaService.emit(
+          EVENT_TOPICS.MATCH_EVENTS,
+          EVENT_KEYS.USER_MATCHED,
+          {
+            user1: data.fromUserId,
+            user2: data.toUserId,
+            timestamp: new Date().toISOString(),
+          }
+        );
+      }
+    }
   }
 }

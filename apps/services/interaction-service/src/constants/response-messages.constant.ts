@@ -1,8 +1,6 @@
-export const USER_RESPONSE_MESSAGES = {
-  NOT_FOUND: 'User not found',
-  UPDATED: 'User updated successfully',
-  STATUS_UPDATED: 'User status updated successfully',
-  INVALID_ID: 'Invalid user ID',
-  INVALID_UPDATE_DATA: 'Invalid update data',
+export const INTERACTION_RESPONSE_MESSAGES = {
+  SELF_INTERACTION_NOT_ALLOWED: 'Cannot interact with yourself',
+  ALREADY_EXISTS: 'Interaction already exists',
+  MATCH_CREATED: 'It\'s a match!',
   INTERNAL_ERROR: 'Internal server error',
 } as const;

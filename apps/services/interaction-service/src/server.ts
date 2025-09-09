@@ -8,7 +8,7 @@ const startServer = async () => {
     await initLoaders();
 
     app.listen(env.PORT, () => {
-      console.log(`User Server running on port ${env.PORT}`);
+      console.log(`Interaction Server running on port ${env.PORT}`);
     });
   } catch (err) {
     console.error('Failed to start server:', err);

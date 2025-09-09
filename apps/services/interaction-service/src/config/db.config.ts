@@ -4,7 +4,7 @@ import { env } from '@/config';
 export const connectDB = async () => {
   try {
     const MONGODB_URI = env.MONGODB_URI.concat(
-      '/I4You-userDB',
+      '/I4You-interactionDB',
       '?retryWrites=true&w=majority&appName=i4you-cluster'
     );
     console.log('Connecting to MongoDB:', MONGODB_URI);

@@ -8,12 +8,14 @@ class KafkaClient {
 
   private constructor() {
     this.kafka = new Kafka({
-      clientId: 'user-service',
+      clientId: 'interaction-service',
       brokers: ['kafka-cluster-kafka-brokers.kafka.svc.cluster.local:9092'],
     });
 
     this._producer = this.kafka.producer();
-    this._consumer = this.kafka.consumer({ groupId: 'user-service-group' });
+    this._consumer = this.kafka.consumer({
+      groupId: 'interaction-service-group',
+    });
   }
 
   public static getInstance(): KafkaClient {
