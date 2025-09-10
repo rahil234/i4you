@@ -122,6 +122,16 @@ const matchStore: StateCreator<MatchesStore, [['zustand/devtools', never]]> = (s
       }), undefined, 'matchStore/superLikeUser');
     },
 
+    reFetchMatches: async () => {
+      const { data: matches, error } = await MatchService.getMatches();
+      if (error) {
+        console.log('Error re-fetching matches:', error);
+        set({ error: 'Failed to re-fetch matches' });
+        return;
+      }
+      set({ matches }, undefined, 'matchStore/reFetchMatches');
+    },
+
     dislikeUser: async (userId) => {
       const { error } = await InteractionService.dislikeUser(userId);
 
