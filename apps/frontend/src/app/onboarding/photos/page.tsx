@@ -1,7 +1,7 @@
 'use client';
 import { Upload, X } from 'lucide-react';
 import { OnboardingLayout } from '@/components/onboarding-layout';
-import { useOnboardingStore } from '@/store/onboardingStore';
+import { useOnboardingStore } from '@/store/onboarding-store';
 import mediaService from '@/services/media.service';
 
 export default function OnboardingPhotos() {

@@ -1,52 +1,50 @@
 import { inject, injectable } from 'inversify';
 
 import { TYPES } from '@/types';
-import { UserService } from '@/services/user.service';
 import { handleAsync } from '@/utils/handle-async';
-import { AuthError } from '@/errors/AuthError';
 import OnboardingRequestDTO from '@/dtos/onboarding.request.dtos';
 import UserDTO from '@/dtos/user.dtos';
 import AdminDTO from '@/dtos/admin.dtos';
-import { UserDocument } from '@/models/user.model';
+import { USER_RESPONSE_MESSAGES } from '@/constants/response-messages.constant';
+import { USER_ROLES } from '@/constants/roles.constant';
+import { HTTP_STATUS } from '@/constants/http-status.constant';
+import { IUserService } from '@/services/interfaces/IUserService';
 
 @injectable()
 export class UserController {
-  constructor(@inject(TYPES.UserService) private userService: UserService) {}
+  constructor(@inject(TYPES.UserService) private _userService: IUserService) {}
 
   getUser = handleAsync(async (req, res) => {
     const { id: userId, role } = req.user;
 
-    const user = await this.userService.getUserById(userId, role);
+    const user = await this._userService.getUserById(userId, role);
 
     if (!user) {
-      res.status(404).json({ message: 'User not found' });
+      res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .json({ message: USER_RESPONSE_MESSAGES.NOT_FOUND });
       return;
     }
 
-    const photos = await this.userService.getUserPhotos(String(user._id));
+    const photos = await this._userService.getUserPhotos(user.id);
 
     const data =
-      role === 'admin'
+      role === USER_ROLES.ADMIN
         ? new AdminDTO(user)
-        : new UserDTO(user as UserDocument, photos);
+        : new UserDTO(user, photos);
 
-    res.status(200).json(data);
+    res.status(HTTP_STATUS.OK).json(data);
   });
 
   updateUser = handleAsync(async (req, res) => {
     const { id } = req.user;
     const { data } = req.body;
 
-    if (!id) {
-      res.status(401).json({ message: 'Unauthorized' });
-      return;
-    }
+    const newUser = await this._userService.updateUser(id, data);
 
-    const newUser = await this.userService.updateUser(id, data);
+    const photos = await this._userService.getUserPhotos(newUser.id);
 
-    const photos = await this.userService.getUserPhotos(String(newUser._id));
-
-    res.status(200).json(new UserDTO(newUser, photos));
+    res.status(HTTP_STATUS.OK).json(new UserDTO(newUser, photos));
   });
 
   updateUserStatus = handleAsync(async (req, res) => {
@@ -54,14 +52,11 @@ export class UserController {
 
     const { status } = req.body;
 
-    if (!userId) {
-      res.status(401).json({ message: 'Unauthorized' });
-      return;
-    }
+    await this._userService.updateUserStatus(userId, status);
 
-    await this.userService.updateUserStatus(userId, status);
-
-    res.status(200).json({ message: 'User status updated successfully' });
+    res
+      .status(HTTP_STATUS.OK)
+      .json({ message: USER_RESPONSE_MESSAGES.STATUS_UPDATED });
   });
 
   getUsers = handleAsync(async (req, res) => {
@@ -73,7 +68,7 @@ export class UserController {
       gender = '',
     } = req.query;
 
-    const result = await this.userService.getUsers({
+    const result = await this._userService.getUsers({
       page: Number(page),
       limit: Number(limit),
       search: String(search),
@@ -81,23 +76,20 @@ export class UserController {
       gender: String(gender),
     });
 
-    res.status(200).json(result);
+    res.status(HTTP_STATUS.OK).json(result);
   });
 
   likeUser = handleAsync(async (req, res) => {
     const { userId } = req.params;
 
-    if (!userId) {
-      res.status(401).json({ message: 'Unauthorized' });
-      return;
-    }
-
-    const match = await this.userService.likeUser(userId, req.user.id);
+    const match = await this._userService.likeUser(req.user.id, userId);
 
     if (match) {
-      res.status(200).json(match);
+      res.status(HTTP_STATUS.OK).json(match);
     } else {
-      res.status(404).json({ message: 'No match found' });
+      res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .json({ message: USER_RESPONSE_MESSAGES.NOT_FOUND });
     }
   });
 
@@ -106,8 +98,10 @@ export class UserController {
 
     const userId = req.user.id;
 
-    await this.userService.onBoarding(userId, new OnboardingRequestDTO(data));
+    await this._userService.onBoarding(userId, new OnboardingRequestDTO(data));
 
-    res.status(200).json({ message: 'user onboarded successfully' });
+    res
+      .status(HTTP_STATUS.OK)
+      .json({ message: USER_RESPONSE_MESSAGES.UPDATED });
   });
 }

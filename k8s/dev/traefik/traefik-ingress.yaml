@@ -72,6 +72,22 @@ spec:
                 port:
                   number: 4005
 
+          - path: /api/v1/interaction
+            pathType: Prefix
+            backend:
+              service:
+                name: interaction-service
+                port:
+                  number: 4002
+
+          - path: /api/v1/notification
+            pathType: Prefix
+            backend:
+              service:
+                name: notification-service
+                port:
+                  number: 4006
+
           - path: /api/v1/moderation
             pathType: Prefix
             backend:

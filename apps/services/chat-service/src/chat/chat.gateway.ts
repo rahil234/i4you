@@ -108,14 +108,14 @@ export class ChatGateway implements OnGatewayInit {
       return;
     }
 
-    socket.emit('newChat', new ChatResponseDto(chat, otherUser));
+    socket.emit('newChat', new ChatResponseDto(chat, otherUser, null));
 
     if (newMessage) {
       this.kafkaService.emit('chat.events', {
         type: 'NEW_CHAT',
         recipientId: newUserId,
         data: {
-          chat: new ChatResponseDto(chat, user),
+          chat: new ChatResponseDto(chat, user, null),
           message: new MessageResponseDto(newMessage),
         },
       });
@@ -133,6 +133,7 @@ export class ChatGateway implements OnGatewayInit {
 
     if (!chat) {
       console.log('Creating new chat for user:', userId, 'and chatId:', chatId);
+      // chat = await this.chatService.createChat(userId, chatId);
       throw new Error('Chat not found');
     }
 

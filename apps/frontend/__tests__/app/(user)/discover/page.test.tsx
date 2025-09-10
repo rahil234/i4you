@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import DiscoverPage from 'app/(user)/discover/page';
 
-jest.mock('@/store/matchesStore', () => () => ({
+jest.mock('@/store/matches-store', () => () => ({
   potentialMatches: [
     {
       id: '1',
@@ -33,7 +33,7 @@ jest.mock('@/components/user-profile-card', () => ({
 
 describe('DiscoverPage', () => {
   it('shows loader when loading is true', () => {
-    jest.mock('@/store/matchesStore', () => () => ({
+    jest.mock('@/store/matches-store', () => () => ({
       potentialMatches: [],
       fetchPotentialMatches: jest.fn(),
       loading: true,

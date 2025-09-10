@@ -19,8 +19,11 @@ const nextConfig = {
 const pwaConfig = pwa({
   dest: 'public',
   register: true,
-  disable: process.env.NODE_ENV === 'development',
+  swSrc: "service-worker/sw.js",
   skipWaiting: true,
+  clientsClaim: true,
+  disable: process.env.NODE_ENV === 'development',
+  buildExcludes: [/app-build-manifest\.json$/],
 });
 
 export default pwaConfig(nextConfig);

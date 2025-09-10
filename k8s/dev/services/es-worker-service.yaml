@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: es-worker-service
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: es-worker-service
+  template:
+    metadata:
+      labels:
+        app: es-worker-service
+        version: v1
+    spec:
+      containers:
+        - name: es-worker-service
+          image: es-worker-service-image
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 4010
+          env:
+            - name: NODE_ENV
+              value: "development"
+            - name: PORT
+              value: "4011"
+            - name: MONGODB_URI
+              value: "mongodb+srv://rahilsardar234:NOKCk3dcykTN0P32@i4you-cluster.kdpj0cj.mongodb.net/I4You-userDB"
+            - name: REDIS_HOST
+              value: "redis.redis.svc.cluster.local"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_PASSWORD
+              value: "password"
+            - name: KAFKA_BROKER
+              value: "kafka-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
+            - name: KAFKA_TOPIC
+              value: "user.events"
+            - name: ES_URL
+              value: "http://elastic-es-http.elastic-system.svc.cluster.local:9200"
+            - name: ES_API_KEY
+              value: "OWFPT2pwZ0JzRmNxVXhoam0wQ0E6bzNvZ1QtcnFoTFAyVjF2VWZoTWdnUQ=="
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: es-worker-service
+  namespace: app
+spec:
+  type: ClusterIP
+  selector:
+    app: es-worker-service
+  ports:
+    - port: 4011
+      targetPort: 4011

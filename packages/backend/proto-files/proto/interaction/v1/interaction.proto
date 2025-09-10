@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package interaction.v1;
+
+service InteractionService {
+  rpc GetAlreadyInteractedUsers(GetAlreadyInteractedUsersRequest) returns (GetAlreadyInteractedUsersResponse);
+}
+
+message GetAlreadyInteractedUsersRequest {
+  string userId = 1;
+}
+
+message GetAlreadyInteractedUsersResponse {
+  repeated string usersIds = 1;
+}

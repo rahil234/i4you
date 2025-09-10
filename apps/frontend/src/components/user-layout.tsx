@@ -10,7 +10,7 @@ interface UserLayoutProps {
 
 export function UserLayout({ children, className, hideNavigation = false }: UserLayoutProps) {
   return (
-    <div className={cn("min-h-screen bg-gray-50", className)}>
+    <div className={cn("bg-background", className)}>
       <main
         className={cn(
           hideNavigation && "pb-0 overflow-hidden",

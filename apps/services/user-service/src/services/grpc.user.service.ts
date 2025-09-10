@@ -16,22 +16,23 @@ import { UserService } from '@/services/user.service';
 
 const userService = container.get(TYPES.UserService) as UserService;
 
-export class userGrpcService implements UserServiceServer {
+export class UserGrpcService implements UserServiceServer {
   [name: string]: UntypedHandleCall;
 
   getUserById: handleUnaryCall<GetUserByIdRequest, GetUserByIdResponse> =
     async (call, callback) => {
       try {
         const user = await userService.getUserById(call.request.id, 'member');
+
         if (!user) {
           callback({ code: 13, message: 'User not found' }, null);
           return;
         }
 
-        const photos = await userService.getUserPhotos(user._id.toString());
+        const photos = await userService.getUserPhotos(user.id.toString());
 
         const userData = {
-          id: user._id.toString(),
+          id: user.id.toString(),
           name: user.name,
           email: user.email,
           createdAt: new Date(user.createdAt).toISOString(),
@@ -49,8 +50,9 @@ export class userGrpcService implements UserServiceServer {
         };
 
         callback(null, userData);
-      } catch (err: any) {
-        callback({ code: 13, message: err.message, stack: err.stack });
+      } catch (err) {
+        if (err instanceof Error)
+          callback({ code: 13, message: err.message, stack: err.stack });
       }
     };
 
@@ -59,10 +61,7 @@ export class userGrpcService implements UserServiceServer {
     GetUserByEmailResponse
   > = async (call, callback) => {
     try {
-      const user = await userService.getUserByEmail(
-        call.request.email,
-        'member'
-      );
+      const user = await userService.getUserByEmail(call.request.email);
 
       if (!user) {
         callback({ code: 5, message: 'No User Exists' }, null);
@@ -89,8 +88,9 @@ export class userGrpcService implements UserServiceServer {
       console.log('getUserByEmail response:', userData);
 
       callback(null, userData);
-    } catch (err: any) {
-      callback({ code: 13, message: err.message, stack: err.stack });
+    } catch (err) {
+      if (err instanceof Error)
+        callback({ code: 13, message: err.message, stack: err.stack });
     }
   };
 
@@ -121,20 +121,21 @@ export class userGrpcService implements UserServiceServer {
         onboardingCompleted: user.onboardingCompleted || false,
         status: user.status,
       });
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error in createUser:', err);
+      if (err instanceof Error && 'statusCode' in err) {
+        if (err.statusCode === 409) {
+          return callback({
+            code: 6,
+            message: 'User already exists with this email',
+          });
+        }
 
-      if (err.statusCode === 409) {
-        return callback({
-          code: 6, // ALREADY_EXISTS
-          message: 'User already exists with this email',
+        callback({
+          code: 13,
+          message: err.message || 'Internal server error',
         });
       }
-
-      callback({
-        code: 13, // INTERNAL
-        message: err.message || 'Internal server error',
-      });
     }
   };
 

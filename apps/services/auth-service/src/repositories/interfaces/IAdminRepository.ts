@@ -1,4 +1,4 @@
-import IBaseRepository from '@/repositories/interfaces/IBaseRepositoryInterface';
+import { IBaseRepository } from '@/repositories/interfaces/IBaseRepositoryInterface';
 import { AdminDocument } from '@/models/admin.model';
 
 interface AdminRepository extends IBaseRepository<AdminDocument> {

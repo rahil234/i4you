@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useOnboardingStore, type OnboardingStep } from '@/store/onboardingStore';
+import { useOnboardingStore, type OnboardingStep } from '@/store/onboarding-store';
 import { LoadScript } from '@react-google-maps/api';
 
 interface OnboardingLayoutProps {

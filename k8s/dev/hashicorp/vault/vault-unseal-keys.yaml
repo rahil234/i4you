@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vault-unseal-keys
+  namespace: vault
+type: Opaque
+data:
+  unseal-keys.txt: ZTMyMjlhNzZlNjUzNTU0Yzg0MDRiZDA3YTQxZmQ1NzY0YmQwZWZjZTk0ZWRiZDJmNWFlOGJmODJiMmVmNTZhYQo=

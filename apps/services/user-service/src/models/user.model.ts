@@ -1,9 +1,26 @@
 import mongoose, { Schema, Document, ObjectId } from 'mongoose';
-import { User } from '@i4you/shared';
 
-export interface UserDocument
-  extends Omit<User, 'id' | 'createdAt' | 'updatedAt'>,
-    Document<ObjectId> {
+export interface UserDocument extends Document<ObjectId> {
+  name: string;
+  gender: 'male' | 'female' | 'other';
+  bio: string;
+  interests: string[];
+  age: number;
+  email: string;
+  password: string;
+  onboardingCompleted: boolean;
+  preferences: {
+    ageRange: [number, number];
+    distance: number;
+    lookingFor: 'casual' | 'relationship' | 'friendship' | 'all';
+    showMe: 'male' | 'female' | 'all';
+  };
+  location: {
+    type: 'Point';
+    coordinates: [number, number];
+    displayName: string;
+  };
+  status: 'active' | 'suspended';
   createdAt: Date;
   updatedAt: Date;
 }
@@ -34,10 +51,6 @@ const userSchema = new Schema<UserDocument>(
     preferences: {
       ageRange: { type: [Number] },
       distance: { type: Number },
-      gender: {
-        type: String,
-        enum: ['male', 'female', 'other'],
-      },
       showMe: { type: String, enum: ['male', 'female', 'all'] },
       lookingFor: {
         type: String,

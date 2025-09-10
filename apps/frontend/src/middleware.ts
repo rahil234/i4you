@@ -6,6 +6,7 @@ export async function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
 
   const publicExactPaths = [
+    '/manifest.json',
     '/login',
     '/forgot-password',
     '/login-with-otp',
@@ -19,7 +20,7 @@ export async function middleware(request: NextRequest) {
     '/clear-token',
   ];
 
-  const publicPathStartsWith = ['/_next', '/api', '/onboarding'];
+  const publicPathStartsWith = ['/_next', '/api', '/onboarding', '/icons', '/screenshots', '/sw.js'];
 
   if (
     publicExactPaths.includes(pathname) ||

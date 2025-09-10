@@ -18,9 +18,6 @@ export class UserGrpcService {
         { id },
         (err: any, response: GetUserByIdResponse) => {
           if (err) return reject(err);
-
-          console.log('getUserById response:', response);
-
           resolve(response);
         }
       );

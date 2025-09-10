@@ -11,7 +11,7 @@ export interface ChatPreview {
     isOnline?: boolean;
     lastActive?: string;
   };
-  messages: Message[];
+  lastMessage: Message | null;
   unreadCount: number;
 }
 
@@ -25,10 +25,15 @@ export class ChatResponseDto implements ChatPreview {
     isOnline?: boolean;
     lastActive?: string;
   };
-  messages: Message[];
+  lastMessage: Message | null;
   unreadCount: number;
 
-  constructor(chat: Chat, user: User, messages: Message[] = []) {
+  constructor(
+    chat: Chat,
+    user: User,
+    lastMessage: Message | null,
+    unreadCount = 0,
+  ) {
     this.id = String(chat.id);
     this.participant = {
       id: user.id,
@@ -41,7 +46,7 @@ export class ChatResponseDto implements ChatPreview {
       isOnline: true,
       lastActive: 'Not Implemented',
     };
-    this.messages = messages;
-    this.unreadCount = 2;
+    this.lastMessage = lastMessage ? lastMessage : null;
+    this.unreadCount = unreadCount;
   }
 }

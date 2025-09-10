@@ -3,21 +3,17 @@ import { inject, injectable } from 'inversify';
 import { createError } from '@i4you/http-errors';
 
 import { TYPES } from '@/types';
-import { AuthService } from '@/services/auth.service';
 import { handleAsync } from '@/utils/handle-async';
 import {
   clearAuthCookie,
   setAccessCookie,
   setRefreshCookie,
 } from '@/utils/cookie';
-import { UserGrpcService } from '@/services/user.grpc.service';
+import { IAuthService } from '@/services/interfaces/IAuthService';
 
 @injectable()
 export class AuthController {
-  constructor(
-    @inject(TYPES.AuthService) private authService: AuthService,
-    @inject(TYPES.UserGrpcService) private userGrpcService: UserGrpcService
-  ) {}
+  constructor(@inject(TYPES.AuthService) private authService: IAuthService) {}
 
   login = handleAsync(async (req, res) => {
     const { accessToken, refreshToken, user } = await this.authService.login(

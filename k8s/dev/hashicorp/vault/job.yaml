@@ -1,0 +1,72 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: vault-setup-job
+  namespace: vault
+spec:
+  template:
+    spec:
+      serviceAccountName: vault
+      restartPolicy: OnFailure
+      containers:
+        - name: vault-setup
+          image: hashicorp/vault:1.20.1
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              
+              vault status || true
+              
+              # Unseal Vault (repeat until unsealed)
+              echo "Unsealing Vault..."
+              for key in $(cat /vault/unseal/unseal-keys.txt); do
+                vault operator unseal "$key"
+              done
+
+              echo "Checking if Vault is unsealed..."
+              vault status
+
+              # Login with root token
+              vault login $(cat /vault/userconfig/root-token/root-token.txt)
+
+              # Enable Kubernetes auth if not already enabled
+              vault auth enable kubernetes || true
+
+              # Configure Kubernetes auth method
+              vault write auth/kubernetes/config \
+                token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
+                kubernetes_host="https://${KUBERNETES_PORT_443_TCP_ADDR}:443" \
+                kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+
+              # Create a policy for external-secrets
+              vault policy write external-secrets - <<EOF
+              path "i4you/data/*" {
+                capabilities = ["read"]
+              }
+              EOF
+
+              # Create a role that binds service account to policy
+              vault write auth/kubernetes/role/external-secrets-role \
+                bound_service_account_names=external-secrets-sa \
+                bound_service_account_namespaces=external-secrets \
+                policies=external-secrets \
+                ttl=24h
+          env:
+            - name: VAULT_ADDR
+              value: http://vault.vault.svc.cluster.local:8200
+          volumeMounts:
+            - name: vault-root-token
+              mountPath: /vault/userconfig/root-token
+              readOnly: true
+            - name: vault-unseal-keys
+              mountPath: /vault/unseal
+              readOnly: true
+      volumes:
+        - name: vault-root-token
+          secret:
+            secretName: vault-root-token
+        - name: vault-unseal-keys
+          secret:
+            secretName: vault-unseal-keys

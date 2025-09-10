@@ -1,4 +1,5 @@
 'use client';
+
 import { UserLayout } from '@/components/user-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,18 +12,18 @@ import {
   Edit,
   MapPin,
   MessageCircle,
-  Gift,
+  // Gift,
   Camera,
-  Instagram,
-  Twitter,
-  Facebook,
+  // Instagram,
+  // Twitter,
+  // Facebook,
   Share2,
   Shield,
   Award,
   Eye,
   BadgeCheck,
 } from 'lucide-react';
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore } from '@/store/auth-store';
 import { useRouter } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -74,7 +75,7 @@ export default function ProfilePage() {
       <div className="max-w-lg mx-auto pb-20 pt-6 px-4">
         {/* Header with profile actions */}
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold dark:text-black">My Profile</h1>
+          <h1 className="text-2xl font-bold text-foreground">My Profile</h1>
           <div className="flex space-x-2">
             <Button variant="outline" size="icon" onClick={() => router.push('/settings')}>
               <Settings className="h-4 w-4" />
@@ -286,30 +287,30 @@ export default function ProfilePage() {
         </Tabs>
 
         {/* Social connections */}
-        <Card className="mb-6">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg flex items-center">
-              <Gift className="h-4 w-4 mr-2 text-primary" />
-              Connect More
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-3 gap-3">
-              <Button variant="outline" className="flex flex-col h-auto py-3">
-                <Instagram className="h-5 w-5 mb-1 text-pink-500" />
-                <span className="text-xs">Instagram</span>
-              </Button>
-              <Button variant="outline" className="flex flex-col h-auto py-3">
-                <Facebook className="h-5 w-5 mb-1 text-blue-600" />
-                <span className="text-xs">Facebook</span>
-              </Button>
-              <Button variant="outline" className="flex flex-col h-auto py-3">
-                <Twitter className="h-5 w-5 mb-1 text-blue-400" />
-                <span className="text-xs">Twitter</span>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+        {/*<Card className="mb-6">*/}
+        {/*  <CardHeader className="pb-2">*/}
+        {/*    <CardTitle className="text-lg flex items-center">*/}
+        {/*      <Gift className="h-4 w-4 mr-2 text-primary" />*/}
+        {/*      Connect More*/}
+        {/*    </CardTitle>*/}
+        {/*  </CardHeader>*/}
+        {/*  <CardContent>*/}
+        {/*    <div className="grid grid-cols-3 gap-3">*/}
+        {/*      <Button variant="outline" className="flex flex-col h-auto py-3">*/}
+        {/*        <Instagram className="h-5 w-5 mb-1 text-pink-500" />*/}
+        {/*        <span className="text-xs">Instagram</span>*/}
+        {/*      </Button>*/}
+        {/*      <Button variant="outline" className="flex flex-col h-auto py-3">*/}
+        {/*        <Facebook className="h-5 w-5 mb-1 text-blue-600" />*/}
+        {/*        <span className="text-xs">Facebook</span>*/}
+        {/*      </Button>*/}
+        {/*      <Button variant="outline" className="flex flex-col h-auto py-3">*/}
+        {/*        <Twitter className="h-5 w-5 mb-1 text-blue-400" />*/}
+        {/*        <span className="text-xs">Twitter</span>*/}
+        {/*      </Button>*/}
+        {/*    </div>*/}
+        {/*  </CardContent>*/}
+        {/*</Card>*/}
 
         {/* Membership card */}
         <Card className="mb-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white">

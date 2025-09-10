@@ -1,8 +1,8 @@
-import { LikeModel, LikeDocument } from '@/models/like.model';
-import { BaseRepository } from '@/repositories/base.repository';
-import ILikeRepository from '@/repositories/interfaces/ILikeRepository';
-import { injectable } from 'inversify';
 import mongoose from 'mongoose';
+import { injectable } from 'inversify';
+import { ILikeRepository } from '@/repositories/interfaces/ILikeRepository';
+import { BaseRepository } from '@/repositories/base.repository';
+import { LikeModel, LikeDocument } from '@/models/like.model';
 
 @injectable()
 export class LikeRepository

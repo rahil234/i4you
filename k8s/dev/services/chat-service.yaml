@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-service
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chat-service
+  template:
+    metadata:
+      labels:
+        app: chat-service
+        version: v1
+    spec:
+      containers:
+        - name: chat-service
+          image: chat-service-image:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 4004
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "4004"
+            - name: USER_GRPC_SERVER_URL
+              value: "user-service:50051"
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: MONGODB_URI
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chat-service
+  namespace: app
+spec:
+  type: ClusterIP
+  selector:
+    app: chat-service
+  ports:
+    - port: 4004
+      targetPort: 4004

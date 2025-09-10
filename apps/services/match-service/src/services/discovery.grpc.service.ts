@@ -1,17 +1,10 @@
 import { injectable, inject } from 'inversify';
-import { TYPES } from '@/types';
+import { GetMatchesRequest, Match, TYPES } from '@/types';
 import { DiscoveryGrpcProvider } from '@/providers/discovery.grpc.provider';
-import { GetPotentialMatchesResponse } from '@i4you/proto-files/discovery/v2';
-import { Preferences, Location } from '@i4you/proto-files/user/v2';
-
-interface GetMatchesRequest {
-  preferences: Preferences;
-  location: Location;
-  excludeUserIds?: string[];
-}
+import { IDiscoveryService } from '@/services/interfaces/IDiscoveryService';
 
 @injectable()
-export class DiscoveryGrpcService {
+export class DiscoveryGrpcService implements IDiscoveryService {
   constructor(
     @inject(TYPES.DiscoveryGrpcProvider)
     private discoveryServiceClient: DiscoveryGrpcProvider
@@ -21,7 +14,7 @@ export class DiscoveryGrpcService {
     preferences,
     location,
     excludeUserIds = [],
-  }: GetMatchesRequest): Promise<GetPotentialMatchesResponse> {
+  }: GetMatchesRequest): Promise<Match[]> {
     return new Promise((resolve, reject) => {
       this.discoveryServiceClient.getPotentialMatches(
         {
@@ -30,13 +23,13 @@ export class DiscoveryGrpcService {
           lookingFor: preferences.lookingFor,
           minAge: preferences.ageRange[0],
           maxAge: preferences.ageRange[1],
-          locationLat: location.coordinates[0],
-          locationLng: location.coordinates[1],
+          locationLng: location.coordinates[0],
+          locationLat: location.coordinates[1],
           excludeUserIds,
         },
         (err, response) => {
           if (err) return reject(err);
-          resolve(response);
+          resolve(response.matches as unknown as Match[]);
         }
       );
     });

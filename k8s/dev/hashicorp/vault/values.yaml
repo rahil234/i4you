@@ -1,7 +1,36 @@
+injector:
+  enabled: false
+
 server:
   dev:
-    enabled: true
-  ui:
-    enabled: true
-    serviceType: "ClusterIP"
-    externalPort: 8200
+    enabled: false
+
+    extraContainers:
+      - name: vault-k8s-setup
+        image: hashicorp/vault:1.17.3
+        env:
+          - name: VAULT_ADDR
+            value: http://127.0.0.1:8200
+        command:
+          - /bin/sh
+          - -c
+          - |
+            vault auth enable kubernetes || true
+            vault policy write myapp-policy - <<EOF
+            path "secret/data/myapp/*" {
+              capabilities = ["read"]
+            }
+            EOF
+            vault write auth/kubernetes/role/myapp \
+              bound_service_account_names=myapp-sa \
+              bound_service_account_namespaces=default \
+              policies=myapp-policy \
+              ttl=1h
+        volumeMounts:
+          - name: vault-config
+            mountPath: /vault/config
+
+ui:
+  enabled: true
+  serviceType: "ClusterIP"
+  externalPort: 8200

@@ -128,7 +128,6 @@ let socketClient: SocketIOClient | null = null;
 
 export function getSocketClient() {
   if (!socketClient) {
-    console.log('Creating new SocketIOClient instance');
     socketClient = new SocketIOClient('https://i4you.local.net', {
       path: '/socket.io/chat',
       transports: ['websocket'],

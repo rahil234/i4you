@@ -2,8 +2,7 @@
 
 import { User } from '@i4you/shared';
 
-
-export async function getUser(accessToken: string): Promise<User> {
+export async function getUser(accessToken: string): Promise<Omit<User, 'location'> & { location: string, onboarding: boolean }> {
   try {
 
     const API_URL = process.env.NEXT_PRIVATE_API_URL;
@@ -18,8 +17,6 @@ export async function getUser(accessToken: string): Promise<User> {
       },
       cache: 'no-store',
     });
-
-    console.log(`Fetching user data from ${API_URL}/api/v1/user/me, response`, res);
 
     if (!res.ok) {
       throw new Error(`Failed to fetch user data: ${res.status} ${res.statusText}`);

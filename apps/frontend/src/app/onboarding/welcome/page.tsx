@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Flame } from "lucide-react"
 import { OnboardingLayout } from "@/components/onboarding-layout"
-import { useOnboardingStore } from "@/store/onboardingStore"
+import { useOnboardingStore } from "@/store/onboarding-store"
 
 export default function OnboardingWelcome() {
   const router = useRouter()

@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
-import { useOnboardingStore } from '@/store/onboardingStore';
+import { useOnboardingStore } from '@/store/onboarding-store';
 
 export default function OnboardingComplete() {
   const router = useRouter();

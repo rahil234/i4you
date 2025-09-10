@@ -55,7 +55,6 @@ export default function SettingsPage() {
             </div>
           </RadioGroup>
         </div>
-
       </div>
     </UserLayout>
   );

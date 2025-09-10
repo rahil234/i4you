@@ -3,9 +3,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { OnboardingLayout } from '@/components/onboarding-layout';
-import { useOnboardingStore } from '@/store/onboardingStore';
+import { useOnboardingStore } from '@/store/onboarding-store';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import useAuthStore from '@/store/authStore';
+import { useAuthStore } from '@/store/auth-store';
 import { useEffect } from 'react';
 
 export default function OnboardingAbout() {

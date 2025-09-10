@@ -10,6 +10,9 @@ spec:
       - /api/v1/auth
       - /api/v1/media
       - /api/v1/match
+      - /api/v1/notification
       - /api/v1/chat
       - /api/v1/payment
       - /api/v1/moderation
+      - /api/v1/interaction
+      - /api/v1/interaction

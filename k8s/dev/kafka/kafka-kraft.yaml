@@ -41,6 +41,11 @@ spec:
         port: 9094
         type: nodeport
         tls: false
+        configuration:
+          brokers:
+            - broker: 0
+              advertisedHost: localhost
+              advertisedPort: 9092
       - name: tls
         port: 9093
         type: internal

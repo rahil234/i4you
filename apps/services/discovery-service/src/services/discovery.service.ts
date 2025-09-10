@@ -6,36 +6,15 @@ import elastic from '@/config/elastic';
 export class DiscoveryService {
 
   async getPotentialMatches(data: GetPotentialMatchesRequest): Promise<GetPotentialMatchesResponse> {
-
-    console.log('Received getPotentialMatches request:', data);
-
-    // const result = await elastic.search({
-    //   index: 'users',
-    //   query: {
-    //     bool: {
-    //       must: [
-    //         { match: { gender: preferences.gender } },
-    //         {
-    //           range: {
-    //             age: {
-    //               gte: preferences.ageRange[0],
-    //               lte: preferences.ageRange[1],
-    //             },
-    //           },
-    //         },
-    //       ],
-    //     },
-    //   },
-    // });
-
     const result = await elastic.search({
       index: 'users',
       _source: ['id', 'name', 'email', 'gender', 'interests', 'age', 'photos', 'location'],
       _source_excludes: ['location._id'],
       query: {
         bool: {
-          must: [
-            ...(data.showMe ? [{ match: { gender: data.showMe } }] : []),
+          filter: [
+            ...(data.showMe && data.showMe !== 'all' ? [{ term: { gender: data.showMe } }] : []),
+            ...(data.lookingFor && data.lookingFor !== 'all' ? [{ term: { 'preferences.lookingFor': data.lookingFor } }] : []),
             {
               range: {
                 age: {
@@ -44,13 +23,16 @@ export class DiscoveryService {
                 },
               },
             },
-          ],
-          filter: {
-            geo_distance: {
-              distance: `${data.maxDistance * 1000}km`,
-              'location.coordinates': [data.locationLng, data.locationLat],
+            {
+              geo_distance: {
+                distance: `${data.maxDistance}km`,
+                'location.coordinates': {
+                  lon: data.locationLng,
+                  lat: data.locationLat,
+                },
+              },
             },
-          },
+          ],
           must_not: [
             {
               terms: {
@@ -63,9 +45,10 @@ export class DiscoveryService {
       script_fields: {
         distance: {
           script: {
+            lang: 'painless',
             params: {
-              lat: data.locationLat,
               lon: data.locationLng,
+              lat: data.locationLat,
             },
             source: 'doc[\'location.coordinates\'].arcDistance(params.lat, params.lon)',
           },
@@ -73,14 +56,13 @@ export class DiscoveryService {
       },
     });
 
-    const hits = result.hits.hits.map((hit: any) => {
-      return {
+    const hits = result.hits.hits.map((hit: any) => (
+      {
         ...hit._source,
-        distance: hit.fields.distance ? hit.fields.distance[0] / 1000 / 1000 : 0,
-      };
-    });
-
-    console.log('Filtered Hits:', hits);
+        photos: [],
+        distance: hit.fields.distance ? (hit.fields.distance[0] * 0.001) : undefined,
+      }
+    ));
 
     return {
       matches: hits,

@@ -8,3 +8,4 @@ plugins:
     types:
       - "user.v2"
       - "discovery.v2"
+      - "interaction.v1"

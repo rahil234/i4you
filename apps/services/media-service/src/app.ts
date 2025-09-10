@@ -6,6 +6,7 @@ import mediaRoutes from '@/routes/media.routes';
 import { errorHandlerMiddleware } from '@/middlwares/error-handler.middleware';
 import setupSwaggerDocs, { swaggerSpec } from '@/config/swagger.config';
 import { requestLogger } from '@/middlwares/request-logger.middleware';
+import { connectRedis } from '@/config/redis.config';
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use(errorHandlerMiddleware);
 setupSwaggerDocs(app);
 
 const startServer = async () => {
+  await connectRedis();
   app.listen(env.PORT);
 };
 

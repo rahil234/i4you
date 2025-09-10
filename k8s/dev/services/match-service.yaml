@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: match-service
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: match-service
+  template:
+    metadata:
+      labels:
+        app: match-service
+        version: v1
+    spec:
+#      initContainers:
+#        - name: wait-for-kafka
+#          image: busybox
+#          command:
+#            - sh
+#            - -c
+#            - |
+#              echo "Waiting for Kafka DNS to resolve..."
+#              until nslookup kafka-cluster-kafka-brokers.kafka.svc.cluster.local; do
+#                echo "Still waiting for Kafka..."
+#                sleep 2
+#              done
+      containers:
+        - name: match-service
+          image: match-service-image:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 4005
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "4005"
+            - name: USER_GRPC_SERVER_URL
+              value: "user-service:50051"
+            - name: DISCOVERY_GRPC_SERVER_URL
+              value: "discovery-service:50052"
+            - name: INTERACTION_GRPC_SERVER_URL
+              value: "interaction-service:50051"
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: MONGODB_URI
+            - name: REDIS_HOST
+              value: "redis.redis-local.svc.cluster.local"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_PASSWORD
+              value: "password"
+            - name: KAFKAJS_NO_PARTITIONER_WARNING
+              value: "1"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: match-service
+  namespace: app
+spec:
+  type: ClusterIP
+  selector:
+    app: match-service
+  ports:
+    - name: http
+      port: 4005
+      targetPort: 4005
+    - name: grpc
+      port: 50055
+      targetPort: 50055
