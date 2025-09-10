@@ -9,7 +9,7 @@ import ChatWindow from '@/components/user/chat/chat-window';
 import ConversationsList from '@/components/user/chat/conversations-list';
 
 export default function ChatPage({ params }: { params: Promise<{ id: string }> }) {
-  const { initiateChatUser, joinChat, setCurrentChat, markAsRead, chats, currentChat, isLoading } = useChatStore();
+  const { initiateChatUser, chats, currentChat, isLoading } = useChatStore();
   const [isNewChat, setIsNewChat] = useState(true);
 
   const [chat, setChat] = useState(currentChat);

@@ -41,6 +41,8 @@ spec:
               value: "user-service:50051"
             - name: DISCOVERY_GRPC_SERVER_URL
               value: "discovery-service:50052"
+            - name: INTERACTION_GRPC_SERVER_URL
+              value: "interaction-service:50051"
             - name: MONGODB_URI
               valueFrom:
                 secretKeyRef:

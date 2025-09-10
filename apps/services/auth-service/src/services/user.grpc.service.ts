@@ -7,9 +7,10 @@ import {
 import { TYPES } from '@/types';
 import { GrpcClientProvider } from '@/providers/grpc.client.provider';
 import { User } from '@i4you/shared';
+import { IUserService } from '@/services/interfaces/IUserService';
 
 @injectable()
-export class UserGrpcService {
+export class UserGrpcService implements IUserService {
   constructor(
     @inject(TYPES.GrpcClientProvider) private client: GrpcClientProvider
   ) {}

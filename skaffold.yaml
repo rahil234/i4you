@@ -171,6 +171,14 @@ profiles:
                 dest: .
           docker:
             dockerfile: Dockerfile.dev
+        - image: interaction-service-image
+          context: apps/services/interaction-service
+          sync:
+            manual:
+              - src: src/**/*
+                dest: .
+          docker:
+            dockerfile: Dockerfile.dev
         - image: discovery-service-image
           context: apps/services/discovery-service
           sync:
@@ -228,6 +236,7 @@ profiles:
         - k8s/dev/es-worker-service.yaml
         - k8s/dev/moderation-service.yaml
         - k8s/dev/notification-service.yaml
+        - k8s/dev/services/interaction-service.yaml
         - k8s/dev/payment-service.yaml
         - k8s/dev/stripe-webhook-handler.yaml
         - k8s/dev/frontend.yaml
