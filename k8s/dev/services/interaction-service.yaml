@@ -26,8 +26,6 @@ spec:
               value: "development"
             - name: PORT
               value: "4002"
-            - name: USER_SERVER_URL
-              value: "http://interaction-service:3000"
             - name: GRPC_PORT
               value: "50051"
             - name: MONGODB_URI

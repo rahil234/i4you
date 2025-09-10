@@ -1,6 +1,6 @@
 import { MatchModel, MatchDocument } from '@/models/match.model';
 import { BaseRepository } from '@/repositories/base.repository';
-import IMatchRepository from '@/repositories/interfaces/IMatchRepository';
+import { IMatchRepository } from '@/repositories/interfaces/IMatchRepository';
 import { injectable } from 'inversify';
 import mongoose from 'mongoose';
 
@@ -53,7 +53,7 @@ export class MatchRepository
       status: 'matched',
     });
 
-    return !!match;
+    return Boolean(match);
   }
 
   async getBlockedMatches(userId: string): Promise<MatchDocument[]> {

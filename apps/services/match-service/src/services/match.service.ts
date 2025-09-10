@@ -1,27 +1,33 @@
 import { injectable, inject } from 'inversify';
-import { Match, TYPES } from '@/types';
-import { DiscoveryGrpcService } from '@/services/discovery.grpc.service';
-import { UserGrpcService } from '@/services/user.grpc.service';
-import IKafkaService from '@/events/kafka/interfaces/IKafkaService';
-import IMatchRepository from '@/repositories/interfaces/IMatchRepository';
-import ILikeRepository from '@/repositories/interfaces/ILikeRepository';
+import { Match, MatchEventPayload, TYPES } from '@/types';
+import { IKafkaService } from '@/events/kafka/interfaces/IKafkaService';
+import { IMatchRepository } from '@/repositories/interfaces/IMatchRepository';
+import { createError } from '@i4you/http-errors';
+import { EVENT_KEYS, EVENT_TOPICS } from '@/constants/events.constant';
+import { IMatchService } from '@/services/interfaces/IMatchService';
+import { IInteractionService } from '@/services/interfaces/IInteractionService';
+import { IUserService } from '@/services/interfaces/IUserService';
+import { IDiscoveryService } from '@/services/interfaces/IDiscoveryService';
 
 @injectable()
-export class MatchService {
+export class MatchService implements IMatchService {
   constructor(
+    @inject(TYPES.MatchRepository) private _matchRepository: IMatchRepository,
+    @inject(TYPES.InteractionService)
+    private _interactionService: IInteractionService,
+    @inject(TYPES.UserGrpcService) private userGrpcService: IUserService,
     @inject(TYPES.KafkaService) private kafkaService: IKafkaService,
-    @inject(TYPES.MatchRepository) private matchRepository: IMatchRepository,
-    @inject(TYPES.LikeRepository) private likeRepository: ILikeRepository,
-    @inject(TYPES.UserGrpcService) private userGrpcService: UserGrpcService,
     @inject(TYPES.DiscoveryGrpcService)
-    private discoverGrpcService: DiscoveryGrpcService
+    private discoverGrpcService: IDiscoveryService
   ) {}
 
   async getMatches(userId: string): Promise<Match[]> {
     try {
-      const matches = await this.matchRepository.getMatches(userId);
+      const matches = await this._matchRepository.getMatches(userId);
 
-      const populatedMatches = await Promise.all(
+      // TODO: Add pagination and sorting
+      // @ts-expect-error some properties are optional
+      return Promise.all(
         matches.map(async (match) => {
           const matchId = String(
             String(match.userA) === userId ? match.userB : match.userA
@@ -45,22 +51,17 @@ export class MatchService {
           };
         })
       );
-
-      // TODO: Add pagination and sorting
-      // @ts-expect-error some properties are optional
-      return populatedMatches;
     } catch (error) {
       console.error('Error fetching matches:', error);
       throw error;
     }
   }
 
-  async getPotentialMatches(userId: string) {
+  async getPotentialMatches(userId: string): Promise<Match[]> {
     const user = await this.userGrpcService.findUserById(userId);
 
-    const likedUserIds = (await this.likeRepository.getLikesSent(userId)).map(
-      (d) => d.toUserId.toString()
-    );
+    const likedUserIds =
+      await this._interactionService.getInteractedUserIds(userId);
 
     const excludeUserIds = [userId, ...likedUserIds];
 
@@ -68,82 +69,81 @@ export class MatchService {
 
     console.log('Fetching potential matches for user:', user.location);
 
-    const { matches } = await this.discoverGrpcService.getMatches({
+    return this.discoverGrpcService.getMatches({
       preferences: user.preferences!,
       location: user.location!,
       excludeUserIds,
     });
-
-    return matches;
   }
 
-  async handleLike(userId: string, likedUserId: string): Promise<void> {
-    console.log(`User ${userId} liked user ${likedUserId}`);
+  async userMatched(userA: string, userB: string) {
+    const user1 = await this.userGrpcService.findUserById(userA);
+    const user2 = await this.userGrpcService.findUserById(userB);
 
-    try {
-      const isMutual = await this.likeRepository.checkIfUserLiked(
-        likedUserId,
-        userId
-      );
-
-      if (isMutual) {
-        const alreadyMatched = await this.matchRepository.isMatchExists(
-          userId,
-          likedUserId
-        );
-
-        if (alreadyMatched) {
-          console.log(
-            `✅ Match already exists between ${userId} and ${likedUserId}`
-          );
-          const isLiked = await this.likeRepository.checkIfUserLiked(
-            userId,
-            likedUserId
-          );
-          if (!isLiked) {
-            await this.likeRepository.saveLike(userId, likedUserId);
-          }
-          return;
-        }
-
-        await this.likeRepository.saveLike(userId, likedUserId);
-
-        const match = await this.matchRepository.createMatch(
-          userId,
-          likedUserId
-        );
-
-        await this.kafkaService.emit('match.events', 'match_found', {
-          user1: userId,
-          user2: likedUserId,
-          matchId: match.id,
-          timestamp: new Date().toISOString(),
-        });
-
-        console.log(`✅ Match created between ${userId} and ${likedUserId}`);
-      } else {
-        await this.likeRepository.saveLike(userId, likedUserId);
-        console.log(`🕒 ${userId} liked ${likedUserId}, waiting for mutual.`);
-      }
-    } catch (error: any) {
-      if (error.code == 11000) {
-        console.log('⚠️ Duplicate like detected. Ignoring.');
-        return;
-      }
-
-      console.error('❌ Unexpected error:', error);
-      // ❌ DO NOT throw again — or it will retry forever
-      // Optionally send to DLQ or alert
+    if (!user1 || !user2) {
+      createError.BadRequest('One or both users not found');
     }
+
+    console.log(`User ${user1.name} matched with user ${user2.id}`);
+
+    const alreadyMatched = await this._matchRepository.isMatchExists(
+      user1.id,
+      user2.id
+    );
+
+    if (alreadyMatched) {
+      console.log(
+        `✅ Match already exists between ${user1.id} and ${user2.id}, skipping.`
+      );
+      return;
+    }
+
+    const match = await this._matchRepository.createMatch(user1.id, user2.id);
+
+    await this.kafkaService.emit(
+      EVENT_TOPICS.NOTIFICATION_EVENTS,
+      EVENT_KEYS.USER_MATCHED,
+      {
+        recipientId: user1.id,
+        data: {
+          userId: user2.id,
+          matchedUserId: user2.id,
+          name: user2.name,
+          photo: user2.photos[0],
+          timestamp: new Date(),
+        },
+      } as MatchEventPayload
+    );
+
+    await this.kafkaService.emit(
+      EVENT_TOPICS.NOTIFICATION_EVENTS,
+      EVENT_KEYS.USER_MATCHED,
+      {
+        recipientId: user2.id,
+        data: {
+          userId: user1.id,
+          matchedUserId: user1.id,
+          name: user1.name,
+          photo: user1.photos[0],
+          timestamp: new Date(),
+        },
+      } as MatchEventPayload
+    );
+
+    console.log(
+      `✅ Match created between ${match.userA} and ${match.userB} and notifications sent.`
+    );
   }
 
   async getBlockedMatches(userId: string): Promise<Match[]> {
     try {
-      const blockedMathes =
-        await this.matchRepository.getBlockedMatches(userId);
+      const blockedMatches =
+        await this._matchRepository.getBlockedMatches(userId);
 
-      const populatedMatches = await Promise.all(
-        blockedMathes.map(async (match) => {
+      // TODO: Add pagination and sorting
+      // @ts-expect-error some properties are optional
+      return Promise.all(
+        blockedMatches.map(async (match) => {
           const matchId = String(
             String(match.userA) === userId ? match.userB : match.userA
           );
@@ -166,10 +166,6 @@ export class MatchService {
           };
         })
       );
-
-      // TODO: Add pagination and sorting
-      // @ts-expect-error some properties are optional
-      return populatedMatches;
     } catch (error) {
       console.error('Error fetching matches:', error);
       throw error;
@@ -178,13 +174,13 @@ export class MatchService {
 
   async blockMatch(userId: string, matchId: string): Promise<void> {
     console.log(`Blocking match between user ${userId} and match ${matchId}`);
-    await this.matchRepository.blockMatch(userId, matchId);
+    await this._matchRepository.blockMatch(userId, matchId);
     console.log(`Match between user ${userId} and match ${matchId} blocked`);
   }
 
   async unblockMatch(userId: string, matchId: string): Promise<void> {
     console.log(`Unblocking match between user ${userId} and match ${matchId}`);
-    await this.matchRepository.unblockMatch(userId, matchId);
+    await this._matchRepository.unblockMatch(userId, matchId);
     console.log(`Match between user ${userId} and match ${matchId} unblocked`);
   }
 }

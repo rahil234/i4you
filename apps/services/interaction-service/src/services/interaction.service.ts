@@ -8,9 +8,12 @@ import { INTERACTION } from '@/constants/interactions.constant';
 import { INTERACTION_RESPONSE_MESSAGES } from '@/constants/response-messages.constant';
 import { IKafkaService } from '@/events/kafka/interfaces/IKafkaService';
 import { EVENT_KEYS, EVENT_TOPICS } from '@/constants/events.constant';
+import { IGRPCInteractionService } from '@/services/interfaces/IGRPCInteractionService';
 
 @injectable()
-export class InteractionService implements IInteractionService {
+export class InteractionService
+  implements IInteractionService, IGRPCInteractionService
+{
   constructor(
     @inject(TYPES.InteractionRepository)
     private _interactionRepository: IInteractionRepository,
@@ -28,11 +31,17 @@ export class InteractionService implements IInteractionService {
       data.fromUserId,
       data.toUserId
     );
+
     if (existing) {
       createError.BadRequest(INTERACTION_RESPONSE_MESSAGES.ALREADY_EXISTS);
     }
 
-    const reciprocal = await this._interactionRepository.create(data);
+    await this._interactionRepository.create(data);
+
+    const reciprocal = await this._interactionRepository.findByUsers(
+      data.toUserId,
+      data.fromUserId
+    );
 
     if (data.type === INTERACTION.LIKE || data.type === INTERACTION.SUPERLIKE) {
       if (
@@ -58,5 +67,11 @@ export class InteractionService implements IInteractionService {
         );
       }
     }
+  }
+
+  async getAlreadyInteractedUsers(userId: string): Promise<string[]> {
+    const interactions =
+      await this._interactionRepository.findByOfUserById(userId);
+    return interactions.map((interaction) => interaction.toUserId);
   }
 }

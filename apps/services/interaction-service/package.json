@@ -15,7 +15,7 @@
     "@grpc/grpc-js": "^1.13.4",
     "@i4you/env-config": "^1.0.2",
     "@i4you/http-errors": "^0.0.2",
-    "@i4you/proto-files": "^1.0.5-beta.8",
+    "@i4you/proto-files": "^1.0.6-beta.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
     "express": "^4.21.2",

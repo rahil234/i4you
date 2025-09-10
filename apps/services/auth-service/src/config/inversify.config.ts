@@ -11,16 +11,21 @@ import { CacheService } from '@/services/cache.service';
 import { UserGrpcService } from '@/services/user.grpc.service';
 import { GrpcClientProvider } from '@/providers/grpc.client.provider';
 import ICacheService from '@/services/interfaces/ICacheService';
+import { IUserService } from '@/services/interfaces/IUserService';
+import { IMailService } from '@/services/interfaces/IMailService';
+import { IAuthService } from '@/services/interfaces/IAuthService';
 
 const container = new Container();
 
+container.bind<AuthController>(TYPES.AuthController).to(AuthController);
+
 container.bind<IAdminRepository>(TYPES.AdminRepository).to(AdminRepository);
 container.bind<IUserRepository>(TYPES.UserRepository).to(UserRepository);
-container.bind<AuthService>(TYPES.AuthService).to(AuthService);
-container.bind<AuthController>(TYPES.AuthController).to(AuthController);
-container.bind<MailService>(TYPES.MailService).to(MailService);
-container.bind<UserGrpcService>(TYPES.UserGrpcService).to(UserGrpcService);
+container.bind<IAuthService>(TYPES.AuthService).to(AuthService);
+container.bind<IMailService>(TYPES.MailService).to(MailService);
+container.bind<IUserService>(TYPES.UserGrpcService).to(UserGrpcService);
 container.bind<ICacheService>(TYPES.CacheService).to(CacheService);
+
 container
   .bind<GrpcClientProvider>(TYPES.GrpcClientProvider)
   .to(GrpcClientProvider)

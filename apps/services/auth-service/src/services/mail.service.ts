@@ -1,14 +1,10 @@
 import { injectable } from 'inversify';
 import { mailTransporter } from '@/config/mail.config';
-
-export interface SendMailOptions {
-  to: string;
-  subject: string;
-  html: string;
-}
+import { SendMailOptions } from 'nodemailer';
+import { IMailService } from '@/services/interfaces/IMailService';
 
 @injectable()
-export class MailService {
+export class MailService implements IMailService {
   async sendMail({ to, subject, html }: SendMailOptions) {
     await mailTransporter.sendMail({
       from: '"I4You" <noreply@i4you.app>',

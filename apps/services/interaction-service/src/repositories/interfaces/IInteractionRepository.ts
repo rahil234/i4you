@@ -7,5 +7,6 @@ export interface IInteractionRepository {
     fromUserId: string,
     toUserId: string
   ): Promise<Interaction | null>;
+  findByOfUserById(fromUserId: string): Promise<Interaction[]>;
   delete(fromUserId: string, toUserId: string): Promise<void>;
 }

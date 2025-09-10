@@ -35,4 +35,19 @@ export class MongoInteractionRepository implements IInteractionRepository {
   async delete(fromUserId: string, toUserId: string): Promise<void> {
     await InteractionModel.deleteOne({ fromUserId, toUserId });
   }
+
+  async findByOfUserById(fromUserId: string): Promise<Interaction[]> {
+    return InteractionModel.find({ fromUserId }).then((docs) =>
+      docs.map(
+        (doc) =>
+          new Interaction(
+            doc.id,
+            doc.fromUserId,
+            doc.toUserId,
+            doc.type,
+            doc.createdAt
+          )
+      )
+    );
+  }
 }
