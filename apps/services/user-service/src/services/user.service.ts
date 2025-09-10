@@ -1,46 +1,47 @@
 import { injectable, inject } from 'inversify';
-import IUserRepository from '@/repositories/interfaces/IUserRepository';
+import type { RootFilterQuery } from 'mongoose';
+import { IUserRepository } from '@/repositories/interfaces/IUserRepository';
 import { GetUsersRequestDTO, MatchEventPayload, TYPES } from '@/types';
 import UserDTO from '@/dtos/user.dtos';
 import { BadRequestError } from '@/errors/BadRequestError';
-import IAdminRepository from '@/repositories/interfaces/IAdminRepository';
-import { User, UserJwtPayload } from '@i4you/shared';
+import { IAdminRepository } from '@/repositories/interfaces/IAdminRepository';
+import { UserJwtPayload } from '@i4you/shared';
 import OnboardingRequestDTO from '@/dtos/onboarding.request.dtos';
-import { AdminDocument } from '@/models/admin.model';
-import { UserDocument } from '@/models/user.model';
 import ICacheService from '@/services/interfaces/ICacheService';
-import IUserService from '@/services/interfaces/IUserService';
+import { IUserService } from '@/services/interfaces/IUserService';
 import IKafkaService from '@/events/kafka/interfaces/IKafkaService';
 import { createError } from '@i4you/http-errors';
 import IMediaService from '@/services/interfaces/IMediaService';
 import { USER_ROLES } from '@/constants/roles.constant';
+import { Admin } from '@/entities/admin.entity';
+import { User } from '@/entities/user.entity';
 
 @injectable()
 export class UserService implements IUserService {
   constructor(
-    @inject(TYPES.UserRepository) private userRepository: IUserRepository,
-    @inject(TYPES.AdminRepository) private adminRepository: IAdminRepository,
-    @inject(TYPES.MediaService) private mediaService: IMediaService,
-    @inject(TYPES.KafkaService) private kafkaService: IKafkaService,
-    @inject(TYPES.CacheService) private cacheService: ICacheService
+    @inject(TYPES.UserRepository) private _userRepository: IUserRepository,
+    @inject(TYPES.AdminRepository) private _adminRepository: IAdminRepository,
+    @inject(TYPES.MediaService) private _mediaService: IMediaService,
+    @inject(TYPES.KafkaService) private _kafkaService: IKafkaService,
+    @inject(TYPES.CacheService) private _cacheService: ICacheService
   ) {}
 
   private async suspendUser(userId: string) {
-    await this.cacheService.set(`suspend:${userId}`, 'true', 60 * 60 * 24 * 7);
+    await this._cacheService.set(`suspend:${userId}`, 'true', 60 * 60 * 24 * 7);
   }
 
   private async reInitiateUser(userId: string) {
-    await this.cacheService.del(`suspend:${userId}`);
+    await this._cacheService.del(`suspend:${userId}`);
   }
 
-  async getUserById(id: string, role?: 'member'): Promise<UserDocument>;
-  async getUserById(id: string, role: 'admin'): Promise<AdminDocument>;
+  async getUserById(id: string, role?: 'member'): Promise<User>;
+  async getUserById(id: string, role: 'admin'): Promise<Admin>;
   async getUserById(
     id: string,
     role: UserJwtPayload['role'] = USER_ROLES.MEMBER
   ) {
-    const cacheKey = `${role === USER_ROLES.ADMIN ? 'admin' : 'member'}:${id}`;
-    const cached = await this.cacheService.get(cacheKey);
+    const cacheKey = `${role === USER_ROLES.ADMIN ? USER_ROLES.ADMIN : USER_ROLES.MEMBER}:${id}`;
+    const cached = await this._cacheService.get(cacheKey);
 
     if (cached) {
       return cached;
@@ -48,16 +49,16 @@ export class UserService implements IUserService {
 
     const data =
       role === 'admin'
-        ? await this.adminRepository.findById(id)
-        : await this.userRepository.findById(id);
+        ? await this._adminRepository.findById(id)
+        : await this._userRepository.findById(id);
 
-    await this.cacheService.set(cacheKey, data);
+    await this._cacheService.set(cacheKey, data);
 
     return data;
   }
 
   async getUserByEmail(email: string): Promise<UserDTO> {
-    const user = await this.userRepository.findByEmail(email);
+    const user = await this._userRepository.findByEmail(email);
 
     if (!user) {
       throw new BadRequestError('User not found');
@@ -69,7 +70,7 @@ export class UserService implements IUserService {
   async getUsers({ page, limit, search, status, gender }: GetUsersRequestDTO) {
     const offset = (page - 1) * limit;
 
-    const whereClause: any = {};
+    const whereClause: RootFilterQuery<User> = {};
 
     if (search) {
       whereClause.$or = [
@@ -86,17 +87,17 @@ export class UserService implements IUserService {
       whereClause.gender = gender;
     }
 
-    const users = await this.userRepository.findMany(whereClause, {
+    const users = await this._userRepository.findMany(whereClause, {
       skip: offset,
       limit,
     });
 
-    const total = await this.userRepository.count(whereClause);
+    const total = await this._userRepository.count(whereClause);
 
     const data = await Promise.all(
       users.map(async (user) => {
-        const photos = await this.mediaService.getUserImages(
-          user._id.toString()
+        const photos = await this._mediaService.getUserImages(
+          user.id.toString()
         );
         return new UserDTO(user, photos);
       })
@@ -115,13 +116,13 @@ export class UserService implements IUserService {
     email,
     password,
   }: Pick<User, 'name' | 'email' | 'password'>) {
-    const user = await this.userRepository.findByEmail(email);
+    const user = await this._userRepository.findByEmail(email);
 
     if (user) {
       throw createError.Conflict('User Already Exists');
     }
 
-    const newUser = await this.userRepository.create({
+    const newUser = await this._userRepository.create({
       name,
       email,
       password,
@@ -134,20 +135,20 @@ export class UserService implements IUserService {
     return newUser;
   }
 
-  async updateUser(id: string, data: any): Promise<UserDocument> {
-    const user = await this.userRepository.findById(id);
+  async updateUser(id: string, data: User): Promise<User> {
+    const user = await this._userRepository.findById(id);
 
     if (!user) {
       throw new BadRequestError('User not found');
     }
 
-    await this.cacheService.del(`member:${id}`);
+    await this._cacheService.del(`member:${id}`);
 
     console.log('Updating user:', id, data);
 
     const location = data.location
       ? {
-          type: 'Point',
+          type: 'Point' as const,
           coordinates:
             data.location?.coordinates[0] !== 0 &&
             data.location?.coordinates[1] !== 0
@@ -157,7 +158,7 @@ export class UserService implements IUserService {
         }
       : undefined;
 
-    const newUser = await this.userRepository.update(id, {
+    const newUser = await this._userRepository.update(id, {
       ...data,
       location,
     });
@@ -166,8 +167,8 @@ export class UserService implements IUserService {
       throw new BadRequestError('Failed to update user');
     }
 
-    await this.kafkaService.emit('user.events', 'user.profile.updated', {
-      id: newUser._id,
+    await this._kafkaService.emit('user.events', 'user.profile.updated', {
+      id: newUser.id,
       name: newUser.name,
       email: newUser.email,
       interests: newUser.interests,
@@ -182,7 +183,7 @@ export class UserService implements IUserService {
   }
 
   async updateUserStatus(userId: string, status: string) {
-    const user = await this.userRepository.find({ _id: userId });
+    const user = await this._userRepository.find({ id: userId });
 
     if (!user) {
       throw new Error('User not found');
@@ -198,17 +199,55 @@ export class UserService implements IUserService {
       await this.reInitiateUser(userId);
     }
 
-    await this.cacheService.del(`member:${userId}`);
+    await this._cacheService.del(`member:${userId}`);
 
-    await this.userRepository.update(userId, {
+    await this._userRepository.update(userId, {
       status: status as 'active' | 'suspended',
     });
   }
 
-  async likeUser(userId: string, likedUserId: string) {
+  async userMatched(userA: string, userB: string) {
+    const user1 = await this._userRepository.findById(userA);
+    const user2 = await this._userRepository.findById(userB);
+
+    if (!user1 || !user2) {
+      throw new BadRequestError('One or both users not found');
+    }
+
+    console.log(`User ${user1.name} matched with user ${user2.id}`);
+
+    await this._kafkaService.emit('notification.events', 'user_matched', {
+      recipientId: user1.id,
+      data: {
+        userId: user2.id,
+        matchedUserId: user2.id,
+        name: user2.name,
+        photo: (await this._mediaService.getUserImages(user2.id))[0],
+        timestamp: new Date(),
+      },
+    } as MatchEventPayload);
+
+    await this._kafkaService.emit('notification.events', 'user_matched', {
+      recipientId: user2.id,
+      data: {
+        userId: user1.id,
+        matchedUserId: user1.id,
+        name: user1.name,
+        photo: (await this._mediaService.getUserImages(user1.id))[0],
+        timestamp: new Date().toISOString(),
+      },
+    });
+
+    return;
+  }
+
+  async likeUser(
+    userId: string,
+    likedUserId: string
+  ): Promise<{ message: string } | null> {
     console.log(`User ${userId} liked user ${likedUserId}`);
 
-    await this.kafkaService.emit('user.events', 'user_liked', {
+    await this._kafkaService.emit('user.events', 'user_liked', {
       userId,
       likedUserId,
       timestamp: new Date().toISOString(),
@@ -217,43 +256,8 @@ export class UserService implements IUserService {
     return { message: 'User liked successfully' };
   }
 
-  async userMatched(userA: string, userB: string) {
-    const user1 = await this.userRepository.findById(userA);
-    const user2 = await this.userRepository.findById(userB);
-
-    if (!user1 || !user2) {
-      throw new BadRequestError('One or both users not found');
-    }
-
-    console.log(`User ${user1.name} matched with user ${user2.id}`);
-
-    await this.kafkaService.emit('notification.events', 'user_matched', {
-      recipientId: user1.id,
-      data: {
-        userId: user2.id,
-        matchedUserId: user2.id,
-        name: user2.name,
-        photo: (await this.mediaService.getUserImages(user2.id))[0],
-        timestamp: new Date(),
-      },
-    } as MatchEventPayload);
-
-    await this.kafkaService.emit('notification.events', 'user_matched', {
-      recipientId: user2.id,
-      data: {
-        userId: user1.id,
-        matchedUserId: user1.id,
-        name: user1.name,
-        photo: (await this.mediaService.getUserImages(user1.id))[0],
-        timestamp: new Date().toISOString(),
-      },
-    });
-
-    return;
-  }
-
   async onBoarding(userId: string, data: OnboardingRequestDTO) {
-    const newUser = await this.userRepository.update(userId, {
+    const newUser = await this._userRepository.update(userId, {
       ...data,
       onboardingCompleted: true,
     });
@@ -262,10 +266,10 @@ export class UserService implements IUserService {
       throw new BadRequestError('Failed to complete onboarding');
     }
 
-    await this.cacheService.del(`member:${userId}`);
+    await this._cacheService.del(`member:${userId}`);
 
-    await this.kafkaService.emit('user.events', 'user.created', {
-      id: newUser._id,
+    await this._kafkaService.emit('user.events', 'user.created', {
+      id: newUser.id,
       name: newUser.name,
       email: newUser.email,
       interests: newUser.interests,
@@ -278,6 +282,6 @@ export class UserService implements IUserService {
   }
 
   async getUserPhotos(userId: string) {
-    return this.mediaService.getUserImages(userId);
+    return this._mediaService.getUserImages(userId);
   }
 }

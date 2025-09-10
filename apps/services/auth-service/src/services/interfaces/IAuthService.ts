@@ -1,4 +1,4 @@
-import { LoginRequestDTO, LoginResponseDTO } from '@/dtos/login.dto';
+import { type LoginRequestDTO, LoginResponseDTO } from '@/dtos/login.dto';
 import { RegisterRequestDTO } from '@/dtos/register.dto';
 
 export interface IAuthService {

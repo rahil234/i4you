@@ -1,24 +1,15 @@
-import { Kafka, Producer } from 'kafkajs';
-import IKafkaService from '@/events/kafka/interfaces/IKafkaService';
+import { IKafkaService } from '@/events/kafka/interfaces/IKafkaService';
+import { kafkaClient } from '@/events/kafka/kafka';
 
 export class KafkaService implements IKafkaService {
-  private producer: Producer;
-
-  constructor() {
-    const kafka = new Kafka({
-      clientId: 'user-service',
-      brokers: ['kafka-cluster-kafka-brokers.kafka.svc.cluster.local:9092'],
-    });
-
-    this.producer = kafka.producer();
-  }
+  private _producer = kafkaClient.producer;
 
   async connect() {
-    await this.producer.connect();
+    await this._producer.connect();
   }
 
-  async emit(topic: string, key: string, payload: any): Promise<void> {
-    await this.producer.send({
+  async emit(topic: string, key: string, payload: object): Promise<void> {
+    await this._producer.send({
       topic,
       messages: [
         {

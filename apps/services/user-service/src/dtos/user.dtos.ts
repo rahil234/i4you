@@ -1,7 +1,17 @@
-import { User, UserPreferences } from '@i4you/shared';
-import { UserDocument } from '@/models/user.model';
+import { UserPreferences } from '@i4you/shared';
+import { User } from '@/entities/user.entity';
 
-class UserDTO implements Omit<User, 'location' | 'onboardingCompleted'> {
+class UserDTO
+  implements
+    Omit<
+      User,
+      | 'location'
+      | 'onboardingCompleted'
+      | 'password'
+      | 'createdAt'
+      | 'updatedAt'
+    >
+{
   id: string;
   name: string;
   email: string;
@@ -9,10 +19,10 @@ class UserDTO implements Omit<User, 'location' | 'onboardingCompleted'> {
   avatar?: string;
   gender: 'male' | 'female' | 'other';
   bio: string;
-  photos: string[];
   role: 'admin' | 'member';
   onboarding?: boolean;
-  interests?: string[];
+  interests: string[];
+  photos: string[];
   stats?: {
     matches: number;
     likes: number;
@@ -23,12 +33,12 @@ class UserDTO implements Omit<User, 'location' | 'onboardingCompleted'> {
   joined: string;
   status: 'active' | 'suspended';
 
-  constructor(user: UserDocument, photos?: string[]) {
-    this.id = user._id.toString();
+  constructor(user: User, photos?: string[]) {
+    this.id = user.id.toString();
     this.name = user.name;
     this.email = user.email;
     this.avatar = photos ? photos[0] : '/default-avatar.png';
-    this.photos = photos ?? user.photos ?? [];
+    this.photos = photos ?? [];
     this.status = user.status;
     this.age = user.age;
     this.gender = user.gender;
