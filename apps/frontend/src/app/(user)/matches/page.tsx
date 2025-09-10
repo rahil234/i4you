@@ -45,11 +45,9 @@ export default function MatchesPage() {
     resetCount();
   }, []);
 
-  const filteredMatches = matches.filter(
-    (match) =>
-      (match.user?.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (match.user?.location || '').toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  useEffect(() => {
+    setIsConnecting(connectionStatus !== 'connected');
+  }, [connectionStatus]);
 
   const handleConfirm = async () => {
     if (!openDialog) return;

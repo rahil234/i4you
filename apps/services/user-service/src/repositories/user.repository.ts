@@ -54,4 +54,15 @@ export class MongoUserRepository
   async count(filter: Partial<UserDocument>): Promise<number> {
     return UserModel.countDocuments(filter as RootFilterQuery<UserDocument>);
   }
+
+  async findMany(filter: any, options: { skip: number; limit: number }) {
+    return UserModel.find(filter)
+      .skip(options.skip)
+      .limit(options.limit)
+      .lean();
+  }
+
+  async count(filter: any) {
+    return UserModel.countDocuments(filter);
+  }
 }
