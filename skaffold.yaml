@@ -225,6 +225,8 @@ profiles:
         - k8s/dev/secrets/vault-secrets.yaml
         - k8s/dev/kafka/kafka-topics.yaml
         - k8s/dev/i4you-cert-secret.yaml
+        - k8s/dev/traefik/traefik-validate-middleware.yaml
+        - k8s/dev/traefik/traefik-strip-path-middleware.yaml
         - k8s/dev/services/validate-service.yaml
         - k8s/dev/services/user-service.yaml
         - k8s/dev/services/auth-service.yaml
@@ -241,8 +243,6 @@ profiles:
         - k8s/dev/services/stripe-webhook-handler.yaml
         - k8s/dev/services/frontend.yaml
         - k8s/dev/nginx-socket-proxy.yaml
-        - k8s/dev/traefik/traefik-validate-middleware.yaml
-        - k8s/dev/traefik/traefik-strip-path-middleware.yaml
         - k8s/dev/traefik/traefik-ingress.yaml
 
   - name: production
