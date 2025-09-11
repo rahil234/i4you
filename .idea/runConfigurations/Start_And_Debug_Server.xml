@@ -1,9 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Start And Debug Server" type="CompoundRunConfigurationType">
-    <toRun name="Auth Service Debug" type="ChromiumRemoteDebugType" />
-    <toRun name="Gateway Server Debug" type="ChromiumRemoteDebugType" />
-    <toRun name="User Service Debug" type="ChromiumRemoteDebugType" />
-    <toRun name="docker-compose.yaml[auth-service, gateway-server, user-service]: Compose Deployment" type="docker-deploy" />
-    <method v="2" />
-  </configuration>
-</component>
