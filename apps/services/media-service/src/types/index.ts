@@ -37,3 +37,17 @@ interface SearchResponseImage {
 export interface SearchResponse {
   resources: SearchResponseImage[];
 }
+
+interface SignFields {
+  timestamp: number;
+  public_id: string;
+  moderation: string;
+  type: string;
+  api_key: string;
+  signature: string;
+}
+
+export interface UploadParams {
+  url: string;
+  fields: SignFields;
+}

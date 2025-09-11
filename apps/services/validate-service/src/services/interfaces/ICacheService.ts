@@ -1,7 +1,7 @@
-export default interface ICacheService {
-  get<T>(key: string): Promise<T | null>;
+export interface ICacheService {
+  get<T>(key: string): Promise<boolean | null>;
 
-  set<T>(key: string, value: T, ttlSeconds?: number): Promise<void>;
+  set<T>(key: string, value: boolean, ttlSeconds?: number): Promise<void>;
 
   del(key: string): Promise<void>;
-};
+}

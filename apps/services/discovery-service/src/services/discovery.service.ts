@@ -1,9 +1,10 @@
 import { injectable } from 'inversify';
 import { GetPotentialMatchesRequest, GetPotentialMatchesResponse } from '@i4you/proto-files/discovery/v2';
 import elastic from '@/config/elastic';
+import { IDiscoveryService } from '@/services/interfaces/IDiscoverService';
 
 @injectable()
-export class DiscoveryService {
+export class DiscoveryService implements IDiscoveryService {
 
   async getPotentialMatches(data: GetPotentialMatchesRequest): Promise<GetPotentialMatchesResponse> {
     const result = await elastic.search({

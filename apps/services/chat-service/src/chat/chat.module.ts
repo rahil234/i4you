@@ -2,13 +2,14 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { Chat, ChatSchema } from './schemas/chat.schema.js';
-import { ChatGateway } from './chat.gateway.js';
-import { ChatService } from './services/chat.service.js';
-import { ChatController } from './chat.controller.js';
+import { ChatController } from './controllers/chat.controller.js';
 import { UserModule } from '../user/user.module.js';
-import { Message, MessageSchema } from './schemas/message.schema.js';
+import { MessageDocument, MessageSchema } from './schemas/message.schema.js';
 import { ChatRepository } from './repositories/chat.repository.js';
 import { MessageRepository } from './repositories/message.repository.js';
+import { GRPCUserService } from '../user/user.grpc.service.js';
+import { ChatService } from './services/chat.service.js';
+import { ChatGateway } from './gateways/chat.gateway.js';
 
 @Module({
   imports: [
@@ -32,13 +33,19 @@ import { MessageRepository } from './repositories/message.repository.js';
     MongooseModule.forFeature([
       { name: Chat.name, schema: ChatSchema },
       {
-        name: Message.name,
+        name: MessageDocument.name,
         schema: MessageSchema,
       },
     ]),
     UserModule,
   ],
-  providers: [ChatGateway, ChatService, ChatRepository, MessageRepository],
+  providers: [
+    ChatGateway,
+    { provide: 'ChatService', useClass: ChatService },
+    { provide: 'ChatRepository', useClass: ChatRepository },
+    { provide: 'MessageRepository', useClass: MessageRepository },
+    { provide: 'UserService', useClass: GRPCUserService },
+  ],
   controllers: [ChatController],
 })
 export class ChatModule {}

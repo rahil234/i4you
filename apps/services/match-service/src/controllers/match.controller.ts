@@ -1,17 +1,17 @@
 import { inject, injectable } from 'inversify';
 
 import { TYPES } from '@/types';
-import { MatchService } from '@/services/match.service';
 import { handleAsync } from '@/utils/handle-async';
 import { createError } from '@i4you/http-errors';
 import MatchesResponseDTO from '@/dtos/matches.response.dtos';
-import { MediaService } from '@/services/media.service';
+import { IMatchService } from '@/services/interfaces/IMatchService';
+import IMediaService from '@/services/interfaces/IMediaService';
 
 @injectable()
 export class MatchController {
   constructor(
-    @inject(TYPES.MatchService) private matchService: MatchService,
-    @inject(TYPES.MediaService) private mediaService: MediaService
+    @inject(TYPES.MatchService) private matchService: IMatchService,
+    @inject(TYPES.MediaService) private mediaService: IMediaService
   ) {}
 
   getMatches = handleAsync(async (req, res) => {

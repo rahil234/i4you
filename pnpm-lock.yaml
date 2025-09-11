@@ -314,7 +314,7 @@ importers:
         version: 0.0.2
       '@i4you/proto-files':
         specifier: ^1.0.5-beta.4
-        version: 1.0.5-beta.8(@types/node@24.3.0)(jiti@1.21.7)(jsdom@20.0.3)(tsx@4.20.5)
+        version: 1.0.5(@types/node@24.3.0)(jiti@1.21.7)(jsdom@20.0.3)(tsx@4.20.5)
       '@protobuf-ts/runtime':
         specifier: ^2.9.5
         version: 2.11.1
@@ -407,7 +407,7 @@ importers:
         specifier: ^8.29.0
         version: 8.42.0(@typescript-eslint/parser@8.42.0(eslint@9.34.0(jiti@1.21.7))(typescript@5.9.2))(eslint@9.34.0(jiti@1.21.7))(typescript@5.9.2)
       '@typescript-eslint/parser':
-        specifier: ^8.29.0
+        specifier: ^8.42.0
         version: 8.42.0(eslint@9.34.0(jiti@1.21.7))(typescript@5.9.2)
       eslint:
         specifier: ^9.22.0
@@ -453,7 +453,7 @@ importers:
         version: 1.13.4
       '@i4you/proto-files':
         specifier: ^1.0.5-beta.0
-        version: 1.0.5-beta.8(@types/node@22.18.0)(jiti@1.21.7)(jsdom@20.0.3)
+        version: 1.0.5(@types/node@22.18.0)(jiti@1.21.7)(jsdom@20.0.3)
       '@nestjs/common':
         specifier: ^11.0.1
         version: 11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -592,7 +592,7 @@ importers:
         version: 1.0.2
       '@i4you/proto-files':
         specifier: ^1.0.6-beta.3
-        version: 1.0.6-beta.3(@types/node@24.3.0)(jiti@1.21.7)(jsdom@20.0.3)(terser@5.44.0)(tsx@4.20.5)(yaml@2.8.1)
+        version: 1.0.6-beta.3(@types/node@24.3.0)(jsdom@20.0.3)(tsx@4.20.5)
       inversify:
         specifier: ^7.7.0
         version: 7.9.1(reflect-metadata@0.2.2)
@@ -672,7 +672,7 @@ importers:
         version: 0.0.2
       '@i4you/proto-files':
         specifier: ^1.0.6-beta.3
-        version: 1.0.6-beta.3(@types/node@24.3.0)(jiti@1.21.7)(jsdom@20.0.3)(terser@5.44.0)(tsx@4.20.5)(yaml@2.8.1)
+        version: 1.0.6-beta.3(@types/node@24.3.0)(jiti@1.21.7)(jsdom@20.0.3)(tsx@4.20.5)
       class-transformer:
         specifier: ^0.5.1
         version: 0.5.1
@@ -775,7 +775,7 @@ importers:
         version: 0.0.2
       '@i4you/proto-files':
         specifier: ^1.0.6-beta.3
-        version: 1.0.6-beta.3(@types/node@24.3.0)(jiti@1.21.7)(jsdom@20.0.3)(terser@5.44.0)(tsx@4.20.5)(yaml@2.8.1)
+        version: 1.0.6-beta.3(@types/node@24.3.0)(jiti@1.21.7)(jsdom@20.0.3)(tsx@4.20.5)
       cookie-parser:
         specifier: ~1.4.4
         version: 1.4.7
@@ -832,7 +832,7 @@ importers:
         specifier: ^8.29.0
         version: 8.42.0(@typescript-eslint/parser@8.42.0(eslint@9.34.0(jiti@1.21.7))(typescript@5.9.2))(eslint@9.34.0(jiti@1.21.7))(typescript@5.9.2)
       '@typescript-eslint/parser':
-        specifier: ^8.29.0
+        specifier: ^8.42.0
         version: 8.42.0(eslint@9.34.0(jiti@1.21.7))(typescript@5.9.2)
       eslint:
         specifier: ^9.22.0
@@ -890,7 +890,7 @@ importers:
         version: 1.0.2
       '@i4you/proto-files':
         specifier: latest
-        version: 1.0.4
+        version: 1.0.5(@types/node@24.3.0)(jiti@1.21.7)(jsdom@20.0.3)(tsx@4.20.5)
       '@protobuf-ts/runtime':
         specifier: ^2.9.5
         version: 2.11.1
@@ -989,7 +989,7 @@ importers:
         specifier: ^8.29.0
         version: 8.42.0(@typescript-eslint/parser@8.42.0(eslint@9.34.0(jiti@1.21.7))(typescript@5.9.2))(eslint@9.34.0(jiti@1.21.7))(typescript@5.9.2)
       '@typescript-eslint/parser':
-        specifier: ^8.29.0
+        specifier: ^8.42.0
         version: 8.42.0(eslint@9.34.0(jiti@1.21.7))(typescript@5.9.2)
       eslint:
         specifier: ^9.22.0
@@ -1065,8 +1065,8 @@ importers:
   apps/services/notification-service:
     dependencies:
       '@keyv/redis':
-        specifier: ^4.5.0
-        version: 4.6.0(keyv@5.5.0)
+        specifier: ^5.1.1
+        version: 5.1.2(keyv@5.5.0)
       '@nestjs/cache-manager':
         specifier: ^3.0.1
         version: 3.0.1(@nestjs/common@11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.6)(cache-manager@7.2.0)(keyv@5.5.0)(rxjs@7.8.2)
@@ -1215,6 +1215,9 @@ importers:
       kafkajs:
         specifier: ^2.2.4
         version: 2.2.4
+      razorpay:
+        specifier: ^2.9.6
+        version: 2.9.6
       stripe:
         specifier: ^18.4.0
         version: 18.5.0(@types/node@24.3.0)
@@ -1245,7 +1248,7 @@ importers:
         version: 1.13.4
       '@i4you/proto-files':
         specifier: ^1.0.5-beta.0
-        version: 1.0.5-beta.8(@types/node@22.18.0)(jiti@1.21.7)(jsdom@20.0.3)
+        version: 1.0.5(@types/node@22.18.0)(jiti@1.21.7)(jsdom@20.0.3)
       '@nestjs/common':
         specifier: ^11.0.1
         version: 11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -1393,7 +1396,7 @@ importers:
         version: 0.0.2
       '@i4you/proto-files':
         specifier: ^1.0.5-beta.4
-        version: 1.0.5-beta.8(@types/node@24.3.0)(jiti@1.21.7)(jsdom@20.0.3)(tsx@4.20.5)
+        version: 1.0.5(@types/node@24.3.0)(jiti@1.21.7)(jsdom@20.0.3)(tsx@4.20.5)
       '@protobuf-ts/runtime':
         specifier: ^2.9.5
         version: 2.11.1
@@ -1412,6 +1415,12 @@ importers:
       bcryptjs:
         specifier: ^3.0.2
         version: 3.0.2
+      class-transformer:
+        specifier: ^0.5.1
+        version: 0.5.1
+      class-validator:
+        specifier: ^0.14.2
+        version: 0.14.2
       cookie-parser:
         specifier: ~1.4.4
         version: 1.4.7
@@ -1480,7 +1489,7 @@ importers:
         specifier: ^8.29.0
         version: 8.42.0(@typescript-eslint/parser@8.42.0(eslint@9.34.0(jiti@1.21.7))(typescript@5.9.2))(eslint@9.34.0(jiti@1.21.7))(typescript@5.9.2)
       '@typescript-eslint/parser':
-        specifier: ^8.29.0
+        specifier: ^8.42.0
         version: 8.42.0(eslint@9.34.0(jiti@1.21.7))(typescript@5.9.2)
       eslint:
         specifier: ^9.22.0
@@ -1565,7 +1574,7 @@ importers:
         specifier: ^8.29.0
         version: 8.42.0(@typescript-eslint/parser@8.42.0(eslint@9.34.0(jiti@1.21.7))(typescript@5.9.2))(eslint@9.34.0(jiti@1.21.7))(typescript@5.9.2)
       '@typescript-eslint/parser':
-        specifier: ^8.29.0
+        specifier: ^8.42.0
         version: 8.42.0(eslint@9.34.0(jiti@1.21.7))(typescript@5.9.2)
       eslint:
         specifier: ^9.22.0
@@ -2978,11 +2987,8 @@ packages:
   '@i4you/http-errors@0.0.2':
     resolution: {integrity: sha512-psV1cXkmpFB4rZsIG55KoSQKnuKVgKQ5knv95Zxkf100qXZTqgCUIdezNqrjXE9K9GOuS/J0ap/n6K2j9Y8vRg==}
 
-  '@i4you/proto-files@1.0.4':
-    resolution: {integrity: sha512-wxw+jsuNCrZTIiM+t28Hu4bdEDzSePaVCHTKsXsr0IbZOHhT7OkLdqVELBEF8ed2Kf3UwHvPOOjSgJuiXvYybg==}
-
-  '@i4you/proto-files@1.0.5-beta.8':
-    resolution: {integrity: sha512-lqg144E3NkRKbSCq9whODeh1s4+8CRl5YV2zmdxyVEqoKoUfK2AsHLMgqGoYqKZjGAbewGcIp/08nYqhubuojw==}
+  '@i4you/proto-files@1.0.5':
+    resolution: {integrity: sha512-h2w/8TGgYaCdn1lWMxliparW9t0W3DYLpq+IYjrN579ng+vdXNXJ36hOUyusZqMRXLJhdlnUAQSKAklKbUHeXA==}
 
   '@i4you/proto-files@1.0.6-beta.3':
     resolution: {integrity: sha512-m5CrAG0ZRr9C6yBNox4mvQ8CuQHsaH9mSAQHCJnby3X2AsqDbIdJcR0zrT57ePZvr75lyZlN8DjGF3z26jwnyQ==}
@@ -3393,11 +3399,11 @@ packages:
   '@jsdevtools/ono@7.1.3':
     resolution: {integrity: sha512-4JQNk+3mVzK3xh2rqd6RB4J46qUR19azEHBneZyTZM+c456qOrbbM/5xcR8huNCCcbVt7+UmizG6GuUvPvKUYg==}
 
-  '@keyv/redis@4.6.0':
-    resolution: {integrity: sha512-FP3FP42RiQ3j0UC6f4Maf7ISTLAIivm37/SdfG5xvhqceMMq3kabtC6T4a2h5byMnh4S8PjP51DY/9CpyrcfsQ==}
+  '@keyv/redis@5.1.2':
+    resolution: {integrity: sha512-ju+s33Gt8d8xW1aW69CdTvVTQBRmt82PHjcGWsbtsbOh0IcFJ2gsj3bWJVFjn/KYyoqxJSZEpUXlRyv/wq4FMA==}
     engines: {node: '>= 18'}
     peerDependencies:
-      keyv: ^5.3.4
+      keyv: ^5.5.1
 
   '@keyv/serialize@1.1.0':
     resolution: {integrity: sha512-RlDgexML7Z63Q8BSaqhXdCYNBy/JQnqYIwxofUrNLGCblOMHp+xux2Q8nLMLlPpgHQPoU0Do8Z6btCpRBEqZ8g==}
@@ -4455,10 +4461,6 @@ packages:
     engines: {node: '>= 18'}
     peerDependencies:
       '@redis/client': ^5.8.2
-
-  '@redis/client@1.6.1':
-    resolution: {integrity: sha512-/KCsg3xSlR+nCK8/8ZYSknYxvXHwubJrU82F3Lm1Fp6789VQ0/3RJKfsmRXjqfaTA++23CvC3hqmqe/2GEt6Kw==}
-    engines: {node: '>=14'}
 
   '@redis/client@5.8.2':
     resolution: {integrity: sha512-WtMScno3+eBpTac1Uav2zugXEoXqaU23YznwvFgkPwBQVwEHTDgOG7uEAObtZ/Nyn8SmAMbqkEubJaMOvnqdsQ==}
@@ -7058,10 +7060,6 @@ packages:
   functions-have-names@1.2.3:
     resolution: {integrity: sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==}
 
-  generic-pool@3.9.0:
-    resolution: {integrity: sha512-hymDOu5B53XvN4QT9dBmZxPX4CWhBPPLguTZ9MMFeFa/Kg0xWVfylOVNlJji/E7yTZWFd/q9GO5TxDLq156D7g==}
-    engines: {node: '>= 4'}
-
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
@@ -8668,6 +8666,9 @@ packages:
     resolution: {integrity: sha512-RmkhL8CAyCRPXCE28MMH0z2PNWQBNk2Q09ZdxM9IOOXwxwZbN+qbWaatPkdkWIKL2ZVDImrN/pK5HTRz2PcS4g==}
     engines: {node: '>= 0.8'}
 
+  razorpay@2.9.6:
+    resolution: {integrity: sha512-zsHAQzd6e1Cc6BNoCNZQaf65ElL6O6yw0wulxmoG5VQDr363fZC90Mp1V5EktVzG45yPyNomNXWlf4cQ3622gQ==}
+
   react-day-picker@9.9.0:
     resolution: {integrity: sha512-NtkJbuX6cl/VaGNb3sVVhmMA6LSMnL5G3xNL+61IyoZj0mUZFWTg4hmj7PHjIQ8MXN9dHWhUHFoJWG6y60DKSg==}
     engines: {node: '>=18'}
@@ -10178,9 +10179,6 @@ packages:
 
   yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
-
-  yallist@4.0.0:
-    resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
 
   yaml@2.0.0-1:
     resolution: {integrity: sha512-W7h5dEhywMKenDJh2iX/LABkbFnBxasD27oyXWDS/feDsxiw0dD5ncXdYXgkvAsXIY2MpW/ZKkr9IU30DBdMNQ==}
@@ -12282,12 +12280,7 @@ snapshots:
     dependencies:
       dotenv: 16.6.1
 
-  '@i4you/proto-files@1.0.4':
-    dependencies:
-      '@bufbuild/protobuf': 2.7.0
-      '@grpc/grpc-js': 1.13.4
-
-  '@i4you/proto-files@1.0.5-beta.8(@types/node@22.18.0)(jiti@1.21.7)(jsdom@20.0.3)':
+  '@i4you/proto-files@1.0.5(@types/node@22.18.0)(jiti@1.21.7)(jsdom@20.0.3)':
     dependencies:
       '@bufbuild/protobuf': 2.7.0
       '@grpc/grpc-js': 1.13.4
@@ -12313,7 +12306,7 @@ snapshots:
       - tsx
       - yaml
 
-  '@i4you/proto-files@1.0.5-beta.8(@types/node@24.3.0)(jiti@1.21.7)(jsdom@20.0.3)(tsx@4.20.5)':
+  '@i4you/proto-files@1.0.5(@types/node@24.3.0)(jiti@1.21.7)(jsdom@20.0.3)(tsx@4.20.5)':
     dependencies:
       '@bufbuild/protobuf': 2.7.0
       '@grpc/grpc-js': 1.13.4
@@ -12339,11 +12332,37 @@ snapshots:
       - tsx
       - yaml
 
-  '@i4you/proto-files@1.0.6-beta.3(@types/node@24.3.0)(jiti@1.21.7)(jsdom@20.0.3)(terser@5.44.0)(tsx@4.20.5)(yaml@2.8.1)':
+  '@i4you/proto-files@1.0.6-beta.3(@types/node@24.3.0)(jiti@1.21.7)(jsdom@20.0.3)(tsx@4.20.5)':
     dependencies:
       '@bufbuild/protobuf': 2.7.0
       '@grpc/grpc-js': 1.13.4
-      vitest: 3.2.4(@types/node@24.3.0)(jiti@1.21.7)(jsdom@20.0.3)(terser@5.44.0)(tsx@4.20.5)(yaml@2.8.1)
+      vitest: 3.2.4(@types/node@24.3.0)(jiti@1.21.7)(jsdom@20.0.3)(tsx@4.20.5)
+    transitivePeerDependencies:
+      - '@edge-runtime/vm'
+      - '@types/debug'
+      - '@types/node'
+      - '@vitest/browser'
+      - '@vitest/ui'
+      - happy-dom
+      - jiti
+      - jsdom
+      - less
+      - lightningcss
+      - msw
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - tsx
+      - yaml
+
+  '@i4you/proto-files@1.0.6-beta.3(@types/node@24.3.0)(jsdom@20.0.3)(tsx@4.20.5)':
+    dependencies:
+      '@bufbuild/protobuf': 2.7.0
+      '@grpc/grpc-js': 1.13.4
+      vitest: 3.2.4(@types/node@24.3.0)(jsdom@20.0.3)(tsx@4.20.5)
     transitivePeerDependencies:
       - '@edge-runtime/vm'
       - '@types/debug'
@@ -12842,9 +12861,9 @@ snapshots:
 
   '@jsdevtools/ono@7.1.3': {}
 
-  '@keyv/redis@4.6.0(keyv@5.5.0)':
+  '@keyv/redis@5.1.2(keyv@5.5.0)':
     dependencies:
-      '@redis/client': 1.6.1
+      '@redis/client': 5.8.2
       cluster-key-slot: 1.1.2
       hookified: 1.12.0
       keyv: 5.5.0
@@ -13900,12 +13919,6 @@ snapshots:
   '@redis/bloom@5.8.2(@redis/client@5.8.2)':
     dependencies:
       '@redis/client': 5.8.2
-
-  '@redis/client@1.6.1':
-    dependencies:
-      cluster-key-slot: 1.1.2
-      generic-pool: 3.9.0
-      yallist: 4.0.0
 
   '@redis/client@5.8.2':
     dependencies:
@@ -17058,8 +17071,6 @@ snapshots:
 
   functions-have-names@1.2.3: {}
 
-  generic-pool@3.9.0: {}
-
   gensync@1.0.0-beta.2: {}
 
   get-caller-file@2.0.5: {}
@@ -18818,6 +18829,12 @@ snapshots:
       iconv-lite: 0.6.3
       unpipe: 1.0.0
 
+  razorpay@2.9.6:
+    dependencies:
+      axios: 1.11.0(debug@2.6.9)
+    transitivePeerDependencies:
+      - debug
+
   react-day-picker@9.9.0(react@19.1.1):
     dependencies:
       '@date-fns/tz': 1.4.1
@@ -20395,6 +20412,48 @@ snapshots:
       - tsx
       - yaml
 
+  vitest@3.2.4(@types/node@24.3.0)(jsdom@20.0.3)(tsx@4.20.5):
+    dependencies:
+      '@types/chai': 5.2.2
+      '@vitest/expect': 3.2.4
+      '@vitest/mocker': 3.2.4(vite@7.1.4(@types/node@24.3.0)(jiti@1.21.7)(terser@5.44.0)(tsx@4.20.5)(yaml@2.8.1))
+      '@vitest/pretty-format': 3.2.4
+      '@vitest/runner': 3.2.4
+      '@vitest/snapshot': 3.2.4
+      '@vitest/spy': 3.2.4
+      '@vitest/utils': 3.2.4
+      chai: 5.3.3
+      debug: 4.4.1
+      expect-type: 1.2.2
+      magic-string: 0.30.18
+      pathe: 2.0.3
+      picomatch: 4.0.3
+      std-env: 3.9.0
+      tinybench: 2.9.0
+      tinyexec: 0.3.2
+      tinyglobby: 0.2.14
+      tinypool: 1.1.1
+      tinyrainbow: 2.0.0
+      vite: 7.1.4(@types/node@24.3.0)(jiti@1.21.7)(terser@5.44.0)(tsx@4.20.5)(yaml@2.8.1)
+      vite-node: 3.2.4(@types/node@24.3.0)(jiti@1.21.7)(terser@5.44.0)(tsx@4.20.5)(yaml@2.8.1)
+      why-is-node-running: 2.3.0
+    optionalDependencies:
+      '@types/node': 24.3.0
+      jsdom: 20.0.3
+    transitivePeerDependencies:
+      - jiti
+      - less
+      - lightningcss
+      - msw
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - tsx
+      - yaml
+
   w3c-xmlserializer@4.0.0:
     dependencies:
       xml-name-validator: 4.0.0
@@ -20726,8 +20785,6 @@ snapshots:
   y18n@5.0.8: {}
 
   yallist@3.1.1: {}
-
-  yallist@4.0.0: {}
 
   yaml@2.0.0-1: {}
 

@@ -5,7 +5,7 @@ import { env } from '@/config/index';
 
 import { TYPES } from '@/types';
 import { handleAsync } from '@/utils/handle-async';
-import { CacheService } from '@/services/cache.service';
+import { IUserService } from '@/services/interfaces/IUserService';
 
 const ignorePaths = new Set([
   '/public',
@@ -31,13 +31,10 @@ const ignorePaths = new Set([
 
 @injectable()
 export class ValidateController {
-  constructor(@inject(TYPES.CacheService) private cacheService: CacheService) {}
+  constructor(@inject(TYPES.UserService) private _userService: IUserService) {}
 
   validate = handleAsync(async (req, res) => {
-    const forwardedUri = req.headers['x-forwarded-uri'] as string; // e.g., /api/v1/user
-    // const forwardedHost = req.headers['x-forwarded-host'] as string; // e.g., example.com
-    // const forwardedMethod = req.headers['x-forwarded-method'] as string; // e.g., GET
-    // console.log('Requested:', forwardedMethod, forwardedHost + forwardedUri);
+    const forwardedUri = req.headers['x-forwarded-uri'] as string;
 
     if (
       forwardedUri.startsWith('/api') ||
@@ -61,17 +58,13 @@ export class ValidateController {
           role: string;
         };
 
-        // Check if the user is blocked
-        const userKey = `suspend:${payload.sub}`;
+        const isSuspended = await this._userService.isSuspended(payload.sub);
 
-        const isSuspented = await this.cacheService.get(userKey);
-
-        if (isSuspented) {
+        if (isSuspended) {
           res.status(403).json({ message: 'User is suspended' });
           return;
         }
 
-        // Inject user info in response headers
         res.set('X-User-ID', payload.sub);
         res.set('X-User-Role', payload.role);
 
