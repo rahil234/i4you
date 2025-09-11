@@ -1,10 +1,10 @@
 import { UserModel, UserDocument } from '@/models/user.model';
-import IUserRepository from '@/repositories/interfaces/IUserRepository';
+import IUserRepository from '@/repositories/interfaces/IPaymentRepository';
 import { BaseRepository } from '@/repositories/base.repository';
 import { injectable } from 'inversify';
 
 @injectable()
-export class UserRepository
+export class PaymentRepository
   extends BaseRepository<UserDocument>
   implements IUserRepository
 {

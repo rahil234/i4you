@@ -25,8 +25,6 @@ export class NotificationListener {
 
   @EventPattern('chat.events')
   async handleChatEvent(@Payload() payload: MatchEventPayload) {
-    console.log('Received chat event:', payload);
-
     if (!payload.recipientId) {
       console.error('No recipientId provided in payload:', payload);
       return;

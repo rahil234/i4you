@@ -4,12 +4,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { env } from '@/config';
 import { SearchResponse, TYPES } from '@/types';
 import ICacheService from '@/services/interfaces/ICacheService';
+import { IMediaService } from '@/services/interfaces/IMediaService';
 
 const blockedImageUrl =
   'https://res.cloudinary.com/snapcart-website/image/upload/v1754467019/content-blocked.jpg';
 
 @injectable()
-export class MediaService {
+export class MediaService implements IMediaService {
   constructor(@inject(TYPES.CacheService) private cacheService: ICacheService) {
     cloudinary.config({
       cloud_name: env.CLOUDINARY_CLOUD_NAME,

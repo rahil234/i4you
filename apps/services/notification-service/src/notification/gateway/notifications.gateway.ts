@@ -4,8 +4,9 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { NotificationsService } from '../services/notifications.service';
-import { AuthenticatedSocket } from '../types/authenticated-socket';
+import { Inject } from '@nestjs/common';
+import { AuthenticatedSocket } from '../../types/authenticated-socket.js';
+import { ISocketService } from '../../socket/services/interfaces/ISocketService';
 
 @WebSocketGateway({
   cors: {
@@ -17,7 +18,10 @@ export class NotificationsGateway {
   @WebSocketServer()
   server: Server;
 
-  constructor(private readonly notificationsService: NotificationsService) {}
+  constructor(
+    @Inject('SocketService')
+    private readonly _socketService: ISocketService,
+  ) {}
 
   afterInit(server: Server) {
     server.use((socket, next) => {
@@ -36,7 +40,7 @@ export class NotificationsGateway {
     const userId = socket.handshake.headers['x-user-id'];
 
     if (typeof userId === 'string') {
-      this.notificationsService
+      this._socketService
         .saveSocketMapping(userId, socket.id)
         .catch((err) => console.error(`Error saving mapping: ${err}`));
     } else {
@@ -44,7 +48,7 @@ export class NotificationsGateway {
     }
 
     socket.on('disconnect', () => {
-      this.notificationsService
+      this._socketService
         .removeSocketMapping(socket.id)
         .then(() => console.log(`Socket ${socket.id} mapping removed`))
         .catch((err) => console.error(`Error removing socket mapping: ${err}`));
@@ -53,7 +57,7 @@ export class NotificationsGateway {
   }
 
   async emitToUser(userId: string, event: string, payload: any) {
-    const socketId = await this.notificationsService.getSocketId(userId);
+    const socketId = await this._socketService.getSocketId(userId);
     if (socketId) {
       this.server.to(socketId).emit(event, payload);
     }

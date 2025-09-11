@@ -12,13 +12,13 @@ import { Server, Socket } from 'socket.io';
 
 import { User } from '@i4you/shared';
 
-import { ChatService } from './services/chat.service.js';
-import { AuthenticatedSocket } from '../types/authenticated-socket.js';
-import { MessageRequestDto } from './dto/message.request.dto.js';
-import { ChatResponseDto } from './dto/get-chat.dto.js';
-import { UserGrpcService } from '../user/user.grpc.service.js';
-import { MessageResponseDto } from './dto/message.response.dto.js';
-import { Message } from './schemas/message.schema.js';
+import { AuthenticatedSocket } from '../../types/authenticated-socket.js';
+import { MessageRequestDto } from '../dto/message.request.dto.js';
+import { ChatResponseDto } from '../dto/get-chat.dto.js';
+import { MessageResponseDto } from '../dto/message.response.dto.js';
+import { IUserService } from '../../user/interfaces/IUserService.js';
+import { IChatService } from '../services/interfaces/IChatService.js';
+import { Message } from '../entities/message.entity.js';
 
 @WebSocketGateway({
   cors: {
@@ -31,9 +31,10 @@ export class ChatGateway implements OnGatewayInit {
   server: Server;
 
   constructor(
-    private readonly chatService: ChatService,
-    private readonly userGrpcService: UserGrpcService,
-    @Inject('KAFKA_SERVICE') private readonly kafkaService: ClientKafka,
+    @Inject('ChatService')
+    private readonly _chatService: IChatService,
+    @Inject('UserService') private readonly _userService: IUserService,
+    @Inject('KAFKA_SERVICE') private readonly _kafkaService: ClientKafka,
   ) {}
 
   afterInit(server: Server) {
@@ -66,7 +67,7 @@ export class ChatGateway implements OnGatewayInit {
     @MessageBody('newUserId') newUserId: string,
     @MessageBody('message') message: { content: string; timestamp: string },
   ) {
-    let chat = await this.chatService.findChatByParticipants(
+    let chat = await this._chatService.findChatByParticipants(
       socket.user.id,
       newUserId,
     );
@@ -80,9 +81,9 @@ export class ChatGateway implements OnGatewayInit {
         newUserId,
       );
 
-      chat = await this.chatService.createChat(socket.user.id, newUserId);
+      chat = await this._chatService.createChat(socket.user.id, newUserId);
 
-      newMessage = await this.chatService.createMessage({
+      newMessage = await this._chatService.createMessage({
         chatId: chat._id.toString(),
         sender: socket.user.id,
         content: message.content,
@@ -92,11 +93,11 @@ export class ChatGateway implements OnGatewayInit {
       console.log('Chat already exists:', chat);
     }
 
-    const otherUser = (await this.userGrpcService.getUserById(
+    const otherUser = (await this._userService.getUserById(
       newUserId,
     )) as unknown as User;
 
-    const user = (await this.userGrpcService.getUserById(
+    const user = (await this._userService.getUserById(
       socket.user.id,
     )) as unknown as User;
 
@@ -111,7 +112,7 @@ export class ChatGateway implements OnGatewayInit {
     socket.emit('newChat', new ChatResponseDto(chat, otherUser, null));
 
     if (newMessage) {
-      this.kafkaService.emit('chat.events', {
+      this._kafkaService.emit('chat.events', {
         type: 'NEW_CHAT',
         recipientId: newUserId,
         data: {
@@ -129,11 +130,11 @@ export class ChatGateway implements OnGatewayInit {
   ) {
     const userId = socket.handshake.headers['x-user-id'] as string;
 
-    const chat = await this.chatService.findChatById(chatId);
+    const chat = await this._chatService.findChatById(chatId);
 
     if (!chat) {
       console.log('Creating new chat for user:', userId, 'and chatId:', chatId);
-      // chat = await this.chatService.createChat(userId, chatId);
+      // chat = await this._chatService.createChat(userId, chatId);
       throw new Error('Chat not found');
     }
 
@@ -167,7 +168,7 @@ export class ChatGateway implements OnGatewayInit {
 
     const timestamp = payload.timestamp || Date.now();
 
-    const chat = await this.chatService.findChatById(payload.chatId);
+    const chat = await this._chatService.findChatById(payload.chatId);
 
     if (!chat) {
       console.error('Chat not found:', payload.chatId);
@@ -176,7 +177,7 @@ export class ChatGateway implements OnGatewayInit {
 
     const otherUserId = chat.participants.find((id) => id !== socket.user.id);
 
-    const newMessage = await this.chatService.createMessage({
+    const newMessage = await this._chatService.createMessage({
       chatId: payload.chatId,
       sender: socket.user.id,
       content: payload.content,
@@ -186,7 +187,7 @@ export class ChatGateway implements OnGatewayInit {
     const isRecipientConnected = false;
 
     if (!isRecipientConnected) {
-      this.kafkaService.emit('chat.events', {
+      this._kafkaService.emit('chat.events', {
         type: 'NEW_MESSAGE',
         recipientId: otherUserId,
         data: new MessageResponseDto(newMessage),
@@ -206,7 +207,7 @@ export class ChatGateway implements OnGatewayInit {
     @MessageBody('chatId') chatId: string,
     @MessageBody('page') page: number,
   ) {
-    const messages = await this.chatService.getMessages(chatId, page);
+    const messages = await this._chatService.getMessages(chatId, page);
     socket.emit('messagesPage', { chatId, page, messages });
   }
 
@@ -240,7 +241,7 @@ export class ChatGateway implements OnGatewayInit {
       chatId: payload.chatId,
     });
 
-    await this.chatService.markMessagesAsRead(payload.chatId, userId);
+    await this._chatService.markMessagesAsRead(payload.chatId, userId);
   }
 
   @SubscribeMessage('delivered_receipt')
@@ -256,6 +257,6 @@ export class ChatGateway implements OnGatewayInit {
       chatId: payload.chatId,
     });
 
-    await this.chatService.markMessagesAsRead(payload.chatId, userId);
+    await this._chatService.markMessagesAsRead(payload.chatId, userId);
   }
 }

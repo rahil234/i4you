@@ -1,14 +1,11 @@
-import { inject, injectable } from 'inversify';
+import { injectable } from 'inversify';
 import cloudinary from '@/config/cloudinary.config';
-import { TYPES } from '@/types';
-import IModerationRepository from '@/repositories/interfaces/IModerationRepository';
+import { IModerationService } from '@/services/interfaces/IModerationService';
 
 @injectable()
-export class ModerationService {
-  constructor(@inject(TYPES.ModerationRepository) private moderationRepository: IModerationRepository) {
-  }
+export class ModerationService implements IModerationService {
 
-  getPendingImages = async (status: 'approved' | 'pending' | 'rejected', sortBy?: string) => {
+  getPendingImages = async (status: 'approved' | 'pending' | 'rejected') => {
     const result = await cloudinary.search
       .expression(`moderation_status:${status}`)
       .sort_by('created_at', 'desc')
@@ -28,7 +25,7 @@ export class ModerationService {
     }));
   };
 
-  updateModerationStatus = async (publicId, status) => {
+  updateModerationStatus = async (publicId: string, status: string) => {
     const result = await cloudinary.api.update(publicId, {
       moderation_status: status,
       type: 'authenticated',

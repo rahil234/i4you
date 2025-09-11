@@ -1,10 +1,12 @@
-import { Controller, Get, Headers, Param, Query } from '@nestjs/common';
-import { ChatService } from './services/chat.service.js';
-import { MessageResponseDto } from './dto/message.response.dto.js';
+import { Controller, Get, Headers, Inject, Param, Query } from '@nestjs/common';
+import { MessageResponseDto } from '../dto/message.response.dto.js';
+import { IChatService } from '../services/interfaces/IChatService';
 
 @Controller()
 export class ChatController {
-  constructor(private readonly chatService: ChatService) {}
+  constructor(
+    @Inject('ChatService') private readonly chatService: IChatService,
+  ) {}
 
   @Get('/')
   getChats(@Headers('x-user-id') userId: string): Promise<any> {

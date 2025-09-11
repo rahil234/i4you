@@ -1,10 +1,13 @@
-import { Body, Controller, Post, Headers } from '@nestjs/common';
-import { NotificationsService } from '../services/notifications.service';
 import type { PushSubscription } from 'web-push';
+import { Body, Controller, Post, Headers, Inject } from '@nestjs/common';
+import { NotificationsService } from '../services/notifications.service.js';
 
 @Controller()
 export class NotificationController {
-  constructor(private readonly notificationService: NotificationsService) {}
+  constructor(
+    @Inject('NotificationService')
+    private readonly notificationService: NotificationsService,
+  ) {}
 
   @Post('subscribe')
   async subscribe(

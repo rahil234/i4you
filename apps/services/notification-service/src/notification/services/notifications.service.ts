@@ -1,22 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
 import type { PushSubscription } from 'web-push';
+import { INotificationsService } from './interfaces/INotificationService';
 
 @Injectable()
-export class NotificationsService {
+export class NotificationsService implements INotificationsService {
   constructor(@Inject('REDIS_CLIENT') private readonly redis: Redis) {}
-
-  async saveSocketMapping(userId: string, socketId: string): Promise<void> {
-    await this.redis.set(`socket:${userId}`, socketId);
-  }
-
-  async getSocketId(userId: string): Promise<string | null> {
-    return this.redis.get(`socket:${userId}`);
-  }
-
-  async removeSocketMapping(userId: string): Promise<void> {
-    await this.redis.del(`socket:${userId}`);
-  }
 
   async getAllSubscription(): Promise<PushSubscription[]> {
     const keys = await this.redis.keys('subscription:*');
@@ -60,8 +49,7 @@ export class NotificationsService {
     subscription: PushSubscription,
     payload: string,
   ): Promise<void> {
-    // This method can be used to send notifications to the subscribed users
-    // For example, using a push service or WebSocket
+    // This method can be used to send notifications to the subscribed users using a push service or WebSocket.
     console.log('Sending notification to:', subscription);
     console.log('Payload:', payload);
     return Promise.resolve();

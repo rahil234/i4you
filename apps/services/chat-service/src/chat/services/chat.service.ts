@@ -1,34 +1,30 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { User } from '@i4you/shared';
-
-import { ChatRepository } from '../repositories/chat.repository.js';
-import { MessageRepository } from '../repositories/message.repository.js';
-import { UserGrpcService } from '../../user/user.grpc.service.js';
 
 import { ChatResponseDto } from '../dto/get-chat.dto.js';
 import { UserResponseDto } from '../dto/get-user.dto.js';
-
-interface Message {
-  chatId: string;
-  sender: string;
-  content: string;
-  timestamp: number;
-}
+import { IChatRepository } from '../repositories/interfaces/chat.repository.interface';
+import { IMessageRepository } from '../repositories/interfaces/message.repository.interface';
+import { IUserService } from '../../user/interfaces/IUserService';
+import { Message } from '../../types';
+import { IChatService } from './interfaces/IChatService';
+import { Chat } from '../schemas/chat.schema';
 
 @Injectable()
-export class ChatService {
+export class ChatService implements IChatService {
   constructor(
-    private readonly chatRepository: ChatRepository,
-    private readonly messageRepository: MessageRepository,
-    private readonly userGrpcService: UserGrpcService,
+    @Inject('ChatRepository') private readonly _chatRepository: IChatRepository,
+    @Inject('MessageRepository')
+    private readonly _messageRepository: IMessageRepository,
+    @Inject('UserService') private readonly _userService: IUserService,
   ) {}
 
-  async findChatById(chatId: string) {
-    return this.chatRepository.findById(chatId);
+  async findChatById(chatId: string): Promise<Chat | null> {
+    return this._chatRepository.findById(chatId);
   }
 
   async findChatsByUserId(userId: string) {
-    const chats = await this.chatRepository.findByUser(userId);
+    const chats = await this._chatRepository.findByUser(userId);
 
     const enrichedChats = await Promise.all(
       chats.map(async (chat) => {
@@ -36,15 +32,15 @@ export class ChatService {
 
         if (!otherUserId) return;
 
-        const user = (await this.userGrpcService.getUserById(
+        const user = (await this._userService.getUserById(
           otherUserId,
         )) as unknown as User;
 
-        const lastMessage = await this.messageRepository.findLastMessage(
+        const lastMessage = await this._messageRepository.findLastMessage(
           chat.id,
         );
 
-        const unreadCount = await this.messageRepository.countUnreadMessages(
+        const unreadCount = await this._messageRepository.countUnreadMessages(
           chat.id,
           userId,
         );
@@ -65,7 +61,7 @@ export class ChatService {
   }
 
   async getInitialChatUser(userId: string) {
-    const user = (await this.userGrpcService.getUserById(
+    const user = (await this._userService.getUserById(
       userId,
     )) as unknown as User;
 
@@ -73,15 +69,15 @@ export class ChatService {
   }
 
   async findChatByParticipants(userA: string, userB: string) {
-    return this.chatRepository.findByParticipants(userA, userB);
+    return this._chatRepository.findByParticipants(userA, userB);
   }
 
   async createChat(userA: string, userB: string) {
-    return this.chatRepository.create([userA, userB]);
+    return this._chatRepository.create([userA, userB]);
   }
 
   async createMessage({ chatId, sender, content, timestamp }: Message) {
-    const message = await this.messageRepository.create(
+    const message = await this._messageRepository.create(
       chatId,
       sender,
       content,
@@ -89,7 +85,7 @@ export class ChatService {
     );
 
     // Optional: Update chat's last message summary or timestamp
-    await this.chatRepository.updateLastMessage(chatId, {
+    await this._chatRepository.updateLastMessage(chatId, {
       sender,
       content,
       timestamp: new Date().toISOString(),
@@ -99,14 +95,14 @@ export class ChatService {
   }
 
   async getMessages(chatId: string, page = 0, limit = 20) {
-    return this.messageRepository.findByChatId(chatId, page, limit);
+    return this._messageRepository.findByChatId(chatId, page, limit);
   }
 
   async markMessagesAsDelivered(chatId: string, userId?: string) {
-    return this.messageRepository.markAsDelivered(chatId, userId);
+    return this._messageRepository.markAsDelivered(chatId, userId);
   }
 
   async markMessagesAsRead(chatId: string, userId?: string) {
-    return this.messageRepository.markAsRead(chatId, userId);
+    return this._messageRepository.markAsRead(chatId, userId);
   }
 }
