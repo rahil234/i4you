@@ -1,3 +1,0 @@
-<component name="DependencyValidationManager">
-  <scope name="Auth-Service" pattern="file[i4you]:apps/services/auth-service/*||file[i4you]:apps/services/auth-service//*" />
-</component>

@@ -163,4 +163,5 @@ next-env.d.ts
 .idea/workspace.xml
 
 .terraform
+
 .idea

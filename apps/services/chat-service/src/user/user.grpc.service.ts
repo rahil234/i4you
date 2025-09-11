@@ -1,24 +1,33 @@
 import {
   GetUserByEmailResponse,
-  GetUserByIdResponse,
   UserServiceClient,
 } from '@i4you/proto-files/user/v2';
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { GrpcClientProvider } from './grpc.client.provider.js';
+import { IUserService } from './interfaces/IUserService';
+import { User } from '@i4you/shared';
 
 @Injectable()
-export class UserGrpcService {
+export class GRPCUserService implements IUserService {
   private userGrpcService: UserServiceClient;
 
-  constructor(@Inject() GrpcClientProvider: GrpcClientProvider) {
+  constructor(private readonly GrpcClientProvider: GrpcClientProvider) {
     this.userGrpcService = GrpcClientProvider.userClient;
   }
 
-  async getUserById(id: string): Promise<GetUserByIdResponse> {
+  async getUserById(id: string): Promise<User> {
     return new Promise((resolve, reject) => {
       this.userGrpcService.getUserById({ id }, (err, response) => {
         if (err) return reject(err);
-        resolve(response);
+        resolve({
+          ...response,
+          role: 'member',
+          joined: response.createdAt,
+          status: response.status as User['status'],
+          gender: response.gender as User['gender'],
+          preferences: response.preferences as User['preferences'],
+          location: response.location as User['location'],
+        });
       });
     });
   }

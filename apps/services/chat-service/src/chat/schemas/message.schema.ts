@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
 @Schema({ timestamps: true })
-export class Message extends Document<Types.ObjectId> {
+export class MessageDocument extends Document<Types.ObjectId> {
   @Prop({ type: String, required: true })
   chatId: string;
 
@@ -25,4 +25,4 @@ export class Message extends Document<Types.ObjectId> {
   updatedAt: Date;
 }
 
-export const MessageSchema = SchemaFactory.createForClass(Message);
+export const MessageSchema = SchemaFactory.createForClass(MessageDocument);

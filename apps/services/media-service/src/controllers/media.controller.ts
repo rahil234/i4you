@@ -1,11 +1,13 @@
 import { inject, injectable } from 'inversify';
 import { handleAsync } from '@/utils/handle-async';
-import { MediaService } from '@/services/media.service';
 import { TYPES } from '@/types';
+import { IMediaService } from '@/services/interfaces/IMediaService';
 
 @injectable()
 export class MediaController {
-  constructor(@inject(TYPES.MediaService) private mediaService: MediaService) {}
+  constructor(
+    @inject(TYPES.MediaService) private mediaService: IMediaService
+  ) {}
 
   getUploadUrl = handleAsync(async (req, res) => {
     const fileType = req.query.fileType as string;

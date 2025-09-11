@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { UserGrpcService } from './user.grpc.service.js';
+import { GRPCUserService } from './user.grpc.service.js';
 import { GrpcClientProvider } from './grpc.client.provider.js';
 
 @Module({
-  providers: [UserGrpcService, GrpcClientProvider],
-  exports: [UserGrpcService],
+  providers: [GRPCUserService, GrpcClientProvider],
+  exports: [GRPCUserService, GrpcClientProvider],
 })
 export class UserModule {}

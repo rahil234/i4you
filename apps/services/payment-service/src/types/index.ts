@@ -1,6 +1,5 @@
 export const TYPES = {
-  DiscoverService: Symbol.for('DiscoverService'),
+  PaymentService: Symbol.for('PaymentService'),
   StripeController: Symbol.for('StripeController'),
-  GrpcClientProvider: Symbol.for('GrpcClientProvider'),
   CacheService: Symbol.for('CacheService'),
 };

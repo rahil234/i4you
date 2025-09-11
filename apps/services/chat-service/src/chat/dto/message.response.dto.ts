@@ -1,5 +1,5 @@
 import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
-import { Message } from '../schemas/message.schema';
+import { Message } from '../entities/message.entity.js';
 
 export class MessageResponseDto {
   @IsString()
@@ -26,11 +26,11 @@ export class MessageResponseDto {
   timestamp: number;
 
   constructor(message: Message) {
-    this.id = message._id.toString();
+    this.id = message.id;
     this.chatId = message.chatId;
     this.sender = message.sender;
     this.content = message.content;
     this.status = message.status;
-    this.timestamp = new Date(message.createdAt).getTime();
+    this.timestamp = new Date(message.createdAt!).getTime();
   }
 }
