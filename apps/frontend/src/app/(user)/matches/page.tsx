@@ -31,10 +31,11 @@ import {
 } from '@/components/ui/dialog';
 import {Match} from '@/types';
 import {BlockedUsersDialog} from '@/components/user/match/blocked-users-dialog';
+import {Skeleton} from "@/components/ui/skeleton";
 
 export default function MatchesPage() {
     const [searchQuery, setSearchQuery] = useState('');
-    const {matches, blockMatch, resetCount} = useMatchesStore();
+    const {loading, matches, blockMatch, resetCount} = useMatchesStore();
     const [openDialog, setOpenDialog] = useState<null | {
         type: 'report' | 'block';
         match: Match;
@@ -43,7 +44,7 @@ export default function MatchesPage() {
 
     useEffect(() => {
         resetCount();
-    }, []);
+    }, [resetCount]);
 
     const filteredMatches = matches.filter(
         (match) =>
@@ -60,6 +61,58 @@ export default function MatchesPage() {
         }
         setOpenDialog(null);
     };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-background">
+                <div className="max-w-lg mx-auto pt-6 px-4">
+                    {/* Header Skeleton */}
+                    <div className="mb-8">
+                        <div className="flex items-center justify-between mb-6">
+                            <div className="space-y-2">
+                                <Skeleton className="h-8 w-48 rounded-lg"/> {/* Title */}
+                                <Skeleton className="h-4 w-24 rounded-lg"/> {/* Matches count */}
+                            </div>
+                            <Skeleton className="h-10 w-10 rounded-full"/> {/* More menu button */}
+                        </div>
+
+                        {/* Search Bar Skeleton */}
+                        <div className="relative">
+                            <Skeleton className="h-12 rounded-full pl-10 w-full"/>
+                            {/* The search icon itself is decorative, so just skeleton the input */}
+                        </div>
+                    </div>
+
+                    {/* Matches List Skeleton */}
+                    <div className="space-y-4">
+                        {[...Array(5)].map((_, idx) => (
+                            <div
+                                key={idx}
+                                className="bg-card rounded-2xl p-4 shadow-sm border border-border animate-pulse"
+                            >
+                                <div className="flex items-center space-x-4">
+                                    {/* Avatar Skeleton */}
+                                    <Skeleton className="h-16 w-16 rounded-full"/>
+
+                                    {/* User Info Skeleton */}
+                                    <div className="flex-1 space-y-2 py-1">
+                                        <Skeleton className="h-6 w-3/5 rounded-lg"/>
+                                        <Skeleton className="h-4 w-1/3 rounded-lg"/>
+                                        <Skeleton className="h-4 w-2/5 rounded-lg"/>
+                                    </div>
+
+                                    {/* Message Button Skeleton */}
+                                    <Skeleton className="h-12 w-12 rounded-full"/>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="h-8"></div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <UserLayout>

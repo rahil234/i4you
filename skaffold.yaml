@@ -195,6 +195,14 @@ profiles:
                 dest: .
           docker:
             dockerfile: Dockerfile.dev
+        - image: subscription-service-image
+          context: apps/services/subscription-service
+          sync:
+            manual:
+              - src: src/**/*
+                dest: .
+          docker:
+            dockerfile: Dockerfile.dev
         - image: es-worker-service-image
           context: apps/services/es-worker-service
           sync:
@@ -240,6 +248,7 @@ profiles:
         - k8s/dev/services/notification-service.yaml
         - k8s/dev/services/interaction-service.yaml
         - k8s/dev/services/payment-service.yaml
+        - k8s/dev/services/subscription-service.yaml
         - k8s/dev/services/stripe-webhook-handler.yaml
         - k8s/dev/services/frontend.yaml
         - k8s/dev/nginx-socket-proxy.yaml

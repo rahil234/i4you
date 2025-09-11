@@ -14,7 +14,7 @@ import { container } from '@/config/inversify.config';
 import { TYPES } from '@/types';
 import { UserService } from '@/services/user.service';
 
-const userService = container.get(TYPES.UserService) as UserService;
+const userService = container.get<UserService>(TYPES.UserService);
 
 export class UserGrpcService implements UserServiceServer {
   [name: string]: UntypedHandleCall;
@@ -139,6 +139,10 @@ export class UserGrpcService implements UserServiceServer {
     }
   };
 
-  updateUser: handleUnaryCall<UpdateUserRequest, UpdateUserResponse> =
-    async () => {};
+  updateUser: handleUnaryCall<UpdateUserRequest, UpdateUserResponse> = async (
+    _call,
+    callback
+  ) => {
+    callback({ code: 13, message: 'Not Implemented' });
+  };
 }

@@ -13,21 +13,29 @@ import { IKafkaService } from '@/events/kafka/interfaces/IKafkaService';
 import { MediaService } from '@/services/media.service';
 import { IUserService } from '@/services/interfaces/IUserService';
 import IMediaService from '@/services/interfaces/IMediaService';
+import { ISubscriptionService } from '@/services/interfaces/ISubscriptionService';
+import { HttpSubscriptionService } from '@/services/http-subscription.service';
 
-const container = new Container();
+export const container = new Container();
 
 container.bind<IUserRepository>(TYPES.UserRepository).to(MongoUserRepository);
+
 container
   .bind<IAdminRepository>(TYPES.AdminRepository)
   .to(MongoAdminRepository);
 
 container.bind<IUserService>(TYPES.UserService).to(UserService);
+
+container
+  .bind<ISubscriptionService>(TYPES.SubscriptionService)
+  .to(HttpSubscriptionService);
+
 container.bind<IMediaService>(TYPES.MediaService).to(MediaService);
+
 container.bind<ICacheService>(TYPES.CacheService).to(CacheService);
+
 container
   .bind<IKafkaService>(TYPES.KafkaService)
   .toConstantValue(new KafkaService());
 
 container.bind<UserController>(TYPES.UserController).to(UserController);
-
-export { container };

@@ -1,7 +1,12 @@
 import { injectable, inject } from 'inversify';
 import type { RootFilterQuery } from 'mongoose';
 import { IUserRepository } from '@/repositories/interfaces/IUserRepository';
-import { GetUsersRequestDTO, MatchEventPayload, TYPES } from '@/types';
+import {
+  GetUsersRequestDTO,
+  MatchEventPayload,
+  Subscription,
+  TYPES,
+} from '@/types';
 import UserDTO from '@/dtos/user.dtos';
 import { BadRequestError } from '@/errors/BadRequestError';
 import { IAdminRepository } from '@/repositories/interfaces/IAdminRepository';
@@ -9,12 +14,13 @@ import { UserJwtPayload } from '@i4you/shared';
 import OnboardingRequestDTO from '@/dtos/onboarding.request.dtos';
 import ICacheService from '@/services/interfaces/ICacheService';
 import { IUserService } from '@/services/interfaces/IUserService';
-import IKafkaService from '@/events/kafka/interfaces/IKafkaService';
+import { IKafkaService } from '@/events/kafka/interfaces/IKafkaService';
 import { createError } from '@i4you/http-errors';
 import IMediaService from '@/services/interfaces/IMediaService';
 import { USER_ROLES } from '@/constants/roles.constant';
 import { Admin } from '@/entities/admin.entity';
 import { User } from '@/entities/user.entity';
+import { ISubscriptionService } from '@/services/interfaces/ISubscriptionService';
 
 @injectable()
 export class UserService implements IUserService {
@@ -22,6 +28,8 @@ export class UserService implements IUserService {
     @inject(TYPES.UserRepository) private _userRepository: IUserRepository,
     @inject(TYPES.AdminRepository) private _adminRepository: IAdminRepository,
     @inject(TYPES.MediaService) private _mediaService: IMediaService,
+    @inject(TYPES.SubscriptionService)
+    private _subscriptionService: ISubscriptionService,
     @inject(TYPES.KafkaService) private _kafkaService: IKafkaService,
     @inject(TYPES.CacheService) private _cacheService: ICacheService
   ) {}
@@ -64,7 +72,11 @@ export class UserService implements IUserService {
       throw new BadRequestError('User not found');
     }
 
-    return new UserDTO(user);
+    const subscription = await this._subscriptionService.getUserSubscription(
+      user.id
+    );
+
+    return new UserDTO(user, subscription);
   }
 
   async getUsers({ page, limit, search, status, gender }: GetUsersRequestDTO) {
@@ -99,7 +111,11 @@ export class UserService implements IUserService {
         const photos = await this._mediaService.getUserImages(
           user.id.toString()
         );
-        return new UserDTO(user, photos);
+        const subscription =
+          await this._subscriptionService.getUserSubscription(
+            user.id.toString()
+          );
+        return new UserDTO(user, subscription, photos);
       })
     );
 
@@ -283,5 +299,9 @@ export class UserService implements IUserService {
 
   async getUserPhotos(userId: string) {
     return this._mediaService.getUserImages(userId);
+  }
+
+  getUserSubscription(userId: string): Promise<Subscription> {
+    return this._subscriptionService.getUserSubscription(userId);
   }
 }

@@ -42,4 +42,11 @@ export class InteractionController {
     const interaction = await this._interactionService.createInteraction(data);
     res.status(201).json(interaction);
   });
+
+  getInteractionBalances = handleAsync(async (req, res) => {
+    const userId = req.user.id;
+    const balances =
+      await this._interactionService.getInteractionBalances(userId);
+    res.status(200).json(balances);
+  });
 }

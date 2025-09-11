@@ -33,6 +33,12 @@ spec:
                 secretKeyRef:
                   name: vault-secret
                   key: MONGODB_URI
+            - name: REDIS_HOST
+              value: "redis.redis.svc.cluster.local"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_PASSWORD
+              value: "password"
 ---
 apiVersion: v1
 kind: Service
