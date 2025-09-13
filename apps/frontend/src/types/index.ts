@@ -8,7 +8,7 @@ export interface User extends Omit<BaseUser, 'location'> {
     bio: string;
     location: string;
     subscription: {
-        planId: 'basic' | 'plus' | 'premium';
+        planId: 'free' | 'plus' | 'premium';
         status: string;
     };
     photos: string[];

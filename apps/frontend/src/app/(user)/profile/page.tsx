@@ -72,7 +72,7 @@ export default function ProfilePage() {
             title: 'Free Member',
             description: 'Basic features',
             buttonText: 'Upgrade to Premium',
-            buttonAction: () => router.push('/subscribe'),
+            buttonAction: () => router.push('/subscription'),
         },
         plus: {
             title: 'Plus Member',

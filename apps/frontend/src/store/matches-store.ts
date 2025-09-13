@@ -1,23 +1,18 @@
 'use client';
 
-import type {Match, User} from '@/types';
+import type {Match} from '@/types';
 import {create, StateCreator} from 'zustand';
 import {devtools} from 'zustand/middleware';
 import MatchService from '@/services/match.service';
 import matchService from '@/services/match.service';
-import InteractionService from '@/services/interaction.service';
 
 interface MatchesStore {
     matches: Match[];
     newMatches: Match[];
     newMatchesCount: number;
-    potentialMatches: User[];
     loading: boolean;
     error: string | null;
     initial: () => Promise<void>;
-    likeUser: (userId: string) => Promise<void>;
-    superLikeUser: (userId: string) => Promise<void>;
-    dislikeUser: (userId: string) => Promise<void>;
     unmatchUser: (matchId: string) => Promise<void>;
     pushNewMatch: (newMatch: Match) => void;
     blockMatch: (matchId: string) => Promise<void>;
@@ -50,50 +45,6 @@ const matchStore: StateCreator<MatchesStore, [['zustand/devtools', never]]> = (s
                 newMatchesCount: matches.length,
                 loading: false,
             }, undefined, 'matchStore/initial/success');
-        },
-
-        likeUser: async (userId) => {
-            await new Promise((resolve) => setTimeout(resolve, 500));
-
-            const {error} = await InteractionService.likeUser(userId);
-
-            if (error) {
-                console.log('Error liking user:', error);
-                set({error: 'Failed to like user'});
-                return;
-            }
-
-            set((state) => ({
-                potentialMatches: state.potentialMatches.filter((user) => user.id !== userId),
-            }), undefined, 'matchStore/likeUser');
-        },
-
-        superLikeUser: async (userId) => {
-            const {error} = await InteractionService.superLikeUser(userId);
-
-            if (error) {
-                console.log('Error Super liking user:', error);
-                set({error: 'Failed to super-like user'});
-                return;
-            }
-
-            set((state) => ({
-                potentialMatches: state.potentialMatches.filter((user) => user.id !== userId),
-            }), undefined, 'matchStore/superLikeUser');
-        },
-
-        dislikeUser: async (userId) => {
-            const {error} = await InteractionService.dislikeUser(userId);
-
-            if (error) {
-                console.log('Error disliking user:', error);
-                set({error: 'Failed to dislike user'});
-                return;
-            }
-
-            set((state) => ({
-                potentialMatches: state.potentialMatches.filter((user) => user.id !== userId),
-            }), undefined, 'matchStore/dislikeUser');
         },
 
         reFetchMatches: async () => {
@@ -153,7 +104,6 @@ const matchStore: StateCreator<MatchesStore, [['zustand/devtools', never]]> = (s
             set({
                 matches: [],
                 newMatches: [],
-                potentialMatches: [],
                 loading: false,
                 error: null,
             }, undefined, 'matchStore/clear');

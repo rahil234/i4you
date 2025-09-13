@@ -9,6 +9,12 @@ class SubscriptionService {
             .then(res => res.data),
     );
 
+    cancel = () => handleApi(() =>
+        api
+            .delete('/subscription')
+            .then(res => res.data),
+    );
+
     getSessionDetails = (sessionId: string) => handleApi(() =>
         api
             .get(`/payment/session/${sessionId}`)

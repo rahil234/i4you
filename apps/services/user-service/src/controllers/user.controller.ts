@@ -30,8 +30,6 @@ export class UserController {
 
     const subscription = await this._userService.getUserSubscription(userId);
 
-    console.log('sub❤️', subscription);
-
     const data =
       role === USER_ROLES.ADMIN
         ? new AdminDTO(user)

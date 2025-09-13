@@ -16,8 +16,6 @@ export default function AuthSessionHydrator({user}: {
         return null;
     }
 
-    console.log('user from props:', user);
-
     useEffect(() => {
         if (user) {
             setState({user, isAuthenticated: true, isLoading: false});

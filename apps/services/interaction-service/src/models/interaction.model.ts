@@ -1,4 +1,5 @@
 import { Schema, model, Document } from 'mongoose';
+import { INTERACTION } from '@/constants/interactions.constant';
 
 export interface InteractionDocument extends Document {
   fromUserId: string;
@@ -13,7 +14,7 @@ const InteractionSchema = new Schema<InteractionDocument>(
     toUserId: { type: String, required: true, index: true },
     type: {
       type: String,
-      enum: ['LIKE', 'DISLIKE', 'SUPERLIKE'],
+      enum: [INTERACTION.LIKE, INTERACTION.SUPERLIKE, INTERACTION.DISLIKE],
       required: true,
     },
   },
