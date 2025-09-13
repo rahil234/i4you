@@ -6,7 +6,7 @@ import {devtools} from 'zustand/middleware';
 import MatchService from '@/services/match.service';
 import matchService from '@/services/match.service';
 
-interface MatchesStore {
+interface MatchStore {
     matches: Match[];
     newMatches: Match[];
     newMatchesCount: number;
@@ -22,7 +22,7 @@ interface MatchesStore {
     clear: () => Promise<void>;
 }
 
-const matchStore: StateCreator<MatchesStore, [['zustand/devtools', never]]> = (set, get) => ({
+const matchStore: StateCreator<MatchStore, [['zustand/devtools', never]]> = (set, get) => ({
         matches: [],
         newMatches: [],
         newMatchesCount: 0,
@@ -111,7 +111,7 @@ const matchStore: StateCreator<MatchesStore, [['zustand/devtools', never]]> = (s
     }
 )
 
-export const useMatchesStore = create<MatchesStore>()(
+export const useMatchStore = create<MatchStore>()(
     devtools(
         matchStore,
         {

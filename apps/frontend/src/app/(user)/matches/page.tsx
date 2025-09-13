@@ -13,7 +13,7 @@ import {
     MoreVertical, Flag, CircleX,
 } from 'lucide-react';
 import Link from 'next/link';
-import {useMatchesStore} from '@/store/matches-store';
+import {useMatchStore} from '@/store/match-store';
 import {Notifications} from '@/components/user/notification';
 import {
     DropdownMenu,
@@ -35,7 +35,7 @@ import {Skeleton} from "@/components/ui/skeleton";
 
 export default function MatchesPage() {
     const [searchQuery, setSearchQuery] = useState('');
-    const {loading, matches, blockMatch, resetCount} = useMatchesStore();
+    const {loading, matches, blockMatch, resetCount} = useMatchStore();
     const [openDialog, setOpenDialog] = useState<null | {
         type: 'report' | 'block';
         match: Match;

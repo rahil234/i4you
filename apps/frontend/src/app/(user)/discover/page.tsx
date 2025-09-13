@@ -6,7 +6,7 @@ import {AnimatePresence} from 'motion/react';
 import {Loader2} from 'lucide-react';
 import Logo from '/public/favicon.ico';
 import {UserLayout} from '@/components/user-layout';
-import {useMatchesStore} from '@/store/matches-store';
+import {useMatchStore} from '@/store/match-store';
 import {UserProfileCard} from '@/components/user-profile-card';
 import {Notifications} from '@/components/user/notification';
 import {useAuthStore} from '@/store/auth-store';
@@ -17,7 +17,7 @@ import LimitOverlay from "@/components/user/discover/InteractionLimitOverlay";
 export default function DiscoverPage() {
     const {user} = useAuthStore();
     const cardRef = useRef<any>(null);
-    const {newMatches, closeMatch} = useMatchesStore();
+    const {newMatches, closeMatch} = useMatchStore();
     const {loading, potentialMatches} = useInteractionStore();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [matchAnimation, setMatchAnimation] = useState(false);
