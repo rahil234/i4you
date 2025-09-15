@@ -4,6 +4,7 @@ import OnboardingRequestDTO from '@/dtos/onboarding.request.dtos';
 import AdminDTO from '@/dtos/admin.dtos';
 import { User } from '@/entities/user.entity';
 import { Admin } from '@/entities/admin.entity';
+import { Subscription } from '@/types';
 
 interface GetUsersParams {
   page: number;
@@ -44,4 +45,6 @@ export interface IUserService {
   onBoarding(userId: string, data: OnboardingRequestDTO): Promise<void>;
 
   getUserPhotos(userId: string): Promise<string[]>;
+
+  getUserSubscription(userId: string): Promise<Subscription>;
 }

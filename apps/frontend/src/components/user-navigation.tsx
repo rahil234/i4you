@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Heart, MessageCircle, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useMatchesStore } from '@/store/matches-store';
+import { useMatchStore } from '@/store/match-store';
 import { Logo } from '@/components/logo';
 import { useChatStore } from '@/store/chat-store';
 import { useAuthStore } from '@/store/auth-store';
@@ -12,7 +12,7 @@ import { useMemo } from 'react';
 
 export function UserNavigation() {
   const pathname = usePathname();
-  const { newMatchesCount } = useMatchesStore();
+  const { newMatchesCount } = useMatchStore();
   const { chats, messages } = useChatStore();
   const { user } = useAuthStore();
 

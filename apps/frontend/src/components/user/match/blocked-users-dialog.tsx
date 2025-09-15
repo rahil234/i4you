@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { CircleX } from 'lucide-react';
 import matchService from '@/services/match.service';
 import { Match } from '@/types';
-import { useMatchesStore } from '@/store/matches-store';
+import { useMatchStore } from '@/store/match-store';
 
 interface BlockedUsersDialogProps {
   open: boolean;
@@ -16,7 +16,7 @@ interface BlockedUsersDialogProps {
 
 export function BlockedUsersDialog({ open, onClose }: BlockedUsersDialogProps) {
   const [blocked, setBlocked] = useState<Match[]>([]);
-  const { reFetchMatches } = useMatchesStore();
+  const { reFetchMatches } = useMatchStore();
 
   useEffect(() => {
     if (open) {

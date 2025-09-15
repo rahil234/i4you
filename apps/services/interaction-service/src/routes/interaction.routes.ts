@@ -74,4 +74,25 @@ router.post(
   interactionController.superLikeUser
 );
 
+/**
+ * @swagger
+ * /api/v1/interaction:
+ *   post:
+ *     summary: Create a new interaction
+ *     tags:
+ *       - User
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Interaction created successfully
+ *       400:
+ *         description: Bad request
+ */
+router.get(
+  '/balances',
+  authenticateAndAuthorizeMiddleware([USER_ROLES.MEMBER]),
+  interactionController.getInteractionBalances
+);
+
 export default router;

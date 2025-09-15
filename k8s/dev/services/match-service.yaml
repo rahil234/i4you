@@ -14,18 +14,18 @@ spec:
         app: match-service
         version: v1
     spec:
-#      initContainers:
-#        - name: wait-for-kafka
-#          image: busybox
-#          command:
-#            - sh
-#            - -c
-#            - |
-#              echo "Waiting for Kafka DNS to resolve..."
-#              until nslookup kafka-cluster-kafka-brokers.kafka.svc.cluster.local; do
-#                echo "Still waiting for Kafka..."
-#                sleep 2
-#              done
+      #      initContainers:
+      #        - name: wait-for-kafka
+      #          image: busybox
+      #          command:
+      #            - sh
+      #            - -c
+      #            - |
+      #              echo "Waiting for Kafka DNS to resolve..."
+      #              until nslookup kafka-cluster-kafka-brokers.kafka.svc.cluster.local; do
+      #                echo "Still waiting for Kafka..."
+      #                sleep 2
+      #              done
       containers:
         - name: match-service
           image: match-service-image:latest
@@ -48,12 +48,6 @@ spec:
                 secretKeyRef:
                   name: vault-secret
                   key: MONGODB_URI
-            - name: REDIS_HOST
-              value: "redis.redis-local.svc.cluster.local"
-            - name: REDIS_PORT
-              value: "6379"
-            - name: REDIS_PASSWORD
-              value: "password"
             - name: KAFKAJS_NO_PARTITIONER_WARNING
               value: "1"
 ---

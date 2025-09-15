@@ -44,7 +44,8 @@ export class MongoUserRepository
     filter: Partial<UserDocument>,
     options: { skip: number; limit: number }
   ): Promise<User[]> {
-    const docs = await UserModel.find(filter as RootFilterQuery<UserDocument>)
+    const docs = await this.model
+      .find(filter as RootFilterQuery<UserDocument>)
       .skip(options.skip)
       .limit(options.limit)
       .lean();
@@ -52,17 +53,6 @@ export class MongoUserRepository
   }
 
   async count(filter: Partial<UserDocument>): Promise<number> {
-    return UserModel.countDocuments(filter as RootFilterQuery<UserDocument>);
-  }
-
-  async findMany(filter: any, options: { skip: number; limit: number }) {
-    return UserModel.find(filter)
-      .skip(options.skip)
-      .limit(options.limit)
-      .lean();
-  }
-
-  async count(filter: any) {
-    return UserModel.countDocuments(filter);
+    return this.model.countDocuments(filter as RootFilterQuery<UserDocument>);
   }
 }

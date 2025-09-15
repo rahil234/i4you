@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: subscription-service
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: subscription-service
+  template:
+    metadata:
+      labels:
+        app: subscription-service
+        version: v1
+    spec:
+      containers:
+        - name: subscription-service
+          image: subscription-service-image
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 4010
+          env:
+            - name: NODE_ENV
+              value: "development"
+            - name: PORT
+              value: "4010"
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: MONGODB_URI
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: subscription-service
+  namespace: app
+spec:
+  type: ClusterIP
+  selector:
+    app: subscription-service
+  ports:
+    - name: http
+      port: 4010
+      targetPort: 4010

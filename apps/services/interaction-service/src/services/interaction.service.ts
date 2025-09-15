@@ -3,12 +3,13 @@ import { CreateInteractionDTO } from '@/dtos/interaction.dto';
 import { createError } from '@i4you/http-errors';
 import { IInteractionService } from '@/services/interfaces/IInteractionService';
 import { inject, injectable } from 'inversify';
-import { TYPES } from '@/types';
+import { InteractionBalances, TYPES } from '@/types';
 import { INTERACTION } from '@/constants/interactions.constant';
 import { INTERACTION_RESPONSE_MESSAGES } from '@/constants/response-messages.constant';
 import { IKafkaService } from '@/events/kafka/interfaces/IKafkaService';
 import { EVENT_KEYS, EVENT_TOPICS } from '@/constants/events.constant';
 import { IGRPCInteractionService } from '@/services/interfaces/IGRPCInteractionService';
+import { ITokenService } from '@/services/interfaces/ITokenService';
 
 @injectable()
 export class InteractionService
@@ -17,6 +18,8 @@ export class InteractionService
   constructor(
     @inject(TYPES.InteractionRepository)
     private _interactionRepository: IInteractionRepository,
+    @inject(TYPES.TokenService)
+    private _tokenService: ITokenService,
     @inject(TYPES.KafkaService) private _kafkaService: IKafkaService
   ) {}
 
@@ -36,14 +39,30 @@ export class InteractionService
       createError.BadRequest(INTERACTION_RESPONSE_MESSAGES.ALREADY_EXISTS);
     }
 
+    let res = true;
+
+    switch (data.type) {
+      case INTERACTION.LIKE:
+        res = await this._tokenService.consumeLike(data.fromUserId);
+        break;
+      case INTERACTION.SUPERLIKE:
+        res = await this._tokenService.consumeSuperLike(data.fromUserId);
+        break;
+    }
+
+    if (!res) {
+      throw createError.BadRequest(
+        INTERACTION_RESPONSE_MESSAGES.INSUFFICIENT_TOKENS
+      );
+    }
     await this._interactionRepository.create(data);
 
-    const reciprocal = await this._interactionRepository.findByUsers(
-      data.toUserId,
-      data.fromUserId
-    );
-
     if (data.type === INTERACTION.LIKE || data.type === INTERACTION.SUPERLIKE) {
+      const reciprocal = await this._interactionRepository.findByUsers(
+        data.toUserId,
+        data.fromUserId
+      );
+
       if (
         reciprocal &&
         (reciprocal.type === INTERACTION.LIKE ||
@@ -73,5 +92,19 @@ export class InteractionService
     const interactions =
       await this._interactionRepository.findByOfUserById(userId);
     return interactions.map((interaction) => interaction.toUserId);
+  }
+
+  async getInteractionBalances(userId: string): Promise<InteractionBalances> {
+    const {
+      superLikes,
+      likes,
+      nextRefill: refill_time,
+    } = await this._tokenService.getTokenDetailsByUserId(userId);
+
+    return {
+      likes,
+      superLikes,
+      refill_time,
+    };
   }
 }

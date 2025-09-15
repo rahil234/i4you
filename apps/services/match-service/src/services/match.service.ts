@@ -65,10 +65,6 @@ export class MatchService implements IMatchService {
 
     const excludeUserIds = [userId, ...likedUserIds];
 
-    console.log('likedUserIds:', excludeUserIds);
-
-    console.log('Fetching potential matches for user:', user.location);
-
     return this.discoverGrpcService.getMatches({
       preferences: user.preferences!,
       location: user.location!,

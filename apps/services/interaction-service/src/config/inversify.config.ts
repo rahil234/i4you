@@ -7,16 +7,32 @@ import { InteractionController } from '@/controllers/interaction.controller';
 import { KafkaService } from '@/events/kafka/KafkaService';
 import { IKafkaService } from '@/events/kafka/interfaces/IKafkaService';
 import { IInteractionService } from '@/services/interfaces/IInteractionService';
+import { ITokenRepository } from '@/repositories/interfaces/ITokenRepository';
+import { RedisTokenRepository } from '@/repositories/token.repository';
+import { ITokenService } from '@/services/interfaces/ITokenService';
+import { TokenService } from '@/services/token.service';
+import { ISubscriptionService } from '@/services/interfaces/ISubscriptionService';
+import { HttpSubscriptionService } from '@/services/http-subscription.service';
 
-const container = new Container();
+export const container = new Container();
 
 container
   .bind<IInteractionRepository>(TYPES.InteractionRepository)
   .to(MongoInteractionRepository);
 
 container
+  .bind<ITokenRepository>(TYPES.TokenRepository)
+  .to(RedisTokenRepository);
+
+container.bind<ITokenService>(TYPES.TokenService).to(TokenService);
+
+container
   .bind<IInteractionService>(TYPES.InteractionService)
   .to(InteractionService);
+
+container
+  .bind<ISubscriptionService>(TYPES.SubscriptionService)
+  .to(HttpSubscriptionService);
 
 container
   .bind<IKafkaService>(TYPES.KafkaService)
@@ -25,5 +41,3 @@ container
 container
   .bind<InteractionController>(TYPES.InteractionController)
   .to(InteractionController);
-
-export { container };

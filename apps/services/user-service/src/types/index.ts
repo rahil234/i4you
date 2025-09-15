@@ -2,6 +2,7 @@ export const TYPES = {
   UserRepository: Symbol.for('UserRepository'),
   AdminRepository: Symbol.for('AdminRepository'),
   UserService: Symbol.for('UserService'),
+  SubscriptionService: Symbol.for('SubscriptionService'),
   MediaService: Symbol.for('MediaService'),
   CacheService: Symbol.for('CacheService'),
   UserController: Symbol.for('UserController'),
@@ -26,4 +27,9 @@ export interface GetUsersRequestDTO {
   search: string;
   status: string;
   gender: string;
+}
+
+export interface Subscription {
+  planId: string;
+  status: string;
 }

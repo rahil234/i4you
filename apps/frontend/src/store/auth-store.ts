@@ -7,7 +7,7 @@ import AuthService from '@/services/auth.service';
 import UserService from '@/services/user.service';
 import { StateCreator } from 'zustand';
 import { User } from '@i4you/shared';
-import { useMatchesStore } from '@/store/matches-store';
+import { useMatchStore } from '@/store/match-store';
 
 interface AuthStore extends AuthState {
   login: (email: string, password: string) => Promise<void>;
@@ -48,7 +48,7 @@ const authStore: StateCreator<AuthStore, [['zustand/devtools', never], ['zustand
       isAuthenticated: true,
       isLoading: false,
     });
-    await useMatchesStore.getState().initial();
+    await useMatchStore.getState().initial();
   },
 
   adminLogin: async (email, password) => {
@@ -59,7 +59,7 @@ const authStore: StateCreator<AuthStore, [['zustand/devtools', never], ['zustand
       return;
     }
     set({ error: null, isLoading: false, user: data.user, isAuthenticated: true });
-    await useMatchesStore.getState().clear();
+    await useMatchStore.getState().clear();
   },
 
   googleAuthLogin: async (token) => {
@@ -78,7 +78,7 @@ const authStore: StateCreator<AuthStore, [['zustand/devtools', never], ['zustand
       isAuthenticated: true,
       isLoading: false,
     }, undefined, 'authStore/googleAuthLogin/success');
-    await useMatchesStore.getState().initial();
+    await useMatchStore.getState().initial();
   },
 
   facebookAuthLogin: async (token) => {
@@ -98,7 +98,7 @@ const authStore: StateCreator<AuthStore, [['zustand/devtools', never], ['zustand
       isAuthenticated: true,
       isLoading: false,
     });
-    await useMatchesStore.getState().initial();
+    await useMatchStore.getState().initial();
   },
 
   googleAuthRegister: async (token) => {
@@ -115,7 +115,7 @@ const authStore: StateCreator<AuthStore, [['zustand/devtools', never], ['zustand
       isAuthenticated: false,
       isLoading: false,
     });
-    await useMatchesStore.getState().clear();
+    await useMatchStore.getState().clear();
   },
 
   facebookAuthRegister: async (token) => {
@@ -135,7 +135,7 @@ const authStore: StateCreator<AuthStore, [['zustand/devtools', never], ['zustand
       isAuthenticated: true,
       isLoading: false,
     });
-    await useMatchesStore.getState().clear();
+    await useMatchStore.getState().clear();
   },
 
   register: async (name, email, password) => {
@@ -156,7 +156,7 @@ const authStore: StateCreator<AuthStore, [['zustand/devtools', never], ['zustand
       isAuthenticated: true,
       isLoading: false,
     });
-    await useMatchesStore.getState().clear();
+    await useMatchStore.getState().clear();
   },
 
   updateUser: async (updatedUser: any) => {
@@ -172,7 +172,7 @@ const authStore: StateCreator<AuthStore, [['zustand/devtools', never], ['zustand
     console.log('Updated user data:', data);
 
     set({ user: data, isLoading: false });
-    await useMatchesStore.getState().initial();
+    await useMatchStore.getState().initial();
   },
 
   logout: async () => {
@@ -188,7 +188,7 @@ const authStore: StateCreator<AuthStore, [['zustand/devtools', never], ['zustand
       error: null,
       signUpError: null,
     }, undefined, 'authStore/logout/success');
-    await useMatchesStore.getState().clear();
+    await useMatchStore.getState().clear();
     console.log('Logged out');
   },
 

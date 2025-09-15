@@ -1,5 +1,6 @@
 import { UserPreferences } from '@i4you/shared';
 import { User } from '@/entities/user.entity';
+import { Subscription } from '@/types';
 
 class UserDTO
   implements
@@ -23,6 +24,10 @@ class UserDTO
   onboarding?: boolean;
   interests: string[];
   photos: string[];
+  subscription: {
+    planId: string;
+    status: string;
+  };
   stats?: {
     matches: number;
     likes: number;
@@ -33,7 +38,7 @@ class UserDTO
   joined: string;
   status: 'active' | 'suspended';
 
-  constructor(user: User, photos?: string[]) {
+  constructor(user: User, subscription: Subscription, photos?: string[]) {
     this.id = user.id.toString();
     this.name = user.name;
     this.email = user.email;
@@ -42,6 +47,7 @@ class UserDTO
     this.status = user.status;
     this.age = user.age;
     this.gender = user.gender;
+    this.subscription = subscription;
     this.interests = user.interests;
     this.preferences = user.preferences;
     this.bio = user.bio;

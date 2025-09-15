@@ -28,10 +28,12 @@ export class UserController {
 
     const photos = await this._userService.getUserPhotos(user.id);
 
+    const subscription = await this._userService.getUserSubscription(userId);
+
     const data =
       role === USER_ROLES.ADMIN
         ? new AdminDTO(user)
-        : new UserDTO(user, photos);
+        : new UserDTO(user, subscription, photos);
 
     res.status(HTTP_STATUS.OK).json(data);
   });
@@ -44,7 +46,11 @@ export class UserController {
 
     const photos = await this._userService.getUserPhotos(newUser.id);
 
-    res.status(HTTP_STATUS.OK).json(new UserDTO(newUser, photos));
+    const subscription = await this._userService.getUserSubscription(
+      newUser.id
+    );
+
+    res.status(HTTP_STATUS.OK).json(new UserDTO(newUser, subscription, photos));
   });
 
   updateUserStatus = handleAsync(async (req, res) => {

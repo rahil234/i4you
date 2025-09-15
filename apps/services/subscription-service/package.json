@@ -1,0 +1,35 @@
+{
+  "name": "subscription-service",
+  "version": "0.0.1",
+  "author": "rahil234",
+  "private": true,
+  "license": "UNLICENSED",
+  "main": "src/app.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc src/server.ts",
+    "start": "node dist/server.js",
+    "dev": "tsx watch src/server.ts",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "test": "jest"
+  },
+  "packageManager": "pnpm@10.6.4+sha512.da3d715bfd22a9a105e6e8088cfc7826699332ded60c423b14ec613a185f1602206702ff0fe4c438cb15c979081ce4cb02568e364b15174503a63c7a8e2a5f6c",
+  "dependencies": {
+    "@i4you/env-config": "^1.0.2",
+    "@types/mongoose": "^5.11.97",
+    "fastify": "^5.4.0",
+    "fastify-plugin": "^5.0.1",
+    "inversify": "^7.7.0",
+    "kafkajs": "^2.2.4",
+    "mongoose": "^8.18.1",
+    "razorpay": "^2.9.6",
+    "stripe": "^18.4.0"
+  },
+  "devDependencies": {
+    "@i4you/shared": "^1.0.3-beta.0",
+    "@types/node": "^24.1.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  }
+}
