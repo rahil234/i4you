@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 
 import { TYPES } from '@/types';
 import { handleAsync } from '@/utils/handle-async';
-import OnboardingRequestDTO from '@/dtos/onboarding.request.dtos';
+import { OnboardingRequestDTO } from '@/dtos/onboarding.request.dtos';
 import UserDTO from '@/dtos/user.dtos';
 import AdminDTO from '@/dtos/admin.dtos';
 import { USER_RESPONSE_MESSAGES } from '@/constants/response-messages.constant';

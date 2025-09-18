@@ -11,7 +11,7 @@ import UserDTO from '@/dtos/user.dtos';
 import { BadRequestError } from '@/errors/BadRequestError';
 import { IAdminRepository } from '@/repositories/interfaces/IAdminRepository';
 import { UserJwtPayload } from '@i4you/shared';
-import OnboardingRequestDTO from '@/dtos/onboarding.request.dtos';
+import { OnboardingRequestDTO } from '@/dtos/onboarding.request.dtos';
 import ICacheService from '@/services/interfaces/ICacheService';
 import { IUserService } from '@/services/interfaces/IUserService';
 import { IKafkaService } from '@/events/kafka/interfaces/IKafkaService';
