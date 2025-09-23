@@ -1,12 +1,9 @@
-import {
-    CheckoutSessionPayload,
-    CheckoutSessionResponse,
-    ISubscriptionService, SessionDetails,
-} from '@/services/interfaces/ISubscriptionService';
 import Razorpay from 'razorpay';
 import {env} from '@/config';
+import {IPaymentService} from "@/services/interfaces/IPaymentService.ts";
+import {CheckoutSessionPayload, CheckoutSessionResponse, SessionDetails} from "@/types";
 
-export class RazorpayPaymentService implements ISubscriptionService {
+export class RazorpayPaymentService implements IPaymentService {
     private razorpay: Razorpay;
 
     constructor() {

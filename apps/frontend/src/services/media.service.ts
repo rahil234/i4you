@@ -1,36 +1,37 @@
 import api from '@/lib/api';
-import { handleApi } from '@/utils/apiHandler';
+import {handleApi} from '@/utils/apiHandler';
 import axios from 'axios';
 
 class MediaService {
-  getUploadUrl = (file: File) =>
-    handleApi(() =>
-      api
-        .get(`/media/upload-url?fileType=${encodeURIComponent(file.type)}`)
-        .then(res => res.data),
-    );
+    getUploadUrl = (file: File) =>
+        handleApi(() =>
+            api
+                .get(`/media/upload-url?fileType=${encodeURIComponent(file.type)}`)
+                .then(res => res.data.data),
+        );
 
-  uploadImage = (file: File, url: string, fields: any) =>
-    handleApi(async () => {
-      const formData = new FormData();
-      formData.append('file', file);
-      Object.entries(fields).forEach(([key, value]) => {
-        formData.append(key, value as string);
-      });
+    uploadImage = (file: File, url: string, fields: any) =>
+        handleApi(async () => {
+            console.log('Uploading image to', url, 'with fields', fields);
+            const formData = new FormData();
+            formData.append('file', file);
+            Object.entries(fields).forEach(([key, value]) => {
+                formData.append(key, value as string);
+            });
 
-      const res = await axios
-        .post(url, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
+            const res = await axios
+                .post(url, formData, {
+                    headers: {'Content-Type': 'multipart/form-data'},
+                });
+            return res.data;
         });
-      return res.data;
-    });
 
-  deleteImage = (url: string) =>
-    handleApi(() =>
-      api
-        .delete(`/media/image/${encodeURIComponent(url)}`)
-        .then(res => res.data),
-    );
+    deleteImage = (url: string) =>
+        handleApi(() =>
+            api
+                .delete(`/media/image/${encodeURIComponent(url)}`)
+                .then(res => res.data),
+        );
 }
 
 export default new MediaService();

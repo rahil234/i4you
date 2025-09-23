@@ -32,27 +32,23 @@ export class ChatService implements IChatService {
 
         if (!otherUserId) return;
 
-        const user = (await this._userService.getUserById(
-          otherUserId,
-        )) as unknown as User;
+        const user = await this._userService.getUserById(otherUserId);
 
         const lastMessage = await this._messageRepository.findLastMessage(
-          chat.id,
+          chat._id.toString(),
         );
 
         const unreadCount = await this._messageRepository.countUnreadMessages(
-          chat.id,
+          chat._id.toString(),
           userId,
         );
-
-        console.log('Unread count:', unreadCount);
 
         if (!user) {
           console.warn(`User with ID ${otherUserId} not found`);
           throw new Error('Cannot find user from grpc service');
         }
 
-        // @ts-expect-error -- lastMessage can be null
+        // @ts-expect-error - user is of type User
         return new ChatResponseDto(chat, user, lastMessage, unreadCount);
       }),
     );

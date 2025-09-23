@@ -121,7 +121,7 @@ importers:
         version: 10.4.21(postcss@8.5.6)
       axios:
         specifier: latest
-        version: 1.12.1(debug@2.6.9)
+        version: 1.12.2(debug@2.6.9)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -172,7 +172,7 @@ importers:
         version: 19.1.1
       react-day-picker:
         specifier: latest
-        version: 9.9.0(react@19.1.1)
+        version: 9.10.0(react@19.1.1)
       react-dom:
         specifier: ^19.1.0
         version: 19.1.1(react@19.1.1)
@@ -193,7 +193,7 @@ importers:
         version: 2.1.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       recharts:
         specifier: latest
-        version: 3.2.0(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react-is@18.3.1)(react@19.1.1)(redux@5.0.1)
+        version: 3.2.1(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react-is@18.3.1)(react@19.1.1)(redux@5.0.1)
       socket.io-client:
         specifier: ^4.8.1
         version: 4.8.1
@@ -329,7 +329,7 @@ importers:
         version: 6.4.19
       axios:
         specifier: ^1.8.4
-        version: 1.12.1(debug@2.6.9)
+        version: 1.12.2(debug@2.6.9)
       bcryptjs:
         specifier: ^3.0.2
         version: 3.0.2
@@ -447,7 +447,7 @@ importers:
     dependencies:
       '@bufbuild/protobuf':
         specifier: latest
-        version: 2.8.0
+        version: 2.9.0
       '@grpc/grpc-js':
         specifier: ^1.13.4
         version: 1.13.4
@@ -612,6 +612,12 @@ importers:
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.13.5(@swc/helpers@0.5.17))(@types/node@24.3.0)(typescript@5.9.2)
+      tsc-alias:
+        specifier: ^1.8.15
+        version: 1.8.16
+      tsc-esm-fix:
+        specifier: ^3.1.2
+        version: 3.1.2
       tsx:
         specifier: ^4.19.4
         version: 4.20.5
@@ -633,6 +639,9 @@ importers:
       '@fastify/sensible':
         specifier: ^6.0.3
         version: 6.0.3
+      '@i4you/env-config':
+        specifier: ^1.0.2
+        version: 1.0.2
       dotenv:
         specifier: ^16.5.0
         version: 16.6.1
@@ -652,6 +661,12 @@ importers:
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.13.5(@swc/helpers@0.5.17))(@types/node@24.3.0)(typescript@5.9.2)
+      tsc-alias:
+        specifier: ^1.8.15
+        version: 1.8.16
+      tsc-esm-fix:
+        specifier: ^3.1.2
+        version: 3.1.2
       tsx:
         specifier: ^4.19.4
         version: 4.20.5
@@ -908,7 +923,7 @@ importers:
         version: 6.4.19
       axios:
         specifier: ^1.8.4
-        version: 1.12.1(debug@2.6.9)
+        version: 1.12.2(debug@2.6.9)
       bcryptjs:
         specifier: ^3.0.2
         version: 3.0.2
@@ -1058,6 +1073,12 @@ importers:
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.13.5(@swc/helpers@0.5.17))(@types/node@24.3.0)(typescript@5.9.2)
+      tsc-alias:
+        specifier: ^1.8.15
+        version: 1.8.16
+      tsc-esm-fix:
+        specifier: ^3.1.2
+        version: 3.1.2
       tsx:
         specifier: ^4.19.4
         version: 4.20.5
@@ -1234,6 +1255,12 @@ importers:
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.13.5(@swc/helpers@0.5.17))(@types/node@24.3.0)(typescript@5.9.2)
+      tsc-alias:
+        specifier: ^1.8.15
+        version: 1.8.16
+      tsc-esm-fix:
+        specifier: ^3.1.2
+        version: 3.1.2
       tsx:
         specifier: ^4.19.4
         version: 4.20.5
@@ -1245,7 +1272,7 @@ importers:
     dependencies:
       '@bufbuild/protobuf':
         specifier: latest
-        version: 2.8.0
+        version: 2.9.0
       '@grpc/grpc-js':
         specifier: ^1.13.4
         version: 1.13.4
@@ -1416,6 +1443,12 @@ importers:
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.13.5(@swc/helpers@0.5.17))(@types/node@24.3.0)(typescript@5.9.2)
+      tsc-alias:
+        specifier: ^1.8.15
+        version: 1.8.16
+      tsc-esm-fix:
+        specifier: ^3.1.2
+        version: 3.1.2
       tsx:
         specifier: ^4.19.4
         version: 4.20.5
@@ -1710,7 +1743,7 @@ importers:
     dependencies:
       '@bufbuild/protobuf':
         specifier: ^2.2.5
-        version: 2.8.0
+        version: 2.9.0
       '@grpc/grpc-js':
         specifier: ^1.13.3
         version: 1.13.4
@@ -2708,8 +2741,8 @@ packages:
   '@bufbuild/protobuf@2.7.0':
     resolution: {integrity: sha512-qn6tAIZEw5i/wiESBF4nQxZkl86aY4KoO0IkUa2Lh+rya64oTOdJQFlZuMwI1Qz9VBJQrQC4QlSA2DNek5gCOA==}
 
-  '@bufbuild/protobuf@2.8.0':
-    resolution: {integrity: sha512-r1/0w5C9dkbcdjyxY8ZHsC5AOWg4Pnzhm2zu7LO4UHSounp2tMm6Y+oioV9zlGbLveE7YaWRDUk48WLxRDgoqg==}
+  '@bufbuild/protobuf@2.9.0':
+    resolution: {integrity: sha512-rnJenoStJ8nvmt9Gzye8nkYd6V22xUAnu4086ER7h1zJ508vStko4pMvDeQ446ilDTFpV5wnoc5YS7XvMwwMqA==}
 
   '@bufbuild/protoplugin@2.7.0':
     resolution: {integrity: sha512-yUdg8hXzFGR6K8ren7aXly2hT9BxClId814VB142YeZPatY0wqD3c0D8KfIz5nIeMdoPt0/Pm/RycFJCNGMD6w==}
@@ -5862,8 +5895,8 @@ packages:
   avvio@9.1.0:
     resolution: {integrity: sha512-fYASnYi600CsH/j9EQov7lECAniYiBFiiAtBNuZYLA2leLe9qOvZzqYHFjtIj6gD2VMoMLP14834LFWvr4IfDw==}
 
-  axios@1.12.1:
-    resolution: {integrity: sha512-Kn4kbSXpkFHCGE6rBFNwIv0GQs4AvDT80jlveJDKFxjbTYMUeB4QtsdPCv6H8Cm19Je7IU6VFtRl2zWZI0rudQ==}
+  axios@1.12.2:
+    resolution: {integrity: sha512-vMJzPewAlRyOgxV2dU0Cuz2O8zzzx9VYtbJOaBgXFeLc4IV/Eg50n4LowmehOOR61S8ZMpc2K5Sa7g6A4jfkUw==}
 
   b4a@1.6.7:
     resolution: {integrity: sha512-OnAYlL5b7LEkALw87fUVafQw5rVR9RjwGd4KUwNQ6DrrNmaVaUCgLipfVlzrPQ4tWOR9P0IXGNOx50jYCCdSJg==}
@@ -8721,8 +8754,8 @@ packages:
   razorpay@2.9.6:
     resolution: {integrity: sha512-zsHAQzd6e1Cc6BNoCNZQaf65ElL6O6yw0wulxmoG5VQDr363fZC90Mp1V5EktVzG45yPyNomNXWlf4cQ3622gQ==}
 
-  react-day-picker@9.9.0:
-    resolution: {integrity: sha512-NtkJbuX6cl/VaGNb3sVVhmMA6LSMnL5G3xNL+61IyoZj0mUZFWTg4hmj7PHjIQ8MXN9dHWhUHFoJWG6y60DKSg==}
+  react-day-picker@9.10.0:
+    resolution: {integrity: sha512-tedecLSd+fpSN+J08601MaMsf122nxtqZXxB6lwX37qFoLtuPNuRJN8ylxFjLhyJS1kaLfAqL1GUkSLd2BMrpQ==}
     engines: {node: '>=18'}
     peerDependencies:
       react: '>=16.8.0'
@@ -8830,8 +8863,8 @@ packages:
     resolution: {integrity: sha512-57frrGM/OCTLqLOAh0mhVA9VBMHd+9U7Zb2THMGdBUoZVOtGbJzjxsYGDJ3A9AYYCP4hn6y1TVbaOfzWtm5GFg==}
     engines: {node: '>= 12.13.0'}
 
-  recharts@3.2.0:
-    resolution: {integrity: sha512-fX0xCgNXo6mag9wz3oLuANR+dUQM4uIlTYBGTGq9CBRgW/8TZPzqPGYs5NTt8aENCf+i1CI8vqxT1py8L/5J2w==}
+  recharts@3.2.1:
+    resolution: {integrity: sha512-0JKwHRiFZdmLq/6nmilxEZl3pqb4T+aKkOkOi/ZISRZwfBhVMgInxzlYU9D4KnCH3KINScLy68m/OvMXoYGZUw==}
     engines: {node: '>=18'}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -12043,7 +12076,7 @@ snapshots:
 
   '@bufbuild/protobuf@2.7.0': {}
 
-  '@bufbuild/protobuf@2.8.0': {}
+  '@bufbuild/protobuf@2.9.0': {}
 
   '@bufbuild/protoplugin@2.7.0':
     dependencies:
@@ -12388,7 +12421,7 @@ snapshots:
 
   '@i4you/proto-files@1.0.6-beta.3(@types/node@24.3.0)(jiti@1.21.7)(jsdom@20.0.3)(tsx@4.20.5)':
     dependencies:
-      '@bufbuild/protobuf': 2.8.0
+      '@bufbuild/protobuf': 2.9.0
       '@grpc/grpc-js': 1.13.4
       vitest: 3.2.4(@types/node@24.3.0)(jiti@1.21.7)(jsdom@20.0.3)(tsx@4.20.5)
     transitivePeerDependencies:
@@ -12414,7 +12447,7 @@ snapshots:
 
   '@i4you/proto-files@1.0.6-beta.3(@types/node@24.3.0)(jsdom@20.0.3)(tsx@4.20.5)':
     dependencies:
-      '@bufbuild/protobuf': 2.8.0
+      '@bufbuild/protobuf': 2.9.0
       '@grpc/grpc-js': 1.13.4
       vitest: 3.2.4(@types/node@24.3.0)(jsdom@20.0.3)(tsx@4.20.5)
     transitivePeerDependencies:
@@ -15671,7 +15704,7 @@ snapshots:
       '@fastify/error': 4.2.0
       fastq: 1.19.1
 
-  axios@1.12.1(debug@2.6.9):
+  axios@1.12.2(debug@2.6.9):
     dependencies:
       follow-redirects: 1.15.11(debug@2.6.9)
       form-data: 4.0.4
@@ -18885,11 +18918,11 @@ snapshots:
 
   razorpay@2.9.6:
     dependencies:
-      axios: 1.12.1(debug@2.6.9)
+      axios: 1.12.2(debug@2.6.9)
     transitivePeerDependencies:
       - debug
 
-  react-day-picker@9.9.0(react@19.1.1):
+  react-day-picker@9.10.0(react@19.1.1):
     dependencies:
       '@date-fns/tz': 1.4.1
       date-fns: 4.1.0
@@ -18981,7 +19014,7 @@ snapshots:
 
   real-require@0.2.0: {}
 
-  recharts@3.2.0(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react-is@18.3.1)(react@19.1.1)(redux@5.0.1):
+  recharts@3.2.1(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react-is@18.3.1)(react@19.1.1)(redux@5.0.1):
     dependencies:
       '@reduxjs/toolkit': 2.9.0(react-redux@9.2.0(@types/react@19.1.12)(react@19.1.1)(redux@5.0.1))(react@19.1.1)
       clsx: 2.1.1
@@ -19981,7 +20014,7 @@ snapshots:
 
   ts-proto-descriptors@2.0.0:
     dependencies:
-      '@bufbuild/protobuf': 2.8.0
+      '@bufbuild/protobuf': 2.9.0
 
   ts-proto@2.7.7:
     dependencies:

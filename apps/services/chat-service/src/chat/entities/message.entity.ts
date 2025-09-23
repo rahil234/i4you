@@ -7,6 +7,5 @@ export class Message {
     public readonly timestamp: number,
     public readonly status: 'sent' | 'delivered' | 'read',
     public readonly createdAt?: Date,
-    public readonly updatedAt?: Date,
   ) {}
 }

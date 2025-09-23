@@ -1,11 +1,13 @@
 import {IPlanRepository} from "@/repositories/interfaces/IPlanRepository";
 import {Plan} from "@/types";
-import plansData from "@/data/plans.json";
 import {injectable} from "inversify";
+import * as fs from "fs";
 
 @injectable()
 export class JsonPlanRepository implements IPlanRepository {
-    private plans = plansData as Plan[];
+    private plans = JSON.parse(
+        fs.readFileSync(new URL('../data/plans.json', import.meta.url), 'utf-8')
+    );
 
     async findAll(): Promise<Plan[]> {
         return this.plans;

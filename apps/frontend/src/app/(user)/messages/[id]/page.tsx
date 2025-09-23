@@ -11,7 +11,6 @@ import ConversationsList from '@/components/user/chat/conversations-list';
 export default function ChatPage({ params }: { params: Promise<{ id: string }> }) {
   const { initiateChatUser, chats, currentChat, isLoading } = useChatStore();
   const [isNewChat, setIsNewChat] = useState(true);
-
   const [chat, setChat] = useState(currentChat);
 
   const resolvedParams = React.use(params);

@@ -28,6 +28,7 @@ export class ChatController {
     @Param('chatId') chatId: string,
     @Query('page') page: number = 0,
     @Query('limit') limit: number = 0,
+    //TODO
   ): Promise<any> {
     const messages = await this.chatService.getMessages(chatId, page, limit);
     return {

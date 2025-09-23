@@ -1,4 +1,4 @@
-import { Chat } from '../../schemas/chat.schema.js';
+import { Chat } from '../../schemas/chat.schema';
 
 export interface IChatRepository {
   create(participants: string[]): Promise<Chat>;

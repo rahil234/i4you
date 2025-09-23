@@ -1,6 +1,5 @@
-export const INTERACTION_RESPONSE_MESSAGES = {
-  SELF_INTERACTION_NOT_ALLOWED: 'Cannot interact with yourself',
-  ALREADY_EXISTS: 'Interaction already exists',
-  MATCH_CREATED: 'It\'s a match!',
-  INTERNAL_ERROR: 'Internal server error',
+export const MATCH_RESPONSE_MESSAGES = {
+  MATCH_ID_REQUIRED: 'matchId parameter is required',
+  BLOCK_SUCCESS: 'Match blocked successfully',
+  UNBLOCK_SUCCESS: 'Match unblocked successfully',
 } as const;

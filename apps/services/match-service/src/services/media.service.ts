@@ -1,8 +1,8 @@
-import IMediaService from '@/services/interfaces/IMediaService';
+import { IMediaService } from '@/services/interfaces/IMediaService';
 
 export class MediaService implements IMediaService {
   async getUserImages(userId: string): Promise<string[]> {
-    const { images } = await (
+    const { data: images } = await (
       await fetch(
         'http://media-service.app.svc.cluster.local:4003/get-images/' + userId
       )

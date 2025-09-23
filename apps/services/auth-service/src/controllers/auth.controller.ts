@@ -10,114 +10,117 @@ import {
   setRefreshCookie,
 } from '@/utils/cookie';
 import { IAuthService } from '@/services/interfaces/IAuthService';
+import { HTTP_STATUS } from '@/constants/http-status.constant';
+import {
+  AUTH_RESPONSE_MESSAGES,
+  USER_RESPONSE_MESSAGES,
+} from '@/constants/response-messages.constant';
 
 @injectable()
 export class AuthController {
-  constructor(@inject(TYPES.AuthService) private authService: IAuthService) {}
+  constructor(@inject(TYPES.AuthService) private _authService: IAuthService) {}
 
   login = handleAsync(async (req, res) => {
-    const { accessToken, refreshToken, user } = await this.authService.login(
+    const { accessToken, refreshToken, user } = await this._authService.login(
       req.body
     );
 
     setAccessCookie(res, accessToken);
-
     setRefreshCookie(res, refreshToken);
 
-    console.log('User:', user, 'Token:', accessToken);
-
-    res.json({ accessToken, user });
+    res.status(HTTP_STATUS.OK).json({ accessToken, user });
   });
 
   register = handleAsync(async (req, res) => {
-    await this.authService.register(req.body);
+    await this._authService.register(req.body);
 
-    res.status(201).json({
-      message: 'User created and send verification email successfully',
+    res.status(HTTP_STATUS.CREATED).json({
+      message: AUTH_RESPONSE_MESSAGES.REGISTER_SUCCESS,
     });
   });
 
   adminLogin = handleAsync(async (req, res) => {
     const { accessToken, refreshToken, user } =
-      await this.authService.adminLogin(req.body);
+      await this._authService.adminLogin(req.body);
 
     setAccessCookie(res, accessToken);
     setRefreshCookie(res, refreshToken);
 
-    res.json({ accessToken, user });
+    res.status(HTTP_STATUS.OK).json({ accessToken, user });
   });
 
   googleRegister = handleAsync(async (req, res, next) => {
     const { token } = req.body;
 
     if (!token) {
-      console.error('Required Google token is missing');
-      next(createError.Unauthorized('Google token is required'));
+      next(
+        createError.Unauthorized(AUTH_RESPONSE_MESSAGES.GOOGLE_TOKEN_REQUIRED)
+      );
     }
 
-    await this.authService.googleRegister(token);
+    await this._authService.googleRegister(token);
 
-    res.json({ message: 'User registered successfully' });
+    res.status(HTTP_STATUS.OK).json({
+      message: AUTH_RESPONSE_MESSAGES.GOOGLE_REGISTER_SUCCESS,
+    });
   });
 
   googleLogin = handleAsync(async (req, res) => {
     const { token } = req.body;
 
-    console.log('Google login token:', token);
-
     if (!token) {
-      res.status(401).json({ message: 'Unauthorized' });
+      res
+        .status(HTTP_STATUS.UNAUTHORIZED)
+        .json({ message: USER_RESPONSE_MESSAGES.UNAUTHORIZED });
       return;
     }
 
     const { accessToken, refreshToken, user } =
-      await this.authService.googleLogin(token);
+      await this._authService.googleLogin(token);
 
     setAccessCookie(res, accessToken);
-
     setRefreshCookie(res, refreshToken);
 
-    console.log('User:', user, 'Token:', accessToken, 'Refresh:', refreshToken);
-
-    res.json({ accessToken, user });
+    res.status(HTTP_STATUS.OK).json({ accessToken, user });
   });
 
   facebookRegister = handleAsync(async (req, res, next) => {
     const { token } = req.body;
 
     if (!token) {
-      next(createError.Unauthorized('Facebook token is required'));
-    }
-
-    const user = await this.authService.facebookRegister(token);
-
-    if (!user) {
       next(
-        createError.Internal('Registration failed. Please try again later.')
+        createError.Unauthorized(AUTH_RESPONSE_MESSAGES.FACEBOOK_TOKEN_REQUIRED)
       );
     }
 
-    res.json({ message: 'User registered successfully' });
+    const user = await this._authService.facebookRegister(token);
+
+    if (!user) {
+      next(
+        createError.Internal(AUTH_RESPONSE_MESSAGES.FACEBOOK_REGISTER_FAILED)
+      );
+    }
+
+    res.json({ message: AUTH_RESPONSE_MESSAGES.FACEBOOK_REGISTER_SUCCESS });
   });
 
   facebookLogin = handleAsync(async (req, res, next) => {
     const { token } = req.body;
 
     if (!token) {
-      next(createError.Unauthorized('Facebook token is required'));
+      next(
+        createError.Unauthorized(AUTH_RESPONSE_MESSAGES.FACEBOOK_TOKEN_REQUIRED)
+      );
       return;
     }
 
     const { accessToken, refreshToken, user } =
-      await this.authService.facebookLogin(token);
+      await this._authService.facebookLogin(token);
 
     setAccessCookie(res, accessToken);
-
     setRefreshCookie(res, refreshToken);
 
-    console.log('User:', user, 'Token:', accessToken, 'Refresh:', refreshToken);
-
-    res.json({ accessToken, user });
+    res.status(HTTP_STATUS.OK).json({ accessToken, user });
   });
 
   changePassword = handleAsync(async (req, res) => {
@@ -126,83 +129,101 @@ export class AuthController {
 
     if (!currentPassword || !newPassword) {
       res
-        .status(400)
-        .json({ message: 'currentPassword and newPassword is required' });
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .json({ message: AUTH_RESPONSE_MESSAGES.PASSWORD_REQUIRED });
       return;
     }
 
-    await this.authService.changePassword(id, currentPassword, newPassword);
+    await this._authService.changePassword(id, currentPassword, newPassword);
 
-    res.status(200).json({ message: 'Password Changed Successfully' });
+    res
+      .status(HTTP_STATUS.OK)
+      .json({ message: AUTH_RESPONSE_MESSAGES.PASSWORD_CHANGED });
   });
 
   forgetPassword = handleAsync(async (req, res) => {
     const { email } = req.body;
 
     if (!email) {
-      res.status(400).json({ message: 'Email is required' });
+      res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .json({ message: AUTH_RESPONSE_MESSAGES.EMAIL_REQUIRED });
       return;
     }
 
-    await this.authService.forgetPassword(email);
+    await this._authService.forgetPassword(email);
 
-    res.status(200).json({ message: 'Password reset link sent' });
+    res
+      .status(HTTP_STATUS.OK)
+      .json({ message: AUTH_RESPONSE_MESSAGES.FORGOT_PASSWORD_SUCCESS });
   });
 
   resetPassword = handleAsync(async (req, res) => {
     const { password, token } = req.body;
 
     if (!password || !token) {
-      res.status(400).json({ message: 'password and token is required' });
+      res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .json({ message: AUTH_RESPONSE_MESSAGES.RESET_PASSWORD_REQUIRED });
       return;
     }
 
-    await this.authService.resetPassword(password, token);
+    await this._authService.resetPassword(password, token);
 
-    res.status(200).json({ message: 'Password Changed Successfully' });
+    res
+      .status(HTTP_STATUS.OK)
+      .json({ message: AUTH_RESPONSE_MESSAGES.RESET_PASSWORD_SUCCESS });
   });
 
   verifyAccount = handleAsync(async (req, res) => {
     const { password, token } = req.body;
 
     if (!password || !token) {
-      res.status(400).json({ message: 'password and token is required' });
+      res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .json({ message: AUTH_RESPONSE_MESSAGES.VERIFY_ACCOUNT_REQUIRED });
       return;
     }
 
-    await this.authService.verifyAccount(password, token);
+    await this._authService.verifyAccount(password, token);
 
-    res.status(200).json({ message: 'Account Verification Successfully' });
+    res
+      .status(HTTP_STATUS.OK)
+      .json({ message: AUTH_RESPONSE_MESSAGES.VERIFY_ACCOUNT_SUCCESS });
   });
 
   refreshToken = handleAsync(async (req, res) => {
     const { refreshToken } = req.cookies;
 
     if (!refreshToken) {
-      res.status(401).json({ message: 'Unauthorized' });
+      res
+        .status(HTTP_STATUS.UNAUTHORIZED)
+        .json({ message: USER_RESPONSE_MESSAGES.UNAUTHORIZED });
       return;
     }
 
     const { accessToken, refreshToken: newRefreshToken } =
-      await this.authService.refreshToken(refreshToken);
+      await this._authService.refreshToken(refreshToken);
 
     if (!accessToken) {
-      res.status(401).json({ message: 'Unauthorized' });
+      res
+        .status(HTTP_STATUS.UNAUTHORIZED)
+        .json({ message: USER_RESPONSE_MESSAGES.UNAUTHORIZED });
       return;
     }
 
     setAccessCookie(res, accessToken);
-
     setRefreshCookie(res, newRefreshToken);
 
-    res.json({ token: accessToken });
+    res.status(HTTP_STATUS.OK).json({ token: accessToken });
   });
 
   logout = handleAsync(async (req, res) => {
     const token = req.cookies['refreshToken'];
-    console.log('Logout token:', { token, user: req.user });
-    await this.authService.logout(req.user.id, token);
+    await this._authService.logout(req.user.id, token);
     clearAuthCookie(res);
-    res.status(200).json({ message: 'Logged out' });
+    res
+      .status(HTTP_STATUS.OK)
+      .json({ message: AUTH_RESPONSE_MESSAGES.LOGOUT_SUCCESS });
   });
 }

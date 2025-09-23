@@ -1,4 +1,3 @@
 FROM nginx:latest
 
-COPY nginx.dev.conf /etc/nginx/nginx.conf:ro
-COPY certs /etc/nginx/certs
+COPY nginx.test.conf /etc/nginx/nginx.conf

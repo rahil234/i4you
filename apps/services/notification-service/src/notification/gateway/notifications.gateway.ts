@@ -58,6 +58,14 @@ export class NotificationsGateway {
 
   async emitToUser(userId: string, event: string, payload: any) {
     const socketId = await this._socketService.getSocketId(userId);
+    console.log(
+      'Emitting event',
+      event,
+      'to user',
+      userId,
+      'with socketId',
+      socketId,
+    );
     if (socketId) {
       this.server.to(socketId).emit(event, payload);
     }

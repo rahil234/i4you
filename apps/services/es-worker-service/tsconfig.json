@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
-    "module": "node16",
+    "module": "ES2022",
+    "target": "ES2022",
     "declaration": true,
-    "moduleResolution": "node16",
+    "moduleResolution": "bundler",
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES2023",
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
@@ -17,6 +17,11 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
   }
 }

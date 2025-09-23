@@ -99,48 +99,4 @@ export class MatchRepository
     await match.save();
     return true;
   }
-
-  async getBlockedMatches(userId: string): Promise<MatchDocument[]> {
-    const userObjectId = new mongoose.Types.ObjectId(userId);
-    return await MatchModel.find({
-      status: 'blocked',
-      $or: [{ userA: userObjectId }, { userB: userObjectId }],
-    }).exec();
-  }
-
-  async blockMatch(userId: string, matchId: string): Promise<boolean> {
-    const userObjectId = new mongoose.Types.ObjectId(userId);
-    const matchObjectId = new mongoose.Types.ObjectId(matchId);
-
-    const match = await MatchModel.findOne({
-      _id: matchObjectId,
-      $or: [{ userA: userObjectId }, { userB: userObjectId }],
-    });
-
-    if (!match) {
-      throw new Error('Match not found or access denied');
-    }
-
-    match.status = 'blocked';
-    await match.save();
-    return true;
-  }
-
-  async unblockMatch(userId: string, matchId: string): Promise<boolean> {
-    const userObjectId = new mongoose.Types.ObjectId(userId);
-    const matchObjectId = new mongoose.Types.ObjectId(matchId);
-
-    const match = await MatchModel.findOne({
-      _id: matchObjectId,
-      $or: [{ userA: userObjectId }, { userB: userObjectId }],
-    });
-
-    if (!match) {
-      throw new Error('Match not found or access denied');
-    }
-
-    match.status = 'matched';
-    await match.save();
-    return true;
-  }
 }

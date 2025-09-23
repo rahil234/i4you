@@ -7,7 +7,7 @@ import { MessageMapper } from '../mappers/message.mapper.js';
 
 export class MessageRepository implements IMessageRepository {
   constructor(
-    @InjectModel(MessageDocument.name)
+    @InjectModel(Message.name)
     private messageModel: Model<MessageDocument>,
   ) {}
 
@@ -35,7 +35,7 @@ export class MessageRepository implements IMessageRepository {
       .limit(limit)
       .exec();
 
-    return docs.map(MessageMapper.toDomain);
+    return docs.map((d) => MessageMapper.toDomain(d));
   }
 
   async findLastMessage(chatId: string): Promise<Message | null> {

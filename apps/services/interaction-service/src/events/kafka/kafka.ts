@@ -1,21 +1,24 @@
-import { Kafka, Producer, Consumer } from 'kafkajs';
+import { Kafka, Producer } from 'kafkajs';
+import { env } from '@/config';
 
 class KafkaClient {
   private static instance: KafkaClient;
   private kafka: Kafka;
   private readonly _producer: Producer;
-  private readonly _consumer: Consumer;
 
   private constructor() {
     this.kafka = new Kafka({
-      clientId: 'match-service',
-      brokers: ['kafka-cluster-kafka-brokers.kafka.svc.cluster.local:9092'],
+      clientId: 'interaction-service',
+      brokers: [env.KAFKA_BROKER_URL],
+      sasl: {
+        username: env.KAFKA_USERNAME,
+        password: env.KAFKA_PASSWORD,
+        mechanism: 'plain',
+      },
+      ssl: env.NODE_ENV === 'production',
     });
 
     this._producer = this.kafka.producer();
-    this._consumer = this.kafka.consumer({
-      groupId: 'match-service-group',
-    });
   }
 
   public static getInstance(): KafkaClient {
@@ -27,7 +30,6 @@ class KafkaClient {
 
   async connectProducer() {
     await this._producer.connect();
-    console.log('Kafka Producer connected');
   }
 
   get producer() {

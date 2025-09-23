@@ -18,7 +18,7 @@ export function startServer() {
         console.error('Server error:', err);
         return;
       }
-      console.log(`User gRPC Server running at 0.0.0.0:${port}`);
+      console.log(`Discovery gRPC Server running at 0.0.0.0:${port}`);
     },
   );
 }

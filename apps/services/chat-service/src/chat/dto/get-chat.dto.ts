@@ -1,19 +1,6 @@
-import { Message, User } from '@i4you/shared';
+import { User } from '@i4you/shared';
 import { Chat } from '../schemas/chat.schema';
-
-export interface ChatPreview {
-  id: string;
-  participant: {
-    id: string;
-    name: string;
-    avatar: string;
-    initials?: string;
-    isOnline?: boolean;
-    lastActive?: string;
-  };
-  lastMessage: Message | null;
-  unreadCount: number;
-}
+import { ChatPreview, Message } from '../../types';
 
 export class ChatResponseDto implements ChatPreview {
   id: string;

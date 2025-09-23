@@ -7,7 +7,7 @@
   "main": "src/app.ts",
   "type": "module",
   "scripts": {
-    "build": "tsc src/server.ts",
+    "build": "tsc && tsc-alias && tsc-esm-fix",
     "start": "node dist/server.js",
     "dev": "tsx watch src/server.ts",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -29,6 +29,8 @@
     "@i4you/shared": "^1.0.3-beta.0",
     "@types/node": "^24.1.0",
     "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.15",
+    "tsc-esm-fix": "^3.1.2",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3"
   }

@@ -20,11 +20,13 @@ export class NotificationListener {
 
   @EventPattern('notification.events')
   async handleMatchEvent(@Payload() payload: MatchEventPayload) {
+    console.log('Received match event payload:', payload);
     await this.gateway.emitToUser(payload.recipientId, 'match', payload.data);
   }
 
   @EventPattern('chat.events')
   async handleChatEvent(@Payload() payload: MatchEventPayload) {
+    console.log('Received chat event payload:', payload);
     if (!payload.recipientId) {
       console.error('No recipientId provided in payload:', payload);
       return;

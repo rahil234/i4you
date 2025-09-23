@@ -11,7 +11,7 @@ import { UserGrpcProvider } from '@/providers/user.grpc.provider';
 import { DiscoveryGrpcService } from '@/services/discovery.grpc.service';
 import { DiscoveryGrpcProvider } from '@/providers/discovery.grpc.provider';
 import { MediaService } from '@/services/media.service';
-import IMediaService from '@/services/interfaces/IMediaService';
+import { IMediaService } from '@/services/interfaces/IMediaService';
 import { IMatchService } from '@/services/interfaces/IMatchService';
 import { IUserService } from '@/services/interfaces/IUserService';
 import { IDiscoveryService } from '@/services/interfaces/IDiscoveryService';
