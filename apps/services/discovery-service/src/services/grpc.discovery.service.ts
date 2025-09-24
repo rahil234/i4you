@@ -20,9 +20,7 @@ export class discoverGrpcService implements DiscoverServiceServer {
     getPotentialMatches: handleUnaryCall<GetPotentialMatchesRequest, GetPotentialMatchesResponse> =
         async (call, callback) => {
             try {
-                console.log('getPotentialMatches called with request:', call.request);
                 const matches = await discoverService.getPotentialMatches(call.request);
-                console.log('getPotentialMatches response:', matches);
                 callback(null, matches);
             } catch (err: any) {
                 console.log('Error in getPotentialMatches:', err);

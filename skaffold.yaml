@@ -30,12 +30,42 @@ profiles:
         - https://download.elastic.co/downloads/eck/3.1.0/crds.yaml
         - https://raw.githubusercontent.com/traefik/traefik/v3.4/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
         - https://github.com/strimzi/strimzi-kafka-operator/releases/download/0.47.0/strimzi-crds-0.47.0.yaml
-        - https://raw.githubusercontent.com/grafana/grafana-operator/master/deploy/helm/grafana-operator/crds/grafana.integreatly.org_grafanas.yaml
+        - https://raw.githubusercontent.com/grafana/grafana-operator/master/deploy/helm/grafana-operator/files/crds/grafana.integreatly.org_grafanas.yaml
         - https://github.com/prometheus-operator/prometheus-operator/releases/download/v0.84.0/stripped-down-crds.yaml
-        - https://raw.githubusercontent.com/grafana/grafana-operator/master/deploy/helm/grafana-operator/crds/grafana.integreatly.org_grafanas.yaml
+
+  - name: prod:crds
+    deploy:
+      kubeContext: i4you-cluster
+      kubectl:
+        hooks:
+          before:
+            - host:
+                command:
+                  - kubectl
+                  - apply
+                  - --server-side
+                  - --force-conflicts
+                  - -f
+                  - https://raw.githubusercontent.com/external-secrets/external-secrets/main/deploy/crds/bundle.yaml
+            - host:
+                command:
+                  - kubectl
+                  - apply
+                  - --server-side
+                  - --force-conflicts
+                  - -f
+                  - https://github.com/grafana/grafana-operator/releases/download/v5.18.0/crds.yaml
+    manifests:
+      rawYaml:
+        - https://download.elastic.co/downloads/eck/3.1.0/crds.yaml
+        - https://raw.githubusercontent.com/traefik/traefik/v3.4/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
+        - https://github.com/strimzi/strimzi-kafka-operator/releases/download/0.47.0/strimzi-crds-0.47.0.yaml
+        - https://raw.githubusercontent.com/grafana/grafana-operator/master/deploy/helm/grafana-operator/files/crds/grafana.integreatly.org_grafanas.yaml
+        - https://github.com/prometheus-operator/prometheus-operator/releases/download/v0.84.0/stripped-down-crds.yaml
 
   - name: setup
     deploy:
+      kubeContext: orbstack
       kubectl:
         hooks:
           after:
@@ -56,10 +86,9 @@ profiles:
         - k8s/dev/hashicorp/vault/vault-ingress.yaml
         - k8s/dev/hashicorp/vault/storage-class.yaml
         - k8s/dev/hashicorp/vault/vault-cluster-store.yaml
-        - k8s/dev/hashicorp/vault/job.yaml
         - https://download.elastic.co/downloads/eck/3.1.0/operator.yaml
         - https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.8.0/components.yaml
-        - k8s/dev/kafka/kafka-storage.yaml
+#        - k8s/dev/kafka/kafka-storage.yaml
         - k8s/dev/kafka/kafka-kraft.yaml
         - k8s/dev/elastic/storage-class.yaml
         - k8s/dev/elastic/elasticsearch.yaml
@@ -96,7 +125,35 @@ profiles:
             valuesFiles:
               - k8s/dev/traefik/values.yaml
 
+  - name: prod:setup
+    manifests:
+      rawYaml:
+        - k8s/prod/traefik/namespace.yaml
+        - k8s/prod/elastic/namespace.yaml
+        - k8s/prod/secrets/namespace.yaml
+        - https://download.elastic.co/downloads/eck/3.1.0/operator.yaml
+        - k8s/prod/elastic/storage-class.yaml
+        - k8s/prod/elastic/elasticsearch.yaml
+        - k8s/prod/kibana/kibana.yaml
+        - k8s/prod/kibana/ingress.yaml
+        - k8s/prod/kibana/kibana-user.yaml
+      helm:
+        releases:
+          - name: traefik
+            remoteChart: traefik/traefik
+            namespace: traefik
+            valuesFiles:
+              - k8s/prod/traefik/values.yaml
+          - name: external-secrets
+            remoteChart: external-secrets-operator/external-secrets
+            version: 0.19.1
+            namespace: external-secrets
+            setValues:
+              installCRDs: false
+
   - name: dev
+    deploy:
+      kubeContext: orbstack
     build:
       artifacts:
         - image: validate-service-image
@@ -254,44 +311,105 @@ profiles:
         - k8s/dev/nginx-socket-proxy.yaml
         - k8s/dev/traefik/traefik-ingress.yaml
 
-  - name: production
+  - name: prod
+    deploy:
+      kubeContext: i4you-cluster
     build:
+      platforms:
+        - linux/amd64
+      tagPolicy:
+        customTemplate:
+          template: latest
+      #        gitCommit:
+      #          variant: AbbrevCommitSha
+      #          ignoreChanges: true
       artifacts:
-        - image: asia-south1-docker.pkg.dev/i4you-457707/i4you-repo/validate-service-image
+        - image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/socket-nginx-image
+          context: apps/nginx
+          docker:
+            dockerfile: Dockerfile
+        - image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/validate-service-image
           context: apps/services/validate-service
           docker:
             dockerfile: Dockerfile
-      #        - image: user-service-image
-      #          context: apps/services/user-service
-      #          docker:
-      #            dockerfile: Dockerfile
-      #        - image: auth-service-image
-      #          context: apps/services/auth-service
-      #          docker:
-      #            dockerfile: Dockerfile
-      #        - image: media-service-image
-      #          context: apps/services/media-service
-      #          docker:
-      #            dockerfile: Dockerfile
-      #        - image: chat-service-image
-      #          context: apps/services/chat-service
-      #          docker:
-      #            dockerfile: Dockerfile
-      #        - image: frontend-image
-      #          context: apps/frontend
-      #          docker:
-      #            dockerfile: Dockerfile
-      #        - image: socket-nginx-image
-      #          context: apps/nginx
-      #          docker:
-      #            dockerfile: Dockerfile
+        - image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/user-service-image
+          context: apps/services/user-service
+          docker:
+            dockerfile: Dockerfile
+        - image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/auth-service-image
+          context: apps/services/auth-service
+          docker:
+            dockerfile: Dockerfile
+        - image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/media-service-image
+          context: apps/services/media-service
+          docker:
+            dockerfile: Dockerfile
+        - image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/subscription-service-image
+          context: apps/services/subscription-service
+          docker:
+            dockerfile: Dockerfile
+        - image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/match-service-image
+          context: apps/services/match-service
+          docker:
+            dockerfile: Dockerfile
+        - image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/moderation-service-image
+          context: apps/services/moderation-service
+          docker:
+            dockerfile: Dockerfile
+        - image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/interaction-service-image
+          context: apps/services/interaction-service
+          docker:
+            dockerfile: Dockerfile
+        - image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/discovery-service-image
+          context: apps/services/discovery-service
+          docker:
+            dockerfile: Dockerfile
+        - image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/es-worker-service-image
+          context: apps/services/es-worker-service
+          docker:
+            dockerfile: Dockerfile
+        - image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/chat-service-image
+          context: apps/services/chat-service
+          docker:
+            dockerfile: Dockerfile
+        - image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/notification-service-image
+          context: apps/services/notification-service
+          docker:
+            dockerfile: Dockerfile
+        - image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/signaling-service-image
+          context: apps/services/signaling-service
+          docker:
+            dockerfile: Dockerfile
+        - image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/payment-service-image
+          context: apps/services/payment-service
+          docker:
+            dockerfile: Dockerfile
+        - image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/frontend-image
+          context: apps/frontend
+          docker:
+            dockerfile: Dockerfile
       local:
-        push: true
+        push: false
         useBuildkit: true
         concurrency: 0
+        useDockerCLI: false
     manifests:
       rawYaml:
-        - k8s/prod/validate-service.yamls
+        - k8s/prod/services/auth-service.yaml
+        - k8s/prod/services/chat-service.yaml
+        - k8s/prod/services/discovery-service.yaml
+        - k8s/prod/services/es-worker-service.yaml
+        - k8s/prod/services/interaction-service.yaml
+        - k8s/prod/services/match-service.yaml
+        - k8s/prod/services/media-service.yaml
+        - k8s/prod/services/moderation-service.yaml
+        - k8s/prod/services/notification-service.yaml
+        - k8s/prod/services/payment-service.yaml
+        - k8s/prod/services/signaling-service.yaml
+        - k8s/prod/services/subscription-service.yaml
+        - k8s/prod/services/user-service.yaml
+        - k8s/prod/services/validate-service.yaml
+        - k8s/prod/services/frontend.yaml
 
   - name: monitoring
     manifests:
@@ -307,18 +425,6 @@ profiles:
             remoteChart: grafana/grafana-operator
             namespace: monitoring
             createNamespace: true
-          #          - name: grafana-old
-          #            remoteChart: grafana/grafana
-          #            namespace: monitoring
-          #            createNamespace: true
-          #            valuesFiles:
-          #              - k8s/dev/monitoring/grafana/values.yaml
-          #          - name: promtail
-          #            remoteChart: grafana/promtail
-          #            namespace: monitoring
-          #            createNamespace: true
-          #            valuesFiles:
-          #              - k8s/dev/monitoring/promtail/values.yaml
           - name: loki
             remoteChart: grafana/loki
             namespace: monitoring

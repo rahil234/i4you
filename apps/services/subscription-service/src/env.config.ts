@@ -2,4 +2,7 @@ export const env = {
     NODE_ENV: 'NODE_ENV',
     PORT: 'PORT',
     MONGODB_URI: 'MONGODB_URI',
+    REDIS_HOST: 'REDIS_HOST',
+    REDIS_PORT: 'REDIS_PORT',
+    REDIS_PASSWORD: 'REDIS_PASSWORD'
 };

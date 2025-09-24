@@ -15,10 +15,12 @@
   },
   "dependencies": {
     "@i4you/env-config": "^1.0.2",
+    "@i4you/http-errors": "latest",
     "fastify": "^5.4.0",
     "fastify-plugin": "^5.0.1",
     "inversify": "^7.7.0",
     "kafkajs": "^2.2.4",
+    "pino-pretty": "^13.1.1",
     "razorpay": "^2.9.6",
     "stripe": "^18.4.0"
   },

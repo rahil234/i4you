@@ -2,10 +2,38 @@ import {FastifyInstance} from 'fastify';
 import {container} from '@/config/inversify.config';
 import {TYPES} from '@/types';
 import {SubscriptionController} from "@/controllers/subscription.controller";
+import {redlock} from "@/utils/lock";
 
 const subscriptionController = container.get<SubscriptionController>(TYPES.SubscriptionController);
 
 export function subscriptionRoutes(fastify: FastifyInstance) {
+
+    fastify.post("/subscriptions/lock", {
+        handler: subscriptionController.acquireLock.bind(subscriptionController),
+        schema: {
+            querystring: {
+                type: "object",
+                required: ["userId"],
+                properties: {
+                    userId: {type: "string"},
+                }
+            }
+        }
+    });
+
+    fastify.delete("/subscriptions/lock", {
+        handler: subscriptionController.releaseLock.bind(subscriptionController),
+        schema: {
+            querystring: {
+                type: "object",
+                required: ["userId"],
+                properties: {
+                    userId: {type: "string"},
+                }
+            }
+        }
+    });
+
     fastify.post('/subscriptions',
         async (request, reply) => {
             try {

@@ -1,6 +1,7 @@
 export const TYPES = {
     PlanRepository: Symbol.for('PlanRepository'),
     SubscriptionService: Symbol.for('SubscriptionService'),
+    TransactionService: Symbol.for('TransactionService'),
     SubscriptionController: Symbol.for('SubscriptionController'),
     PlanController: Symbol.for('PlanController'),
     SubscriptionRepository: Symbol.for('SubscriptionRepository'),

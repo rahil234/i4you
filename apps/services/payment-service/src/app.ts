@@ -4,7 +4,18 @@ import Fastify from 'fastify';
 import {env} from '@/config';
 import authenticateAndAuthorize from "@/plugins/authenticate-and-authorize.middleware";
 
-const app = Fastify({logger: true});
+const app = Fastify({
+    logger: {
+        level: "error",
+        transport: {
+            target: "pino-pretty",
+            options: {
+                singleLine: true,
+                ignore: "pid,hostname,reqId",
+            },
+        },
+    },
+});
 
 app.register(authenticateAndAuthorize);
 

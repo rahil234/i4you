@@ -10,7 +10,6 @@ export class ModerationController {
     constructor(@inject(TYPES.ModerationService) private moderationService: ModerationService) {
     }
 
-
     getPendingModerationImages: RouteHandler = async (req, reply) => {
         const {status, sortBy} = req.query as {
             status: "approved" | "pending" | "rejected";

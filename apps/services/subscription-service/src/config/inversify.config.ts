@@ -10,6 +10,8 @@ import {IPlanRepository} from "@/repositories/interfaces/IPlanRepository";
 import {IPlanService} from "@/services/interfaces/IPlanService";
 import {PlanService} from "@/services/plan.service";
 import {PlanController} from "@/controllers/plan.controller";
+import {ITransactionService} from "@/services/interfaces/ITransactionService";
+import {TransactionService} from "@/services/transaction.service";
 
 export const container = new Container();
 
@@ -24,6 +26,9 @@ container
 
 container
     .bind<ISubscriptionService>(TYPES.SubscriptionService).to(SubscriptionService);
+
+container
+    .bind<ITransactionService>(TYPES.TransactionService).to(TransactionService);
 
 container
     .bind<IPlanService>(TYPES.PlanService).to(PlanService);
