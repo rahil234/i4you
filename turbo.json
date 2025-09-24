@@ -35,17 +35,5 @@
       "persistent": true,
       "cache": true
     }
-  },
-  "style": "default",
-  "tailwind": {
-    "config": "",
-    "css": "",
-    "baseColor": "",
-    "cssVariables": false
-  },
-  "rsc": false,
-  "aliases": {
-    "utils": "",
-    "components": ""
   }
 }

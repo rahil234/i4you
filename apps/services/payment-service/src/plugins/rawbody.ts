@@ -4,7 +4,7 @@ export default fp(async (fastify) => {
   fastify.addContentTypeParser(
     'application/json',
     { parseAs: 'buffer' },
-    function(_req, body, done) {
+    function (_req, body, done) {
       try {
         done(null, body);
       } catch (error) {

@@ -16,4 +16,7 @@ const moderationSchema = new Schema<ModerationDocument>({
   },
 });
 
-export const ModerationModel = model<ModerationDocument>('Moderation', moderationSchema);
+export const ModerationModel = model<ModerationDocument>(
+  'Moderation',
+  moderationSchema,
+);

@@ -1,62 +1,71 @@
-import {inject, injectable} from 'inversify';
-import {TYPES} from '@/types';
-import {ISubscriptionService} from "@/services/interfaces/ISubscriptionService";
-import {FastifyReply, FastifyRequest} from "fastify";
-import {ITransactionService} from "@/services/interfaces/ITransactionService";
+import { inject, injectable } from 'inversify';
+import { TYPES } from '@/types';
+import { ISubscriptionService } from '@/services/interfaces/ISubscriptionService';
+import { FastifyReply, FastifyRequest } from 'fastify';
+import { ITransactionService } from '@/services/interfaces/ITransactionService';
 
 @injectable()
 export class SubscriptionController {
-    constructor(
-        @inject(TYPES.SubscriptionService) private _subscriptionService: ISubscriptionService,
-        @inject(TYPES.TransactionService) private _transactionService: ITransactionService) {
+  constructor(
+    @inject(TYPES.SubscriptionService)
+    private _subscriptionService: ISubscriptionService,
+    @inject(TYPES.TransactionService)
+    private _transactionService: ITransactionService,
+  ) {}
+
+  async acquireLock(request: FastifyRequest, reply: FastifyReply) {
+    const { userId } = request.query as { userId: string };
+    console.log('Acquiring lock for userId:', userId);
+
+    if (!userId) {
+      return reply.status(400).send({ error: 'userId are required' });
     }
 
-    async acquireLock(request: FastifyRequest, reply: FastifyReply) {
-        const {userId} = request.query as { userId: string };
-        console.log("Acquiring lock for userId:", userId);
+    const lock = await this._transactionService.acquireLock(userId);
 
-        if (!userId) {
-            return reply.status(400).send({error: "userId are required"});
-        }
-
-        const lock = await this._transactionService.acquireLock(userId)
-
-        if (!lock) {
-            return reply.status(409).send({error: "Subscription already in progress"});
-        }
-
-        return reply.send({ok: true});
+    if (!lock) {
+      return reply
+        .status(409)
+        .send({ error: 'Subscription already in progress' });
     }
 
-    async releaseLock(request: FastifyRequest, reply: FastifyReply) {
-        const {userId} = request.query as { userId: string };
+    return reply.send({ ok: true });
+  }
 
-        if (!userId) {
-            return reply.status(400).send({error: "userId are required"});
-        }
+  async releaseLock(request: FastifyRequest, reply: FastifyReply) {
+    const { userId } = request.query as { userId: string };
 
-        await this._transactionService.releaseLock(userId);
-
-        return reply.send({ok: true});
+    if (!userId) {
+      return reply.status(400).send({ error: 'userId are required' });
     }
 
-    async createSubscription(userId: string, planId: string) {
-        return this._subscriptionService.createSubscription({userId, planId});
-    }
+    await this._transactionService.releaseLock(userId);
 
-    async getActiveSubscription(subscriptionId: string) {
-        return this._subscriptionService.getActiveSubscriptionByUserId(subscriptionId);
-    }
+    return reply.send({ ok: true });
+  }
 
-    async getSubscriptionDetails(subscriptionId: string) {
-        return this._subscriptionService.getSubscriptionDetails(subscriptionId);
-    }
+  async createSubscription(userId: string, planId: string) {
+    return this._subscriptionService.createSubscription({ userId, planId });
+  }
 
-    async listUserSubscriptions(userId: string) {
-        return this._subscriptionService.listUserSubscriptions(userId);
-    }
+  async getActiveSubscription(subscriptionId: string) {
+    return this._subscriptionService.getActiveSubscriptionByUserId(
+      subscriptionId,
+    );
+  }
 
-    async cancelSubscription(subscriptionId: string, cancelAtPeriodEnd = true) {
-        return this._subscriptionService.cancelSubscription(subscriptionId, cancelAtPeriodEnd);
-    }
+  async getSubscriptionDetails(subscriptionId: string) {
+    return this._subscriptionService.getSubscriptionDetails(subscriptionId);
+  }
+
+  async listUserSubscriptions(userId: string) {
+    return this._subscriptionService.listUserSubscriptions(userId);
+  }
+
+  async cancelSubscription(subscriptionId: string, cancelAtPeriodEnd = true) {
+    return this._subscriptionService.cancelSubscription(
+      subscriptionId,
+      cancelAtPeriodEnd,
+    );
+  }
 }

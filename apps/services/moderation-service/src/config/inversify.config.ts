@@ -7,10 +7,13 @@ import { ModerationController } from '@/controllers/moderation.controller';
 const container = new Container();
 
 container
-  .bind<ModerationController>(TYPES.ModerationController).to(ModerationController);
+  .bind<ModerationController>(TYPES.ModerationController)
+  .to(ModerationController);
 container
-  .bind<ModerationService>(TYPES.ModerationService).to(ModerationService);
+  .bind<ModerationService>(TYPES.ModerationService)
+  .to(ModerationService);
 container
-  .bind<ModerationRepository>(TYPES.ModerationRepository).to(ModerationRepository);
+  .bind<ModerationRepository>(TYPES.ModerationRepository)
+  .to(ModerationRepository);
 
 export { container };

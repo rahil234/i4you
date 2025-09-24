@@ -1,2 +1,1 @@
-export interface PaymentRepository {
-}
+export interface PaymentRepository {}

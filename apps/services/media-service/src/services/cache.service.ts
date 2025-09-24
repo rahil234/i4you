@@ -1,6 +1,6 @@
-import ICacheService from './interfaces/ICacheService';
+import { ICacheService } from './interfaces/ICacheService';
 import { redisClient } from '@/config/redis.config';
-import { inject, injectable } from 'inversify';
+import { injectable } from 'inversify';
 
 @injectable()
 export class CacheService implements ICacheService {
@@ -9,7 +9,7 @@ export class CacheService implements ICacheService {
     return data ? JSON.parse(data) : null;
   }
 
-  async set(key: string, value: any, ttlSeconds = 900): Promise<void> {
+  async set<T>(key: string, value: T, ttlSeconds = 900): Promise<void> {
     await redisClient.set(key, JSON.stringify(value), {
       EX: ttlSeconds,
     });

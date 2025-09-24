@@ -5,13 +5,13 @@ export const MEDIA_MESSAGES = {
 } as const;
 
 export const MODERATION_STATUS = {
-    APPROVED: 'approved',
-    REJECTED: 'rejected',
-    PENDING: 'pending',
+  APPROVED: 'approved',
+  REJECTED: 'rejected',
+  PENDING: 'pending',
 } as const;
 
 export const MODERATION_MESSAGES = {
-    FETCH_SUCCESS: 'Moderation images fetched successfully',
-    UPDATE_SUCCESS: 'Moderation updated successfully',
-    INVALID_STATUS: 'Invalid moderation status',
+  FETCH_SUCCESS: 'Moderation images fetched successfully',
+  UPDATE_SUCCESS: 'Moderation updated successfully',
+  INVALID_STATUS: 'Invalid moderation status',
 } as const;

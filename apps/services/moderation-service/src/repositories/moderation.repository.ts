@@ -4,7 +4,8 @@ import { BaseRepository } from '@/repositories/base.repository';
 
 export class ModerationRepository
   extends BaseRepository<ModerationDocument>
-  implements IModerationRepository {
+  implements IModerationRepository
+{
   constructor() {
     super(ModerationModel);
   }

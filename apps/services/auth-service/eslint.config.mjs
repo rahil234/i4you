@@ -22,6 +22,7 @@ export default defineConfig([
     plugins: {
       prettier: prettierPlugin,
     },
+    ignores: ['node_modules/', 'dist/', 'build/'],
     rules: {
       // Prettier formatting as ESLint errors
       'prettier/prettier': 'warn',

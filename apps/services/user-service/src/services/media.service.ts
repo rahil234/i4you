@@ -1,4 +1,4 @@
-import IMediaService from '@/services/interfaces/IMediaService';
+import { IMediaService } from '@/services/interfaces/IMediaService';
 
 export class MediaService implements IMediaService {
   async getUserImages(userId: string): Promise<string[]> {

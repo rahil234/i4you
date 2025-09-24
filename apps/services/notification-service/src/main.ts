@@ -30,4 +30,10 @@ async function bootstrap() {
   await app.listen(PORT);
 }
 
-bootstrap();
+bootstrap()
+  .then(() => {
+    console.log(`Notification service is running on port ${PORT}`);
+  })
+  .catch(() => {
+    console.error('Failed to start notification service');
+  });

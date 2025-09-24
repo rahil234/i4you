@@ -1,5 +1,4 @@
-import {injectable} from 'inversify';
+import { injectable } from 'inversify';
 
 @injectable()
-export class PaymentRepository {
-}
+export class PaymentRepository {}

@@ -4,4 +4,4 @@ export default interface ICacheService {
   set<T>(key: string, value: T, ttlSeconds?: number): Promise<void>;
 
   del(key: string): Promise<void>;
-};
+}

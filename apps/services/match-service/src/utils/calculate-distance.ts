@@ -22,6 +22,6 @@ export function getDistanceInKm(
 
 // Example usage
 const coord1: [number, number] = [11.2952824, 75.8231807]; // Moozhikkal
-const coord2: [number, number] = [11.2261464,75.7853685]; // Thiruvannur
+const coord2: [number, number] = [11.2261464, 75.7853685]; // Thiruvannur
 const distance = getDistanceInKm(coord1, coord2);
 console.log(`Distance: ${distance.toFixed(2)} km`); // Output: Distance: 878.83 km
