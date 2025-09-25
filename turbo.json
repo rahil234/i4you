@@ -12,7 +12,7 @@
       ],
       "cache": true
     },
-    "lint": {
+    "lint:fix": {
       "dependsOn": [
         "^lint"
       ],

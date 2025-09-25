@@ -1,8 +1,13 @@
+import { ModerationImage, ModerationStatus } from '@/types';
+
 export interface IModerationService {
   getPendingImages(
     status: 'approved' | 'pending' | 'rejected',
     sortBy?: string,
-  ): Promise<any[]>;
+  ): Promise<ModerationImage[]>;
 
-  updateModerationStatus(publicId, status): Promise<any>;
+  updateModerationStatus(
+    publicId: string,
+    status: ModerationStatus,
+  ): Promise<any>;
 }

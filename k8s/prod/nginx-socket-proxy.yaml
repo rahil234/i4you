@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: socket-proxy-nginx
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: socket-proxy-nginx
+  template:
+    metadata:
+      labels:
+        app: socket-proxy-nginx
+        version: v1
+    spec:
+      containers:
+        - name: socket-proxy-nginx
+          image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/socket-nginx-image:90eb55b-dirty
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: socket-proxy-nginx
+  namespace: app
+spec:
+  type: ClusterIP
+  selector:
+    app: socket-proxy-nginx
+  ports:
+    - port: 80
+      targetPort: 80

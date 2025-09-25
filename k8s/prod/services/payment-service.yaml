@@ -1,67 +1,64 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: moderation-service
+  name: payment-service
   namespace: app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: moderation-service
+      app: payment-service
   template:
     metadata:
       labels:
-        app: moderation-service
+        app: payment-service
         version: v1
     spec:
       containers:
-        - name: moderation-service
-          image: moderation-service-image
-          imagePullPolicy: IfNotPresent
+        - name: payment-service
+          image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/payment-service-image:latest
+          imagePullPolicy: Always
           ports:
-            - containerPort: 4012
+            - containerPort: 4010
           env:
             - name: NODE_ENV
               value: "development"
             - name: PORT
-              value: "4012"
-            - name: GRPC_PORT
-              value: "50052"
-            - name: MONGODB_URI
+              value: "4010"
+            - name: FRONTEND_URL
+              value: https://i4you.ddns.net
+            - name: STRIPE_SECRET_KEY
               valueFrom:
                 secretKeyRef:
                   name: vault-secret
-                  key: MONGODB_URI
-            - name: CLOUDINARY_CLOUD_NAME
+                  key: STRIPE_SECRET_KEY
+            - name: STRIPE_WEBHOOK_SECRET
               valueFrom:
                 secretKeyRef:
                   name: vault-secret
-                  key: CLOUDINARY_CLOUD_NAME
-            - name: CLOUDINARY_API_KEY
+                  key: STRIPE_WEBHOOK_SECRET
+            - name: RAZORPAY_KEY_ID
               valueFrom:
                 secretKeyRef:
                   name: vault-secret
-                  key: CLOUDINARY_API_KEY
-            - name: CLOUDINARY_API_SECRET
+                  key: RAZORPAY_KEY_ID
+            - name: RAZORPAY_KEY_SECRET
               valueFrom:
                 secretKeyRef:
                   name: vault-secret
-                  key: CLOUDINARY_API_SECRET
+                  key: RAZORPAY_KEY_SECRET
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: moderation-service
+  name: payment-service
   namespace: app
 spec:
   type: ClusterIP
   selector:
-    app: moderation-service
+    app: payment-service
   ports:
     - name: http
-      port: 4012
-      targetPort: 4012
-    - name: grpc
-      port: 50052
-      targetPort: 50052
+      port: 4010
+      targetPort: 4010

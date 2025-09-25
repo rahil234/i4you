@@ -25,6 +25,8 @@ spec:
               value: "development"
             - name: PORT
               value: "4010"
+            - name: FRONTEND_URL
+              value: https://i4you.local.net
             - name: STRIPE_SECRET_KEY
               valueFrom:
                 secretKeyRef:

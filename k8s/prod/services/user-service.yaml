@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: user-service
+        version: v1
+    spec:
+      containers:
+        - name: user-service
+          image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/user-service-image:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 4002
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "4002"
+            - name: AUTH_SERVER_URL
+              value: "http://auth-service:3001"
+            - name: USER_SERVER_URL
+              value: "http://user-service:3000"
+            - name: GRPC_PORT
+              value: "50051"
+            - name: JWT_SECRET
+              value: "your_jwt_secret"
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: MONGODB_URI
+            - name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: REDIS_HOST
+            - name: REDIS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: REDIS_PORT
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: REDIS_PASSWORD
+            - name: KAFKA_BROKER_URL
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: KAFKA_BROKER_URL
+            - name: KAFKA_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: KAFKA_USERNAME
+            - name: KAFKA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: KAFKA_PASSWORD
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: app
+spec:
+  type: ClusterIP
+  selector:
+    app: user-service
+  ports:
+    - name: http
+      port: 80
+      targetPort: 4002
+    - name: grpc
+      port: 50051
+      targetPort: 50051

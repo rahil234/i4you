@@ -1,0 +1,12 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: jwt-auth
+  namespace: app
+spec:
+  forwardAuth:
+    address: http://validate-service.app.svc.cluster.local/validate
+    trustForwardHeader: true
+    authResponseHeaders:
+      - "X-User-Id"
+      - "X-User-Role"

@@ -3,8 +3,8 @@ import { env } from '@/config';
 
 const elastic = new Client({
   node: env.ES_URL,
-  maxRetries: 5,
-  requestTimeout: 60000,
+  maxRetries: Number(env.ES_MAX_RETRY),
+  requestTimeout: Number(env.ES_REQUEST_TIMEOUT),
   auth: {
     username: env.ES_USERNAME,
     password: env.ES_PASSWORD,

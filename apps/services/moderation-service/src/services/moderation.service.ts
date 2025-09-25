@@ -1,11 +1,13 @@
 import { injectable } from 'inversify';
 import cloudinary from '@/config/cloudinary.config';
+import { ResourceApiResponse } from 'cloudinary';
 import { IModerationService } from '@/services/interfaces/IModerationService';
+import { ModerationUpdateResult, ModerationStatus } from '@/types';
 
 @injectable()
 export class ModerationService implements IModerationService {
   getPendingImages = async (status: 'approved' | 'pending' | 'rejected') => {
-    const result = await cloudinary.search
+    const result: ResourceApiResponse = await cloudinary.search
       .expression(`moderation_status:${status}`)
       .sort_by('created_at', 'desc')
       .max_results(30)
@@ -24,7 +26,10 @@ export class ModerationService implements IModerationService {
     }));
   };
 
-  updateModerationStatus = async (publicId: string, status: string) => {
+  updateModerationStatus = async (
+    publicId: string,
+    status: ModerationStatus,
+  ): Promise<ModerationUpdateResult> => {
     const result = await cloudinary.api.update(publicId, {
       moderation_status: status,
       type: 'authenticated',

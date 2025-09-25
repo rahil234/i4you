@@ -13,7 +13,7 @@ metadata:
   name: kafka-pv-0
 spec:
   capacity:
-    storage: 100Gi
+    storage: 10Gi
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Delete
@@ -21,8 +21,6 @@ spec:
   claimRef:
     name: data-0-kafka-cluster-dual-role-0
     namespace: kafka
-  local:
-    path: /Users/rahilk/data/kafka
   nodeAffinity:
     required:
       nodeSelectorTerms:

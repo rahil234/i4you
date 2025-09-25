@@ -16,13 +16,13 @@ spec:
     spec:
       containers:
         - name: subscription-service
-          image: subscription-service-image
-          imagePullPolicy: IfNotPresent
+          image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/subscription-service-image:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 4010
           env:
             - name: NODE_ENV
-              value: "development"
+              value: "production"
             - name: PORT
               value: "4010"
             - name: MONGODB_URI
@@ -30,12 +30,6 @@ spec:
                 secretKeyRef:
                   name: vault-secret
                   key: MONGODB_URI
-            - name: REDIS_HOST
-              value: "redis.redis.svc.cluster.local"
-            - name: REDIS_PORT
-              value: "6379"
-            - name: REDIS_PASSWORD
-              value: "password"
 
 ---
 apiVersion: v1

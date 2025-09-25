@@ -2,8 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: validate-service
+  namespace: app
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: validate-service
@@ -14,8 +15,8 @@ spec:
     spec:
       containers:
         - name: validate-service
-          image: validate-service-image:latest
-          imagePullPolicy: IfNotPresent
+          image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/validate-service-image:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 5000
           env:
@@ -32,12 +33,32 @@ spec:
             - name: JWT_EXPIRES_IN
               value: 15m
             - name: MONGODB_URI
-              value: "mongodb+srv://rahilsardar234:NOKCk3dcykTN0P32@i4you-cluster.kdpj0cj.mongodb.net/I4You-userDB"
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: MONGODB_URI
+            - name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: REDIS_HOST
+            - name: REDIS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: REDIS_PORT
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: REDIS_PASSWORD
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: validate-service
+  namespace: app
 spec:
   type: ClusterIP
   selector:

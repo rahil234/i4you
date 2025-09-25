@@ -15,7 +15,7 @@ spec:
     volumes:
       - id: 0
         type: persistent-claim
-        size: 100Gi
+        size: 10Gi
         deleteClaim: false
         kraftMetadata: shared
 
@@ -37,10 +37,14 @@ spec:
         port: 9092
         type: internal
         tls: false
+        authentication:
+          type: scram-sha-512
       - name: external
         port: 9094
         type: nodeport
         tls: false
+        authentication:
+          type: scram-sha-512
         configuration:
           brokers:
             - broker: 0

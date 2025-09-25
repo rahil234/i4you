@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
         - name: media-service
-          image: media-service-image:latest
-          imagePullPolicy: IfNotPresent
+          image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/media-service-image:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 4003
           env:
@@ -26,11 +26,20 @@ spec:
             - name: PORT
               value: "4003"
             - name: REDIS_HOST
-              value: "redis.redis.svc.cluster.local"
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: REDIS_HOST
             - name: REDIS_PORT
-              value: "6379"
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: REDIS_PORT
             - name: REDIS_PASSWORD
-              value: "password"
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: REDIS_PASSWORD
             - name: CLOUDINARY_CLOUD_NAME
               valueFrom:
                 secretKeyRef:

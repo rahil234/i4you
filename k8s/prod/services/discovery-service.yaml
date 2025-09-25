@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
         - name: discovery-service
-          image: discovery-service-image
-          imagePullPolicy: IfNotPresent
+          image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/discovery-service-image:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 4010
           env:
@@ -33,16 +33,24 @@ spec:
                   name: vault-secret
                   key: MONGODB_URI
             - name: ES_URL
-              value: "http://elastic-es-http.elastic-system.svc.cluster.local:9200"
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: ES_URL
             - name: ES_USERNAME
-              value: "rahil"
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: ES_USERNAME
             - name: ES_PASSWORD
-              value: "password"
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: ES_PASSWORD
             - name: ES_MAX_RETRY
               value: "5"
             - name: ES_REQUEST_TIMEOUT
               value: "60000"
-
 
 ---
 apiVersion: v1
