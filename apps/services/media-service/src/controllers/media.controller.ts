@@ -8,13 +8,13 @@ import { MEDIA_MESSAGES } from '@/constants/response-messages.constant';
 @injectable()
 export class MediaController {
   constructor(
-    @inject(TYPES.MediaService) private mediaService: IMediaService
+    @inject(TYPES.MediaService) private _mediaService: IMediaService
   ) {}
 
   getUploadUrl = handleAsync(async (req, res) => {
     const fileType = req.query.fileType as string;
 
-    const uploadParams = await this.mediaService.generateUploadParams(
+    const uploadParams = await this._mediaService.generateUploadParams(
       req.user.id,
       fileType
     );
@@ -28,7 +28,7 @@ export class MediaController {
 
   getImages = handleAsync(async (req, res) => {
     const { userId } = req.params;
-    const images = await this.mediaService.getUserImages(userId);
+    const images = await this._mediaService.getUserImages(userId);
 
     res.status(HTTP_STATUS.OK).json({
       statusCode: HTTP_STATUS.OK,
@@ -39,7 +39,7 @@ export class MediaController {
 
   deleteImage = handleAsync(async (req, res) => {
     const { imageUrl } = req.params;
-    const status = await this.mediaService.deleteImageByUrl(imageUrl);
+    const status = await this._mediaService.deleteImageByUrl(imageUrl);
 
     res.status(HTTP_STATUS.OK).json({
       statusCode: HTTP_STATUS.OK,

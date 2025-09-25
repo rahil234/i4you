@@ -1,8 +1,9 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Message } from '../schemas/message.schema.js';
+import { IVideoRepository } from './interfaces/IVideoRepository';
 
-export class VideoRepository {
+export class VideoRepository implements IVideoRepository {
   constructor(
     @InjectModel(Message.name) private messageModel: Model<Message>,
   ) {}

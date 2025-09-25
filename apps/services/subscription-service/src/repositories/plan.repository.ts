@@ -5,37 +5,37 @@ import * as fs from 'fs';
 
 @injectable()
 export class JsonPlanRepository implements IPlanRepository {
-  private plans = JSON.parse(
+  private _plans = JSON.parse(
     fs.readFileSync(new URL('../data/plans.json', import.meta.url), 'utf-8'),
   );
 
   async findAll(): Promise<Plan[]> {
-    return await this.plans;
+    return await this._plans;
   }
 
   async findById(id: string): Promise<Plan | null> {
-    const plan = await this.plans.find((p) => p.id === id);
+    const plan = await this._plans.find((p) => p.id === id);
     return plan || null;
   }
 
   async create(plan: Plan): Promise<Plan> {
-    await this.plans.push(plan);
+    await this._plans.push(plan);
     return plan;
   }
 
   async update(id: string, planData: Partial<Plan>): Promise<Plan | null> {
-    const index = await this.plans.findIndex((p) => p.id === id);
+    const index = await this._plans.findIndex((p) => p.id === id);
     if (index === -1) return null;
 
-    this.plans[index] = { ...this.plans[index], ...planData };
-    return this.plans[index];
+    this._plans[index] = { ...this._plans[index], ...planData };
+    return this._plans[index];
   }
 
   async delete(id: string): Promise<boolean> {
-    const index = await this.plans.findIndex((p) => p.id === id);
+    const index = await this._plans.findIndex((p) => p.id === id);
     if (index === -1) return false;
 
-    this.plans.splice(index, 1);
+    this._plans.splice(index, 1);
     return true;
   }
 }

@@ -1,4 +1,3 @@
-import { ModerationService } from '@/services/moderation.service';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '@/types';
 import { RouteHandler } from 'fastify';
@@ -7,12 +6,13 @@ import {
   MODERATION_MESSAGES,
   MODERATION_STATUS,
 } from '@/constants/response-messages.constant';
+import { IModerationService } from '@/services/interfaces/IModerationService';
 
 @injectable()
 export class ModerationController {
   constructor(
     @inject(TYPES.ModerationService)
-    private moderationService: ModerationService,
+    private _moderationService: IModerationService,
   ) {}
 
   getPendingModerationImages: RouteHandler = async (req, reply) => {
@@ -21,7 +21,7 @@ export class ModerationController {
       sortBy?: string;
     };
 
-    const images = await this.moderationService.getPendingImages(status);
+    const images = await this._moderationService.getPendingImages(status);
 
     reply.status(HTTP_STATUS.OK).send({
       statusCode: HTTP_STATUS.OK,
@@ -45,7 +45,7 @@ export class ModerationController {
       });
     }
 
-    const updated = await this.moderationService.updateModerationStatus(
+    const updated = await this._moderationService.updateModerationStatus(
       publicId,
       status,
     );

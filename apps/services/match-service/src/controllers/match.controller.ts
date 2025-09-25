@@ -12,24 +12,24 @@ import { MATCH_RESPONSE_MESSAGES } from '@/constants/response-messages.constant'
 @injectable()
 export class MatchController {
   constructor(
-    @inject(TYPES.MatchService) private matchService: IMatchService,
-    @inject(TYPES.MediaService) private mediaService: IMediaService
+    @inject(TYPES.MatchService) private _matchService: IMatchService,
+    @inject(TYPES.MediaService) private _mediaService: IMediaService
   ) {}
 
   getMatches = handleAsync(async (req, res) => {
-    const matches = await this.matchService.getMatches(req.user.id);
+    const matches = await this._matchService.getMatches(req.user.id);
     res.status(HTTP_STATUS.OK).json(matches);
   });
 
   getPotentialMatches = handleAsync(async (req, res) => {
-    const matches = await this.matchService.getPotentialMatches(req.user.id);
+    const matches = await this._matchService.getPotentialMatches(req.user.id);
 
     const matchesWithPhotos = await Promise.all(
       matches.map(
         async (match) =>
           new MatchesResponseDTO(
             match,
-            await this.mediaService.getUserImages(match.id)
+            await this._mediaService.getUserImages(match.id)
           )
       )
     );
@@ -38,7 +38,7 @@ export class MatchController {
   });
 
   getBlockedMatches = handleAsync(async (req, res) => {
-    const blockedMatches = await this.matchService.getBlockedMatches(
+    const blockedMatches = await this._matchService.getBlockedMatches(
       req.user.id
     );
     res.status(HTTP_STATUS.OK).json(blockedMatches);
@@ -49,7 +49,7 @@ export class MatchController {
     if (!matchId) {
       createError.BadRequest(MATCH_RESPONSE_MESSAGES.MATCH_ID_REQUIRED);
     }
-    await this.matchService.blockMatch(req.user.id, matchId);
+    await this._matchService.blockMatch(req.user.id, matchId);
     res
       .status(HTTP_STATUS.OK)
       .json({ message: MATCH_RESPONSE_MESSAGES.BLOCK_SUCCESS });
@@ -60,7 +60,7 @@ export class MatchController {
     if (!matchId) {
       createError.BadRequest(MATCH_RESPONSE_MESSAGES.MATCH_ID_REQUIRED);
     }
-    await this.matchService.unblockMatch(req.user.id, matchId);
+    await this._matchService.unblockMatch(req.user.id, matchId);
     res
       .status(HTTP_STATUS.OK)
       .json({ message: MATCH_RESPONSE_MESSAGES.UNBLOCK_SUCCESS });

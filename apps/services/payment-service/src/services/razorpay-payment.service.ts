@@ -8,10 +8,10 @@ import {
 } from '@/types';
 
 export class RazorpayPaymentService implements IPaymentService {
-  private razorpay: Razorpay;
+  private _razorpay: Razorpay;
 
   constructor() {
-    this.razorpay = new Razorpay({
+    this._razorpay = new Razorpay({
       key_id: env.RAZORPAY_KEY_ID,
       key_secret: env.RAZORPAY_KEY_SECRET,
     });
@@ -20,7 +20,7 @@ export class RazorpayPaymentService implements IPaymentService {
   async createCheckoutSession(
     payload: CheckoutSessionPayload,
   ): Promise<CheckoutSessionResponse> {
-    const paymentLink = await this.razorpay.paymentLink.create({
+    const paymentLink = await this._razorpay.paymentLink.create({
       amount: 50000,
       currency: 'INR',
       description: 'Payment for order',
@@ -42,7 +42,7 @@ export class RazorpayPaymentService implements IPaymentService {
       callback_method: 'get',
     });
 
-    const order = await this.razorpay.orders.create({
+    const order = await this._razorpay.orders.create({
       amount: 50000,
       currency: 'INR',
       receipt: 'receipt#1',
@@ -57,7 +57,7 @@ export class RazorpayPaymentService implements IPaymentService {
   async getSessionDetails(sessionId: string): Promise<SessionDetails> {
     try {
       console.log('Fetching Razorpay payment link details for ID:', sessionId);
-      const order = await this.razorpay.orders.fetch(sessionId);
+      const order = await this._razorpay.orders.fetch(sessionId);
 
       console.log('razarpay order', order);
 

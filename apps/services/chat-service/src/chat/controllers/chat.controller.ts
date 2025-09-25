@@ -5,22 +5,22 @@ import { IChatService } from '../services/interfaces/IChatService';
 @Controller()
 export class ChatController {
   constructor(
-    @Inject('ChatService') private readonly chatService: IChatService,
+    @Inject('ChatService') private readonly _chatService: IChatService,
   ) {}
 
   @Get('/')
-  getChats(@Headers('x-user-id') userId: string): Promise<any> {
-    return this.chatService.findChatsByUserId(userId);
+  getChats(@Headers('x-user-id') userId: string) {
+    return this._chatService.findChatsByUserId(userId);
   }
 
   @Get('/user/:userId')
-  getInitialChatUser(@Param('userId') userId: string): Promise<any> {
-    return this.chatService.getInitialChatUser(userId);
+  getInitialChatUser(@Param('userId') userId: string) {
+    return this._chatService.getInitialChatUser(userId);
   }
 
   @Get('/chat/:chatId')
-  getChatById(@Param('chatId') chatId: string): Promise<any> {
-    return this.chatService.findChatById(chatId);
+  getChatById(@Param('chatId') chatId: string) {
+    return this._chatService.findChatById(chatId);
   }
 
   @Get('/:chatId/messages')
@@ -28,9 +28,8 @@ export class ChatController {
     @Param('chatId') chatId: string,
     @Query('page') page: number = 0,
     @Query('limit') limit: number = 0,
-    //TODO
-  ): Promise<any> {
-    const messages = await this.chatService.getMessages(chatId, page, limit);
+  ) {
+    const messages = await this._chatService.getMessages(chatId, page, limit);
     return {
       messages: messages.map((m) => new MessageResponseDto(m)),
       page,

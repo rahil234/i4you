@@ -6,24 +6,7 @@ import {
   SubscribeMessage,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-
-interface UserInfo {
-  socketId: string;
-  name: string;
-  id: string;
-  avatar: string;
-}
-
-export interface WebRtcSdp {
-  type: 'offer' | 'answer';
-  sdp: string;
-}
-
-export interface WebRtcIceCandidate {
-  candidate: string;
-  sdpMid?: string | null;
-  sdpMLineIndex?: number | null;
-}
+import { UserInfo, WebRtcIceCandidate, WebRtcSdp } from '../types';
 
 @WebSocketGateway({
   cors: {

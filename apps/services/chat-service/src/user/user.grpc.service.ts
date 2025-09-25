@@ -9,15 +9,15 @@ import { User } from '@i4you/shared';
 
 @Injectable()
 export class GRPCUserService implements IUserService {
-  private userGrpcService: UserServiceClient;
+  private _userGrpcService: UserServiceClient;
 
   constructor(private readonly GrpcClientProvider: GrpcClientProvider) {
-    this.userGrpcService = GrpcClientProvider.userClient;
+    this._userGrpcService = GrpcClientProvider.userClient;
   }
 
   async getUserById(id: string): Promise<User> {
     return new Promise((resolve, reject) => {
-      this.userGrpcService.getUserById({ id }, (err, response) => {
+      this._userGrpcService.getUserById({ id }, (err, response) => {
         if (err) return reject(err);
         resolve({
           ...response,
@@ -34,7 +34,7 @@ export class GRPCUserService implements IUserService {
 
   async getUserByEmail(email: string): Promise<GetUserByEmailResponse> {
     return new Promise((resolve, reject) => {
-      this.userGrpcService.getUserByEmail({ email }, (err, response) => {
+      this._userGrpcService.getUserByEmail({ email }, (err, response) => {
         if (err) return reject(err);
         resolve(response);
       });

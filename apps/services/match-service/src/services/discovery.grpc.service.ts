@@ -7,7 +7,7 @@ import { IDiscoveryService } from '@/services/interfaces/IDiscoveryService';
 export class DiscoveryGrpcService implements IDiscoveryService {
   constructor(
     @inject(TYPES.DiscoveryGrpcProvider)
-    private discoveryServiceClient: DiscoveryGrpcProvider
+    private _discoveryServiceClient: DiscoveryGrpcProvider
   ) {}
 
   async getMatches({
@@ -16,7 +16,7 @@ export class DiscoveryGrpcService implements IDiscoveryService {
     excludeUserIds = [],
   }: GetMatchesRequest): Promise<Match[]> {
     return new Promise((resolve, reject) => {
-      this.discoveryServiceClient.getPotentialMatches(
+      this._discoveryServiceClient.getPotentialMatches(
         {
           showMe: preferences.showMe,
           maxDistance: preferences.distance,

@@ -8,7 +8,7 @@ import { MessageMapper } from '../mappers/message.mapper.js';
 export class MessageRepository implements IMessageRepository {
   constructor(
     @InjectModel(Message.name)
-    private messageModel: Model<MessageDocument>,
+    private _messageModel: Model<MessageDocument>,
   ) {}
 
   async create(
@@ -17,7 +17,7 @@ export class MessageRepository implements IMessageRepository {
     content: string,
     timestamp: number,
   ): Promise<Message> {
-    const doc = await this.messageModel.create({
+    const doc = await this._messageModel.create({
       chatId,
       sender,
       content,
@@ -28,7 +28,7 @@ export class MessageRepository implements IMessageRepository {
   }
 
   async findByChatId(chatId: string, page = 0, limit = 20): Promise<Message[]> {
-    const docs = await this.messageModel
+    const docs = await this._messageModel
       .find({ chatId })
       .sort({ createdAt: -1 })
       .skip(page * limit)
@@ -39,7 +39,7 @@ export class MessageRepository implements IMessageRepository {
   }
 
   async findLastMessage(chatId: string): Promise<Message | null> {
-    const doc = await this.messageModel
+    const doc = await this._messageModel
       .findOne({ chatId })
       .sort({ createdAt: -1 })
       .exec();
@@ -50,7 +50,7 @@ export class MessageRepository implements IMessageRepository {
   }
 
   async countUnreadMessages(chatId: string, userId?: string): Promise<number> {
-    return this.messageModel
+    return this._messageModel
       .countDocuments({
         chatId,
         status: { $ne: 'read' },
@@ -60,14 +60,14 @@ export class MessageRepository implements IMessageRepository {
   }
 
   async markAsDelivered(chatId: string, userId?: string): Promise<void> {
-    await this.messageModel.updateMany(
+    await this._messageModel.updateMany(
       { chatId, status: { $ne: 'delivered' }, sender: { $ne: userId } },
       { status: 'delivered' },
     );
   }
 
   async markAsRead(chatId: string, userId?: string): Promise<void> {
-    await this.messageModel.updateMany(
+    await this._messageModel.updateMany(
       { chatId, status: { $ne: 'read' }, sender: { $ne: userId } },
       { status: 'read' },
     );

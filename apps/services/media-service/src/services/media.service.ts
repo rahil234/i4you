@@ -11,7 +11,9 @@ const blockedImageUrl =
 
 @injectable()
 export class MediaService implements IMediaService {
-  constructor(@inject(TYPES.CacheService) private cacheService: ICacheService) {
+  constructor(
+    @inject(TYPES.CacheService) private _cacheService: ICacheService
+  ) {
     cloudinary.config({
       cloud_name: env.CLOUDINARY_CLOUD_NAME,
       api_key: env.CLOUDINARY_API_KEY,
@@ -39,7 +41,7 @@ export class MediaService implements IMediaService {
       env.CLOUDINARY_API_SECRET
     );
 
-    await this.cacheService.del(`user:images:${userId}`);
+    await this._cacheService.del(`user:images:${userId}`);
 
     return {
       url: `https://api.cloudinary.com/v1_1/${env.CLOUDINARY_CLOUD_NAME}/auto/upload`,
@@ -54,7 +56,7 @@ export class MediaService implements IMediaService {
   async getUserImages(userId: string) {
     const cacheKey = `user:images:${userId}`;
 
-    const cachedImages = await this.cacheService.get<string[]>(cacheKey);
+    const cachedImages = await this._cacheService.get<string[]>(cacheKey);
     if (cachedImages) {
       return cachedImages;
     }
@@ -73,7 +75,7 @@ export class MediaService implements IMediaService {
         : image.secure_url
     );
 
-    await this.cacheService.set(cacheKey, images, 900);
+    await this._cacheService.set(cacheKey, images, 900);
 
     return images;
   }
@@ -96,7 +98,7 @@ export class MediaService implements IMediaService {
     }
 
     const userIdFromUrl = publicId.split('/')[1];
-    await this.cacheService.del(`user:images:${userIdFromUrl}`);
+    await this._cacheService.del(`user:images:${userIdFromUrl}`);
 
     return data.result;
   }
