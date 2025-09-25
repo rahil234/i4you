@@ -1,32 +1,32 @@
 import type { PushSubscription } from 'web-push';
 import { Body, Controller, Post, Headers, Inject } from '@nestjs/common';
-import { NotificationsService } from '../services/notifications.service.js';
+import { INotificationsService } from '../services/interfaces/INotificationService';
 
 @Controller()
 export class NotificationController {
   constructor(
     @Inject('NotificationService')
-    private readonly notificationService: NotificationsService,
+    private readonly notificationService: INotificationsService,
   ) {}
 
   @Post('subscribe')
   async subscribe(
     @Body() subscription: PushSubscription,
     @Headers('x-user-id') userId: string,
-  ): Promise<any> {
+  ) {
     await this.notificationService.subscribe(userId, subscription);
   }
 
   @Post('unsubscribe')
-  unsubscribe(@Body() subscription: PushSubscription): any {
+  unsubscribe(@Body() subscription: PushSubscription) {
     console.log('Unsubscribed:', subscription);
   }
 
   @Post('send')
-  async sendTest(@Body() body: { message: string }): Promise<any> {
+  async sendTest(@Body() body: { message: string }) {
     const { message } = body;
     const payload = JSON.stringify({
-      title: 'Notification from NesvtJS',
+      title: 'Notification from NestJS',
       body: message,
     });
 

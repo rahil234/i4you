@@ -12,13 +12,13 @@ import { IUserService } from '@/services/interfaces/IUserService';
 @injectable()
 export class UserGrpcService implements IUserService {
   constructor(
-    @inject(TYPES.GrpcClientProvider) private client: GrpcClientProvider
+    @inject(TYPES.GrpcClientProvider) private _client: GrpcClientProvider
   ) {}
 
   async findUserById(id: string): Promise<GetUserByIdResponse> {
     console.log('Finding user by ID:', id);
     return new Promise((resolve, reject) => {
-      this.client.getUserById({ id }, (err, response) => {
+      this._client.getUserById({ id }, (err, response) => {
         if (err) return reject(err);
         resolve(response);
       });
@@ -28,7 +28,7 @@ export class UserGrpcService implements IUserService {
   async findUserByEmail(email: string): Promise<GetUserByEmailResponse | null> {
     console.log('Finding user by Email:', email);
     return new Promise((resolve, reject) => {
-      this.client.getUserByEmail({ email }, (err, response) => {
+      this._client.getUserByEmail({ email }, (err, response) => {
         if (err) {
           if (err.code === 5) {
             return resolve(null);
@@ -44,7 +44,7 @@ export class UserGrpcService implements IUserService {
     user: Required<Pick<User, 'name' | 'email' | 'password'>>
   ): Promise<CreateUserResponse> {
     return new Promise((resolve, reject) => {
-      this.client.createUser(user, (err, response) => {
+      this._client.createUser(user, (err, response) => {
         if (err) return reject(err);
         resolve(response);
       });

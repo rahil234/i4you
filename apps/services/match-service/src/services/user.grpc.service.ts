@@ -6,12 +6,12 @@ import { UserGrpcProvider } from '@/providers/user.grpc.provider';
 @injectable()
 export class UserGrpcService {
   constructor(
-    @inject(TYPES.UserGrpcProvider) private userServiceClient: UserGrpcProvider
+    @inject(TYPES.UserGrpcProvider) private _userServiceClient: UserGrpcProvider
   ) {}
 
   async findUserById(id: string): Promise<GetUserByIdResponse> {
     return new Promise((resolve, reject) => {
-      this.userServiceClient.getUserById({ id }, (err, response) => {
+      this._userServiceClient.getUserById({ id }, (err, response) => {
         if (err) return reject(err);
         resolve(response);
       });

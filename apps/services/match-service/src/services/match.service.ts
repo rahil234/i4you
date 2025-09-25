@@ -15,10 +15,10 @@ export class MatchService implements IMatchService {
     @inject(TYPES.MatchRepository) private _matchRepository: IMatchRepository,
     @inject(TYPES.InteractionService)
     private _interactionService: IInteractionService,
-    @inject(TYPES.UserGrpcService) private userGrpcService: IUserService,
-    @inject(TYPES.KafkaService) private kafkaService: IKafkaService,
+    @inject(TYPES.UserGrpcService) private _userGrpcService: IUserService,
+    @inject(TYPES.KafkaService) private _kafkaService: IKafkaService,
     @inject(TYPES.DiscoveryGrpcService)
-    private discoverGrpcService: IDiscoveryService
+    private _discoverGrpcService: IDiscoveryService
   ) {}
 
   async getMatches(userId: string): Promise<Match[]> {
@@ -33,7 +33,7 @@ export class MatchService implements IMatchService {
             String(match.userA) === userId ? match.userB : match.userA
           );
 
-          const userData = await this.userGrpcService.findUserById(matchId);
+          const userData = await this._userGrpcService.findUserById(matchId);
 
           return {
             id: match.id,
@@ -58,14 +58,14 @@ export class MatchService implements IMatchService {
   }
 
   async getPotentialMatches(userId: string): Promise<Match[]> {
-    const user = await this.userGrpcService.findUserById(userId);
+    const user = await this._userGrpcService.findUserById(userId);
 
     const likedUserIds =
       await this._interactionService.getInteractedUserIds(userId);
 
     const excludeUserIds = [userId, ...likedUserIds];
 
-    return this.discoverGrpcService.getMatches({
+    return this._discoverGrpcService.getMatches({
       preferences: user.preferences!,
       location: user.location!,
       excludeUserIds,
@@ -73,8 +73,8 @@ export class MatchService implements IMatchService {
   }
 
   async userMatched(userA: string, userB: string) {
-    const user1 = await this.userGrpcService.findUserById(userA);
-    const user2 = await this.userGrpcService.findUserById(userB);
+    const user1 = await this._userGrpcService.findUserById(userA);
+    const user2 = await this._userGrpcService.findUserById(userB);
 
     if (!user1 || !user2) {
       createError.BadRequest('One or both users not found');
@@ -96,7 +96,7 @@ export class MatchService implements IMatchService {
 
     const match = await this._matchRepository.createMatch(user1.id, user2.id);
 
-    await this.kafkaService.emit(
+    await this._kafkaService.emit(
       EVENT_TOPICS.NOTIFICATION_EVENTS,
       EVENT_KEYS.USER_MATCHED,
       {
@@ -111,7 +111,7 @@ export class MatchService implements IMatchService {
       } as MatchEventPayload
     );
 
-    await this.kafkaService.emit(
+    await this._kafkaService.emit(
       EVENT_TOPICS.NOTIFICATION_EVENTS,
       EVENT_KEYS.USER_MATCHED,
       {
@@ -144,7 +144,7 @@ export class MatchService implements IMatchService {
             String(match.userA) === userId ? match.userB : match.userA
           );
 
-          const userData = await this.userGrpcService.findUserById(matchId);
+          const userData = await this._userGrpcService.findUserById(matchId);
 
           return {
             id: match.id,
