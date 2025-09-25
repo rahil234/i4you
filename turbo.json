@@ -12,6 +12,17 @@
       ],
       "cache": true
     },
+    "lint:fix": {
+      "dependsOn": [
+        "^lint"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "dist/**"
+      ],
+      "cache": true
+    },
     "test": {
       "dependsOn": [
         "^test"

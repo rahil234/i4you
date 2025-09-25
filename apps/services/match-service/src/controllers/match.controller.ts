@@ -5,7 +5,9 @@ import { handleAsync } from '@/utils/handle-async';
 import { createError } from '@i4you/http-errors';
 import MatchesResponseDTO from '@/dtos/matches.response.dtos';
 import { IMatchService } from '@/services/interfaces/IMatchService';
-import IMediaService from '@/services/interfaces/IMediaService';
+import { IMediaService } from '@/services/interfaces/IMediaService';
+import { HTTP_STATUS } from '@/constants/http-status.constant';
+import { MATCH_RESPONSE_MESSAGES } from '@/constants/response-messages.constant';
 
 @injectable()
 export class MatchController {
@@ -16,7 +18,7 @@ export class MatchController {
 
   getMatches = handleAsync(async (req, res) => {
     const matches = await this.matchService.getMatches(req.user.id);
-    res.status(200).json(matches);
+    res.status(HTTP_STATUS.OK).json(matches);
   });
 
   getPotentialMatches = handleAsync(async (req, res) => {
@@ -32,33 +34,35 @@ export class MatchController {
       )
     );
 
-    res.status(200).json(matchesWithPhotos);
+    res.status(HTTP_STATUS.OK).json(matchesWithPhotos);
   });
 
   getBlockedMatches = handleAsync(async (req, res) => {
     const blockedMatches = await this.matchService.getBlockedMatches(
       req.user.id
     );
-
-    res.status(200).json(blockedMatches);
+    res.status(HTTP_STATUS.OK).json(blockedMatches);
   });
 
   blockMatch = handleAsync(async (req, res) => {
-    console.log('Blocking match with ID:', req.params.matchId);
     const matchId = req.params.matchId;
     if (!matchId) {
-      createError.BadRequest('matchId parameter is required');
+      createError.BadRequest(MATCH_RESPONSE_MESSAGES.MATCH_ID_REQUIRED);
     }
     await this.matchService.blockMatch(req.user.id, matchId);
-    res.status(200).json({ message: 'Match blocked successfully' });
+    res
+      .status(HTTP_STATUS.OK)
+      .json({ message: MATCH_RESPONSE_MESSAGES.BLOCK_SUCCESS });
   });
 
   unblockMatch = handleAsync(async (req, res) => {
     const matchId = req.params.matchId;
     if (!matchId) {
-      createError.BadRequest('matchId parameter is required');
+      createError.BadRequest(MATCH_RESPONSE_MESSAGES.MATCH_ID_REQUIRED);
     }
     await this.matchService.unblockMatch(req.user.id, matchId);
-    res.status(200).json({ message: 'Match unblocked successfully' });
+    res
+      .status(HTTP_STATUS.OK)
+      .json({ message: MATCH_RESPONSE_MESSAGES.UNBLOCK_SUCCESS });
   });
 }

@@ -3,7 +3,7 @@ import { AppError } from '@/errors/AppError';
 import { HttpError } from '@i4you/http-errors';
 
 export function errorHandlerMiddleware(
-  err: any,
+  err: unknown,
   _req: Request,
   res: Response,
   _next: NextFunction

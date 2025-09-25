@@ -32,6 +32,12 @@ export default function DiscoverPage() {
         }
     }, [newMatches]);
 
+    useEffect(() => {
+        if (currentIndex >= potentialMatches.length && potentialMatches.length > 0) {
+            setCurrentIndex(0);
+        }
+    }, [currentIndex, potentialMatches.length]);
+
     const handleMatch = (match: any) => {
         setCurrentMatch(match);
         setMatchAnimation(true);
@@ -47,11 +53,17 @@ export default function DiscoverPage() {
         }
     };
 
-    useEffect(() => {
-        if (currentIndex >= potentialMatches.length && potentialMatches.length > 0) {
-            setCurrentIndex(0);
-        }
-    }, [currentIndex, potentialMatches.length]);
+    const handleLike = async () => {
+        cardRef.current?.like();
+        console.log('Like button clicked', cardRef.current);
+    };
+
+    const handleSuperLike = async () => {
+        cardRef.current?.superLike()
+        console.log('Super Like button clicked');
+    };
+
+    const handleDislike = async () => (cardRef.current?.dislike());
 
     if (loading) {
         return (
@@ -64,10 +76,6 @@ export default function DiscoverPage() {
             </UserLayout>
         );
     }
-
-    const handleLike = async () => (cardRef.current?.like());
-    const handleDislike = async () => (cardRef.current?.dislike());
-    const handleSuperLike = async () => (cardRef.current?.superLike());
 
     return (
         <UserLayout>
@@ -91,14 +99,22 @@ export default function DiscoverPage() {
                     ) : (<>
                         <div className="relative w-full h-[calc(92vh-250px)] flex items-center justify-center">
                             <AnimatePresence>
-                                {potentialMatches.map((user, index) => (
+                                {/*{potentialMatches.map((user, index) => (*/}
+                                {/*    <UserProfileCard*/}
+                                {/*        ref={cardRef}*/}
+                                {/*        key={`${user.id}-${currentIndex + index}`}*/}
+                                {/*        user={user}*/}
+                                {/*        onMatch={index === 0 ? handleMatch : undefined}*/}
+                                {/*    />*/}
+                                {/*))}*/}
+                                {potentialMatches[currentIndex] &&
                                     <UserProfileCard
                                         ref={cardRef}
-                                        key={`${user.id}-${currentIndex + index}`}
-                                        user={user}
-                                        onMatch={index === 0 ? handleMatch : undefined}
+                                        key={potentialMatches[currentIndex].id}
+                                        user={potentialMatches[currentIndex]}
+                                        onMatch={handleMatch}
                                     />
-                                ))}
+                                }
                             </AnimatePresence>
                         </div>
 

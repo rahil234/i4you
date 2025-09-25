@@ -5,7 +5,7 @@ export const connectDB = async () => {
   try {
     const MONGODB_URI = env.MONGODB_URI.concat(
       '/I4You-subscriptionDB',
-      '?retryWrites=true&w=majority&appName=i4you-cluster'
+      '?retryWrites=true&w=majority&appName=i4you-cluster',
     );
     console.log('Connecting to MongoDB:', MONGODB_URI);
     await mongoose.connect(MONGODB_URI);

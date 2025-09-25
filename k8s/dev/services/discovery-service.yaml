@@ -32,16 +32,17 @@ spec:
                 secretKeyRef:
                   name: vault-secret
                   key: MONGODB_URI
-            - name: REDIS_HOST
-              value: "redis.redis.svc.cluster.local"
-            - name: REDIS_PORT
-              value: "6379"
-            - name: REDIS_PASSWORD
-              value: "password"
             - name: ES_URL
               value: "http://elastic-es-http.elastic-system.svc.cluster.local:9200"
-            - name: ES_API_KEY
-              value: "OWFPT2pwZ0JzRmNxVXhoam0wQ0E6bzNvZ1QtcnFoTFAyVjF2VWZoTWdnUQ=="
+            - name: ES_USERNAME
+              value: "rahil"
+            - name: ES_PASSWORD
+              value: "password"
+            - name: ES_MAX_RETRY
+              value: "5"
+            - name: ES_REQUEST_TIMEOUT
+              value: "60000"
+
 
 ---
 apiVersion: v1

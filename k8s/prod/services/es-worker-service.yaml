@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: es-worker-service
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: es-worker-service
+  template:
+    metadata:
+      labels:
+        app: es-worker-service
+        version: v1
+    spec:
+      containers:
+        - name: es-worker-service
+          image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/es-worker-service-image:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 4010
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "4011"
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: MONGODB_URI
+            - name: KAFKA_BROKER_URL
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: KAFKA_BROKER_URL
+            - name: KAFKA_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: KAFKA_USERNAME
+            - name: KAFKA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: KAFKA_PASSWORD
+            - name: ES_URL
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: ES_URL
+            - name: ES_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: ES_USERNAME
+            - name: ES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: ES_PASSWORD
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: es-worker-service
+  namespace: app
+spec:
+  type: ClusterIP
+  selector:
+    app: es-worker-service
+  ports:
+    - port: 4011
+      targetPort: 4011

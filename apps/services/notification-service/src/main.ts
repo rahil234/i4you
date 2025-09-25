@@ -12,7 +12,13 @@ async function bootstrap() {
     options: {
       client: {
         clientId: 'notification-service',
-        brokers: ['kafka-cluster-kafka-brokers.kafka.svc.cluster.local:9092'],
+        brokers: [process.env.KAFKA_BROKER_URL!],
+        sasl: {
+          username: process.env.KAFKA_USERNAME!,
+          password: process.env.KAFKA_PASSWORD!,
+          mechanism: 'plain',
+        },
+        ssl: process.env.NODE_ENV === 'production',
       },
       consumer: {
         groupId: 'notification-consumer-group',
@@ -24,4 +30,10 @@ async function bootstrap() {
   await app.listen(PORT);
 }
 
-bootstrap();
+bootstrap()
+  .then(() => {
+    console.log(`Notification service is running on port ${PORT}`);
+  })
+  .catch(() => {
+    console.error('Failed to start notification service');
+  });

@@ -1,5 +1,6 @@
-import { consumer } from './kafka';
-import { indexUser } from './elastic';
+import { consumer } from '@/kafka';
+import { indexUser } from '@/elastic';
+import '@/config/env.config';
 
 async function runWorker() {
   await consumer.connect().then(() => {
@@ -12,12 +13,15 @@ async function runWorker() {
     eachMessage: async ({ message }) => {
       if (!message.value || !message.key) return;
 
-      const [key, data] = [message.key.toString(), JSON.parse(message.value.toString())];
+      const [key, data] = [
+        message.key.toString(),
+        JSON.parse(message.value.toString()),
+      ];
 
       console.log(`Received event: ${key}`, data);
 
       if (key === 'user.created' || key === 'user.profile.updated') {
-        console.log(`Indexing user: ${data._id}`);
+        console.log(`Indexing user: ${data.id}`);
         await indexUser(data);
       }
     },

@@ -1,3 +1,3 @@
-export default interface IMediaService {
+export interface IMediaService {
   getUserImages(imageId: string): Promise<string[]>;
 }

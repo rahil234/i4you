@@ -3,7 +3,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { v4 as uuidv4 } from 'uuid';
 import { env } from '@/config';
 import { SearchResponse, TYPES } from '@/types';
-import ICacheService from '@/services/interfaces/ICacheService';
+import { ICacheService } from '@/services/interfaces/ICacheService';
 import { IMediaService } from '@/services/interfaces/IMediaService';
 
 const blockedImageUrl =

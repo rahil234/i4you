@@ -1,7 +1,11 @@
 import { User } from '@i4you/shared';
 
-class OnboardingRequestDTO
-  implements Omit<User, 'id' | 'joined' | 'email' | 'status' | 'role'>
+export class OnboardingRequestDTO
+  implements
+    Omit<
+      User,
+      'id' | 'joined' | 'email' | 'status' | 'role' | 'onboardingCompleted'
+    >
 {
   name;
   age;
@@ -28,5 +32,3 @@ class OnboardingRequestDTO
     };
   }
 }
-
-export default OnboardingRequestDTO;

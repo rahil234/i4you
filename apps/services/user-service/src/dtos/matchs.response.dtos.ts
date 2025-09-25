@@ -1,10 +1,16 @@
 import { User } from '@i4you/shared';
 
-class MatchesResponseDTO
+export class MatchesResponseDTO
   implements
     Omit<
       User,
-      'location' | 'joined' | 'email' | 'status' | 'role' | 'preferences'
+      | 'location'
+      | 'joined'
+      | 'email'
+      | 'status'
+      | 'role'
+      | 'preferences'
+      | 'onboardingCompleted'
     >
 {
   id;
@@ -33,5 +39,3 @@ class MatchesResponseDTO
     this.distance = `${Math.ceil(match.distance / 1000)} Km`;
   }
 }
-
-export default MatchesResponseDTO;

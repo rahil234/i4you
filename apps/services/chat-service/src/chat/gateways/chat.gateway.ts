@@ -1,6 +1,8 @@
 import {
   ConnectedSocket,
   MessageBody,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
   OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
@@ -26,7 +28,9 @@ import { Message } from '../entities/message.entity.js';
     credentials: true,
   },
 })
-export class ChatGateway implements OnGatewayInit {
+export class ChatGateway
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+{
   @WebSocketServer()
   server: Server;
 
@@ -51,12 +55,10 @@ export class ChatGateway implements OnGatewayInit {
     });
   }
 
-  @SubscribeMessage('join')
   handleConnection(socket: AuthenticatedSocket) {
     console.log('Client connected:', socket.id);
   }
 
-  @SubscribeMessage('disconnect')
   handleDisconnect(socket: AuthenticatedSocket) {
     console.log('Client disconnected:', socket.id);
   }
@@ -128,13 +130,12 @@ export class ChatGateway implements OnGatewayInit {
     @ConnectedSocket() socket: AuthenticatedSocket,
     @MessageBody() chatId: string,
   ) {
-    const userId = socket.handshake.headers['x-user-id'] as string;
+    const userId = socket.user.id;
 
     const chat = await this._chatService.findChatById(chatId);
 
     if (!chat) {
       console.log('Creating new chat for user:', userId, 'and chatId:', chatId);
-      // chat = await this._chatService.createChat(userId, chatId);
       throw new Error('Chat not found');
     }
 
@@ -149,7 +150,10 @@ export class ChatGateway implements OnGatewayInit {
   }
 
   @SubscribeMessage('leaveRoom')
-  async handleLeaveRoom(socket: Socket, room: string) {
+  async handleLeaveRoom(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody('room') room: string,
+  ) {
     await socket.leave(room);
     socket.emit('leftRoom', `You have left room: ${room}`);
     this.server.to(room).emit('roomMessage', {
@@ -164,9 +168,7 @@ export class ChatGateway implements OnGatewayInit {
     @ConnectedSocket() socket: AuthenticatedSocket,
     @MessageBody() payload: MessageRequestDto,
   ) {
-    console.log('Received message:', payload);
-
-    const timestamp = payload.timestamp || Date.now();
+    const timestamp = payload.timestamp;
 
     const chat = await this._chatService.findChatById(payload.chatId);
 
@@ -175,7 +177,7 @@ export class ChatGateway implements OnGatewayInit {
       return;
     }
 
-    const otherUserId = chat.participants.find((id) => id !== socket.user.id);
+    const otherUserId = chat.participants.find((id) => id !== socket.user.id)!;
 
     const newMessage = await this._chatService.createMessage({
       chatId: payload.chatId,
@@ -184,7 +186,7 @@ export class ChatGateway implements OnGatewayInit {
       timestamp: timestamp,
     });
 
-    const isRecipientConnected = false;
+    const isRecipientConnected = true;
 
     if (!isRecipientConnected) {
       this._kafkaService.emit('chat.events', {
@@ -192,13 +194,14 @@ export class ChatGateway implements OnGatewayInit {
         recipientId: otherUserId,
         data: new MessageResponseDto(newMessage),
       });
-    } else {
-      socket.to(payload.chatId).emit('message', {
-        ...payload,
-        sender: socket.user.id,
-        timestamp,
-      });
+      return;
     }
+
+    this.server.to(payload.chatId).emit('message', {
+      ...payload,
+      sender: socket.user.id,
+      timestamp,
+    });
   }
 
   @SubscribeMessage('getMessages')
@@ -252,11 +255,11 @@ export class ChatGateway implements OnGatewayInit {
   ) {
     const userId = socket.user.id;
 
-    socket.to(payload.chatId).emit('read_receipt', {
+    socket.to(payload.chatId).emit('delivered_receipt', {
       sender: userId,
       chatId: payload.chatId,
     });
 
-    await this._chatService.markMessagesAsRead(payload.chatId, userId);
+    await this._chatService.markMessagesAsDelivered(payload.chatId, userId);
   }
 }

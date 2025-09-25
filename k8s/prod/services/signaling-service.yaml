@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: signaling-service
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: signaling-service
+  template:
+    metadata:
+      labels:
+        app: signaling-service
+        version: v1
+    spec:
+      containers:
+        - name: signaling-service
+          image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/signaling-service-image:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 4004
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "4004"
+            - name: USER_GRPC_SERVER_URL
+              value: "user-service:50051"
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: MONGODB_URI
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: signaling-service
+  namespace: app
+spec:
+  type: ClusterIP
+  selector:
+    app: signaling-service
+  ports:
+    - port: 4004
+      targetPort: 4004

@@ -1,0 +1,15 @@
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: kibana
+  namespace: elastic-system
+spec:
+  version: 9.0.4
+  count: 1
+  serviceAccountName: elastic-es-elastic-user
+  elasticsearchRef:
+    name: elastic
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true

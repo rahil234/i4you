@@ -52,28 +52,10 @@ export const UserProfileCard = forwardRef(({user}: UserProfileProps, ref) => {
 
         if (info.offset.x > threshold) {
             // Swiped right - like
-            await cardControls.start({
-                x: 500,
-                opacity: 0,
-                transition: {duration: 0.3},
-            });
-
-            const status = await likeUser(user.id);
-            if (!status) {
-                await centerCard();
-            }
+            await handleLike()
         } else if (info.offset.x < -threshold) {
             // Swiped left - dislike
-            await cardControls.start({
-                x: -500,
-                opacity: 0,
-                transition: {duration: 0.3},
-            });
-
-            const status = await dislikeUser(user.id);
-            if (!status) {
-                await centerCard();
-            }
+            await handleDislike()
         } else {
             await cardControls.start({
                 x: 0,
@@ -164,7 +146,7 @@ export const UserProfileCard = forwardRef(({user}: UserProfileProps, ref) => {
                             <div className="w-1/3 h-full cursor-pointer" onClick={nextPhoto}></div>
                         </div>
 
-                        {/* Photo indicators */}
+                        Photo indicators
                         <div className="absolute top-2 left-0 right-0 flex justify-center gap-1 px-2">
                             {user.photos.map((_, index) => (
                                 <div

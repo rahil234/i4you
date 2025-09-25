@@ -11,20 +11,16 @@ export class MessageMapper {
       doc.timestamp,
       doc.status,
       doc.createdAt,
-      doc.updatedAt,
     );
   }
 
-  static toPersistence(entity: Message) {
+  static toPersistence(entity: Message): Partial<MessageDocument> {
     return {
-      _id: entity.id,
       chatId: entity.chatId,
       sender: entity.sender,
       content: entity.content,
       timestamp: entity.timestamp,
       status: entity.status,
-      createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
     };
   }
 }

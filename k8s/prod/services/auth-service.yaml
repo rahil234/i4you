@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-service
+  template:
+    metadata:
+      labels:
+        app: auth-service
+        version: v1
+    spec:
+      containers:
+        - name: auth-service
+          image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/auth-service-image:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 4001
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "4001"
+            - name: APP_URL
+              value: "https://i4you.ddns.net"
+            - name: USER_GRPC_SERVER_URL
+              value: "user-service:50051"
+            - name: JWT_SECRET
+              value: your_jwt_secret
+            - name: JWT_EXPIRES_IN
+              value: 15m
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: MONGODB_URI
+            - name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: REDIS_HOST
+            - name: REDIS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: REDIS_PORT
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: REDIS_PASSWORD
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service
+  namespace: app
+spec:
+  type: ClusterIP
+  selector:
+    app: auth-service
+  ports:
+    - port: 80
+      targetPort: 4001

@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vault-approle-secret
+  namespace: external-secrets
+type: Opaque
+stringData:
+  secretId: "835f700a-5f84-bed3-d57f-a54e6d685772"
+
+---
+apiVersion: external-secrets.io/v1
+kind: ClusterSecretStore
+metadata:
+  name: vault-cluster-store
+spec:
+  provider:
+    vault:
+      server: "https://cluster-0-public-vault-c9b87081.8ba3d2f9.z1.hashicorp.cloud:8200"
+      path: "i4you"
+      version: "v2"
+      namespace: admin
+      auth:
+        appRole:
+          path: approle
+          roleId: "b4416055-1fb6-d21a-0bbf-71b1f8f205cb"
+          secretRef:
+            name: vault-approle-secret
+            namespace: external-secrets
+            key: secretId

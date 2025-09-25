@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { AppError } from '@/errors/AppError';
 
 export function errorHandlerMiddleware(
-  err: any,
+  err: unknown,
   _req: Request,
   res: Response,
   _next: NextFunction

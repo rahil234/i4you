@@ -32,10 +32,21 @@ spec:
                 secretKeyRef:
                   name: vault-secret
                   key: MONGODB_URI
+            - name: CLOUDINARY_CLOUD_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: CLOUDINARY_CLOUD_NAME
             - name: CLOUDINARY_API_KEY
-              value: "415286569897134"
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: CLOUDINARY_API_KEY
             - name: CLOUDINARY_API_SECRET
-              value: "cNEdzuyNazOMmXPLLMf_9kCNsDo"
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: CLOUDINARY_API_SECRET
 
 ---
 apiVersion: v1

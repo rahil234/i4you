@@ -1,12 +1,11 @@
 import { Client } from '@elastic/elasticsearch';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import env from './config/env.config';
 
 export const elasticClient = new Client({
-  node: process.env.ES_URL!,
+  node: env.ES_URL,
   auth: {
-    apiKey: process.env.ES_API_KEY!,
+    username: env.ES_USERNAME,
+    password: env.ES_PASSWORD,
   },
   tls: {
     rejectUnauthorized: false,

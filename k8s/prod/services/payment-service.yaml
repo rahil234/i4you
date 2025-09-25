@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-service
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-service
+  template:
+    metadata:
+      labels:
+        app: payment-service
+        version: v1
+    spec:
+      containers:
+        - name: payment-service
+          image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/payment-service-image:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 4010
+          env:
+            - name: NODE_ENV
+              value: "development"
+            - name: PORT
+              value: "4010"
+            - name: FRONTEND_URL
+              value: https://i4you.ddns.net
+            - name: STRIPE_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: STRIPE_SECRET_KEY
+            - name: STRIPE_WEBHOOK_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: STRIPE_WEBHOOK_SECRET
+            - name: RAZORPAY_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: RAZORPAY_KEY_ID
+            - name: RAZORPAY_KEY_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: RAZORPAY_KEY_SECRET
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-service
+  namespace: app
+spec:
+  type: ClusterIP
+  selector:
+    app: payment-service
+  ports:
+    - name: http
+      port: 4010
+      targetPort: 4010

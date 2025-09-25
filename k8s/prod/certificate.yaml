@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: i4you-cert
+  namespace: app
+spec:
+  secretName: i4you-cert
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+  commonName: i4you.ddns.net
+  dnsNames:
+    - i4you.ddns.net

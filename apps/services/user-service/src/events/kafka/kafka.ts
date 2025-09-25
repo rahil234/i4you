@@ -1,4 +1,5 @@
 import { Kafka, Producer, Consumer } from 'kafkajs';
+import { env } from '@/config';
 
 class KafkaClient {
   private static instance: KafkaClient;
@@ -9,7 +10,13 @@ class KafkaClient {
   private constructor() {
     this.kafka = new Kafka({
       clientId: 'user-service',
-      brokers: ['kafka-cluster-kafka-brokers.kafka.svc.cluster.local:9092'],
+      brokers: [env.KAFKA_BROKER_URL],
+      sasl: {
+        username: env.KAFKA_USERNAME,
+        password: env.KAFKA_PASSWORD,
+        mechanism: 'plain',
+      },
+      ssl: env.NODE_ENV === 'production',
     });
 
     this._producer = this.kafka.producer();

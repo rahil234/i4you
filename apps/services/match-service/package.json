@@ -8,8 +8,8 @@
     "build": "tsc && tsc-alias && tsc-esm-fix",
     "debug": "node --inspect=0.0.0.0:9221 --import tsx src/server.ts",
     "build:noemit": "tsc --project ./tsconfig.json --noEmit",
-    "lint": "eslint --ext .ts src",
-    "lint:fix": "eslint --fix --ext .ts src"
+    "lint": "eslint",
+    "lint:fix": "eslint --fix"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.13.4",
@@ -39,16 +39,16 @@
     "@types/swagger-ui-express": "^4.1.8",
     "@typescript-eslint/eslint-plugin": "^8.29.0",
     "@typescript-eslint/parser": "^8.42.0",
-    "eslint": "^9.22.0",
+    "eslint": "^9.36.0",
     "eslint-config-prettier": "^10.0.1",
-    "eslint-plugin-prettier": "^5.2.2",
-    "globals": "^16.0.0",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.4.0",
     "prettier": "^3.4.2",
     "tsc-alias": "^1.8.15",
     "tsc-esm-fix": "^3.1.2",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2",
-    "typescript-eslint": "^8.26.1"
+    "typescript-eslint": "^8.44.1"
   },
   "packageManager": "pnpm@10.6.4+sha512.da3d715bfd22a9a105e6e8088cfc7826699332ded60c423b14ec613a185f1602206702ff0fe4c438cb15c979081ce4cb02568e364b15174503a63c7a8e2a5f6c"
 }

@@ -31,20 +31,21 @@ spec:
               value: "6379"
             - name: REDIS_PASSWORD
               value: "password"
-            - name: AWS_REGION
-              value: "ap-south-1"
-            - name: AWS_ACCESS_KEY_ID
-              value: "ID"
-            - name: AWS_SECRET_ACCESS_KEY
-              value: "KEY"
-            - name: AWS_BUCKET_NAME
-              value: "i4you-bucket"
             - name: CLOUDINARY_CLOUD_NAME
-              value: "snapcart-website"
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: CLOUDINARY_CLOUD_NAME
             - name: CLOUDINARY_API_KEY
-              value: "415286569897134"
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: CLOUDINARY_API_KEY
             - name: CLOUDINARY_API_SECRET
-              value: "cNEdzuyNazOMmXPLLMf_9kCNsDo"
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: CLOUDINARY_API_SECRET
 
 ---
 apiVersion: v1

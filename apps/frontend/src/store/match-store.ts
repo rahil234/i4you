@@ -14,7 +14,7 @@ interface MatchStore {
     error: string | null;
     initial: () => Promise<void>;
     unmatchUser: (matchId: string) => Promise<void>;
-    pushNewMatch: (newMatch: Match) => void;
+    pushNewMatch: (newMatch: Match) => Promise<void>;
     blockMatch: (matchId: string) => Promise<void>;
     reFetchMatches: () => Promise<void>;
     resetCount: () => void;
@@ -42,7 +42,6 @@ const matchStore: StateCreator<MatchStore, [['zustand/devtools', never]]> = (set
 
             set({
                 matches,
-                newMatchesCount: matches.length,
                 loading: false,
             }, undefined, 'matchStore/initial/success');
         },
@@ -69,10 +68,12 @@ const matchStore: StateCreator<MatchStore, [['zustand/devtools', never]]> = (set
             }
         },
 
-        pushNewMatch: (newMatch: Match) => {
+        pushNewMatch: async (newMatch: Match) => {
             set((state) => ({
                 newMatches: [...state.newMatches, newMatch],
+                newMatchesCount: state.newMatchesCount + 1,
             }), undefined, 'matchStore/pushNewMatch');
+            await get().reFetchMatches()
         },
 
         blockMatch: async (matchId) => {

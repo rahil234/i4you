@@ -24,10 +24,11 @@ import {
 import { NotFoundError } from '@/errors/NotFoundError';
 import { env } from '@/config';
 import { createError } from '@i4you/http-errors';
-import ICacheService from '@/services/interfaces/ICacheService';
+import { ICacheService } from '@/services/interfaces/ICacheService';
 import { IMailService } from '@/services/interfaces/IMailService';
 import { IAuthService } from '@/services/interfaces/IAuthService';
 import { IUserService } from '@/services/interfaces/IUserService';
+import { CONSTANTS } from '@/constants/constants';
 
 const APP_URL = env.APP_URL;
 
@@ -42,27 +43,33 @@ export class AuthService implements IAuthService {
   ) {}
 
   private async _blacklistAccessToken(token: string) {
-    await this._cacheService.set(`blacklist:${token}`, 'true', 60 * 20);
+    await this._cacheService.set(
+      `${CONSTANTS.TOKEN.ACCESS_BLACKLIST_PREFIX}${token}`,
+      'true',
+      CONSTANTS.TOKEN.ACCESS_BLACKLIST_TTL
+    );
   }
 
   private async _addRefreshToken(userId: string, token: string) {
-    await this._cacheService.set(`refresh:${userId}`, token, 60 * 60 * 24 * 7);
+    await this._cacheService.set(
+      `${CONSTANTS.TOKEN.REFRESH_PREFIX}${userId}`,
+      token,
+      CONSTANTS.TOKEN.REFRESH_TTL
+    );
   }
 
   private async _removeRefreshToken(userId: string) {
-    await this._cacheService.del(`refresh:${userId}`);
+    await this._cacheService.del(`${CONSTANTS.TOKEN.REFRESH_PREFIX}${userId}`);
   }
 
   async login(loginDTO: LoginRequestDTO): Promise<LoginResponseDTO> {
     const user = await this._userRepository.findByEmail(loginDTO.email);
     if (!user || !(await comparePassword(loginDTO.password, user.password))) {
-      throw new ValidationError(
-        'Invalid credentials. please check your email or password'
-      );
+      throw new ValidationError(CONSTANTS.ERRORS.INVALID_CREDENTIALS);
     }
 
     if (!user.isVerified) {
-      throw new ValidationError('Please verify your email address');
+      throw new ValidationError(CONSTANTS.ERRORS.VERIFY_EMAIL);
     }
 
     if (user.status === 'suspended') {
@@ -96,11 +103,11 @@ export class AuthService implements IAuthService {
     const user = (await this._userRepository.find({ _id: id }))[0];
 
     if (!user) {
-      throw new ValidationError('User not found');
+      throw new ValidationError(CONSTANTS.ERRORS.USER_NOT_FOUND);
     }
 
     if (!(await comparePassword(currentPassword, user.password))) {
-      throw new ValidationError('Invalid credentials');
+      throw new ValidationError(CONSTANTS.ERRORS.INVALID_CREDENTIALS_SIMPLE);
     }
 
     const hashedPassword = await hashPassword(newPassword);
@@ -110,7 +117,7 @@ export class AuthService implements IAuthService {
   async adminLogin(loginDTO: LoginRequestDTO): Promise<LoginResponseDTO> {
     const user = await this._adminRepository.findByEmail(loginDTO.email);
     if (!user || !(await comparePassword(loginDTO.password, user.password))) {
-      throw new ValidationError('Invalid credentials');
+      throw new ValidationError(CONSTANTS.ERRORS.INVALID_CREDENTIALS_SIMPLE);
     }
 
     const accessToken = generateAccessToken({
@@ -133,7 +140,7 @@ export class AuthService implements IAuthService {
     const { name, email, password } = registerDTO;
 
     if (!name || !email || !password) {
-      throw new ValidationError('All fields are required');
+      throw new ValidationError(CONSTANTS.ERRORS.ALL_FIELDS_REQUIRED);
     }
 
     const hashedPassword = await hashPassword(password);
@@ -152,42 +159,38 @@ export class AuthService implements IAuthService {
         email: user.email,
       });
 
-      const verificationLink = `${APP_URL}/verify?token=${token}`;
+      const verificationLink = `${APP_URL}${CONSTANTS.ROUTES.VERIFY_PATH}${token}`;
 
       await this._mailService.sendMail({
         to: user.email,
-        subject: 'Verify your i4you account',
+        subject: CONSTANTS.ERRORS.VERIFY_ACCOUNT_SUBJECT,
         html: verificationEmailTemplate(user.name, verificationLink),
       });
     } catch (err) {
       if (err instanceof UserExistsError) {
-        throw new UserExistsError(
-          'User already exists with this email. Please login.'
-        );
+        throw new UserExistsError(CONSTANTS.ERRORS.USER_EXISTS);
       }
       if (err instanceof ValidationError) {
         throw err;
       }
       console.error('Registration failed:', err);
-      throw new Error('Registration failed. Please try again later.');
+      throw new Error(CONSTANTS.ERRORS.REGISTRATION_FAILED);
     }
   }
 
   async forgetPassword(email: string) {
     const user = await this._userRepository.findByEmail(email);
     if (!user) {
-      throw new ValidationError('User not found');
+      throw new ValidationError(CONSTANTS.ERRORS.USER_NOT_FOUND);
     }
 
     const resetToken = generateResetToken({ sub: user.id });
 
-    const APP_URL = env.APP_URL;
-
-    const resetLink = `${APP_URL}/reset-password?token=${resetToken}`;
+    const resetLink = `${APP_URL}${CONSTANTS.ROUTES.RESET_PASSWORD_PATH}${resetToken}`;
 
     await this._mailService.sendMail({
       to: user.email,
-      subject: 'Reset Your Password',
+      subject: CONSTANTS.ERRORS.RESET_PASSWORD_SUBJECT,
       html: PasswordResetTemplate(user.name, resetLink),
     });
   }
@@ -196,13 +199,13 @@ export class AuthService implements IAuthService {
     const { sub: userId } = verifyRefreshToken(token);
 
     if (!userId) {
-      throw new NotFoundError('User not found');
+      throw new NotFoundError(CONSTANTS.ERRORS.USER_NOT_FOUND);
     }
 
     const user = await this._userService.findUserById(userId);
 
     if (!user) {
-      throw new ValidationError('User not found');
+      throw new ValidationError(CONSTANTS.ERRORS.USER_NOT_FOUND);
     }
 
     const hashedPassword = await hashPassword(password);
@@ -214,17 +217,17 @@ export class AuthService implements IAuthService {
     const { sub: userId } = verifyRefreshToken(token);
 
     if (!userId) {
-      throw new NotFoundError('User not found');
+      throw new NotFoundError(CONSTANTS.ERRORS.USER_NOT_FOUND);
     }
 
     const user = await this._userRepository.findById(userId);
 
     if (!user || !(await comparePassword(password, user.password))) {
-      throw new ValidationError('Invalid credentials');
+      throw new ValidationError(CONSTANTS.ERRORS.INVALID_CREDENTIALS_SIMPLE);
     }
 
     if (!user) {
-      throw new ValidationError('User not found');
+      throw new ValidationError(CONSTANTS.ERRORS.USER_NOT_FOUND);
     }
 
     await this._userRepository.update(userId, { isVerified: true });
@@ -233,15 +236,13 @@ export class AuthService implements IAuthService {
   async googleRegister(token: string): Promise<void> {
     const googleUser = await fetchGoogleUser(token);
     if (!googleUser) {
-      throw createError.BadRequest('Invalid credentials');
+      throw createError.BadRequest(CONSTANTS.ERRORS.INVALID_CREDENTIALS_SIMPLE);
     }
 
     const user = await this._userRepository.findByEmail(googleUser.email);
 
     if (user) {
-      throw createError.Conflict(
-        'User already exists with this email. Please login.'
-      );
+      throw createError.Conflict(CONSTANTS.ERRORS.USER_EXISTS);
     }
 
     const hashedPassword = await hashPassword(googleUser.email);
@@ -254,20 +255,20 @@ export class AuthService implements IAuthService {
     });
 
     if (!newUser) {
-      throw createError.Internal('Failed to create user. try again later.');
+      throw createError.Internal(CONSTANTS.ERRORS.FAILED_CREATE_USER);
     }
   }
 
   async googleLogin(token: string): Promise<LoginResponseDTO> {
     const googleUser = await fetchGoogleUser(token);
     if (!googleUser) {
-      throw new Error('Invalid credentials');
+      throw new Error(CONSTANTS.ERRORS.INVALID_CREDENTIALS_SIMPLE);
     }
 
     const user = await this._userRepository.findByEmail(googleUser.email);
 
     if (!user) {
-      throw createError.BadRequest('User not found. Please register first.');
+      throw createError.BadRequest(CONSTANTS.ERRORS.USER_NOT_FOUND);
     }
 
     if (user.status === 'suspended') {
@@ -298,23 +299,23 @@ export class AuthService implements IAuthService {
     const facebookUser = await fetchFacebookUser(token);
 
     if (!facebookUser) {
-      throw createError.BadRequest('Invalid User');
+      throw createError.BadRequest(CONSTANTS.ERRORS.INVALID_CREDENTIALS_SIMPLE);
     }
 
     console.log('Facebook user:', facebookUser);
 
-    throw createError.NotImplemented('NOT IMPLEMENTED');
+    throw createError.NotImplemented(CONSTANTS.ERRORS.NOT_IMPLEMENTED);
   }
 
   async facebookLogin(token: string): Promise<LoginResponseDTO> {
     const facebookUser = await fetchFacebookUser(token);
     if (!facebookUser) {
-      throw new Error('Invalid credentials');
+      throw new Error(CONSTANTS.ERRORS.INVALID_CREDENTIALS_SIMPLE);
     }
 
     console.log('Facebook user:', facebookUser);
 
-    throw new ValidationError('NOT IMPLEMENTED');
+    throw new ValidationError(CONSTANTS.ERRORS.NOT_IMPLEMENTED);
   }
 
   async refreshToken(
@@ -324,14 +325,16 @@ export class AuthService implements IAuthService {
 
     if (!userId) {
       console.log('Invalid token:', token);
-      throw new Error('Invalid token');
+      throw new Error(CONSTANTS.ERRORS.INVALID_TOKEN);
     }
 
-    const storedToken = await this._cacheService.get(`refresh:${userId}`);
+    const storedToken = await this._cacheService.get(
+      `${CONSTANTS.TOKEN.REFRESH_PREFIX}${userId}`
+    );
 
     if (!storedToken || storedToken !== token) {
       console.log('Stored token not found or does not match:', storedToken);
-      throw createError.Unauthorized('Invalid refresh token');
+      throw createError.Unauthorized(CONSTANTS.ERRORS.INVALID_REFRESH_TOKEN);
     }
 
     const user =
@@ -339,7 +342,7 @@ export class AuthService implements IAuthService {
         ? await this._adminRepository.findById(userId)
         : await this._userService.findUserById(userId);
 
-    if (!user) throw new Error('User not found');
+    if (!user) throw new Error(CONSTANTS.ERRORS.USER_NOT_FOUND);
     if (user.status === 'suspended') throw new SuspendedUserError();
 
     const accessToken = generateAccessToken({
@@ -351,9 +354,9 @@ export class AuthService implements IAuthService {
     const newRefreshToken = generateRefreshToken({ sub: user.id, role });
 
     await this._cacheService.set(
-      `refresh:${user.id}`,
+      `${CONSTANTS.TOKEN.REFRESH_PREFIX}${user.id}`,
       newRefreshToken,
-      60 * 60 * 24 * 7
+      CONSTANTS.TOKEN.REFRESH_TTL
     );
 
     return { accessToken, refreshToken: newRefreshToken };
@@ -361,7 +364,7 @@ export class AuthService implements IAuthService {
 
   async logout(userId: string, token: string): Promise<void> {
     if (!token || !userId) {
-      throw new ValidationError('Token is required');
+      throw new ValidationError(CONSTANTS.ERRORS.TOKEN_REQUIRED);
     }
 
     await this._blacklistAccessToken(token);

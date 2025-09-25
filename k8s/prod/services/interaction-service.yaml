@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: interaction-service
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: interaction-service
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: interaction-service
+        version: v1
+    spec:
+      containers:
+        - name: interaction-service
+          image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/interaction-service-image:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 4002
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "4002"
+            - name: GRPC_PORT
+              value: "50051"
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: MONGODB_URI
+            - name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: REDIS_HOST
+            - name: REDIS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: REDIS_PORT
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: REDIS_PASSWORD
+            - name: KAFKA_BROKER_URL
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: KAFKA_BROKER_URL
+            - name: KAFKA_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: KAFKA_USERNAME
+            - name: KAFKA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: KAFKA_PASSWORD
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: interaction-service
+  namespace: app
+spec:
+  type: ClusterIP
+  selector:
+    app: interaction-service
+  ports:
+    - name: http
+      port: 4002
+      targetPort: 4002
+    - name: grpc
+      port: 50051
+      targetPort: 50051

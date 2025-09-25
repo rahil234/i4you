@@ -1,6 +1,6 @@
 import UserDTO from '@/dtos/user.dtos';
 import { UserJwtPayload } from '@i4you/shared';
-import OnboardingRequestDTO from '@/dtos/onboarding.request.dtos';
+import { OnboardingRequestDTO } from '@/dtos/onboarding.request.dtos';
 import AdminDTO from '@/dtos/admin.dtos';
 import { User } from '@/entities/user.entity';
 import { Admin } from '@/entities/admin.entity';

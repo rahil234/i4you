@@ -1,0 +1,113 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: i4you-ingress
+  namespace: app
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: |
+      app-jwt-auth@kubernetescrd,app-strip-api-v1@kubernetescrd
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - i4you.ddns.net
+      secretName: i4you-cert
+  rules:
+    - host: i4you.ddns.net
+      http:
+        paths:
+          - path: /socket.io
+            pathType: Prefix
+            backend:
+              service:
+                name: socket-proxy-nginx
+                port:
+                  number: 80
+
+          - path: /webhook
+            pathType: Prefix
+            backend:
+              service:
+                name: payment-service
+                port:
+                  number: 4010
+
+          - path: /api/v1/auth
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-service
+                port:
+                  number: 80
+
+          - path: /api/v1/user
+            pathType: Prefix
+            backend:
+              service:
+                name: user-service
+                port:
+                  number: 80
+
+          - path: /api/v1/media
+            pathType: Prefix
+            backend:
+              service:
+                name: media-service
+                port:
+                  number: 4003
+
+          - path: /api/v1/chat
+            pathType: Prefix
+            backend:
+              service:
+                name: chat-service
+                port:
+                  number: 4004
+
+          - path: /api/v1/match
+            pathType: Prefix
+            backend:
+              service:
+                name: match-service
+                port:
+                  number: 4005
+
+          - path: /api/v1/interaction
+            pathType: Prefix
+            backend:
+              service:
+                name: interaction-service
+                port:
+                  number: 4002
+
+          - path: /api/v1/notification
+            pathType: Prefix
+            backend:
+              service:
+                name: notification-service
+                port:
+                  number: 4006
+
+          - path: /api/v1/moderation
+            pathType: Prefix
+            backend:
+              service:
+                name: moderation-service
+                port:
+                  number: 4012
+
+          - path: /api/v1/payment
+            pathType: Prefix
+            backend:
+              service:
+                name: payment-service
+                port:
+                  number: 4010
+
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80

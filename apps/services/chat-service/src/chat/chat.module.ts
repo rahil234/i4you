@@ -4,12 +4,13 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { Chat, ChatSchema } from './schemas/chat.schema.js';
 import { ChatController } from './controllers/chat.controller.js';
 import { UserModule } from '../user/user.module.js';
-import { MessageDocument, MessageSchema } from './schemas/message.schema.js';
+import { MessageSchema } from './schemas/message.schema.js';
 import { ChatRepository } from './repositories/chat.repository.js';
 import { MessageRepository } from './repositories/message.repository.js';
 import { GRPCUserService } from '../user/user.grpc.service.js';
 import { ChatService } from './services/chat.service.js';
 import { ChatGateway } from './gateways/chat.gateway.js';
+import { Message } from './entities/message.entity.js';
 
 @Module({
   imports: [
@@ -33,7 +34,7 @@ import { ChatGateway } from './gateways/chat.gateway.js';
     MongooseModule.forFeature([
       { name: Chat.name, schema: ChatSchema },
       {
-        name: MessageDocument.name,
+        name: Message.name,
         schema: MessageSchema,
       },
     ]),

@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
     "module": "ES2022",
+    "target": "ES2022",
     "declaration": true,
     "moduleResolution": "bundler",
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES2023",
+    "esModuleInterop": true,
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",

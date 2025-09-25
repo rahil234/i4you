@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: media-service
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: media-service
+  template:
+    metadata:
+      labels:
+        app: media-service
+        version: v1
+    spec:
+      containers:
+        - name: media-service
+          image: asia-south1-docker.pkg.dev/i4you-472205/i4you-repo/media-service-image:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 4003
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "4003"
+            - name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: REDIS_HOST
+            - name: REDIS_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: REDIS_PORT
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: REDIS_PASSWORD
+            - name: CLOUDINARY_CLOUD_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: CLOUDINARY_CLOUD_NAME
+            - name: CLOUDINARY_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: CLOUDINARY_API_KEY
+            - name: CLOUDINARY_API_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: CLOUDINARY_API_SECRET
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: media-service
+  namespace: app
+spec:
+  type: ClusterIP
+  selector:
+    app: media-service
+  ports:
+    - port: 4003
+      targetPort: 4003

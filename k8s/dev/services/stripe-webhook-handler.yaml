@@ -22,7 +22,7 @@ spec:
             - "stripe"
             - "listen"
             - "--forward-to"
-            - "http://payment-service:4010/webhook"
+            - "http://payment-service:4010/webhook/stripe"
           env:
             - name: STRIPE_API_KEY
               valueFrom:

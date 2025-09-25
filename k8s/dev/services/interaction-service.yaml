@@ -23,7 +23,7 @@ spec:
             - containerPort: 4002
           env:
             - name: NODE_ENV
-              value: "development"
+              value: "production"
             - name: PORT
               value: "4002"
             - name: GRPC_PORT
@@ -39,6 +39,13 @@ spec:
               value: "6379"
             - name: REDIS_PASSWORD
               value: "password"
+            - name: KAFKA_BROKER_URL
+              value: "kafka-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
+            - name: KAFKA_USERNAME
+              value: "rahil"
+            - name: KAFKA_PASSWORD
+              value: "zWxJ2ttyrc4qCXwNX4U5XRMTVMFndIzn"
+
 ---
 apiVersion: v1
 kind: Service

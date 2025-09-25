@@ -1,21 +1,24 @@
-import {Subscription} from '@/entities/subscription.entity';
+import { Subscription } from '@/entities/subscription.entity';
 
 export interface ISubscriptionRepository {
-    findById(id: string): Promise<Subscription | null>;
+  findById(id: string): Promise<Subscription | null>;
 
-    findByUserId(userId: string): Promise<Subscription[] | null>;
+  findByUserId(userId: string): Promise<Subscription[] | null>;
 
-    findActiveByUserId(userId: string): Promise<Subscription | null>;
+  findActiveByUserId(userId: string): Promise<Subscription | null>;
 
-    create(data: Omit<Subscription, 'id' | 'startedAt'>): Promise<Subscription>;
+  create(data: Omit<Subscription, 'id' | 'startedAt'>): Promise<Subscription>;
 
-    update(id: string, data: Partial<Subscription>): Promise<Subscription | null>;
+  update(id: string, data: Partial<Subscription>): Promise<Subscription | null>;
 
-    activateSubscription(id: string): Promise<Subscription | null>;
+  activateSubscription(id: string): Promise<Subscription | null>;
 
-    cancelSubscription(id: string, cancelAtPeriodEnd?: boolean): Promise<Subscription | null>;
+  cancelSubscription(
+    id: string,
+    cancelAtPeriodEnd?: boolean,
+  ): Promise<Subscription | null>;
 
-    expireSubscription(id: string): Promise<Subscription | null>;
+  expireSubscription(id: string): Promise<Subscription | null>;
 
-    listByUser(userId: string): Promise<Subscription[]>;
+  listByUser(userId: string): Promise<Subscription[]>;
 }

@@ -29,8 +29,6 @@ class InteractionService {
                 .post(`/interaction/${userId}/dislike`)
                 .then(res => res.data),
         );
-
-
 }
 
 export default new InteractionService();

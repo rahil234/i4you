@@ -7,12 +7,12 @@ import { UserController } from '@/controllers/user.controller';
 import { MongoAdminRepository } from '@/repositories/admin.repository';
 import { IAdminRepository } from '@/repositories/interfaces/IAdminRepository';
 import { CacheService } from '@/services/cache.service';
-import ICacheService from '@/services/interfaces/ICacheService';
+import { ICacheService } from '@/services/interfaces/ICacheService';
 import { KafkaService } from '@/events/kafka/KafkaService';
 import { IKafkaService } from '@/events/kafka/interfaces/IKafkaService';
 import { MediaService } from '@/services/media.service';
 import { IUserService } from '@/services/interfaces/IUserService';
-import IMediaService from '@/services/interfaces/IMediaService';
+import { IMediaService } from '@/services/interfaces/IMediaService';
 import { ISubscriptionService } from '@/services/interfaces/ISubscriptionService';
 import { HttpSubscriptionService } from '@/services/http-subscription.service';
 

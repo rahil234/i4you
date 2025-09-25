@@ -3,10 +3,11 @@ import { FastifyInstance } from 'fastify';
 import { container } from '@/config/inversify.config';
 import { TYPES } from '@/types';
 
-const moderationController = container.get<ModerationController>(TYPES.ModerationController);
+const moderationController = container.get<ModerationController>(
+  TYPES.ModerationController,
+);
 
-export async function moderationRoutes(fastify: FastifyInstance) {
-
+export function moderationRoutes(fastify: FastifyInstance) {
   /**
    * @swagger
    * /api/v1/moderation/pending:
@@ -32,26 +33,6 @@ export async function moderationRoutes(fastify: FastifyInstance) {
    *         description: Unauthorized
    */
   fastify.get('/pending/images', {
-    schema: {
-      response: {
-        200: {
-          type: 'array',
-          properties: {
-            images: {
-              type: 'array',
-              items: {
-                type: 'object',
-                properties: {
-                  publicId: { type: 'string' },
-                  url: { type: 'string' },
-                  status: { type: 'string', enum: ['pending', 'approved', 'rejected'] },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
     handler: moderationController.getPendingModerationImages,
   });
 
