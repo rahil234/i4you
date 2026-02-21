@@ -1,0 +1,22 @@
+{
+  "name": "moderation-service",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/services/moderation-service/src",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsx watch src/app.ts",
+        "cwd": "apps/services/moderation-service"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm build",
+        "cwd": "apps/services/moderation-service"
+      }
+    }
+  }
+}
