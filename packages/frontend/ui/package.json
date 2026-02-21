@@ -1,0 +1,28 @@
+{
+  "name": "@i4you/ui",
+  "version": "1.0.0",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    "./Button": {
+      "types": "./dist/button.d.ts",
+      "default": "./dist/button.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "@types/react": "^19.0.10"
+  },
+  "author": "Rahil234",
+  "description": "UI components for i4you",
+  "license": "MIT"
+}

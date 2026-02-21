@@ -1,0 +1,9 @@
+.fleet
+.devcontainer
+.idea
+node_modules
+apps/**/node_modules
+packages/**/node_modules
+.dockerignore
+docker-compose.yaml
+dist

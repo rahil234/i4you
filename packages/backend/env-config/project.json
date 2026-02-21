@@ -1,0 +1,9 @@
+{
+  "name": "@i4you/env-config",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/backend/env-config/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project @i4you/env-config --web",
+  "targets": {}
+}

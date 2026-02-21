@@ -1,0 +1,11 @@
+packages:
+  - apps/frontend
+  - apps/services/*
+  - packages/*
+  - packages/backend/*
+  - packages/frontend/*
+
+onlyBuiltDependencies:
+  - '@swc/core'
+  - nx
+  - sharp

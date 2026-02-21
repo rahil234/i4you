@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compileOnSave": false,
+  "files": [],
+  "references": [
+    {
+      "path": "./apps/services/auth-service"
+    },
+    {
+      "path": "./apps/services/template-service"
+    },
+    {
+      "path": "./packages/backend/env-config"
+    }
+  ]
+}
