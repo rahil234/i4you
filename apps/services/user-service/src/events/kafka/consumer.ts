@@ -1,7 +1,8 @@
+import { TYPES } from '@/types';
+
 import { kafkaClient } from '@/events/kafka/kafka';
 import { container } from '@/config/inversify.config';
 import { UserService } from '@/services/user.service';
-import { TYPES } from '@/types';
 
 const userService = container.get<UserService>(TYPES.UserService);
 

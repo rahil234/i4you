@@ -54,7 +54,7 @@ export class UserController {
   });
 
   updateUserStatus = handleAsync(async (req, res) => {
-    const { userId } = req.params;
+    const { userId } = req.params as { userId: string };
 
     const { status } = req.body;
 
@@ -86,7 +86,7 @@ export class UserController {
   });
 
   likeUser = handleAsync(async (req, res) => {
-    const { userId } = req.params;
+    const { userId } = req.params as { userId: string };
 
     const match = await this._userService.likeUser(req.user.id, userId);
 

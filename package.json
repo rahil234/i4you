@@ -2,19 +2,31 @@
   "name": "i4you",
   "version": "1.0.0",
   "scripts": {
-    "frontend": "pnpm run --filter=frontend dev",
-    "frontend:secure": "pnpm run --filter=frontend dev:secure",
     "clean": "pnpm exec -r 'rm -rf node_modules'",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "out:auth-service": "turbo prune auth-service --out-dir out/auth-service --docker"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "pnpm": "10.10.0",
-    "turbo": "^2.4.4"
+    "@nx/esbuild": "22.5.2",
+    "@nx/eslint": "22.5.2",
+    "@nx/js": "22.5.2",
+    "@nx/next": "^22.5.2",
+    "@nx/node": "22.5.2",
+    "@swc-node/register": "~1.11.1",
+    "@swc/core": "~1.15.5",
+    "@swc/helpers": "~0.5.18",
+    "esbuild": "^0.19.2",
+    "nx": "22.5.2",
+    "pnpm": "^10.30.1",
+    "tslib": "^2.3.0"
   },
-  "packageManager": "pnpm@10.10.0"
+  "packageManager": "pnpm@10.30.1",
+  "dependencies": {
+    "next": "^16.1.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
 }

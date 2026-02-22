@@ -165,3 +165,8 @@ next-env.d.ts
 .terraform
 
 .idea
+
+
+
+.nx/cache
+.nx/workspace-data

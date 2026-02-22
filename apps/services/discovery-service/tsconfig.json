@@ -19,9 +19,12 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@/*": ["src/*"]
     }
-  }
+  },
+  "references": [
+    {
+      "path": "../../../packages/backend/proto-files"
+    }
+  ]
 }

@@ -1,0 +1,8 @@
+{
+  "name": "@i4you/shared",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/backend/shared",
+  "projectType": "library",
+  "tags": [],
+  "targets": {}
+}

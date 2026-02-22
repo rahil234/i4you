@@ -4,10 +4,10 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3000",
-    "dev:secure": "next dev -p 3000 --experimental-https",
-    "build": "next build",
-    "start": "next start",
+    "dev": "nx next:dev -p 3000",
+    "dev:secure": "nx next:dev -p 3000 --experimental-https",
+    "build": "nx next:build",
+    "start": "nx next:start",
     "lint": "next lint",
     "test": "jest"
   },

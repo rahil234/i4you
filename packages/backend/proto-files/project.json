@@ -1,0 +1,8 @@
+{
+  "name": "@i4you/proto-files",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/backend/proto-files/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {}
+}

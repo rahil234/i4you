@@ -13,20 +13,15 @@
     "strict": true,
     "skipLibCheck": true,
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@/*": ["src/*"]
     },
-    "types": [
-      "reflect-metadata"
-    ],
-    "lib": [
-      "ES2020",
-      "dom"
-    ]
+    "types": ["reflect-metadata"],
+    "lib": ["ES2020", "dom"]
   },
-  "exclude": [
-    "dist",
-    "node_modules"
+  "exclude": ["dist", "node_modules"],
+  "references": [
+    {
+      "path": "../../../packages/backend/proto-files"
+    }
   ]
 }

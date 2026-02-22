@@ -1,7 +1,7 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Document, Schema, Types } from 'mongoose';
 
-export interface AdminDocument extends Document {
-  _id: string;
+export interface AdminDocument extends Document<Types.ObjectId> {
+  _id: Types.ObjectId;
   name: string;
   email: string;
   status: string;

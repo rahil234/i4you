@@ -1,4 +1,5 @@
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
     "types": ["jest", "@testing-library/jest-dom"],
@@ -21,9 +22,10 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "app/*": ["./src/app/*"],
+      "app/*": ["./src/app/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "references": []
 }

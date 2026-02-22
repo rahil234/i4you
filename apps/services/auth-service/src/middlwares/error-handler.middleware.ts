@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { AppError } from '@/errors/AppError';
 import { HttpError } from '@i4you/http-errors';
 

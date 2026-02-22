@@ -1,5 +1,5 @@
-import { injectable, inject } from 'inversify';
-import { hashPassword, comparePassword } from '@/utils/bcrypt';
+import { Types } from 'mongoose';
+import { inject, injectable } from 'inversify';
 import {
   generateAccessToken,
   generateEmailVerificationToken,
@@ -7,28 +7,35 @@ import {
   generateResetToken,
   verifyRefreshToken,
 } from '@/utils/jwt';
-import IUserRepository from '@/repositories/interfaces/IUserRepository';
-import { type LoginRequestDTO, LoginResponseDTO } from '@/dtos/login.dto';
-import { RegisterRequestDTO } from '@/dtos/register.dto';
-import { TYPES } from '@/types';
-import { fetchGoogleUser } from '@/utils/google-auth';
-import { fetchFacebookUser } from '@/utils/facebook-auth';
-import { UserExistsError } from '@/errors/UserExistsError';
-import IAdminRepository from '@/repositories/interfaces/IAdminRepository';
-import { SuspendedUserError } from '@/errors/SuspendedUserError';
-import { ValidationError } from '@/errors/ValidationError';
+import { env } from '@/config';
 import {
   PasswordResetTemplate,
   verificationEmailTemplate,
 } from '@/utils/mail-templates';
+import { TYPES } from '@/types';
+import {
+  BadRequest,
+  Conflict,
+  InternalServerError,
+  NotImplemented,
+  Unauthorized,
+} from '@i4you/http-errors';
+import { CONSTANTS } from '@/constants/constants';
+import { fetchGoogleUser } from '@/utils/google-auth';
 import { NotFoundError } from '@/errors/NotFoundError';
-import { env } from '@/config';
-import { createError } from '@i4you/http-errors';
-import { ICacheService } from '@/services/interfaces/ICacheService';
+import { RegisterRequestDTO } from '@/dtos/register.dto';
+import { fetchFacebookUser } from '@/utils/facebook-auth';
+import { ValidationError } from '@/errors/ValidationError';
+import { UserExistsError } from '@/errors/UserExistsError';
+import { comparePassword, hashPassword } from '@/utils/bcrypt';
+import { SuspendedUserError } from '@/errors/SuspendedUserError';
 import { IMailService } from '@/services/interfaces/IMailService';
 import { IAuthService } from '@/services/interfaces/IAuthService';
 import { IUserService } from '@/services/interfaces/IUserService';
-import { CONSTANTS } from '@/constants/constants';
+import { ICacheService } from '@/services/interfaces/ICacheService';
+import IUserRepository from '@/repositories/interfaces/IUserRepository';
+import { type LoginRequestDTO, LoginResponseDTO } from '@/dtos/login.dto';
+import IAdminRepository from '@/repositories/interfaces/IAdminRepository';
 
 const APP_URL = env.APP_URL;
 
@@ -77,19 +84,19 @@ export class AuthService implements IAuthService {
     }
 
     const accessToken = generateAccessToken({
-      sub: user._id,
+      sub: user._id.toString(),
       role: 'member',
       email: user.email,
     });
     const refreshToken = generateRefreshToken({
-      sub: user._id,
+      sub: user._id.toString(),
       role: 'member',
     });
 
-    await this._addRefreshToken(user._id, refreshToken);
+    await this._addRefreshToken(user._id.toString(), refreshToken);
 
     return new LoginResponseDTO(accessToken, refreshToken, {
-      id: user._id,
+      id: user._id.toString(),
       name: user.name,
       email: user.email,
     });
@@ -100,7 +107,9 @@ export class AuthService implements IAuthService {
     currentPassword: string,
     newPassword: string
   ) {
-    const user = (await this._userRepository.find({ _id: id }))[0];
+    const user = (
+      await this._userRepository.find({ _id: new Types.ObjectId(id) })
+    )[0];
 
     if (!user) {
       throw new ValidationError(CONSTANTS.ERRORS.USER_NOT_FOUND);
@@ -121,16 +130,19 @@ export class AuthService implements IAuthService {
     }
 
     const accessToken = generateAccessToken({
-      sub: user._id,
+      sub: user._id.toString(),
       role: 'admin',
       email: user.email,
     });
-    const refreshToken = generateRefreshToken({ sub: user._id, role: 'admin' });
+    const refreshToken = generateRefreshToken({
+      sub: user._id.toString(),
+      role: 'admin',
+    });
 
-    await this._addRefreshToken(user._id, refreshToken);
+    await this._addRefreshToken(user._id.toString(), refreshToken);
 
     return new LoginResponseDTO(accessToken, refreshToken, {
-      id: user._id,
+      id: user._id.toString(),
       name: user.name,
       email: user.email,
     });
@@ -236,13 +248,13 @@ export class AuthService implements IAuthService {
   async googleRegister(token: string): Promise<void> {
     const googleUser = await fetchGoogleUser(token);
     if (!googleUser) {
-      throw createError.BadRequest(CONSTANTS.ERRORS.INVALID_CREDENTIALS_SIMPLE);
+      throw BadRequest(CONSTANTS.ERRORS.INVALID_CREDENTIALS_SIMPLE);
     }
 
     const user = await this._userRepository.findByEmail(googleUser.email);
 
     if (user) {
-      throw createError.Conflict(CONSTANTS.ERRORS.USER_EXISTS);
+      throw Conflict(CONSTANTS.ERRORS.USER_EXISTS);
     }
 
     const hashedPassword = await hashPassword(googleUser.email);
@@ -255,7 +267,7 @@ export class AuthService implements IAuthService {
     });
 
     if (!newUser) {
-      throw createError.Internal(CONSTANTS.ERRORS.FAILED_CREATE_USER);
+      throw InternalServerError(CONSTANTS.ERRORS.FAILED_CREATE_USER);
     }
   }
 
@@ -268,7 +280,7 @@ export class AuthService implements IAuthService {
     const user = await this._userRepository.findByEmail(googleUser.email);
 
     if (!user) {
-      throw createError.BadRequest(CONSTANTS.ERRORS.USER_NOT_FOUND);
+      throw BadRequest(CONSTANTS.ERRORS.USER_NOT_FOUND);
     }
 
     if (user.status === 'suspended') {
@@ -276,20 +288,20 @@ export class AuthService implements IAuthService {
     }
 
     const accessToken = generateAccessToken({
-      sub: user._id,
+      sub: user._id.toString(),
       role: 'member',
       email: user.email,
     });
 
     const refreshToken = generateRefreshToken({
-      sub: user._id,
+      sub: user._id.toString(),
       role: 'member',
     });
 
-    await this._addRefreshToken(user._id, refreshToken);
+    await this._addRefreshToken(user._id.toString(), refreshToken);
 
     return new LoginResponseDTO(accessToken, refreshToken, {
-      id: user._id,
+      id: user._id.toString(),
       name: user.name,
       email: user.email,
     });
@@ -299,12 +311,12 @@ export class AuthService implements IAuthService {
     const facebookUser = await fetchFacebookUser(token);
 
     if (!facebookUser) {
-      throw createError.BadRequest(CONSTANTS.ERRORS.INVALID_CREDENTIALS_SIMPLE);
+      throw BadRequest(CONSTANTS.ERRORS.INVALID_CREDENTIALS_SIMPLE);
     }
 
     console.log('Facebook user:', facebookUser);
 
-    throw createError.NotImplemented(CONSTANTS.ERRORS.NOT_IMPLEMENTED);
+    throw NotImplemented(CONSTANTS.ERRORS.NOT_IMPLEMENTED);
   }
 
   async facebookLogin(token: string): Promise<LoginResponseDTO> {
@@ -334,7 +346,7 @@ export class AuthService implements IAuthService {
 
     if (!storedToken || storedToken !== token) {
       console.log('Stored token not found or does not match:', storedToken);
-      throw createError.Unauthorized(CONSTANTS.ERRORS.INVALID_REFRESH_TOKEN);
+      throw Unauthorized(CONSTANTS.ERRORS.INVALID_REFRESH_TOKEN);
     }
 
     const user =

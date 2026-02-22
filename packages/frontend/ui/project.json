@@ -1,0 +1,8 @@
+{
+  "name": "@i4you/ui",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/frontend/ui/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {}
+}

@@ -4,12 +4,12 @@ WORKDIR /repo
 RUN corepack enable
 
 COPY pnpm-workspace.yaml ./
+COPY pnpm-lock.yaml ./
 COPY package.json ./
 COPY nx.json ./
 COPY eslint.config.mjs ./
 COPY tsconfig.json ./
 COPY tsconfig.base.json ./
-COPY pnpm-lock.yaml ./
 
 COPY packages ./packages
 COPY apps/services/template-service/package.json ./apps/services/template-service/

@@ -15,9 +15,7 @@ export class RegisterRequest {
   public email: string;
   public password: string;
 
-  constructor(private readonly data: RegisterRequestDTO) {
-    console.log(data);
-    registerRequestSchema.parse(data);
+  constructor(data: RegisterRequestDTO) {
     this.name = data.name;
     this.email = data.email;
     this.password = data.password;

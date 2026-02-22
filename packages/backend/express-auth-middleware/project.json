@@ -1,0 +1,8 @@
+{
+  "name": "@i4you/express-auth-middleware",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/backend/express-auth-middleware/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {}
+}

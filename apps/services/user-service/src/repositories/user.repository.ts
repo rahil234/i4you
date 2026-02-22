@@ -1,5 +1,5 @@
 import { injectable } from 'inversify';
-import { UserModel, UserDocument } from '@/models/user.model';
+import { UserDocument, UserModel } from '@/models/user.model';
 import { IUserRepository } from '@/repositories/interfaces/IUserRepository';
 import { MongoBaseRepository } from '@/repositories/base.repository';
 import { User } from '@/entities/user.entity';
@@ -36,7 +36,7 @@ export class MongoUserRepository
   async findByEmail(email: string): Promise<User | null> {
     const doc = await this.model
       .findOne({ email } as RootFilterQuery<UserDocument>)
-      .lean();
+      .lean<UserDocument>();
     return doc ? this.toDomain(doc) : null;
   }
 
@@ -48,8 +48,8 @@ export class MongoUserRepository
       .find(filter as RootFilterQuery<UserDocument>)
       .skip(options.skip)
       .limit(options.limit)
-      .lean();
-    return docs.map(this.toDomain);
+      .lean<UserDocument[]>();
+    return docs.map((doc) => this.toDomain(doc as UserDocument));
   }
 
   async count(filter: Partial<UserDocument>): Promise<number> {

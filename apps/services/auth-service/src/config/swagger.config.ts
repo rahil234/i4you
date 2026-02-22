@@ -3,10 +3,8 @@ import swaggerUi from 'swagger-ui-express';
 import { Application } from 'express';
 import { env } from '@/env.config';
 import * as path from 'node:path';
-import { fileURLToPath } from 'url';
 
-const filename = fileURLToPath(import.meta.url);
-const dirname = path.dirname(filename);
+const dirname = path.dirname(new URL(import.meta.url).pathname);
 
 const options = {
   definition: {

@@ -12,7 +12,7 @@
       "options": {
         "platform": "node",
         "outputPath": "{projectRoot}/dist",
-        "format": ["cjs"],
+        "format": ["esm"],
         "bundle": true,
         "main": "{projectRoot}/src/main.ts",
         "tsConfig": "{projectRoot}/tsconfig.app.json",

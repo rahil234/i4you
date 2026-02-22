@@ -20,13 +20,13 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@/*": [
-        "/src/*"
-      ]
+      "@/*": ["/src/*"]
     }
   },
-  "include": [
-    "src/**/*",
-    "src/types/**/*"
+  "include": ["src/**/*", "src/types/**/*"],
+  "references": [
+    {
+      "path": "../../../packages/backend/proto-files"
+    }
   ]
 }

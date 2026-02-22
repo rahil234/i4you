@@ -1,0 +1,8 @@
+{
+  "name": "@i4you/express-logger",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/backend/express-logger/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {}
+}

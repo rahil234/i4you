@@ -4,13 +4,28 @@
   "files": [],
   "references": [
     {
-      "path": "./apps/services/auth-service"
+      "path": "./apps/frontend"
     },
     {
       "path": "./apps/services/template-service"
     },
     {
+      "path": "./apps/services/auth-service"
+    },
+    {
       "path": "./packages/backend/env-config"
+    },
+    {
+      "path": "./packages/backend/express-logger"
+    },
+    {
+      "path": "./packages/backend/proto-files"
+    },
+    {
+      "path": "./packages/backend/http-errors"
+    },
+    {
+      "path": "./apps/services/user-service"
     }
   ]
 }

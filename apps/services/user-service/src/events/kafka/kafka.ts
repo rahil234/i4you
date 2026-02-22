@@ -14,7 +14,7 @@ class KafkaClient {
       sasl: {
         username: env.KAFKA_USERNAME,
         password: env.KAFKA_PASSWORD,
-        mechanism: 'plain',
+        mechanism: 'scram-sha-512',
       },
       ssl: env.NODE_ENV === 'production',
     });

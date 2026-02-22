@@ -1,9 +1,5 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
-
-import { env } from '@/config/index';
-import { connectDB } from '@/config/db.config';
-import { connectRedis } from '@/config/redis.config';
 import authRoutes from '@/routes/auth.routes';
 import { errorHandlerMiddleware } from '@/middlwares/error-handler.middleware';
 import setupSwaggerDocs, { swaggerSpec } from '@/config/swagger.config';
@@ -32,17 +28,4 @@ app.use(errorHandlerMiddleware);
 
 setupSwaggerDocs(app);
 
-const startServer = async () => {
-  await connectDB();
-  await connectRedis();
-  app.listen(env.PORT);
-};
-
-startServer()
-  .then(() => {
-    console.log('Auth Server running on port ', env.PORT);
-  })
-  .catch((err) => {
-    console.error('Error starting server:', err);
-    process.exit(1);
-  });
+export default app;

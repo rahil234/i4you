@@ -1,12 +1,12 @@
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { Application } from 'express';
-import { fileURLToPath } from 'url';
+// import { fileURLToPath } from 'url';
 import * as path from 'node:path';
 import { env } from '@/env.config';
-
-const filename = fileURLToPath(import.meta.url);
-const dirname = path.dirname(filename);
+//
+// const filename = fileURLToPath(import.meta.url);
+// const dirname = path.dirname(filename);
 
 const options = {
   definition: {
@@ -22,7 +22,7 @@ const options = {
       },
     ],
   },
-  apis: [path.join(dirname, '../routes/*.{ts,js}')],
+  apis: [path.join(__dirname, '../routes/*.{ts,js}')],
 };
 
 export const swaggerSpec = swaggerJSDoc(options);

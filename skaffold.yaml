@@ -88,7 +88,7 @@ profiles:
         - k8s/dev/hashicorp/vault/vault-cluster-store.yaml
         - https://download.elastic.co/downloads/eck/3.1.0/operator.yaml
         - https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.8.0/components.yaml
-#        - k8s/dev/kafka/kafka-storage.yaml
+        #        - k8s/dev/kafka/kafka-storage.yaml
         - k8s/dev/kafka/kafka-kraft.yaml
         - k8s/dev/elastic/storage-class.yaml
         - k8s/dev/elastic/elasticsearch.yaml
@@ -156,130 +156,129 @@ profiles:
       kubeContext: orbstack
     build:
       artifacts:
-        - image: validate-service-image
-          context: apps/services/validate-service
-          sync:
-            manual:
-              - src: src/**/*
-                dest: .
-          docker:
-            dockerfile: Dockerfile.dev
-        - image: user-service-image
-          context: apps/services/user-service
-          sync:
-            manual:
-              - src: src/**/*
-                dest: .
-          docker:
-            dockerfile: Dockerfile.dev
+        #        - image: validate-service-image
+        #          context: apps/services/validate-service
+        #          sync:
+        #            manual:
+        #              - src: src/**/*
+        #                dest: .
+        #          docker:
+        #            dockerfile: Dockerfile.dev
+        #        - image: user-service-image
+        #          context: apps/services/user-service
+        #          sync:
+        #            manual:
+        #              - src: src/**/*
+        #                dest: .
+        #          docker:
+        #            dockerfile: Dockerfile.dev
         - image: auth-service-image
-          context: apps/services/auth-service
           sync:
             manual:
-              - src: src/**/*
+              - src: apps/services/auth-service/src/**/*
                 dest: .
           docker:
-            dockerfile: Dockerfile.dev
-        - image: media-service-image
-          context: apps/services/media-service
-          sync:
-            manual:
-              - src: src/**/*
-                dest: .
-          docker:
-            dockerfile: Dockerfile.dev
-        - image: match-service-image
-          context: apps/services/match-service
-          sync:
-            manual:
-              - src: src/**/*
-                dest: .
-          docker:
-            dockerfile: Dockerfile.dev
-        - image: chat-service-image
-          context: apps/services/chat-service
-          sync:
-            manual:
-              - src: src/**/*
-                dest: .
-          docker:
-            dockerfile: Dockerfile.dev
-        - image: signaling-service-image
-          context: apps/services/signaling-service
-          sync:
-            manual:
-              - src: src/**/*
-                dest: .
-          docker:
-            dockerfile: Dockerfile.dev
-        - image: notification-service-image
-          context: apps/services/notification-service
-          sync:
-            manual:
-              - src: src/**/*
-                dest: .
-          docker:
-            dockerfile: Dockerfile.dev
-        - image: moderation-service-image
-          context: apps/services/moderation-service
-          sync:
-            manual:
-              - src: src/**/*
-                dest: .
-          docker:
-            dockerfile: Dockerfile.dev
-        - image: interaction-service-image
-          context: apps/services/interaction-service
-          sync:
-            manual:
-              - src: src/**/*
-                dest: .
-          docker:
-            dockerfile: Dockerfile.dev
-        - image: discovery-service-image
-          context: apps/services/discovery-service
-          sync:
-            manual:
-              - src: src/**/*
-                dest: .
-          docker:
-            dockerfile: Dockerfile.dev
-        - image: payment-service-image
-          context: apps/services/payment-service
-          sync:
-            manual:
-              - src: src/**/*
-                dest: .
-          docker:
-            dockerfile: Dockerfile.dev
-        - image: subscription-service-image
-          context: apps/services/subscription-service
-          sync:
-            manual:
-              - src: src/**/*
-                dest: .
-          docker:
-            dockerfile: Dockerfile.dev
-        - image: es-worker-service-image
-          context: apps/services/es-worker-service
-          sync:
-            manual:
-              - src: src/**/*
-                dest: .
-          docker:
-            dockerfile: Dockerfile.dev
-        - image: frontend-image
-          context: apps/frontend
-          sync:
-            manual:
-              - src: src/**/*
-                dest: .
-          docker:
-            dockerfile: Dockerfile.dev
-        - image: socket-nginx-image
-          context: apps/nginx
-          docker:
-            dockerfile: Dockerfile.dev
+            dockerfile: apps/services/auth-service/Dockerfile.dev
+      #        - image: media-service-image
+      #          context: apps/services/media-service
+      #          sync:
+      #            manual:
+      #              - src: src/**/*
+      #                dest: .
+      #          docker:
+      #            dockerfile: Dockerfile.dev
+      #        - image: match-service-image
+      #          context: apps/services/match-service
+      #          sync:
+      #            manual:
+      #              - src: src/**/*
+      #                dest: .
+      #          docker:
+      #            dockerfile: Dockerfile.dev
+      #        - image: chat-service-image
+      #          context: apps/services/chat-service
+      #          sync:
+      #            manual:
+      #              - src: src/**/*
+      #                dest: .
+      #          docker:
+      #            dockerfile: Dockerfile.dev
+      #        - image: signaling-service-image
+      #          context: apps/services/signaling-service
+      #          sync:
+      #            manual:
+      #              - src: src/**/*
+      #                dest: .
+      #          docker:
+      #            dockerfile: Dockerfile.dev
+      #        - image: notification-service-image
+      #          context: apps/services/notification-service
+      #          sync:
+      #            manual:
+      #              - src: src/**/*
+      #                dest: .
+      #          docker:
+      #            dockerfile: Dockerfile.dev
+      #        - image: moderation-service-image
+      #          context: apps/services/moderation-service
+      #          sync:
+      #            manual:
+      #              - src: src/**/*
+      #                dest: .
+      #          docker:
+      #            dockerfile: Dockerfile.dev
+      #        - image: interaction-service-image
+      #          context: apps/services/interaction-service
+      #          sync:
+      #            manual:
+      #              - src: src/**/*
+      #                dest: .
+      #          docker:
+      #            dockerfile: Dockerfile.dev
+      #        - image: discovery-service-image
+      #          context: apps/services/discovery-service
+      #          sync:
+      #            manual:
+      #              - src: src/**/*
+      #                dest: .
+      #          docker:
+      #            dockerfile: Dockerfile.dev
+      #        - image: payment-service-image
+      #          context: apps/services/payment-service
+      #          sync:
+      #            manual:
+      #              - src: src/**/*
+      #                dest: .
+      #          docker:
+      #            dockerfile: Dockerfile.dev
+      #        - image: subscription-service-image
+      #          context: apps/services/subscription-service
+      #          sync:
+      #            manual:
+      #              - src: src/**/*
+      #                dest: .
+      #          docker:
+      #            dockerfile: Dockerfile.dev
+      #        - image: es-worker-service-image
+      #          context: apps/services/es-worker-service
+      #          sync:
+      #            manual:
+      #              - src: src/**/*
+      #                dest: .
+      #          docker:
+      #            dockerfile: Dockerfile.dev
+      #        - image: frontend-image
+      #          context: apps/frontend
+      #          sync:
+      #            manual:
+      #              - src: src/**/*
+      #                dest: .
+      #          docker:
+      #            dockerfile: Dockerfile.dev
+      #        - image: socket-nginx-image
+      #          context: apps/nginx
+      #          docker:
+      #            dockerfile: Dockerfile.dev
       local:
         push: false
         useBuildkit: true
@@ -292,23 +291,23 @@ profiles:
         - k8s/dev/i4you-cert-secret.yaml
         - k8s/dev/traefik/traefik-validate-middleware.yaml
         - k8s/dev/traefik/traefik-strip-path-middleware.yaml
-        - k8s/dev/services/validate-service.yaml
-        - k8s/dev/services/user-service.yaml
+        #        - k8s/dev/services/validate-service.yaml
+        #        - k8s/dev/services/user-service.yaml
         - k8s/dev/services/auth-service.yaml
-        - k8s/dev/services/media-service.yaml
-        - k8s/dev/services/match-service.yaml
-        - k8s/dev/services/chat-service.yaml
-        - k8s/dev/services/signaling-service.yaml
-        - k8s/dev/services/discovery-service.yaml
-        - k8s/dev/services/es-worker-service.yaml
-        - k8s/dev/services/moderation-service.yaml
-        - k8s/dev/services/notification-service.yaml
-        - k8s/dev/services/interaction-service.yaml
-        - k8s/dev/services/payment-service.yaml
-        - k8s/dev/services/subscription-service.yaml
-        - k8s/dev/services/stripe-webhook-handler.yaml
-        - k8s/dev/services/frontend.yaml
-        - k8s/dev/nginx-socket-proxy.yaml
+        #        - k8s/dev/services/media-service.yaml
+        #        - k8s/dev/services/match-service.yaml
+        #        - k8s/dev/services/chat-service.yaml
+        #        - k8s/dev/services/signaling-service.yaml
+        #        - k8s/dev/services/discovery-service.yaml
+        #        - k8s/dev/services/es-worker-service.yaml
+        #        - k8s/dev/services/moderation-service.yaml
+        #        - k8s/dev/services/notification-service.yaml
+        #        - k8s/dev/services/interaction-service.yaml
+        #        - k8s/dev/services/payment-service.yaml
+        #        - k8s/dev/services/subscription-service.yaml
+        #        - k8s/dev/services/stripe-webhook-handler.yaml
+        #        - k8s/dev/services/frontend.yaml
+        #        - k8s/dev/nginx-socket-proxy.yaml
         - k8s/dev/traefik/traefik-ingress.yaml
 
   - name: prod

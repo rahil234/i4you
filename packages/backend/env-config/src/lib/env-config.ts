@@ -1,8 +1,8 @@
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
 
 dotenv.config({
-  debug: process.env.DEBUG === 'true',
-  quiet: process.env.DEBUG !== 'true',
+  quiet: true,
+  debug: false,
 });
 
 // Define types
@@ -34,7 +34,7 @@ export function setupEnvConfig<T extends Record<string, string>>(
   }
 
   debug = options?.debug ?? true;
-  // log('🚀 Setting up envConfig');
+  log('🚀 Setting up envConfig...');
   log('Required envs:', config);
 
   const missingKeys = Object.keys(config).filter(
@@ -55,6 +55,7 @@ export function setupEnvConfig<T extends Record<string, string>>(
   envConfig = result;
   setupCompleted = true;
 
+  log('✅ envConfig initialized.');
   return result;
 }
 

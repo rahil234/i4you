@@ -2,3 +2,16 @@ packages:
   - packages/**
   - apps/*
   - apps/services/*
+
+onlyBuiltDependencies:
+  - '@bufbuild/buf'
+  - '@nestjs/core'
+  - '@parcel/watcher'
+  - '@scarf/scarf'
+  - '@swc/core'
+  - esbuild
+  - less
+  - nx
+  - protobufjs
+  - sharp
+  - unrs-resolver

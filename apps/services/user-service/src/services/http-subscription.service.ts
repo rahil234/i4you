@@ -18,7 +18,10 @@ export class HttpSubscriptionService implements ISubscriptionService {
       return { planId: 'free', status: 'inactive' };
     }
 
-    const sub = await res.json();
+    const sub = (await res.json()) as {
+      planId: 'free' | 'plus' | 'premium';
+      status: string;
+    };
 
     return {
       planId: sub.planId,

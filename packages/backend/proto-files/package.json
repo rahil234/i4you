@@ -23,7 +23,7 @@
   },
   "scripts": {
     "prebuild": "buf generate",
-    "build": "tsc && tsc-alias",
+    "build": "tsc -p tsconfig.lib.json && tsc-alias -p tsconfig.lib.json",
     "test": "vitest run"
   },
   "dependencies": {

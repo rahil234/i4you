@@ -10,7 +10,7 @@ import { MailService } from '@/services/mail.service';
 import { CacheService } from '@/services/cache.service';
 import { UserGrpcService } from '@/services/user.grpc.service';
 import { GrpcClientProvider } from '@/providers/grpc.client.provider';
-import ICacheService from '@/services/interfaces/ICacheService';
+import { ICacheService } from '@/services/interfaces/ICacheService';
 import { IUserService } from '@/services/interfaces/IUserService';
 import { IMailService } from '@/services/interfaces/IMailService';
 import { IAuthService } from '@/services/interfaces/IAuthService';

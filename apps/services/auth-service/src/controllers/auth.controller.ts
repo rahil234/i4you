@@ -1,20 +1,19 @@
 import { inject, injectable } from 'inversify';
+import { BadGateway, Unauthorized } from '@i4you/http-errors';
 
-import { createError } from '@i4you/http-errors';
-
-import { TYPES } from '@/types';
-import { handleAsync } from '@/utils/handle-async';
 import {
   clearAuthCookie,
   setAccessCookie,
   setRefreshCookie,
 } from '@/utils/cookie';
-import { IAuthService } from '@/services/interfaces/IAuthService';
-import { HTTP_STATUS } from '@/constants/http-status.constant';
+import { TYPES } from '@/types';
 import {
   AUTH_RESPONSE_MESSAGES,
   USER_RESPONSE_MESSAGES,
 } from '@/constants/response-messages.constant';
+import { handleAsync } from '@/utils/handle-async';
+import { HTTP_STATUS } from '@/constants/http-status.constant';
+import { IAuthService } from '@/services/interfaces/IAuthService';
 
 @injectable()
 export class AuthController {
@@ -53,9 +52,7 @@ export class AuthController {
     const { token } = req.body;
 
     if (!token) {
-      next(
-        createError.Unauthorized(AUTH_RESPONSE_MESSAGES.GOOGLE_TOKEN_REQUIRED)
-      );
+      next(Unauthorized(AUTH_RESPONSE_MESSAGES.GOOGLE_TOKEN_REQUIRED));
     }
 
     await this._authService.googleRegister(token);
@@ -88,17 +85,13 @@ export class AuthController {
     const { token } = req.body;
 
     if (!token) {
-      next(
-        createError.Unauthorized(AUTH_RESPONSE_MESSAGES.FACEBOOK_TOKEN_REQUIRED)
-      );
+      next(Unauthorized(AUTH_RESPONSE_MESSAGES.FACEBOOK_TOKEN_REQUIRED));
     }
 
     const user = await this._authService.facebookRegister(token);
 
     if (!user) {
-      next(
-        createError.Internal(AUTH_RESPONSE_MESSAGES.FACEBOOK_REGISTER_FAILED)
-      );
+      next(BadGateway(AUTH_RESPONSE_MESSAGES.FACEBOOK_REGISTER_FAILED));
     }
 
     res.json({ message: AUTH_RESPONSE_MESSAGES.FACEBOOK_REGISTER_SUCCESS });
@@ -108,9 +101,7 @@ export class AuthController {
     const { token } = req.body;
 
     if (!token) {
-      next(
-        createError.Unauthorized(AUTH_RESPONSE_MESSAGES.FACEBOOK_TOKEN_REQUIRED)
-      );
+      next(Unauthorized(AUTH_RESPONSE_MESSAGES.FACEBOOK_TOKEN_REQUIRED));
       return;
     }
 

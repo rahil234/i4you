@@ -1,29 +1,10 @@
 {
-  "compilerOptions": {
-    "target": "ES2020",
-    "moduleResolution": "node16",
-    "module": "Node16",
-    "baseUrl": "./",
-    "outDir": "dist",
-    "declaration": true,
-    "declarationMap": true,
-    "strict": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "paths": {
-      "generated/*": [
-        "./generated/*"
-      ]
+  "extends": "../../../tsconfig.base.json",
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "./tsconfig.lib.json"
     }
-  },
-  "include": [
-    "src/**/*",
-    "generated/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
   ]
 }

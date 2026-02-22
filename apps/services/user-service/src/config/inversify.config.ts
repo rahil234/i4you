@@ -1,20 +1,21 @@
 import { Container } from 'inversify';
-import { IUserRepository } from '@/repositories/interfaces/IUserRepository';
-import { MongoUserRepository } from '@/repositories/user.repository';
-import { UserService } from '@/services/user.service';
+
 import { TYPES } from '@/types';
-import { UserController } from '@/controllers/user.controller';
-import { MongoAdminRepository } from '@/repositories/admin.repository';
-import { IAdminRepository } from '@/repositories/interfaces/IAdminRepository';
-import { CacheService } from '@/services/cache.service';
-import { ICacheService } from '@/services/interfaces/ICacheService';
-import { KafkaService } from '@/events/kafka/KafkaService';
-import { IKafkaService } from '@/events/kafka/interfaces/IKafkaService';
+import { UserService } from '@/services/user.service';
 import { MediaService } from '@/services/media.service';
+import { CacheService } from '@/services/cache.service';
+import { KafkaService } from '@/events/kafka/KafkaService';
+import { UserController } from '@/controllers/user.controller';
 import { IUserService } from '@/services/interfaces/IUserService';
 import { IMediaService } from '@/services/interfaces/IMediaService';
-import { ISubscriptionService } from '@/services/interfaces/ISubscriptionService';
+import { ICacheService } from '@/services/interfaces/ICacheService';
+import { MongoUserRepository } from '@/repositories/user.repository';
+import { MongoAdminRepository } from '@/repositories/admin.repository';
+import { IKafkaService } from '@/events/kafka/interfaces/IKafkaService';
+import { IUserRepository } from '@/repositories/interfaces/IUserRepository';
+import { IAdminRepository } from '@/repositories/interfaces/IAdminRepository';
 import { HttpSubscriptionService } from '@/services/http-subscription.service';
+import { ISubscriptionService } from '@/services/interfaces/ISubscriptionService';
 
 export const container = new Container();
 
